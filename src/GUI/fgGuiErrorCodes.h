@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_ERROR_CODES
     #define FG_INC_GUI_ERROR_CODES
@@ -18,12 +18,12 @@
 
     #include "fgErrno.h"
 
-    #define FG_ERRNO_GUI_BASE_CODE(_code)		(FG_ERRNO_BASE_CODE(500)+_code)
+    #define FG_ERRNO_GUI_BASE_CODE(_code)           (FG_ERRNO_BASE_CODE(500)+_code)
 
-    #define FG_ERRNO_GUI_OK						FG_ERRNO_GUI_BASE_CODE(0)
-    #define FG_ERRNO_GUI_LAST_CODE				FG_ERRNO_GUI_BASE_CODE(0)
+    #define FG_ERRNO_GUI_OK                         FG_ERRNO_GUI_BASE_CODE(0)
+    #define FG_ERRNO_GUI_LAST_CODE                  FG_ERRNO_GUI_BASE_CODE(0)
 
-    #define FG_ERRNO_GUI_OK_TEXT "No error"
+    #define FG_ERRNO_GUI_OK_TEXT                    "No error"
 
 namespace FG_ERRNO_GUI {
     const char * const __allErrVec[] = {

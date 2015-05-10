@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_CONTAINER
     #define FG_INC_GUI_CONTAINER
@@ -47,10 +47,14 @@ namespace fg {
         /**
          *
          */
-        class CContainer : public fg::gui::CWidget {
+        class CContainer : public ::fg::gui::CWidget {
         public:
             ///
-            typedef fg::gui::CWidget base_type;
+            typedef CContainer self_type;
+            ///
+            typedef CContainer type;
+            ///
+            typedef CWidget base_type;
             ///
             typedef std::map<std::string, CWidget*> ChildrenMap;
             ///

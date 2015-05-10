@@ -6,29 +6,36 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiFrame.h"
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CFrame::CFrame() :
-CContainer() {
-    CFrame::setDefaults();
+base_type() {
+    self_type::setDefaults();
 }
+//------------------------------------------------------------------------------
 
 gui::CFrame::~CFrame() { }
+//------------------------------------------------------------------------------
 
 void gui::CFrame::setDefaults(void) {
     m_type = FRAME;
     m_typeName = FG_GUI_FRAME_NAME;
     m_typeTraits = FRAME | CONTAINER | WIDGET;
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CFrame::updateBounds(void) {
-    return CContainer::updateBounds();
+    return base_type::updateBounds();
 }
+//------------------------------------------------------------------------------
 
 void gui::CFrame::refresh(void) {
-    CContainer::refresh();
+    base_type::refresh();
 }
+//------------------------------------------------------------------------------

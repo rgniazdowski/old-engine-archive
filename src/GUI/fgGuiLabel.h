@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_LABEL
     #define FG_INC_GUI_LABEL
@@ -23,6 +23,10 @@ namespace fg {
          */
         class CLabel : public CWidget {
         public:
+            ///
+            typedef CLabel self_type;
+            ///
+            typedef CLabel type;
             ///
             typedef CWidget base_type;
 

@@ -14,16 +14,21 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CDrawer::CDrawer() :
 m_pResourceMgr(NULL) { }
+//------------------------------------------------------------------------------
 
 gui::CDrawer::~CDrawer() {
     m_pResourceMgr = NULL;
 }
+//------------------------------------------------------------------------------
 
 void gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
 }
+//------------------------------------------------------------------------------
 
 void gui::CDrawer::appendText2D(Vec2f& outTextSize,
                                 const Vec2f &blockPos,
@@ -59,6 +64,7 @@ void gui::CDrawer::appendText2D(Vec2f& outTextSize,
     style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockPos, blockSize, FG_TRUE);
     this->print(outPos.x, outPos.y, buf, /*fg.textSize*/realTextSize);
 }
+//------------------------------------------------------------------------------
 
 void gui::CDrawer::appendBackground2D(const Vec2f &pos,
                                       const Vec2f &size,

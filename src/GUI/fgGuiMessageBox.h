@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_MESSAGE_BOX
     #define FG_INC_GUI_MESSAGE_BOX
@@ -23,6 +23,10 @@ namespace fg {
          */
         class CMessageBox : public CWindow {
         public:
+            ///
+            typedef CMessageBox self_type;
+            ///
+            typedef CMessageBox type;
             ///
             typedef CWindow base_type;
 

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_STRUCTURE_SHEET_PARSER
     #define FG_INC_GUI_STRUCTURE_SHEET_PARSER
@@ -30,9 +30,13 @@ namespace fg {
         /**
          *
          */
-        class CStructureSheetParser : public fg::xml::CDefaultHandler {
+        class CStructureSheetParser : public ::fg::xml::CDefaultHandler {
             friend class fg::gui::CWidgetManager;
             friend class fg::gui::CGuiMain;
+        public:
+            typedef CStructureSheetParser self_type;
+            typedef CStructureSheetParser type;
+            typedef ::fg::xml::CDefaultHandler base_type;
 
         private:
             ///

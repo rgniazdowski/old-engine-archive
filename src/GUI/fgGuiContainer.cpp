@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiContainer.h"
 #include "Util/fgStrings.h"
@@ -15,13 +15,16 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CContainer::CContainer() :
 base_type(),
 m_packMethod(FG_GUI_CONTAINER_PACK_FREE),
 m_packAlign(FG_GUI_CONTAINER_PACK_ALIGN_NONE),
 m_drawChildren(FG_TRUE) {
-    gui::CContainer::setDefaults();
+    self_type::setDefaults();
 }
+//------------------------------------------------------------------------------
 
 gui::CContainer::~CContainer() {
     // What about freeing children widgets?
@@ -33,6 +36,7 @@ gui::CContainer::~CContainer() {
     m_children.clear_optimised();
     m_childrenMap.clear();
 }
+//------------------------------------------------------------------------------
 
 void gui::CContainer::setDefaults(void) {
     m_type = CONTAINER;
@@ -41,6 +45,7 @@ void gui::CContainer::setDefaults(void) {
     setIgnoreState(FG_TRUE); // CONTAINER BY DEFAULT IGNORES THE STATE CHANGE (STYLE)
     m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
 }
+//------------------------------------------------------------------------------
 
 void gui::CContainer::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 3)
@@ -85,6 +90,7 @@ void gui::CContainer::setFlags(const std::string& flags) {
     }
     flagsVec.clear();
 }
+//------------------------------------------------------------------------------
 
 //fgGuiDrawer *yolo = NULL;
 
@@ -108,6 +114,7 @@ void gui::CContainer::display(CDrawer *guiLayer) {
     }
     //yolo = (fgGuiDrawer *)guiLayer;
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
     if(m_children.empty()) {
@@ -332,6 +339,7 @@ gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
     // outerBox has containers margins
     return outerBox;
 }
+//------------------------------------------------------------------------------
 
 void gui::CContainer::refresh(void) {
     base_type::refresh();
@@ -343,6 +351,7 @@ void gui::CContainer::refresh(void) {
         child->refresh();
     }
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget::EventState gui::CContainer::updateState(const event::SPointerData *pointerData) {
     base_type::updateState(pointerData);
@@ -356,6 +365,7 @@ gui::CWidget::EventState gui::CContainer::updateState(const event::SPointerData 
     }
     return m_state;
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
     if(nameTag.empty())
@@ -366,18 +376,22 @@ gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
     CWidget* pWidget = itor->second;
     return pWidget;
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget *gui::CContainer::getChild(const char* nameTag) {
     return getChild(std::string(nameTag));
 }
+//------------------------------------------------------------------------------
 
 gui::CContainer::ChildrenVec& gui::CContainer::getChildren(void) {
     return m_children;
 }
+//------------------------------------------------------------------------------
 
 gui::CContainer::ChildrenMap& gui::CContainer::getChildrenMap(void) {
     return m_childrenMap;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CContainer::addChild(CWidget *pWidget) {
     if(m_children.find(pWidget) == -1) {
@@ -388,12 +402,14 @@ fgBool gui::CContainer::addChild(CWidget *pWidget) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CContainer::removeChild(CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
     return removeChild(pWidget->getName());
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     if(nameTag.empty())
@@ -413,6 +429,7 @@ fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CContainer::removeChild(const char *nameTag) {
     if(!nameTag)
@@ -421,3 +438,4 @@ fgBool gui::CContainer::removeChild(const char *nameTag) {
         return FG_FALSE;
     return removeChild(std::string(nameTag));
 }
+//------------------------------------------------------------------------------

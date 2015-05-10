@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiScrollArea.h"
 #include "fgGuiDrawer.h"
@@ -14,13 +14,15 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CScrollArea::CScrollArea() :
 base_type(),
 m_hSlider(NULL),
 m_vSlider(NULL),
 m_relMove(),
 m_sliderSwitch(SLIDER_NONE) {
-    gui::CScrollArea::setDefaults();
+    self_type::setDefaults();
     m_hSlider = new CSlider();
     m_hSlider->setName("hslider");
     m_hSlider->setAlignment(CSlider::SLIDER_HORIZONTAL);
@@ -29,6 +31,7 @@ m_sliderSwitch(SLIDER_NONE) {
     m_vSlider->setName("vslider");
     m_vSlider->setAlignment(CSlider::SLIDER_VERTICAL);
 }
+//------------------------------------------------------------------------------
 
 gui::CScrollArea::~CScrollArea() {
     if(m_hSlider) {
@@ -40,12 +43,14 @@ gui::CScrollArea::~CScrollArea() {
     }
     m_vSlider = NULL;
 }
+//------------------------------------------------------------------------------
 
 void gui::CScrollArea::setDefaults(void) {
     m_type = SCROLL_AREA;
     m_typeName = FG_GUI_SCROLL_AREA_NAME;
     m_typeTraits = SCROLL_AREA | CONTAINER | WIDGET;
 }
+//------------------------------------------------------------------------------
 
 void gui::CScrollArea::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 3)
@@ -70,6 +75,7 @@ void gui::CScrollArea::setFlags(const std::string& flags) {
     }
     flagsVec.clear();
 }
+//------------------------------------------------------------------------------
 
 void gui::CScrollArea::display(CDrawer* guiLayer) {
     // Now before drawing the guiLayer needs to set the relative move
@@ -121,6 +127,7 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
         m_vSlider->display(guiLayer);
     }
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CScrollArea::updateBounds(void) {
 
@@ -176,10 +183,12 @@ gfx::BoundingBox3Df gui::CScrollArea::updateBounds(void) {
     }
     return scrollAreaSize;
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CScrollArea::updateBounds(const gfx::BoundingBox3Df& bbox) {
     return base_type::updateBounds(bbox);
 }
+//------------------------------------------------------------------------------
 
 void gui::CScrollArea::refresh(void) {
     base_type::refresh();
@@ -190,6 +199,7 @@ void gui::CScrollArea::refresh(void) {
         m_vSlider->setStyleName(m_styleName);
     }
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget::EventState gui::CScrollArea::updateState(const event::SPointerData* pointerData) {
     if(!pointerData)
@@ -208,3 +218,4 @@ gui::CWidget::EventState gui::CScrollArea::updateState(const event::SPointerData
     base_type::updateState(&newPointerData);
     return m_state;
 }
+//------------------------------------------------------------------------------

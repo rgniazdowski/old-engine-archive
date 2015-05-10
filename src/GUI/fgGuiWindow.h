@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_WINDOW
     #define FG_INC_GUI_WINDOW
@@ -23,6 +23,10 @@ namespace fg {
          */
         class CWindow : public CContainer {
         public:
+            ///
+            typedef CWindow self_type;
+            ///
+            typedef CWindow type;
             ///
             typedef CContainer base_type;
 

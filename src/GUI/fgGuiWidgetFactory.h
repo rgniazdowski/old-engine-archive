@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_WIDGET_FACTORY
     #define FG_INC_GUI_WIDGET_FACTORY
@@ -27,13 +27,17 @@ namespace fg {
         class CWidgetFactory {
         public:
             ///
-            typedef std::map<WidgetType, fgCreateGuiWidgetFn> factoryMap;
+            typedef CWidgetFactory self_type;
             ///
-            typedef std::pair<WidgetType, fgCreateGuiWidgetFn> factoryPair;
+            typedef CWidgetFactory type;
             ///
-            typedef factoryMap::iterator factoryMapItor;
+            typedef std::map<WidgetType, fgCreateGuiWidgetFn> FactoryMap;
             ///
-            typedef factoryMap::const_iterator factoryMapConstItor;
+            typedef std::pair<WidgetType, fgCreateGuiWidgetFn> FactoryPair;
+            ///
+            typedef FactoryMap::iterator FactoryMapItor;
+            ///
+            typedef FactoryMap::const_iterator FactoryMapConstItor;
 
         public:
             /**
@@ -74,7 +78,7 @@ namespace fg {
 
         private:
             /// Map storing create functions for given widget types
-            factoryMap m_factoryMap;
+            FactoryMap m_factoryMap;
         };
     };
 };

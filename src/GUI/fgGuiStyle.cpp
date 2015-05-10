@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiStyle.h"
 #include "Util/fgConfig.h"
@@ -15,11 +15,15 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CStyle::CStyle() { }
+//------------------------------------------------------------------------------
 
 gui::CStyle::~CStyle() {
     m_styleContent.clear();
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyle::load(void) {
     if(getFilePath().empty())
@@ -144,6 +148,7 @@ fgBool gui::CStyle::load(void) {
     delete config;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyle::load(const std::string& path) {
     if(path.empty())
@@ -151,6 +156,7 @@ fgBool gui::CStyle::load(const std::string& path) {
     setFilePath(path);
     return gui::CStyle::load();
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyle::load(const char *path) {
     if(!path)
@@ -158,6 +164,7 @@ fgBool gui::CStyle::load(const char *path) {
     setFilePath(path);
     return gui::CStyle::load();
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent &gui::CStyle::getContent(const std::string& info) {
     if(info.empty())
@@ -186,10 +193,12 @@ gui::CStyleContent &gui::CStyle::getContent(const std::string& info) {
     }
     return m_styleContent["main"];
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent &gui::CStyle::getContent(const char *info) {
     return getContent(std::string(info));
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
                                     int num,
@@ -226,9 +235,11 @@ fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
                                     int num,
                                     const char *info) {
     return copyFullContent(contents, num, std::string(info));
 }
+//------------------------------------------------------------------------------

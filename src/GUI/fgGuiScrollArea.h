@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_SCROLL_AREA
     #define FG_INC_GUI_SCROLL_AREA
@@ -29,10 +29,16 @@ namespace fg {
         class CScrollArea : public CContainer {
         public:
             ///
+            typedef CScrollArea self_type;
+            ///
+            typedef CScrollArea type;
+            ///
             typedef CContainer base_type;
 
         public:
-
+            /**
+             *
+             */
             enum SliderSwitch {
                 SLIDER_NONE = 0,
                 SLIDER_HORIZONTAL = 1,

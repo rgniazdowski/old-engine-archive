@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_EDITABLE_TEXT
     #define FG_INC_GUI_EDITABLE_TEXT
@@ -24,8 +24,11 @@ namespace fg {
         class CEditableText : public CTextArea {
         public:
             ///
+            typedef CEditableText self_type;
+            ///
+            typedef CEditableText type;
+            ///
             typedef CTextArea base_type;
-        protected:
 
         protected:
             /**

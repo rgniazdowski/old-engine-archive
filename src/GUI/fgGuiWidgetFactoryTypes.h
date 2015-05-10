@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_WIDGET_FACTORY_TYPES
     #define FG_INC_GUI_WIDGET_FACTORY_TYPES

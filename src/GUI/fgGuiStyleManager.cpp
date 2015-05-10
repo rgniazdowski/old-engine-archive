@@ -6,24 +6,29 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiStyleManager.h"
 #include "Util/fgDirent.h"
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CStyleManager::CStyleManager() {
     m_managerType = FG_MANAGER_GUI_STYLE;
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleManager::~CStyleManager() {
     gui::CStyleManager::destroy();
 }
+//------------------------------------------------------------------------------
 
 void gui::CStyleManager::clear(void) {
     releaseAllHandles();
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyleManager::destroy(void) {
     StyleVecItor begin = getRefDataVector().begin();
@@ -37,6 +42,7 @@ fgBool gui::CStyleManager::destroy(void) {
     gui::CStyleManager::clear();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyleManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Style manager...");
@@ -78,6 +84,7 @@ fgBool gui::CStyleManager::initialize(void) {
     m_init = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyleManager::insert(CStyle *pStyle, const std::string& nameTag) {
     if(!pStyle)
@@ -89,6 +96,7 @@ fgBool gui::CStyleManager::insert(CStyle *pStyle, const std::string& nameTag) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyleManager::insertStyle(CStyle *pStyle) {
     if(!pStyle) {
@@ -100,21 +108,26 @@ fgBool gui::CStyleManager::insertStyle(CStyle *pStyle) {
     pStyle->setManaged(FG_TRUE);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 gui::CStyle* gui::CStyleManager::request(const std::string& info) {
     // #FIXME
     return NULL;
 }
+//------------------------------------------------------------------------------
 
 gui::CStyle* gui::CStyleManager::request(const char *info) {
     // #FIXME
     return NULL;
 }
+//------------------------------------------------------------------------------
 
 void gui::CStyleManager::setStylesPath(const std::string &path) {
     m_stylesPath = path;
 }
+//------------------------------------------------------------------------------
 
 void gui::CStyleManager::setStylesPath(const char *path) {
     m_stylesPath = path;
 }
+//------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_FONT_DRAWER
     #define FG_INC_FONT_DRAWER
@@ -14,10 +14,10 @@
     #include "fgFontResource.h"
     #include "GFX/fgGfxTypes.h"
 
-    #define FG_FONT_DEFAULT_CHAR_SIZE_PX	-1.0f
-    #define FG_FONT_DRAW_STRING_BUF_MAX		1024
+    #define FG_FONT_DEFAULT_CHAR_SIZE_PX        -1.0f
+    #define FG_FONT_DRAW_STRING_BUF_MAX         1024
 
-    #define FG_FONT_BUFFER_MAX				4096
+    #define FG_FONT_BUFFER_MAX                  4096
 
 // Maybe this class should extend some other class
 // we'll see later, maybe this kind of thing (done via this class)
@@ -37,7 +37,15 @@ namespace fg {
         /**
          *
          */
-        class CFontDrawer : public virtual fg::gfx::CDrawingBatch {
+        class CFontDrawer : public virtual ::fg::gfx::CDrawingBatch {
+        public:
+            ///
+            typedef CFontDrawer self_type;
+            ///
+            typedef CFontDrawer type;
+            ///
+            typedef ::fg::gfx::CDrawingBatch base_type;
+
         public:
             /**
              *

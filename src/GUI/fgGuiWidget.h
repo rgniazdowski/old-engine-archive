@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_WIDGET
     #define FG_INC_GUI_WIDGET
@@ -117,6 +117,10 @@ namespace fg {
             friend class CStructureSheetParser;
 
         public:
+            ///
+            typedef CWidget self_type;
+            ///
+            typedef CWidget type;
             ///
             typedef CManagedObject<WidgetHandle> base_type;
 

@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_WIDGET_MANAGER
     #define FG_INC_GUI_WIDGET_MANAGER
@@ -32,6 +32,10 @@ namespace fg {
         public fg::base::CManager,
         protected fg::util::CHandleManager<CWidget *, WidgetHandle> {
         public:
+            ///
+            typedef CWidgetManager self_type;
+            ///
+            typedef CWidgetManager type;
             ///
             typedef fg::base::CManager base_type;
             ///

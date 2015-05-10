@@ -27,10 +27,14 @@ namespace fg {
         /**
          * 
          */
-        class CSlider : public fg::gui::CWidget {
+        class CSlider : public CWidget {
         public:
             ///
-            typedef fg::gui::CWidget base_type;
+            typedef CSlider self_type;
+            ///
+            typedef CSlider type;
+            ///
+            typedef ::fg::gui::CWidget base_type;
 
             enum SliderAlign {
                 SLIDER_UNDEFINED = 0,

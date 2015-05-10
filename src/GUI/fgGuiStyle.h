@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_STYLE
     #define FG_INC_GUI_STYLE
@@ -82,6 +82,8 @@ namespace fg {
             };
     #endif
         public:
+            typedef CStyle self_type;
+            typedef CStyle type;
             typedef fg::resource::CManagedDataFile<StyleHandle, Quality> base_type;
             typedef std::string HashKey;
     #ifdef FG_USING_MARMALADE	

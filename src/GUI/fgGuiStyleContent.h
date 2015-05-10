@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_STYLE_CONTENT
     #define FG_INC_GUI_STYLE_CONTENT
@@ -511,6 +511,8 @@ namespace fg {
             ///
             typedef CStyleContent self_type;
             ///
+            typedef CStyleContent type;
+            ///
             typedef CStyleContent& self_ref;
 
         public:
@@ -523,6 +525,10 @@ namespace fg {
              */
             virtual ~CStyleContent();
 
+            /**
+             *
+             * @param style
+             */
             void copyFrom(const CStyleContent& style);
 
             ////////////////////////////////////////////////////////////////////
@@ -533,7 +539,8 @@ namespace fg {
              * @param merge     If true the styles will be merged, if false - overwritten
              * @return
              */
-            fgBool initializeFromConfig(util::config::ParameterVec &params, fgBool merge = FG_FALSE);
+            fgBool initializeFromConfig(util::config::ParameterVec &params,
+                                        fgBool merge = FG_FALSE);
 
             ////////////////////////////////////////////////////////////////////
 

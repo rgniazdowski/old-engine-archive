@@ -19,6 +19,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CSlider::CSlider() :
 base_type(),
 m_maxValue(100.0f),
@@ -26,16 +28,19 @@ m_currentValue(),
 m_pointerRatio(),
 m_ratio(0.2f, 0.2f),
 m_sliderAlign(SLIDER_VERTICAL) {
-    CSlider::setDefaults();
+    self_type::setDefaults();
 }
+//------------------------------------------------------------------------------
 
 gui::CSlider::~CSlider() { }
+//------------------------------------------------------------------------------
 
 void gui::CSlider::setDefaults(void) {
     m_type = SLIDER;
     m_typeTraits = SLIDER | WIDGET;
     m_typeName = FG_GUI_SLIDER_NAME;
 }
+//------------------------------------------------------------------------------
 
 void gui::CSlider::display(CDrawer* guiLayer) {
     if(!guiLayer)
@@ -106,6 +111,7 @@ void gui::CSlider::display(CDrawer* guiLayer) {
     }
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[(int)m_state]);
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget::EventState gui::CSlider::updateState(const event::SPointerData* pointerData) {
     if(!pointerData) {
@@ -150,3 +156,4 @@ gui::CWidget::EventState gui::CSlider::updateState(const event::SPointerData* po
 
     return m_state;
 }
+//------------------------------------------------------------------------------

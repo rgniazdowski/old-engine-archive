@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_TEXT_AREA
     #define FG_INC_GUI_TEXT_AREA
@@ -26,13 +26,19 @@ namespace fg {
         class CTextArea : public CScrollArea {
         public:
             ///
+            typedef CTextArea self_type;
+            ///
+            typedef CTextArea type;
+            ///
             typedef CScrollArea base_type;
 
         protected:
             ///
             fg::CStringVector m_textData;
-            ///
 
+            /**
+             *
+             */
             struct TextAreaSize {
                 ///
                 unsigned short cols; // x
@@ -46,8 +52,6 @@ namespace fg {
                 TextAreaSize(unsigned short _cols = 32, unsigned short _rows = 1) :
                 cols(_cols), rows(_rows) { }
             } m_textAreaSize;
-
-
 
         protected:
             /**

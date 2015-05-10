@@ -6,24 +6,28 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiMenu.h"
 #include "Util/fgStrings.h"
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CMenu::CMenu() : m_isMainMenu(FG_FALSE) {
-    gui::CMenu::setDefaults();
+    self_type::setDefaults();
 }
+//------------------------------------------------------------------------------
 
 gui::CMenu::~CMenu() { }
+//------------------------------------------------------------------------------
 
 void gui::CMenu::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 5)
         return;
     // This is important - always call setFlags for the base class
-    CContainer::setFlags(flags);
+    base_type::setFlags(flags);
     m_isMainMenu = FG_FALSE;
     fg::CStringVector flagsVec;
     strings::split(flags, ' ', flagsVec);
@@ -37,6 +41,7 @@ void gui::CMenu::setFlags(const std::string& flags) {
     }
     flagsVec.clear();
 }
+//------------------------------------------------------------------------------
 
 void gui::CMenu::setDefaults(void) {
     m_type = MENU;
@@ -44,11 +49,14 @@ void gui::CMenu::setDefaults(void) {
     m_typeTraits = MENU | CONTAINER | WIDGET;
     setIgnoreState(FG_TRUE);
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CMenu::updateBounds(void) {
-    return CContainer::updateBounds();
+    return base_type::updateBounds();
 }
+//------------------------------------------------------------------------------
 
 void gui::CMenu::refresh(void) {
-    CContainer::refresh();
+    base_type::refresh();
 }
+//------------------------------------------------------------------------------

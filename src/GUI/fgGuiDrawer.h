@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_DRAWER
     #define FG_INC_GUI_DRAWER
@@ -39,6 +39,12 @@ namespace fg {
         class CDrawer : public CFontDrawer, public virtual gfx::CDrawingBatch {
             friend class fg::gui::CGuiMain;
             friend class fg::gui::CWidgetManager;
+
+        public:
+            ///
+            typedef CDrawer self_type;
+            ///
+            typedef CDrawer type;
 
         private:
             /// Pointer to the external resource manager

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_CONSOLE
     #define FG_INC_GUI_CONSOLE
@@ -29,6 +29,10 @@ namespace fg {
          */
         class CConsole : public CTextArea {
         public:
+            ///
+            typedef CConsole self_type;
+            ///
+            typedef CConsole type;
             ///
             typedef CTextArea base_type;
 

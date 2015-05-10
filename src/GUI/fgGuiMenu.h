@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_MENU
     #define FG_INC_GUI_MENU
@@ -26,7 +26,13 @@ namespace fg {
          */
         class CMenu : public CContainer {
         public:
+            ///
+            typedef CMenu self_type;
+            ///
+            typedef CMenu type;
+            ///
             typedef CContainer base_type;
+
         private:
             ///
             fgBool m_isMainMenu;

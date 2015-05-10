@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_SFX_ERROR_CODES
     #define FG_INC_SFX_ERROR_CODES
@@ -18,18 +18,18 @@
 
     #include "fgErrno.h"
 
-    #define FG_ERRNO_SFX_BASE_CODE(_code)		(FG_ERRNO_BASE_CODE(100)+_code)
+    #define FG_ERRNO_SFX_BASE_CODE(_code)       (FG_ERRNO_BASE_CODE(100)+_code)
 
-    #define FG_ERRNO_SFX_OK						FG_ERRNO_SFX_BASE_CODE(0)  /* No error */
+    #define FG_ERRNO_SFX_OK                     FG_ERRNO_SFX_BASE_CODE(0)  /* No error */
 
-    #define FG_ERRNO_SFX_NOT_SUPPORTED_CODEC	FG_ERRNO_SFX_BASE_CODE(1) /* Codec is not supported */
+    #define FG_ERRNO_SFX_NOT_SUPPORTED_CODEC    FG_ERRNO_SFX_BASE_CODE(1) /* Codec is not supported */
 
-    #define FG_ERRNO_SFX_LAST_CODE				FG_ERRNO_SFX_BASE_CODE(1)
+    #define FG_ERRNO_SFX_LAST_CODE              FG_ERRNO_SFX_BASE_CODE(1)
 
 
-    #define FG_ERRNO_SFX_OK_TEXT					"No error"
+    #define FG_ERRNO_SFX_OK_TEXT                "No error"
 
-    #define FG_ERRNO_SFX_NOT_SUPPORTED_CODEC_TEXT	"Codec is not supported"
+    #define FG_ERRNO_SFX_NOT_SUPPORTED_CODEC_TEXT   "Codec is not supported"
 
 namespace FG_ERRNO_SFX {
     const char * const __allErrVec[] = {

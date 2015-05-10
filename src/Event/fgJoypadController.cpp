@@ -19,26 +19,19 @@ fgBool fg::event::CJoypadController::m_init = FG_FALSE;
 
 using namespace fg;
 
-/**
- * 
- * @param eventMgr
- */
+//------------------------------------------------------------------------------
+
 event::CJoypadController::CJoypadController(CEventManager *eventMgr) :
 m_gamepad(NULL),
 m_haptic(NULL),
 m_instanceID(-1),
 m_pEventMgr(eventMgr),
 m_isConnected(FG_FALSE) { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 event::CJoypadController::~CJoypadController() { }
+//------------------------------------------------------------------------------
 
-/**
- * Opens the joystick controller
- * @param device
- */
 void event::CJoypadController::open(const int device) {
 #if defined(FG_USING_SDL2)
     fgBool isGameController = FG_FALSE;
@@ -88,10 +81,8 @@ void event::CJoypadController::open(const int device) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void event::CJoypadController::close(void) {
 #if defined(FG_USING_SDL2)
     if(m_isConnected) {
@@ -106,10 +97,8 @@ void event::CJoypadController::close(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void event::CJoypadController::quit(void) {
     if(m_controllers) {
         for(int i = 0; i < FG_MAX_GAME_CONTROLLERS; i++)
@@ -128,11 +117,8 @@ void event::CJoypadController::quit(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- * @return
- */
 fgBool event::CJoypadController::initialize(void) {
     if(!m_controllers) {
         m_controllers = fgMalloc<CJoypadController>(FG_MAX_GAME_CONTROLLERS);
@@ -173,12 +159,8 @@ fgBool event::CJoypadController::initialize(void) {
 #endif
     return m_init;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param instance
- * @return 
- */
 #if defined(FG_USING_SDL2)
 
 int event::CJoypadController::getControllerIdx(const SDL_JoystickID instance) {
@@ -194,12 +176,8 @@ int event::CJoypadController::getControllerIdx(const int instance) {
     }
     return -1;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param event
- * @return 
- */
 #if defined(FG_USING_SDL2)
 
 int event::CJoypadController::processEvent(const SDL_Event& event) {
@@ -299,11 +277,10 @@ int event::CJoypadController::processEvent(const SDL_Event& event) {
     return 0;
 }
 #else
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 int event::CJoypadController::processEvent(void) {
     return 0;
 }
 #endif /* defined(FG_USING_SDL2) */
+//------------------------------------------------------------------------------

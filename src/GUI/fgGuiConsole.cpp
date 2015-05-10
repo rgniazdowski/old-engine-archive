@@ -6,20 +6,24 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiConsole.h"
 #include "fgStatus.h"
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CConsole::CConsole() :
 base_type(),
 m_numConsoleRecords(0) {
-    gui::CConsole::setDefaults();
+    self_type::setDefaults();
 }
+//------------------------------------------------------------------------------
 
 gui::CConsole::~CConsole() { }
+//------------------------------------------------------------------------------
 
 void gui::CConsole::setDefaults(void) {
     m_type = CONSOLE;
@@ -27,18 +31,22 @@ void gui::CConsole::setDefaults(void) {
     m_typeTraits = CONSOLE | TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
     m_sliderSwitch = SLIDER_VERTICAL;
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CConsole::updateBounds(void) {
     return base_type::updateBounds();
 }
+//------------------------------------------------------------------------------
 
 void gui::CConsole::refresh(void) {
     base_type::refresh();
 }
+//------------------------------------------------------------------------------
 
 void gui::CConsole::display(CDrawer* guiLayer) {
     base_type::display(guiLayer);
 }
+//------------------------------------------------------------------------------
 
 void gui::CConsole::updateFromStatusVec(const CVector<msg::SStatus*>& statusVec) {
     if(statusVec.empty())
@@ -69,3 +77,4 @@ void gui::CConsole::updateFromStatusVec(const CVector<msg::SStatus*>& statusVec)
         m_numConsoleRecords = n;
     }
 }
+//------------------------------------------------------------------------------

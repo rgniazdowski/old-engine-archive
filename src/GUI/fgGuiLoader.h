@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_LOADER
     #define FG_INC_GUI_LOADER
@@ -23,7 +23,13 @@ namespace fg {
          */
         class CLoaderSub : public CWidget {
         public:
-            typedef fg::gui::CWidget base_type;
+            ///
+            typedef CLoaderSub self_type;
+            ///
+            typedef CLoaderSub type;
+            ///
+            typedef ::fg::gui::CWidget base_type;
+
         protected:
             /// 
             std::string m_text;

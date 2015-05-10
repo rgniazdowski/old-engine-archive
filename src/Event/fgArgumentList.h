@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_ARGUMENT_LIST
     #define FG_INC_ARGUMENT_LIST
@@ -181,7 +181,7 @@ namespace fg {
              * @return 
              */
             SArgument& getStructByID(int id);
-            
+
             /**
              * 
              * @param ID
@@ -196,7 +196,10 @@ namespace fg {
             int getCurrentID(void) const;
 
             /**
-             * 
+             * This function  frees the memory  held by the  arguments (argv)
+             * The rule is that when some value/structure/pointer is put into
+             * the argument list it is being managed by the class, so it also
+             * needs to be freed in this function.
              */
             void clear(void);
             /**

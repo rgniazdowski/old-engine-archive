@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgDebugConfig.h"
 #include "fgGuiWidget.h"
@@ -14,6 +14,8 @@
 #include "Resource/fgResource.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 gui::CWidget::CWidget() :
 CManagedObject(),
@@ -48,8 +50,10 @@ m_stateFlags(VISIBLE | ACTIVE) {
     m_bbox.size.y = -1.0f;
     m_bbox.size.z = -1.0f;
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget::~CWidget() { }
+//------------------------------------------------------------------------------
 
 void gui::CWidget::setSize(const Vector3f& size, Unit unit) {
     m_bbox.size = size;
@@ -65,6 +69,7 @@ void gui::CWidget::setSize(const Vector3f& size, Unit unit) {
     m_styles[STATE_DEACTIVATED].getSize().style = (SSize::Style)unit;
     m_styles[STATE_DEACTIVATED].getSize().set(size);
 }
+//------------------------------------------------------------------------------
 
 void gui::CWidget::display(CDrawer* guiLayer) {
     if(!guiLayer)
@@ -132,6 +137,7 @@ void gui::CWidget::display(CDrawer* guiLayer) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CWidget::updateBounds(void) {
     CStyleContent &style = m_styles[m_state];
@@ -155,6 +161,7 @@ gfx::BoundingBox3Df gui::CWidget::updateBounds(void) {
     positionAndSize.size.y += style.getMargin().bottom + style.getMargin().top;
     return positionAndSize;
 }
+//------------------------------------------------------------------------------
 
 gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds) {
     CStyleContent &style = m_styles[m_state];
@@ -216,6 +223,7 @@ gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds
     //positionAndSize.size.y += style.getMargin().bottom + style.getMargin().top;
     return positionAndSize;
 }
+//------------------------------------------------------------------------------
 
 void gui::CWidget::refresh(void) {
     if(m_styles[m_state].getPosition().style != SPosition::Style::STATICPOS) {
@@ -225,6 +233,7 @@ void gui::CWidget::refresh(void) {
             m_relPos.y = m_styles[m_state].getPosition().top;
     }
 }
+//------------------------------------------------------------------------------
 
 gui::CWidget::EventState gui::CWidget::updateState(const event::SPointerData *pointerData) {
     if(!pointerData)
@@ -315,3 +324,4 @@ gui::CWidget::EventState gui::CWidget::updateState(const event::SPointerData *po
     }
     return m_state;
 }
+//------------------------------------------------------------------------------

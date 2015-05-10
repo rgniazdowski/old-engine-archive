@@ -24,6 +24,10 @@ namespace fg {
         class CTable : public CContainer {
         public:
             ///
+            typedef CTable self_type;
+            ///
+            typedef CTable type;
+            ///
             typedef CContainer base_type;
 
         public:

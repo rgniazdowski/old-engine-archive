@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_BUTTON
     #define FG_INC_GUI_BUTTON
@@ -19,12 +19,18 @@
 namespace fg {
     namespace gui {
 
-        /*
+        /**
          *
          */
         class CButton : public CWidget {
         public:
-            typedef fg::gui::CWidget base_type;
+            ///
+            typedef CButton self_type;
+            ///
+            typedef CButton type;
+            ///
+            typedef CWidget base_type;
+
         protected:
             /// 
             CLabel *m_label;

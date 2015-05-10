@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_POPUP
     #define FG_INC_GUI_POPUP
@@ -23,6 +23,11 @@ namespace fg {
          */
         class CPopup : public CWindow {
         public:
+            ///
+            typedef CPopup self_type;
+            ///
+            typedef CPopup type;
+            ///
             typedef CWindow base_type;
 
         public:

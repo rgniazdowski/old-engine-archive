@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 // #TODO - this needs fixing (touch raw data, etc) - is this really necessary?
 // possible fix - manage to detect swipe symbols and more in touch receiver and
