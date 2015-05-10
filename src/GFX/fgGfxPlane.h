@@ -19,8 +19,9 @@
     #define FG_INC_GFX_PLANE_BLOCK
 
     #include "fgBool.h"
-    #include "fgGfxVertex.h"
-    #include "Math/fgMathLib.h"
+    #ifndef FG_INC_MATHLIB
+        #include "Math/fgMathLib.h"
+    #endif 
 
 namespace fg {
     namespace gfx {

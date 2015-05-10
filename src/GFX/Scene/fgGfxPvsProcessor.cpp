@@ -7,10 +7,41 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-#include "fgGfxBspCompiler.h"
+
+#include "fgGfxPvsProcessor.h"
+#include "fgGfxPortalProcessor.h"
+#include "fgGfxBspTree.h"
+#include "fgGfxBspNode.h"
+#include "fgGfxPortal.h"
+#include "Util/fgTime.h"
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
+gfx::CPvsProcessor::CPvsProcessor() : m_nLeafs(0), m_pvs(0), m_cPvss(0) { }
+//------------------------------------------------------------------------------
+
+gfx::CPvsProcessor::~CPvsProcessor() {
+    clear();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CPvsProcessor::clear(void) {
+    if(m_pvs)
+        delete[] m_pvs;
+    m_pvs = 0;
+    m_cPvss = 0;
+    CVector<SPortalData*>::iterator end = m_portVs.end();
+    for(CVector<SPortalData*>::iterator pp = m_portVs.begin(); pp != end; pp++) {
+        if(!(*pp))
+            continue;
+        delete[] (*pp);
+    }
+    m_portVs.clear();
+    dw_deltatime = timesys::ticks();
+
+}
 //------------------------------------------------------------------------------
 
 int AllocBitsRoundByLong(int nSetCount) {

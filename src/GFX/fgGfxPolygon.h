@@ -18,7 +18,9 @@
     #define FG_INC_GFX_POLYGON
     #define FG_INC_GFX_POLYGON_BLOCK
 
-    #include "GFX/fgGfxAABoundingBox.h"
+    #ifndef FG_INC_GFX_AA_BOUNDING_BOX
+        #include "GFX/fgGfxAABoundingBox.h"
+    #endif
     #include "GFX/fgGfxVertexData.h"
     #include "GFX/fgGfxPlane.h"
 

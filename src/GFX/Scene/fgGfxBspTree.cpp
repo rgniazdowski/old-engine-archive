@@ -8,35 +8,30 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
-#include "fgGfxBspCompiler.h"
+#include "fgGfxBspTypes.h"
+#include "fgGfxBspTree.h"
+#include "fgGfxBspNode.h"
+#include "GFX/fgGfxPlane.h"
+#include "GFX/fgGfxPolygon.h"
 
 using namespace fg;
 
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-gfx::CBspNode* gfx::CBspNode::getBack(void) {
-    if(m_nodeIdx[0] >= 0)
-        return m_pBsp->m_nodes[m_nodeIdx[0]];
-    return 0;
+gfx::CBspTree::CBspTree(int expected) {
+    m_polygons.reserve(expected);
+    m_nodes.reserve(expected * 2);
+    m_balance = 6;
+    m_bspType = BSP_LEAFY;
+    //::InitializeCriticalSection(&c_s);
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-gfx::CBspNode* gfx::CBspNode::getFront(void) {
-    if(m_nodeIdx[1] >= 0)
-        return m_pBsp->m_nodes[m_nodeIdx[1]];
-    return 0;
+gfx::CBspTree::~CBspTree() {
+    //::DeleteCriticalSection(&c_s);
+    clear();
 }
-
-//------------------------------------------------------------------------------------------
-
-gfx::CBspNode* gfx::CBspNode::getParent(void) {
-    if(m_idxParent >= 0)
-        return m_pBsp->m_nodes[m_idxParent];
-    return 0;
-}
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CBspTree::process(CVector<CPolygon>& polys) {
     CVector<CPolygon> loco;
@@ -49,8 +44,6 @@ void gfx::CBspTree::process(CVector<CPolygon>& polys) {
         polys[i].m_flags &= ~SPLITTER_POLY;
         loco.push_back(polys[i]);
     }
-    _pInPolys = &polys; // hold a pointer to input data set
-
     makeRoot(); // sdd default root node
     FG_LOG_DEBUG("GFX: Preparing BSP...");
 
@@ -62,8 +55,6 @@ void gfx::CBspTree::process(CVector<CPolygon>& polys) {
     buildPlaneArray(loco);
     CBspNode* pNode = m_nodes[0];
     pNode->m_planeIdx = 0;
-    n_thrcount = 0;
-    n_threadsup = 0;
     if(BSP_TERRAIN == m_bspType) {
         R_TerrainCompile(0, loco);
     } else {
@@ -73,8 +64,7 @@ void gfx::CBspTree::process(CVector<CPolygon>& polys) {
     dw_deltatime = timesys::ticks() - dw_deltatime;
     FG_LOG_DEBUG("GFX: BSP Time: %d ms", dw_deltatime);
 }
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CBspTree::R_TerrainCompile(int nodeIdx, CVector<CPolygon>& polys) {
     static unsigned int Deepth = 0;
@@ -513,7 +503,7 @@ void gfx::CBspTree::clear(void) {
     for(CVector<CBspNode*>::iterator pp = m_nodes.begin(); pp != end; pp++) {
         if(!(*pp))
             continue;
-        delete[] (*pp);
+        delete (*pp);
     }
     m_nodes.clear();
     m_planes.clear();
@@ -572,20 +562,67 @@ fgBool gfx::CBspTree::segmentIntersect(Vector3f& paa,
     return m_hitTest;
 }
 
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-int gfx::CBspTree::getCurrentLeaf(Vector3f& pov, int nodeIdx) {
+int gfx::CBspTree::getCurrentLeaf(const Vector3f& pov, int nodeIdx) {
     float rdist;
     CBspNode* pNode = m_nodes[nodeIdx];
-    while(!pNode->isLeaf()) {
+    while(true) {
+        if(!pNode)
+            return 0;
+        if(pNode->isLeaf()) {
+            return m_nodes[nodeIdx]->m_leafIdx;
+            break;
+        }
         Planef& plane = m_planes[pNode->m_planeIdx];
         rdist = plane.distance(pov);
         if(rdist < 0) {
-            nodeIdx = pNode->m_nodeIdx[0];
+            nodeIdx = pNode->m_nodeIdx[N_BACK];
         } else {
-            nodeIdx = pNode->m_nodeIdx[1];
+            nodeIdx = pNode->m_nodeIdx[N_FRONT];
+        }
+        if(nodeIdx < 0) {
+            nodeIdx = 0;
+            break;
         }
         pNode = m_nodes[nodeIdx];
     }
     return m_nodes[nodeIdx]->m_leafIdx;
 }
+//------------------------------------------------------------------------------
+
+gfx::CPolygon& gfx::CBspTree::getPolygon(int idx) {
+    //ASSERT(idx < (int)m_polygons.size());
+    return m_polygons[idx];
+}
+//------------------------------------------------------------------------------
+
+gfx::CPolygon const& gfx::CBspTree::getPolygon(int idx) const {
+    //ASSERT(idx < (int)m_polygons.size());
+    return m_polygons[idx];
+}
+//------------------------------------------------------------------------------
+
+void gfx::CBspTree::makeRoot(void) {
+    //ASSERT(m_nodes.size() == 0);
+    addNode(new CBspNode(this));
+}
+//------------------------------------------------------------------------------
+
+void gfx::CBspTree::addNode(CBspNode* pNode) {
+    pNode->m_idxNodeThis = m_nodes.size();
+    m_nodes.push_back(pNode);
+
+    if(pNode->isEmptyLeaf()) {
+        pNode->m_leafIdx = m_leafs.size();
+        m_leafs.push_back((CBspLeaf*)pNode);
+    }
+}
+//------------------------------------------------------------------------------
+
+gfx::CBspNode* gfx::CBspTree::createNode(unsigned int _nflags) {
+    if(_nflags & NODE_SOLID)
+        return new CBspNode(this, _nflags);
+    return new CBspLeaf(this, _nflags);
+}
+//------------------------------------------------------------------------------

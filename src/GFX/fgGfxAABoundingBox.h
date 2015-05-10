@@ -30,9 +30,9 @@
 namespace fg {
     namespace gfx {
         ///
-        template <class ValueType> struct SAABoundingBox2DT;
+        template <class TValueType> struct SAABoundingBox2DT;
         ///
-        template <class ValueType> struct SAABoundingBox3DT;
+        template <class TValueType> struct SAABoundingBox3DT;
 
         /**
          * 

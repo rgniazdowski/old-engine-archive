@@ -77,7 +77,10 @@
           <itemPath>../../../src/GFX/Scene/fgGfxBasetree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspCompiler.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspCompiler.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBspNode.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBspNode.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTree.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBspTree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.cpp</itemPath>
@@ -86,8 +89,12 @@
           <itemPath>../../../src/GFX/Scene/fgGfxLooseQuadtree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxOctree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxOctree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxPortal.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxPortal.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxPortalProcessor.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxPortalProcessor.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxPvsProcessor.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxPvsProcessor.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxQuadtree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxQuadtree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneCallback.h</itemPath>
@@ -855,9 +862,24 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspTree.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.cpp"
@@ -900,14 +922,34 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
@@ -2464,9 +2506,24 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspTree.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.cpp"
@@ -2509,14 +2566,34 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
@@ -4036,9 +4113,24 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspTree.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.cpp"
@@ -4081,14 +4173,34 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
@@ -5586,9 +5698,24 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspTree.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.cpp"
@@ -5631,14 +5758,34 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.cpp"
             ex="false"
             tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
@@ -7167,10 +7314,25 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspTree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.cpp"
             ex="false"
@@ -7212,15 +7374,35 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
             ex="false"
@@ -8740,10 +8922,25 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspTree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.cpp"
             ex="false"
@@ -8785,15 +8982,35 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxPortalProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.cpp"
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxPvsProcessor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
             ex="false"

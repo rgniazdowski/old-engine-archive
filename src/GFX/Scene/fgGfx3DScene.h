@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GFX_3D_SCENE
     #define FG_INC_GFX_3D_SCENE
@@ -31,9 +31,11 @@ namespace fg {
         class CScene3D : public CSceneManager {
         public:
             ///
+            typedef CScene3D self_type;
+            ///
+            typedef CScene3D type;
+            ///
             typedef fg::gfx::CSceneManager base_type;
-
-        private:
 
         public:
             /**

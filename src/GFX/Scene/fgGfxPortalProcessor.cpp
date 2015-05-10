@@ -7,32 +7,39 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-#include "fgGfxBspCompiler.h"
-#include <set>
 
-//---------------------------------------------------------------------------------------
-static float GEpsilon = 1.0f / 8.0f;
-//---------------------------------------------------------------------------------------
+//#include "fgGfxBspTypes.h"
+#include "fgGfxPortalProcessor.h"
+#include "fgGfxBspNode.h"
+#include "fgGfxBspTree.h"
+#include "fgGfxPortal.h"
+#include "GFX/fgGfxPolygon.h"
+#include "fgLog.h"
+
+#include <set>
+#include <algorithm>
 
 using namespace fg;
 
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool R_SearchLeaf(CVector<gfx::CBspNode*>& nodes,
                     gfx::CBspNode* pStartNode,
                     gfx::CBspNode* p2Find) {
+    if(!pStartNode || nodes.empty()) {
+        return FG_FALSE;
+    }
     if(pStartNode->isLeaf()) {
         return (pStartNode == p2Find);
     }
 
-    if(R_SearchLeaf(nodes, nodes[pStartNode->m_nodeIdx[0]], p2Find))
+    if(pStartNode->m_nodeIdx[N_BACK] >= 0 && R_SearchLeaf(nodes, nodes[pStartNode->m_nodeIdx[N_BACK]], p2Find))
         return FG_TRUE;
-    if(R_SearchLeaf(nodes, nodes[pStartNode->m_nodeIdx[1]], p2Find))
+    if(pStartNode->m_nodeIdx[N_FRONT] >= 0 && R_SearchLeaf(nodes, nodes[pStartNode->m_nodeIdx[N_FRONT]], p2Find))
         return FG_TRUE;
     return FG_FALSE;
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 gfx::CBspNode* R_FindCommonParent(CVector<gfx::CBspNode*>& nodes,
                                   gfx::CBspNode* pNotGo,
@@ -53,92 +60,30 @@ gfx::CBspNode* R_FindCommonParent(CVector<gfx::CBspNode*>& nodes,
     }
     return R_FindCommonParent(nodes, pUpNode, nodes[pUpNode->m_idxParent], pSec);
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 gfx::CBspNode* FindCommonParent(CVector<gfx::CBspNode*>& nodes,
                                 gfx::CBspNode* pLa,
                                 gfx::CBspNode* pLb) {
     return R_FindCommonParent(nodes, pLa, nodes[pLa->m_idxParent], pLb);
 }
+//------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------------------
-
-void gfx::CPortal::calcNormal(void) {
-    base_type::set(m_vertexes[0], m_vertexes[1], m_vertexes[2]);
+gfx::CBspLeaf* gfx::CPortalProcessor::getLeaf(int idx) {
+    CBspNode* pL = m_pTree->getLeaf(idx);
+    //ASSERT(pL->m_flags & NODE_LEAF);
+    return (CBspLeaf*)pL;
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPortal::split(Planef& plane, gfx::CPortal& a, gfx::CPortal& b) {
-    a.m_vertexes.clear();
-    b.m_vertexes.clear();
-    a.copyProperties(*this);
-    b.copyProperties(*this);
-
-    if(math::isZero(plane.d - d)) {
-        if(math::isZero(math::dot(this->n, plane.n) - 1)) {
-            a.m_vertexes = m_vertexes;
-            return;
-        }
-    }
-    Vector3f iv;
-    Vector3f itxA = m_vertexes.back();
-    float fB;
-    float fA = plane.distance(itxA);
-
-    //FOREACH(CVector<Vector3f>, m_vertexes, vxI) {
-    CVector<Vector3f>::iterator end = m_vertexes.end();
-    for(CVector<Vector3f>::iterator it = m_vertexes.begin(); it != end; it++) {
-        Vector3f &itxB = *it;
-        fB = plane.distance(itxB);
-        if(fA < GEpsilon && fA > -GEpsilon)fA = 0;
-        if(fB < GEpsilon && fB > -GEpsilon)fB = 0;
-        if(fB > GEpsilon) {
-            if(fA < -GEpsilon) {
-                float t = -fA / (fB - fA);
-                //iv.interpolate(itxA, itxB, t);
-                //interpolateVec3f(iv, itxA, itxB, t);
-                iv = math::mix(itxA, itxB, t);
-                a.m_vertexes.push_back(iv);
-                b.m_vertexes.push_back(iv);
-            }
-            a.m_vertexes.push_back(itxB);
-        } else if(fB < -GEpsilon) {
-            if(fA > GEpsilon) {
-                float t = -fA / (fB - fA); // t of segment
-                //iv.interpolate(itxA, itxB, t);
-                iv = math::mix(itxA, itxB, t);
-                a.m_vertexes.push_back(iv);
-                b.m_vertexes.push_back(iv);
-            }
-            b.m_vertexes.push_back(itxB);
-        } else {
-            a.m_vertexes.push_back(itxB);
-            b.m_vertexes.push_back(itxB);
-        }
-
-        itxA = itxB;
-        fA = fB;
-    }
-
-    if(a.m_vertexes.size() <= 3) {
-        if(b.m_vertexes.size())
-            b.m_vertexes = m_vertexes;
-    } else if(b.m_vertexes.size() <= 3) {
-
-        if(a.m_vertexes.size())
-            a.m_vertexes = m_vertexes;
-    }
-}
-
-//---------------------------------------------------------------------------------------
-
-void gfx::CPortalProcessor::clear() {
+void gfx::CPortalProcessor::clear(void) {
 
     m_portals.clear();
     dw_deltatime = timesys::ticks();
 }
+//------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // build the new leafs tha will hold additional flags. we do not copy the
 
 fgBool IsTouchesBox(const gfx::AABoundingBox3Df& a, const gfx::AABoundingBox3Df& other) {
@@ -150,6 +95,7 @@ fgBool IsTouchesBox(const gfx::AABoundingBox3Df& a, const gfx::AABoundingBox3Df&
     if(a.min.z >= other.max.z) return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CPortalProcessor::process(CBspTree& tree) {
     int cleafIdx1 = 0;
@@ -209,8 +155,7 @@ void gfx::CPortalProcessor::process(CBspTree& tree) {
     dw_deltatime = timesys::ticks() - dw_deltatime;
     FG_LOG_DEBUG("GFX: Portal Time: %d ms", dw_deltatime);
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CPortalProcessor::validatePortal(CPortal& portal) {
     Vector3f points[2];
@@ -233,8 +178,7 @@ fgBool gfx::CPortalProcessor::validatePortal(CPortal& portal) {
     }
     return FG_FALSE;
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 static Vector3f GetMajorAxes(Vector3f& normal) {
     Vector3f rv;
@@ -253,8 +197,7 @@ static Vector3f GetMajorAxes(Vector3f& normal) {
     }
     return rv;
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CPortalProcessor::calculateInitialPortal(CPortal& portal, CBspNode* pNode) {
     Planef& plane = pNode->getPlane();
@@ -320,8 +263,7 @@ fgBool gfx::CPortalProcessor::calculateInitialPortal(CPortal& portal, CBspNode* 
     portal.d = plane.d;
     return portal.m_vertexes.size() >= 3;
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CPortalProcessor::clipWithLeafSides(CBspLeaf* pLeaf, CPortal& portal) {
     ::std::set<int> sides;
@@ -336,8 +278,7 @@ void gfx::CPortalProcessor::clipWithLeafSides(CBspLeaf* pLeaf, CPortal& portal) 
         }
     }
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 /*
 BackLeaf->Portal->FrontLeaf    P->[0][1]
@@ -407,8 +348,7 @@ AG:
 
     return FG_TRUE;
 }
-
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CPortalProcessor::cutPortalWithNodeBox(CPortal& portal,
                                                  AABoundingBox3Df& box,
@@ -442,3 +382,20 @@ void gfx::CPortalProcessor::cutPortalWithNodeBox(CPortal& portal,
     portal.clear();
     portal = rp;
 }
+//------------------------------------------------------------------------------
+
+gfx::Planef& gfx::CPortalProcessor::getPlane(int idx) {
+    return m_pTree->getPlane(idx);
+}
+//------------------------------------------------------------------------------
+
+gfx::Planef const& gfx::CPortalProcessor::getPlane(int idx) const {
+    return m_pTree->getPlane(idx);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CPortalProcessor::addPortal(CPortal& portal) {
+    portal.m_idxThis = m_portals.size();
+    m_portals.push_back(portal);
+}
+//------------------------------------------------------------------------------

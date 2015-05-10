@@ -16,15 +16,10 @@
 #ifndef FG_INC_GFX_BSP_TYPES
     #define FG_INC_GFX_BSP_TYPES
     #define FG_INC_GFX_BSP_TYPES_BLOCK
-    #pragma pack(push, 8)
 
     #include "Math/fgMathLib.h"
     #include "fgBool.h"
     #include <cfloat>
-    #include <cstdlib>
-    #include <memory.h>
-    #include <vector>
-    #include <algorithm>
 
     #define ASSERT(...)
 
@@ -272,6 +267,5 @@ namespace fg {
     #define RB_PORTALS                      1014
     #define RB_PORTALSBSP                   1015
 
-    #pragma pack(pop)
     #undef FG_INC_GFX_BSP_TYPES_BLOCK
 #endif /* FG_INC_GFX_BSP_TYPES */
