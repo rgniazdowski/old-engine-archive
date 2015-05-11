@@ -582,7 +582,7 @@ char *util::CZipFile::readString(char *buffer, unsigned int maxlen) {
 }
 //------------------------------------------------------------------------------
 
-int util::CZipFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int util::CZipFile::write(const void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(!buffer || !elemsize || !elemcount || m_filePath.empty())
         return 0;
     return 0;

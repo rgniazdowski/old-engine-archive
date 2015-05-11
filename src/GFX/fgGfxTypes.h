@@ -231,15 +231,6 @@ namespace fg {
         };
     }
 }
-// #FIXME #DUMP 
-inline void dumpMatrix(const float *mat, const char *title) {
-    if(title)
-        printf("%s MATRIX:\n", title);
-    printf("{ %.2f %.2f %.2f %.2f }\n", mat[0], mat[1], mat[2], mat[3]);
-    printf("{ %.2f %.2f %.2f %.2f }\n", mat[4], mat[5], mat[6], mat[7]);
-    printf("{ %.2f %.2f %.2f %.2f }\n", mat[8], mat[9], mat[10], mat[11]);
-    printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
-}
 
     #undef FG_INC_GFX_TYPES_BLOCK
 #endif /* FG_INC_GFX_TYPES */

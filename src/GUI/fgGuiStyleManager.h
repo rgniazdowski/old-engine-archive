@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GUI_STYLE_MANAGER
     #define FG_INC_GUI_STYLE_MANAGER
@@ -25,6 +25,10 @@ namespace fg {
          */
         class CStyleManager : public fg::resource::CDataManagerBase<CStyle*, StyleHandle, StyleTag> {
         public:
+            ///
+            typedef CStyleManager self_type;
+            ///
+            typedef CStyleManager type;
             ///
             typedef CDataManagerBase<CStyle*, StyleHandle, StyleTag> base_type;
 

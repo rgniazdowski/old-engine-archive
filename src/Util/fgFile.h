@@ -45,7 +45,7 @@ namespace fg {
             typedef fg::util::base::CFile::Mode FileMode;
             ///
             typedef fg::util::CZipFile::Mode ZipMode;
-            
+
             typedef fg::util::CRegularFile::FileHandleType FileHandleType;
 
         private:
@@ -77,7 +77,7 @@ namespace fg {
              * @param filePath
              */
             CFile(const char *filePath);
-            
+
             /**
              * 
              * @param orig
@@ -182,7 +182,6 @@ namespace fg {
             virtual inline fgBool isOpen(void) const {
                 return m_file->isOpen();
             }
-
             /**
              * Check if file exists
              * @return 
@@ -204,7 +203,6 @@ namespace fg {
             virtual inline char *load(void) {
                 return m_file->load();
             }
-
             /**
              * This will load the whole file into char *buffer
              * @param filePath
@@ -245,7 +243,7 @@ namespace fg {
              * @param elemcount
              * @return 
              */
-            virtual inline int write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+            virtual inline int write(const void *buffer, unsigned int elemsize, unsigned int elemcount) {
                 return m_file->write(buffer, elemsize, elemcount);
             }
             /**
@@ -316,7 +314,6 @@ namespace fg {
             virtual inline int setPosition(long offset, int whence) {
                 return m_file->setPosition(offset, whence);
             }
-            
             /**
              * Return the stdio FILE standard pointer
              * @return 

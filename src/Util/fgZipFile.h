@@ -463,7 +463,7 @@ namespace fg {
              * @param elemcount
              * @return 
              */
-            virtual int write(void *buffer, unsigned int elemsize, unsigned int elemcount);
+            virtual int write(const void *buffer, unsigned int elemsize, unsigned int elemcount);
             /**
              * Print to the file
              * @param fmt

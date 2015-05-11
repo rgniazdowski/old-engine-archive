@@ -191,7 +191,7 @@ namespace fg {
                  * @param elemcount
                  * @return 
                  */
-                virtual int write(void *buffer, unsigned int elemsize, unsigned int elemcount) = 0;
+                virtual int write(const void *buffer, unsigned int elemsize, unsigned int elemcount) = 0;
                 /**
                  * Print to the file
                  * @param fmt

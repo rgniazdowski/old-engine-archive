@@ -377,7 +377,7 @@ int util::CRegularFile::print(const char *fmt, ...) {
 }
 //------------------------------------------------------------------------------
 
-int util::CRegularFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int util::CRegularFile::write(const void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
