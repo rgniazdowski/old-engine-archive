@@ -16,20 +16,11 @@
         #include "fgGfxTypes.h"
     #endif
 
-    #ifndef FG_INC_TEXTURE_RESOURCE
-    #include "Textures/fgTextureResource.h"
-    #endif
-
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif
-
-    #include <string>
-
 namespace fg {
     namespace gfx {
 
         class CShaderProgram;
+        class CTextureResource;
 
         /**
          * Base structure describing material in graphics rendering
@@ -38,7 +29,11 @@ namespace fg {
          */
         struct SMaterial {
         public:
-            
+            ///
+            typedef SMaterial self_type;
+            ///
+            typedef SMaterial type;
+
             /**
              *
              */
@@ -52,9 +47,6 @@ namespace fg {
             };
 
         public:
-            /// Name of the material
-            std::string name;
-
             /// Ambient color component
             Color4f ambient;
             /// Diffuse color component
@@ -65,7 +57,6 @@ namespace fg {
             Color4f transmittance;
             /// Emission color component
             Color4f emission;
-
             /// The shininess parameter of the material
             float shininess;
             /// Index of refraction parameter
@@ -93,10 +84,27 @@ namespace fg {
             ///
             /// 10  Casts shadows onto invisible surfaces 
             int illuminationModel;
-
             /// Special burn parameter smoothing between transparency and additive blending
             float burn;
+            /// Blending mode
+            BlendMode blendMode;
+            /// Additional state flags (cull face, depth test, etc)
+            StateFlags stateFlags;
 
+            /// Pointer for the ambient texture
+            CTextureResource* ambientTex;
+            /// Pointer for the diffuse texture
+            CTextureResource* diffuseTex;
+            /// Pointer for the specular texture
+            CTextureResource* specularTex;
+            /// Pointer for the normal texture
+            CTextureResource* normalTex;
+            ///
+            CShaderProgram *shaderProgram;
+            /// Name of the material
+            std::string name;
+            ///
+            std::string shaderName;
             /// Name of the ambient texture
             std::string ambientTexName;
             /// Name of the diffuse texture
@@ -105,27 +113,6 @@ namespace fg {
             std::string specularTexName;
             /// Name of the normal texture
             std::string normalTexName;
-
-            /// Pointer for the ambient texture
-            CTexture* ambientTex;
-            /// Pointer for the diffuse texture
-            CTexture* diffuseTex;
-            /// Pointer for the specular texture
-            CTexture* specularTex;
-            /// Pointer for the normal texture
-            CTexture* normalTex;
-
-            ///
-            CShaderProgram *shaderProgram;
-            ///
-            std::string shaderName;
-
-            /// Blending mode
-            BlendMode blendMode;
-
-            /// Additional state flags (cull face, depth test, etc)
-            StateFlags stateFlags;
-
             /// Unknown parameters for the material are stored here
             std::map<std::string, std::string> unknownParam;
 
@@ -139,43 +126,53 @@ namespace fg {
              * @return 
              */
             size_t getDataSize(void);
+            /**
+             * Get the size in bytes of the members in the beginning that are
+             * trivially copy-able (struct of ints/floats, chars, double...)
+             * @return
+             */
+            static size_t getDataStrideTrivial(void) {
+                return sizeof (Color4f) * 5 + sizeof (float) * 4 + sizeof (int) +
+                        sizeof (BlendMode) + sizeof (StateFlags);
+            }
 
             /**
              * 
              * @param material
              */
             SMaterial(const SMaterial& material);
-
-    #if 0
-            SMaterial(tinyobj::material_t & material) {
-                name = material.name;
-                for(int i = 0; i < 3; i++)
-                    ambient[i] = material.ambient[i];
-                for(int i = 0; i < 3; i++)
-                    diffuse[i] = material.diffuse[i];
-                for(int i = 0; i < 3; i++)
-                    specular[i] = material.specular[i];
-                for(int i = 0; i < 3; i++)
-                    transmittance[i] = material.transmittance[i];
-                for(int i = 0; i < 3; i++)
-                    emission[i] = material.emission[i];
-                shininess = material.shininess;
-                ior = material.ior;
-                dissolve = material.dissolve;
-                illuminationModel = material.illum;
-                ambientTexName = material.ambient_texname;
-                diffuseTexName = material.diffuse_texname;
-                specularTexName = material.specular_texname;
-                normalTexName = material.normal_texname;
-            }
-    #endif
             /**
              * 
              */
             virtual ~SMaterial() {
                 clear();
             }
-            
+
+            /**
+             *
+             * @param output
+             * @param path
+             * @return
+             */
+            static fgBool loadFromConfig(SMaterial& output, const std::string& path);
+            /**
+             *
+             * @param path
+             * @return
+             */
+            fgBool loadFromConfig(const std::string& path);
+            /**
+             *
+             * @param path
+             * @return
+             */
+            fgBool loadFromConfig(const char* path) {
+                if(!path)
+                    return FG_FALSE;
+                return loadFromConfig(std::string(path));
+            }
+
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -183,7 +180,6 @@ namespace fg {
             inline fgBool isBlend(void) const {
                 return (fgBool)(blendMode != BlendMode::BLEND_OFF);
             }
-            
             /**
              * 
              * @return 
@@ -219,7 +215,7 @@ namespace fg {
              */
             inline fgBool isFrontFaceCW(void) const {
                 return (fgBool)((stateFlags & FRONT_FACE_CW) && !(stateFlags & FRONT_FACE_CCW));
-            }            
+            }
             /**
              * 
              * @return 
@@ -285,7 +281,7 @@ namespace fg {
              *
              */
             void clear(void);
-            
+
             /**
              * 
              * @return 

@@ -6,29 +6,19 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGfxMaterial.h"
+#include "Util/fgConfig.h"
+#include "Util/fgStrings.h"
 #include "GFX/Shaders/fgGfxShaderProgram.h"
-
-/* #TODO P4 - stworzenie klasy Material w glownym podsystemie GFX - wazne: tablice wierzcholkow, 
- * kolorow/uv itp sa grupowane wedlug uzytego materialu
- *
- * zalozenie jest takie ze grupowanie w ten sposob pozwala przyspieszyc rendering - jesli mamy np.
- * 10 obiektow po 1000+ wierzcholkow to nie ma sensu 10 razy wywolywac i przekazywac listy wierzcholkow
- * do OpenGL - mozna stworzyc jedna tablice i przekazac ja tylko raz 
- * * - teoretycznie ma to przyspieszyc dzialanie i prawdopodobnie tak jest - jednak zostawiam to na pozniej
- *
- * * Jak to zaimplementowac pozniej? W jakis sposob material musi miec odnosnik do obiektow ktore go uzywaja
- * * lub vice versa - po zaladowaniu wszystkich obiektow sa one merge'owane w grupy (wg uzytego Materialu) i
- * * duze tablice danych (vert,tris,uv,norm,color)
- * *
- * * To ma sens przy scenach z duza iloscia obiektow - zostawiam na pozniej - P4
- */
+#include "GFX/Textures/fgTextureResource.h"
 
 using namespace fg;
 
-gfx::SMaterial::SMaterial() : name(),
+//------------------------------------------------------------------------------
+
+gfx::SMaterial::SMaterial() :
 ambient(1.0f, 1.0f, 1.0f, 1.0f),
 diffuse(1.0f, 1.0f, 1.0f, 1.0f),
 specular(1.0f, 1.0f, 1.0f, 1.0f),
@@ -39,19 +29,21 @@ ior(1.0f),
 dissolve(1.0f),
 illuminationModel(0),
 burn(1.0f),
-ambientTexName(),
-diffuseTexName(),
-specularTexName(),
-normalTexName(),
+blendMode(BlendMode::BLEND_OFF),
+stateFlags(FRONT_FACE_CCW | DEPTH_TEST | DEPTH_WRITE_MASK | CULL_FACE),
 ambientTex(NULL),
 diffuseTex(NULL),
 specularTex(NULL),
 normalTex(NULL),
 shaderProgram(NULL),
+name(),
 shaderName(),
-blendMode(BlendMode::BLEND_OFF),
-stateFlags(FRONT_FACE_CCW | DEPTH_TEST | DEPTH_WRITE_MASK | CULL_FACE),
+ambientTexName(),
+diffuseTexName(),
+specularTexName(),
+normalTexName(),
 unknownParam() { }
+//------------------------------------------------------------------------------
 
 size_t gfx::SMaterial::getDataSize(void) {
     size_t size = sizeof (SMaterial);
@@ -64,8 +56,9 @@ size_t gfx::SMaterial::getDataSize(void) {
     size += unknownParam.size() * (sizeof (std::string) * 2);
     return size;
 }
+//------------------------------------------------------------------------------
 
-gfx::SMaterial::SMaterial(const SMaterial & material) {
+gfx::SMaterial::SMaterial(const SMaterial& material) {
     this->ambientTex = material.ambientTex;
     this->diffuseTex = material.diffuseTex;
     this->specularTex = material.specularTex;
@@ -95,6 +88,170 @@ gfx::SMaterial::SMaterial(const SMaterial & material) {
 
     this->unknownParam = material.unknownParam;
 }
+//------------------------------------------------------------------------------
+
+fgBool gfx::SMaterial::loadFromConfig(SMaterial& output, const std::string& path) {
+    util::CConfig config;
+    if(!config.load(path.c_str())) {
+        return FG_FALSE;
+    }
+    util::SCfgSection *section = config.getSection("Material");
+    if(!section) {
+        FG_LOG_ERROR("GFX:Material: Couldn't find 'Material' section in: '%s'", path.c_str());
+        return FG_FALSE;
+    }
+
+    util::config::ParameterVecItor end, itor;
+    end = section->parameters.end();
+    itor = section->parameters.begin();
+    for(; itor != end; itor++) {
+        util::SCfgParameter *param = *itor;
+        if(!param)
+            continue;
+        if(param->name.compare("name") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.name = param->string;
+            }
+
+        } else if(param->name.compare("ambient") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.ambient = strings::parseColor(param->string);
+            }
+
+        } else if(param->name.compare("diffuse") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.diffuse = strings::parseColor(param->string);
+            }
+
+        } else if(param->name.compare("specular") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.specular = strings::parseColor(param->string);
+            }
+
+        } else if(param->name.compare("transmittance") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.transmittance = strings::parseColor(param->string);
+            }
+
+        } else if(param->name.compare("emission") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.emission = strings::parseColor(param->string);
+            }
+
+        } else if(param->name.compare("shininess") == 0) {
+            if(param->type == util::SCfgParameter::FLOAT) {
+                output.shininess = param->float_val;
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.shininess = (float)param->int_val;
+            }
+
+        } else if(param->name.compare("ior") == 0) {
+            if(param->type == util::SCfgParameter::FLOAT) {
+                output.ior = param->float_val;
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.ior = (float)param->int_val;
+            }
+
+        } else if(param->name.compare("dissolve") == 0) {
+            if(param->type == util::SCfgParameter::FLOAT) {
+                output.dissolve = param->float_val;
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.dissolve = (float)param->int_val;
+            }
+
+        } else if(param->name.compare("illumination-model") == 0 || param->name.compare("illum-model") == 0) {
+            if(param->type == util::SCfgParameter::INT) {
+                output.illuminationModel = param->int_val;
+            }
+
+        } else if(param->name.compare("burn") == 0) {
+            if(param->type == util::SCfgParameter::FLOAT) {
+                output.burn = param->float_val;
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.burn = (float)param->int_val;
+            }
+
+        } else if(param->name.compare("ambient-map") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.ambientTexName = param->string;
+            }
+
+        } else if(param->name.compare("diffuse-map") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.diffuseTexName = param->string;
+            }
+
+        } else if(param->name.compare("specular-map") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.specularTexName = param->string;
+            }
+
+        } else if(param->name.compare("normal-map") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.normalTexName = param->string;
+            }
+
+        } else if(param->name.compare("shader-name") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.shaderName = param->string;
+            }
+
+        } else if(param->name.compare("blend-mode") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                // case insensitive
+                if(strings::isEqual(param->string, "additive", FG_FALSE)) {
+                    output.blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+                } else if(strings::isEqual(param->string, "transparency", FG_FALSE)) {
+                    output.blendMode = gfx::BlendMode::BLEND_TRANSPARENCY;
+                }
+            }
+
+        } else if(param->name.compare("front-face") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                if(strings::isEqual(param->string, "ccw", FG_FALSE)) {
+                    output.setFrontFace(gfx::FACE_CCW);
+                } else if(strings::isEqual(param->string, "cw", FG_FALSE)) {
+                    output.setFrontFace(gfx::FACE_CW);
+                }
+            }
+
+        } else if(param->name.compare("cull-face") == 0) {
+            if(param->type == util::SCfgParameter::BOOL) {
+                output.setCullFace(param->bool_val);
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.setCullFace((fgBool)param->int_val);
+            }
+
+        } else if(param->name.compare("depth-test") == 0) {
+            if(param->type == util::SCfgParameter::BOOL) {
+                output.setDepthTest(param->bool_val);
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.setDepthTest((fgBool)param->int_val);
+            }
+
+        } else if(param->name.compare("depth-write-mask") == 0) {
+            if(param->type == util::SCfgParameter::BOOL) {
+                output.setDepthWriteMask(param->bool_val);
+            } else if(param->type == util::SCfgParameter::INT) {
+                output.setDepthWriteMask((fgBool)param->int_val);
+            }
+
+        } else if(param->name.compare("mtl-reference") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                // ????
+            }
+        }
+    }
+    config.clearAll();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SMaterial::loadFromConfig(const std::string& path) {
+    return self_type::loadFromConfig(*this, path);
+}
+
+//------------------------------------------------------------------------------
 
 void gfx::SMaterial::clear(void) {
     // #TODO - here is the place to call resource manager and decrease reference count for the used textures
@@ -136,30 +293,31 @@ void gfx::SMaterial::clear(void) {
 
     unknownParam.clear();
 }
+//------------------------------------------------------------------------------
 
 unsigned int gfx::SMaterial::getSortingValue(const unsigned int maxValue) const {
     unsigned int sortingValue = 0;
 
-    sortingValue += (unsigned int)stateFlags;
-    sortingValue += (unsigned int)blendMode;
+    sortingValue += (unsigned int)stateFlags; // 1
+    sortingValue += (unsigned int)blendMode; // 2
     if(ambientTex) {
-        sortingValue += ambientTex->getRefHandle().getIndex() % 32;
+        sortingValue += ambientTex->getRefHandle().getIndex() % 32; // 3
     }
     if(diffuseTex) {
-        sortingValue += diffuseTex->getRefHandle().getIndex() % 32;
+        sortingValue += diffuseTex->getRefHandle().getIndex() % 32; // 4
     }
     if(specularTex) {
-        sortingValue += specularTex->getRefHandle().getIndex() % 32;
+        sortingValue += specularTex->getRefHandle().getIndex() % 32; // 5
     }
     if(normalTex) {
-        sortingValue += normalTex->getRefHandle().getIndex() % 32;
+        sortingValue += normalTex->getRefHandle().getIndex() % 32; // 6
     }
-    sortingValue += (unsigned int)illuminationModel;
-    sortingValue += name.length();
+    sortingValue += (unsigned int)illuminationModel; // 7
+    sortingValue += name.length(); // 8
 
     //if(burn > 1.0f)
     //        burn = 1.0f; // ? ? ?
-    sortingValue += (unsigned int)(burn * 10.0f);
+    sortingValue += (unsigned int)(burn * 10.0f); // 9
 
     if(sortingValue > maxValue) {
         sortingValue = sortingValue % maxValue;
@@ -167,3 +325,4 @@ unsigned int gfx::SMaterial::getSortingValue(const unsigned int maxValue) const 
 
     return sortingValue;
 }
+//------------------------------------------------------------------------------
