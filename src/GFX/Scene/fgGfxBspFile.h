@@ -48,7 +48,7 @@ namespace fg {
              *
              */
             struct SBinMainHeader {
-                char tag[6];
+                unsigned char tag[6];
                 fgBool hasBsp;
                 fgBool hasPortalProc;
                 fgBool hasPvsProc;

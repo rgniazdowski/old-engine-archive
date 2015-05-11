@@ -158,17 +158,22 @@ fgBool gfx::CBspFile::load(CBspCompiler* pBspCompiler, fgBool closeAfter) {
     if(status)
         status = (fgBool)!!(this->read(&m_mainHeader, sizeof (m_mainHeader), 1));
 
-    if(status)
-        status = checkTag();
+    status = (fgBool)(checkTag() && status);
 
-    if(status && m_mainHeader.hasBsp)
+    if(status && m_mainHeader.hasBsp) {
+        pBspTree = pBspCompiler->getBspTreePtr();
         status = readBspTree(pBspTree);
+    }
 
-    if(status && m_mainHeader.hasPortalProc)
+    if(status && m_mainHeader.hasPortalProc) {
+        pPortalProc = pBspCompiler->getPortalProcessorPtr();
         status = readPortalProcessor(pPortalProc);
+    }
 
-    if(status && m_mainHeader.hasPvsProc);
-    status = readPvsProcessor(pPvsProc);
+    if(status && m_mainHeader.hasPvsProc) {
+        pPvsProc = pBspCompiler->getPvsProcessorPtr();
+        status = readPvsProcessor(pPvsProc);
+    }
 
     if(status && closeAfter) {
         status = close();
@@ -178,26 +183,29 @@ fgBool gfx::CBspFile::load(CBspCompiler* pBspCompiler, fgBool closeAfter) {
 //------------------------------------------------------------------------------
 
 void gfx::CBspFile::prepareTag(void) {
-    m_mainHeader.tag[0] = (char)('f' + 96);
-    m_mainHeader.tag[1] = (char)('g' + 96);
-    m_mainHeader.tag[2] = (char)('_' + 96);
-    m_mainHeader.tag[3] = (char)('b' + 96);
-    m_mainHeader.tag[4] = (char)('s' + 96);
-    m_mainHeader.tag[5] = (char)('p' + 96);
+    m_mainHeader.tag[0] = (unsigned char)('f' + 96);
+    m_mainHeader.tag[1] = (unsigned char)('g' + 96);
+    m_mainHeader.tag[2] = (unsigned char)('_' + 96);
+    m_mainHeader.tag[3] = (unsigned char)('b' + 96);
+    m_mainHeader.tag[4] = (unsigned char)('s' + 96);
+    m_mainHeader.tag[5] = (unsigned char)('p' + 96);
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CBspFile::checkTag(void) {
     fgBool status = FG_FALSE;
-    if(m_mainHeader.tag[0] == (char)('f' + 96)) {
+    const char *tag = "fg_bsp";
+    unsigned int cc = 0;
+    if(m_mainHeader.tag[0] == (unsigned char)('f' + 96)) {
         for(unsigned int i = 0; i < 6; i++) {
             m_mainHeader.tag[i] -= 96;
+            if(m_mainHeader.tag[i] == (unsigned char)tag[i])
+                cc++;
+            m_mainHeader.tag[i] += 96;
         }
     }
-    if(m_mainHeader.tag[0] == 'f') {
-        if(strncmp(m_mainHeader.tag, "fg_bsp", 6) == 0)
-            status = FG_TRUE;
-    }
+    if(cc == 6)
+        status = FG_TRUE;
     return status;
 }
 //------------------------------------------------------------------------------
@@ -367,7 +375,213 @@ fgBool gfx::CBspFile::readBspTree(CBspTree* pBspTree) {
     if(!(m_modeFlags & Mode::READ))
         status = FG_FALSE;
     // This function is for internal use only - 
-    // the main header should already be read    
+    // the main header should already be read
+    status = (fgBool)(status && checkTag());
+    status = (fgBool)(status && m_mainHeader.hasBsp);
+    status = (fgBool)!!(m_mainHeader.numNodes > 0 && status);
+    status = (fgBool)!!(m_mainHeader.numLeafs > 0 && status);
+    status = (fgBool)!!(m_mainHeader.numPolygons > 0 && status);
+    if(!status)
+        return FG_FALSE;
+    pBspTree->clear();
+    pBspTree->setType((CBspTree::BspType)m_mainHeader.bspType);
+    pBspTree->setBalance(m_mainHeader.balance);
+
+    //--------------------------------------------------------------------------
+    // READING NODES
+    CBspTree::NodesVec& nodesVec = pBspTree->getNodes();
+    const unsigned int numNodes = m_mainHeader.numNodes;
+    nodesVec.reserve(numNodes);
+    nodesVec.resize(numNodes);
+
+    SBinDataVecChunkHeader nodesH;
+    status = (fgBool)!!(this->read(&nodesH, sizeof (nodesH), 1));
+    status = (fgBool)(status && nodesH.numChunks == numNodes);
+    status = (fgBool)(status && nodesH.chunkType == ChunkType::BSP_NODES);
+    for(unsigned int i = 0; i < numNodes && status; i++) {
+        nodesVec[i] = NULL;
+        CBspNode* pNode = new CBspNode(NULL, 0);
+        if(!pNode) {
+            status = FG_FALSE;
+            break;
+        }
+        // this is not universal solution - will be screwed up
+        // if the file will be saved by 32bit app and loaded by 64bit app
+        // reason? The whole structure/class is being read/saved
+        // there is pointer inside -> it's 4 or 8 bytes...
+        status = (fgBool)!!(this->read(pNode, sizeof (CBspNode), 1));
+        pNode->setBsp(pBspTree);
+        nodesVec[i] = pNode;
+    }
+    //--------------------------------------------------------------------------
+    // READING LEAFS
+    CBspTree::LeafsVec& leafsVec = pBspTree->getLeafs();
+    const unsigned int numLeafs = m_mainHeader.numLeafs;
+    if(status) {
+        leafsVec.reserve(numLeafs);
+        leafsVec.resize(numLeafs);
+        SBinDataVecChunkHeader leafsH;
+        status = (fgBool)!!(this->read(&leafsH, sizeof (leafsH), 1));
+        status = (status && leafsH.numChunks == numLeafs);
+        status = (status && leafsH.chunkType == ChunkType::BSP_LEAFS);
+    }
+    for(unsigned int i = 0; i < numLeafs && status; i++) {
+        CBspLeaf* pLeaf = new CBspLeaf(NULL, 0);
+        if(!pLeaf) {
+            status = FG_FALSE;
+            break;
+        }
+        // will now read CBspLeaf - it's like a node with additional integers and
+        // CVector<int> which needs to be read manually
+        status = (fgBool)!!(this->read(static_cast<CBspNode*>(pLeaf), sizeof (CBspNode), 1));
+        if(!status) {
+            leafsVec[i] = NULL;
+            delete pLeaf;
+            continue;
+        }
+        this->read(&pLeaf->m_pvsIdx, sizeof (int), 1);
+        this->read(&pLeaf->m_flags, sizeof (unsigned long int), 1);
+        int numIdxs = 0;
+        this->read(&numIdxs, sizeof (unsigned int), 1);
+        if(numIdxs) {
+            pLeaf->m_portalIdxes.reserve(numIdxs);
+            pLeaf->m_portalIdxes.resize(numIdxs);
+            status = (fgBool)!!(this->read(&pLeaf->m_portalIdxes.front(),
+                                           sizeof (int), numIdxs)
+                                == numIdxs);
+        }
+        pLeaf->setBsp(pBspTree);
+        leafsVec[i] = pLeaf;
+    }
+    //--------------------------------------------------------------------------
+    // READING POLYGONS
+    CBspTree::PolygonsVec& polygons = pBspTree->getPolygons();
+    const unsigned int numPolygons = m_mainHeader.numPolygons;
+    if(status) {
+        polygons.reserve(numPolygons);
+        polygons.resize(numPolygons);
+        SBinDataVecChunkHeader polysH;
+        status = (fgBool)!!(this->read(&polysH, sizeof (polysH), 1));
+        status = (status && polysH.numChunks == numPolygons);
+        status = (status && polysH.chunkType == ChunkType::POLYGONS);
+    }
+    for(unsigned int i = 0; i < numPolygons && status; i++) {
+        SPolygon& polygon = polygons[i];
+        // Size to read from the polygon
+        // It should be somehow guaranteed that CVertexData* pointer is last in the structure
+        // Pragma pack?
+        const unsigned int beginSize = sizeof (Planef) + sizeof (int) * 2 +
+                sizeof (unsigned int) +
+                sizeof (AABoundingBox3Df);
+        status = (fgBool)!!(this->read(&polygon, beginSize, 1));
+        if(!status)
+            continue;
+        SBinPolygonVertexDataHeader vertexDataH;
+        status = (fgBool)!!(this->read(&vertexDataH, sizeof (SBinPolygonVertexDataHeader), 1));
+        if(!status)
+            continue;
+        status = (vertexDataH.vertexStride == Vertex4v::stride());
+        if(polygon.getVertexData() == NULL) {
+            // this should not happen
+            status = FG_FALSE;
+            continue;
+        }
+        polygon.getVertexData()->reserve(vertexDataH.numVertices);
+        polygon.getVertexData()->resize(vertexDataH.numVertices);
+
+        status = (fgBool)!!(this->read(polygon.getVertexData()->front(),
+                                       polygon.getVertexData()->stride(),
+                                       vertexDataH.numVertices)
+                            == (int)vertexDataH.numVertices);
+    }
+    //--------------------------------------------------------------------------
+    // PLANES
+    CBspTree::PlanesVec& planes = pBspTree->getPlanes();
+    const unsigned int numPlanes = m_mainHeader.numPlanes;
+
+    if(status) {
+        planes.reserve(numPlanes);
+        planes.resize(numPlanes);
+        SBinDataVecChunkHeader planesH;
+        status = (fgBool)!!(this->read(&planesH, sizeof (planesH), 1));
+        status = (status && planesH.numChunks == numPlanes);
+        status = (status && planesH.chunkType == ChunkType::PLANES);
+    }
+    for(unsigned int i = 0; i < numPlanes && status; i++) {
+        Planef& plane = planes[i];
+        // plane is just a Vec3f, float + enum (int)
+        status = (fgBool)!!(this->read(&plane, sizeof (Planef), 1));
+    }
+    //--------------------------------------------------------------------------
+    // MATERIALS - BINARY
+    {
+        CBspTree::MaterialsVec& materials = pBspTree->getMaterials();
+        const unsigned int numMaterials = m_mainHeader.numMaterials;
+        if(status) {
+            materials.reserve(numMaterials);
+            materials.resize(numMaterials);
+            SBinDataVecChunkHeader materialsH;
+            status = (fgBool)!!(this->read(&materialsH, sizeof (materialsH), 1));
+            status = (status && materialsH.numChunks == numMaterials);
+            status = (status && materialsH.chunkType == ChunkType::MATERIALS);
+        }
+        for(unsigned int i = 0; i < numMaterials && status; i++) {
+            SMaterial& material = materials[i];
+            const unsigned int beginSize = (unsigned int)SMaterial::getDataStrideTrivial();
+            status = (fgBool)!!(this->read(&material, beginSize, 1));
+            if(!status)
+                continue;
+            SBinMaterialInfoHeader matInfoH;
+            status = (fgBool)!!(this->read(&matInfoH, sizeof (matInfoH), 1));
+            if(!status)
+                continue;
+            const int strBufSize = 256;
+            char str[strBufSize];
+            memset(str, 0, strBufSize);
+            if(matInfoH.nameLen) {
+                this->read(str, sizeof (char), matInfoH.nameLen);
+                material.name.clear();
+                material.name.reserve(matInfoH.nameLen + 1);
+                str[matInfoH.nameLen] = 0;
+                material.name.append(str);
+            }
+            if(matInfoH.shaderNameLen) {
+                this->read(str, sizeof (char), matInfoH.shaderNameLen);
+                material.shaderName.clear();
+                material.shaderName.reserve(matInfoH.shaderNameLen + 1);
+                str[matInfoH.shaderNameLen] = 0;
+                material.shaderName.append(str);
+            }
+            if(matInfoH.ambientTexNameLen) {
+                this->read(str, sizeof (char), matInfoH.ambientTexNameLen);
+                material.ambientTexName.clear();
+                material.ambientTexName.reserve(matInfoH.ambientTexNameLen + 1);
+                str[matInfoH.ambientTexNameLen] = 0;
+                material.ambientTexName.append(str);
+            }
+            if(matInfoH.diffuseTexNameLen) {
+                this->read(str, sizeof (char), matInfoH.diffuseTexNameLen);
+                material.diffuseTexName.clear();
+                material.diffuseTexName.reserve(matInfoH.diffuseTexNameLen + 1);
+                str[matInfoH.diffuseTexNameLen] = 0;
+                material.diffuseTexName.append(str);
+            }
+            if(matInfoH.specularTexNameLen) {
+                this->read(str, sizeof (char), matInfoH.specularTexNameLen);
+                material.specularTexName.clear();
+                material.specularTexName.reserve(matInfoH.specularTexNameLen + 1);
+                str[matInfoH.specularTexNameLen] = 0;
+                material.specularTexName.append(str);
+            }
+            if(matInfoH.normalTexNameLen) {
+                this->read(str, sizeof (char), matInfoH.normalTexNameLen);
+                material.normalTexName.clear();
+                material.normalTexName.reserve(matInfoH.normalTexNameLen + 1);
+                str[matInfoH.normalTexNameLen] = 0;
+                material.normalTexName.append(str);
+            }
+        }
+    }
 
     return status;
 }
@@ -390,7 +604,6 @@ fgBool gfx::CBspFile::writePortalProcessor(const CPortalProcessor* pPortalProc) 
         portalsH.numChunks = numPortals;
         status = (fgBool)!!(this->write(&portalsH, sizeof (portalsH), 1));
     }
-
     for(unsigned int i = 0; i < numPortals && status; i++) {
         const CPortal& portal = portals[i];
         // write the plane part
@@ -443,7 +656,63 @@ fgBool gfx::CBspFile::readPortalProcessor(CPortalProcessor* pPortalProc) {
         status = FG_FALSE;
     if(!(m_modeFlags & Mode::READ))
         status = FG_FALSE;
+    status = m_mainHeader.hasPortalProc;
+    SBinDataVecChunkHeader portalsH;
+    if(status)
+        status = (fgBool)!!(this->read(&portalsH, sizeof (portalsH), 1));
+    if(status)
+        status = (portalsH.chunkType == ChunkType::PORTALS);
+    if(status)
+        pPortalProc->clear();
+    CPortalProcessor::PortalsVec& portals = pPortalProc->getPortals();
+    if(status) {
+        portals.reserve(portalsH.numChunks);
+        portals.resize(portalsH.numChunks);
+    }
+    for(unsigned int i = 0; i < portalsH.numChunks && status; i++) {
+        CPortal& portal = portals[i];
+        // read the plane part
+        status = (fgBool)!!(this->read(static_cast<Planef *>(&portal),
+                                       sizeof (Planef), 1));
+        if(!status)
+            continue;
+        this->read(&portal.m_idxThis, sizeof (int), 1);
+        this->read(&portal.m_planeIdx, sizeof (int), 1);
+        this->read(&portal.m_flags, sizeof (CPortal::StateFlags), 1);
 
+        // now the Portal header - information about internal arrays
+        SBinPortalVecDataHeader portalInfo;
+        status = (fgBool)!!(this->read(&portalInfo, sizeof (portalInfo), 1));
+        if(!status)
+            continue;
+        // vertexes
+        portal.m_vertexes.reserve(portalInfo.numVertices + 1);
+        portal.m_vertexes.resize(portalInfo.numVertices);
+        status = (fgBool)!!(this->read(&portal.m_vertexes.front(),
+                                       sizeof (Vector3f),
+                                       portalInfo.numVertices)
+                            == (int)portalInfo.numVertices);
+        if(!status)
+            continue;
+        // sideLIdx
+        portal.m_sideLIdx.reserve(portalInfo.numSideLIdx);
+        portal.m_sideLIdx.resize(portalInfo.numSideLIdx);
+        status = (fgBool)!!(this->read(&portal.m_sideLIdx.front(),
+                                       sizeof (int),
+                                       portalInfo.numSideLIdx)
+                            == (int)portalInfo.numSideLIdx);
+        if(!status)
+            continue;
+        // sideLIdxFinal
+        portal.m_sideLIdxFinal.reserve(portalInfo.numSideLIdxFinal);
+        portal.m_sideLIdxFinal.resize(portalInfo.numSideLIdxFinal);
+        status = (fgBool)!!(this->read(&portal.m_sideLIdxFinal.front(),
+                                       sizeof (int),
+                                       portalInfo.numSideLIdxFinal)
+                            == (int)portalInfo.numSideLIdxFinal);
+        if(!status)
+            continue;
+    }
     return status;
 }
 //------------------------------------------------------------------------------
@@ -465,6 +734,8 @@ fgBool gfx::CBspFile::writePvsProcessor(const CPvsProcessor* pPvsProc) {
         pvsH.numChunks = numPortalsData;
         status = (fgBool)!!(this->write(&pvsH, sizeof (pvsH), 1));
     }
+    if(status && numPortalsData == 0)
+        return status; // do not save
     if(status) {
         // Additional info header
         SBinPvsProcessorHeader pvsH;
@@ -473,11 +744,12 @@ fgBool gfx::CBspFile::writePvsProcessor(const CPvsProcessor* pPvsProc) {
         pvsH.numPortVs = numPortalsData; // repeat
         status = (fgBool)!!(this->write(&pvsH, sizeof (pvsH), 1));
     }
-    if(status) {
+    if(status && pPvsProc->getNumPvs() && pPvsProc->getPvs()) {
         // now will write the unsigned chars of the pvs
         status = (fgBool)!!(this->write(pPvsProc->getPvs(),
                                         sizeof (unsigned char),
-                                        pPvsProc->getNumPvs()));
+                                        pPvsProc->getNumPvs())
+                            == (int)pPvsProc->getNumPvs());
     }
     for(unsigned int i = 0; i < numPortalsData && status; i++) {
         const SPortalData* portalData = portalsData[i];
@@ -530,7 +802,7 @@ fgBool gfx::CBspFile::readPvsProcessor(CPvsProcessor* pPvsProc) {
         if(pvsH.chunkType != ChunkType::BSP_PVS_PROC)
             status = FG_FALSE;
         if(!pvsH.numChunks)
-            status = FG_FALSE;
+            return status;
     }
     SBinPvsProcessorHeader pvsProcHeader;
     if(status) {
@@ -542,8 +814,55 @@ fgBool gfx::CBspFile::readPvsProcessor(CPvsProcessor* pPvsProc) {
         // now can clear out the destination pvs proc
         pPvsProc->clear();
     }
+    pPvsProc->setNumLeafs(pvsProcHeader.numLeafs);
     //pPvsProc->m_numLeafs = pvsProcHeader.numLeafs;
+    //pvsProcHeader.numPortVs;
+    if(status) {
+        unsigned char *pvsVec = new unsigned char[pvsProcHeader.numPvs];
+        if(!pvsVec)
+            return FG_FALSE;
 
+        // now will read the unsigned chars of the pvs
+        status = (fgBool)!!(this->read(pvsVec,
+                                       sizeof (unsigned char),
+                                       pvsProcHeader.numPvs)
+                            == (int)pvsProcHeader.numPvs);
+        if(status)
+            pPvsProc->setPvsArray(pvsVec, pvsProcHeader.numPvs);
+    }
+    CPvsProcessor::PPortalsDataVec& portalsData = pPvsProc->getPortalsData();
+    if(status) {
+        portalsData.reserve(pvsProcHeader.numPortVs);
+        portalsData.resize(pvsProcHeader.numPortVs);
+    }
+    for(unsigned int i = 0; i < pvsProcHeader.numPortVs && status; i++) {
+        portalsData[i] = NULL;
+        int tmpSize;
+        // will read PortalData info header
+        SBinPortalDataInfoHeader portalDataH;
+        // read the info header
+        status = (fgBool)!!(this->read(&portalDataH,
+                                       sizeof (portalDataH), 1));
+        if(!status)
+            break;
+        SPortalData *portalData = new SPortalData(portalDataH.size);
+        if(!portalData) {
+            status = FG_FALSE;
+            break;
+        }
+        portalData->possibleVisCount = portalDataH.possibleVisCount;
+        unsigned char *bitBuffer = portalData->portArrPvs.buffer(tmpSize);
+        if(!bitBuffer) {
+            status = FG_FALSE;
+            break;
+        }
+        // now can read the bit array storage (unsigned char)
+        status = (fgBool)!!(this->read(bitBuffer,
+                                       sizeof (unsigned char),
+                                       portalDataH.sizeBitArray)
+                            == (int)portalDataH.sizeBitArray);
+        portalsData[i] = portalData;
+    }
     return status;
 }
 //------------------------------------------------------------------------------

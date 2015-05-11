@@ -157,6 +157,14 @@ namespace fg {
                 return m_numLeafs;
             }
             /**
+             * 
+             * @param numLeafs
+             * @return 
+             */
+            void setNumLeafs(unsigned int numLeafs) {
+                m_numLeafs = numLeafs;
+            }
+            /**
              *
              * @return
              */
@@ -169,6 +177,17 @@ namespace fg {
              */
             unsigned char* getPvs(void) const {
                 return m_pvs;
+            }
+            /**
+             * 
+             * @param ptr
+             * @param numPvs
+             */
+            void setPvsArray(unsigned char *ptr, int numPvs) {
+                if(m_pvs)
+                    delete [] m_pvs;
+                m_pvs = ptr;
+                m_numPvs = numPvs;
             }
 
         private:

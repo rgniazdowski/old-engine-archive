@@ -30,7 +30,7 @@ gfx::CPvsProcessor::~CPvsProcessor() {
 void gfx::CPvsProcessor::clear(void) {
     if(m_pvs)
         delete[] m_pvs;
-    m_pvs = 0;
+    m_pvs = NULL;
     m_numPvs = 0;
     CVector<SPortalData*>::iterator end = m_portVs.end();
     for(CVector<SPortalData*>::iterator pp = m_portVs.begin(); pp != end; pp++) {

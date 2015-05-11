@@ -77,7 +77,6 @@ gfx::CBspLeaf* gfx::CPortalProcessor::getLeaf(int idx) {
 //------------------------------------------------------------------------------
 
 void gfx::CPortalProcessor::clear(void) {
-
     m_portals.clear();
     dw_deltatime = timesys::ticks();
 }

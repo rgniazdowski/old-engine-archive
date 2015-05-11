@@ -146,6 +146,15 @@ namespace fg {
             SPolygon* getPolygons(int& count);
 
         public:
+            /**
+             * 
+             * @param pBsp
+             */
+            void setBsp(CBspTree* pBsp) {
+                m_pBsp = pBsp;
+            }
+
+        public:
             ///
             int m_idxNodeThis;
             ///
