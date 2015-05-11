@@ -79,6 +79,8 @@
           <itemPath>../../../src/GFX/Scene/fgGfxBspCompiler.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspNode.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspNode.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBspResource.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBspResource.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.cpp</itemPath>
@@ -868,6 +870,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2516,6 +2528,15 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -4123,6 +4144,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -5704,6 +5735,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7324,6 +7365,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -8928,6 +8979,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspNode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxBspResource.h"
             ex="false"
             tool="3"
             flavor2="0">

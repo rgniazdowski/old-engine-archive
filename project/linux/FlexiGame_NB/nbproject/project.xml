@@ -68,6 +68,7 @@
             <word>body's</word>
             <word>bool</word>
             <word>broadphase</word>
+            <word>bsp</word>
             <word>Btw</word>
             <word>bvec</word>
             <word>bvh</word>
@@ -139,6 +140,7 @@
             <word>int</word>
             <word>interpenetrating</word>
             <word>interpolators</word>
+            <word>ints</word>
             <word>ipad</word>
             <word>ismapped</word>
             <word>itor</word>
@@ -194,10 +196,12 @@
             <word>Popup</word>
             <word>pos</word>
             <word>pp</word>
+            <word>Pragma</word>
             <word>preload</word>
             <word>printf</word>
             <word>prox</word>
             <word>ptr</word>
+            <word>pvs</word>
             <word>px</word>
             <word>py</word>
             <word>pz</word>
