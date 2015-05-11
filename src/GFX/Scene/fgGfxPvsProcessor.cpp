@@ -19,7 +19,7 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-gfx::CPvsProcessor::CPvsProcessor() : m_nLeafs(0), m_pvs(0), m_cPvss(0) { }
+gfx::CPvsProcessor::CPvsProcessor() : m_numLeafs(0), m_pvs(0), m_numPvs(0) { }
 //------------------------------------------------------------------------------
 
 gfx::CPvsProcessor::~CPvsProcessor() {
@@ -31,7 +31,7 @@ void gfx::CPvsProcessor::clear(void) {
     if(m_pvs)
         delete[] m_pvs;
     m_pvs = 0;
-    m_cPvss = 0;
+    m_numPvs = 0;
     CVector<SPortalData*>::iterator end = m_portVs.end();
     for(CVector<SPortalData*>::iterator pp = m_portVs.begin(); pp != end; pp++) {
         if(!(*pp))
@@ -57,7 +57,7 @@ void gfx::CPvsProcessor::process(CBspTree& tree, CPortalProcessor& portalprc) {
     m_pBspTree = &tree;
     m_pPortProc = &portalprc;
     clear();
-    m_nLeafs = tree.m_leafs.size();
+    m_numLeafs = tree.m_leafs.size();
     dw_deltatime = timesys::ticks();
 
     if(portalprc.hasPortals()) {
@@ -107,7 +107,7 @@ fgBool gfx::CPvsProcessor::InitalPortalVis(CVector<CPortal>& rPortals) {
 
     for(CVector<CPortal>::iterator portItA = rPortals.begin(); portItA != rPortals.end(); portItA++) {
         CPortal& prtA = *portItA;
-        SPortalData* pD = new SPortalData(m_nLeafs);
+        SPortalData* pD = new SPortalData(m_numLeafs);
         //_portVs << pD; // this prtA pvs
         m_portVs.push_back(pD);
         ::memset(pVis, 0, rPortals.size()); // reset the array for this prtA
@@ -177,13 +177,13 @@ void gfx::CPvsProcessor::gatherLeafsVis(void) {
         delete[] m_pvs;
     }
     m_pvs = 0;
-    int nPerLeaf = AllocBitsRoundByLong(m_nLeafs);
-    m_cPvss = m_nLeafs * nPerLeaf; // all leafs
-    m_pvs = new unsigned char[m_cPvss];
+    int nPerLeaf = AllocBitsRoundByLong(m_numLeafs);
+    m_numPvs = m_numLeafs * nPerLeaf; // all leafs
+    m_pvs = new unsigned char[m_numPvs];
 
-    ::memset(m_pvs, 0, m_cPvss); // zerooo them
+    ::memset(m_pvs, 0, m_numPvs); // zerooo them
     unsigned char* pWalkPvsPtr = m_pvs; // head of all bytes
-    CBitArray pPerLeafPvs(m_nLeafs);
+    CBitArray pPerLeafPvs(m_numLeafs);
 
     CVector<CBspLeaf*>::iterator begin = m_pBspTree->m_leafs.begin();
     CVector<CBspLeaf*>::iterator end = m_pBspTree->m_leafs.end();

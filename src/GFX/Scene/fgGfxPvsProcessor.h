@@ -64,6 +64,16 @@ namespace fg {
          */
         class CPvsProcessor {
         public:
+            typedef CPvsProcessor self_type;
+            typedef CPvsProcessor type;
+
+            typedef CVector<CPortal> PortalsVec;
+            typedef PortalsVec::iterator PortalsVecItor;
+
+            typedef CVector<SPortalData*> PPortalsDataVec;
+            typedef PPortalsDataVec::iterator PPortalsDataVecItor;
+
+        public:
             /**
              *
              */
@@ -81,7 +91,7 @@ namespace fg {
              * @param tree
              * @param portalprc
              */
-            void process(CBspTree& tree, CPortalProcessor& portalprc);
+            void process(CBspTree& bspTree, CPortalProcessor& portalProc);
 
         private:
             /**
@@ -89,7 +99,7 @@ namespace fg {
              * @param rPortals
              * @return
              */
-            fgBool InitalPortalVis(CVector<CPortal>& rPortals);
+            fgBool InitalPortalVis(PortalsVec& rPortals);
 
             /**
              *
@@ -108,7 +118,7 @@ namespace fg {
              * @param prevPvs
              */
             void performPVS(CPortal& pOrigin,
-                            CVector<CPortal>& rPortals,
+                            PortalsVec& rPortals,
                             unsigned char* prevPvs);
 
             /**
@@ -124,20 +134,58 @@ namespace fg {
              */
             fgBool doesPortalSeesPortal(CPortal& a, CPortal& b);
 
+        public:
+            /**
+             *
+             * @return
+             */
+            PPortalsDataVec& getPortalsData(void) {
+                return m_portVs;
+            }
+            /**
+             * 
+             * @return
+             */
+            PPortalsDataVec const& getPortalsData(void) const {
+                return m_portVs;
+            }
+            /**
+             * 
+             * @return
+             */
+            int getNumLeafs(void) const {
+                return m_numLeafs;
+            }
+            /**
+             *
+             * @return
+             */
+            int getNumPvs(void) const {
+                return m_numPvs;
+            }
+            /**
+             * 
+             * @return
+             */
+            unsigned char* getPvs(void) const {
+                return m_pvs;
+            }
+
+        private:
             ///
             CBspTree* m_pBspTree;
             ///
             CPortalProcessor* m_pPortProc;
             ///
-            int m_nLeafs;
+            int m_numLeafs;
 
         public:
             ///
             unsigned char* m_pvs;
             ///
-            int m_cPvss;
+            int m_numPvs;
             ///
-            CVector<SPortalData*> m_portVs;
+            PPortalsDataVec m_portVs;
             ///
             unsigned long int dw_deltatime;
         };
