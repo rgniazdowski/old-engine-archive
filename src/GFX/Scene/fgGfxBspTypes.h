@@ -230,7 +230,7 @@ namespace fg {
              *
              * @return
              */
-            int size(void) {
+            int size(void) const {
                 return m_size;
             }
             /**
@@ -238,7 +238,7 @@ namespace fg {
              * @param bytes
              * @return
              */
-            unsigned char* buffer(int& bytes) {
+            unsigned char* buffer(int& bytes) const {
                 bytes = m_size;
                 return m_storage;
             }

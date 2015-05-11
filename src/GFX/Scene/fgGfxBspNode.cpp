@@ -67,7 +67,7 @@ gfx::Planef& gfx::CBspNode::getPlane(void) const {
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon* gfx::CBspNode::getPolygons(int& count) {
+gfx::SPolygon* gfx::CBspNode::getPolygons(int& count) {
     count = m_nPolys;
     return &(m_pBsp->getPolygons()[m_polyIdx]);
 }
@@ -76,13 +76,13 @@ gfx::CPolygon* gfx::CBspNode::getPolygons(int& count) {
 gfx::CBspLeaf::CBspLeaf(CBspTree* pBsp, unsigned long int _nflags) :
 base_type(pBsp, _nflags),
 m_pvsIdx(-1),
-m_portIdxes(),
-m_flags(0) {
-    m_portIdxes.reserve(4);
+m_flags(0),
+m_portalIdxes() {
+    m_portalIdxes.reserve(4);
 }
 //------------------------------------------------------------------------------
 
 gfx::CBspLeaf::~CBspLeaf() {
-    m_portIdxes.clear();
+    m_portalIdxes.clear();
 }
 //------------------------------------------------------------------------------

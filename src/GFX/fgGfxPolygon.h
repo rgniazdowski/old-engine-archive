@@ -32,13 +32,13 @@ namespace fg {
         /**
          *
          */
-        class CPolygon : public Planef {
-        public:
+        struct SPolygon : public Planef {
+            ///
             typedef Planef base_type;
-            typedef CPolygon self_type;
-            typedef CPolygon type;
-
-        public:
+            ///
+            typedef SPolygon self_type;
+            ///
+            typedef SPolygon type;
 
             enum RelPos {
                 ON_PLANE,
@@ -47,30 +47,33 @@ namespace fg {
                 ON_SPLIT
             };
 
-        public:
             ///
-            int m_planeIdx;
+            int planeIdx;
             ///
-            AABoundingBox3Df m_bbox;
+            int materialIdx;
             ///
-            CVertexData *m_vertexData;
+            AABoundingBox3Df bbox;
             ///
-            unsigned int m_flags;
+            unsigned int flags;
+
+        private:
+            ///
+            CVertexData* vertexData;
 
         public:
             /**
              *
              */
-            CPolygon(unsigned int reserve = 4);
+            SPolygon(unsigned int reserve = 4);
             /**
              *
              */
-            virtual ~CPolygon();
+            virtual ~SPolygon();
             /**
              *
              * @param p
              */
-            CPolygon(const CPolygon& p);
+            SPolygon(const SPolygon& p);
             /**
              *
              */
@@ -104,7 +107,7 @@ namespace fg {
              *
              * @param p
              */
-            void copyProperties(CPolygon& p);
+            void copyProperties(SPolygon& p);
             //fgBool IntersectsPoly(CPolygon& p2);
             /**
              *
@@ -129,7 +132,7 @@ namespace fg {
              * @param b
              * @param bAnyway
              */
-            void split(base_type& plane, CPolygon& a, CPolygon& b, fgBool bAnyway = 0);
+            void split(base_type& plane, SPolygon& a, SPolygon& b, fgBool bAnyway = 0);
             /**
              *
              * @return
@@ -140,26 +143,26 @@ namespace fg {
              * @param plane
              * @param pout
              */
-            void clip(CPolygon& plane, CPolygon& pout);
+            void clip(SPolygon& plane, SPolygon& pout);
             /**
              *
              * @return
              */
             fgBool isSplitter(void) {
-                return (m_flags & SPLITTER_POLY);
+                return (flags & SPLITTER_POLY);
             }
             /**
              *
              */
             void setSplitter(void) {
-                m_flags |= SPLITTER_POLY;
+                flags |= SPLITTER_POLY;
             }
             /**
              *
              * @param p
              * @return
              */
-            CPolygon& operator =(const CPolygon& p);
+            SPolygon& operator =(const SPolygon& p);
 
             /**
              *
@@ -170,11 +173,38 @@ namespace fg {
              * @param p
              * @return
              */
-            fgBool operator ==(const CPolygon& p);
+            fgBool operator ==(const SPolygon& p);
+
+        public:
+            /**
+             * 
+             * @return
+             */
+            CVertexData* getVertexData(void) const {
+                return vertexData;
+            }
+            /**
+             *
+             * @return
+             */
+            unsigned int getVertexDataStride(void) const {
+                if(!vertexData)
+                    return 0;
+                return (unsigned int)vertexData->stride();
+            }
+            /**
+             * 
+             * @return
+             */
+            unsigned int size(void) const {
+                if(!vertexData)
+                    return 0;
+                return (unsigned int)vertexData->size();
+            }
         };
 
-    }
-}
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_POLYGON_BLOCK
 #endif	/* FG_INC_GFX_POLYGON */

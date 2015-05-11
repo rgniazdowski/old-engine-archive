@@ -24,11 +24,15 @@
     #ifndef FG_INC_GFX_PLANE
         #include "GFX/fgGfxPlane.h"
     #endif
+    #ifndef FG_INC_GFX_MATERIAL
+        #include "GFX/fgGfxMaterial.h"
+    #endif
 
 namespace fg {
     namespace gfx {
 
-        class CPolygon;
+        struct SMaterial;
+        struct SPolygon;
         class CBspNode;
         class CBspLeaf;
         class CBspCompiler;
@@ -38,8 +42,30 @@ namespace fg {
          */
         class CBspTree {
         public:
+            ///
             typedef CBspTree type;
+            ///
             typedef CBspTree self_type;
+
+            typedef CVector<CBspNode*> NodesVec;
+            typedef NodesVec::iterator NodesVecItor;
+            typedef NodesVec::const_iterator NodesVecConstItor;
+
+            typedef CVector<CBspLeaf*> LeafsVec;
+            typedef LeafsVec::iterator LeafsVecItor;
+            typedef LeafsVec::const_iterator LeafsVecConstItor;
+
+            typedef CVector<SPolygon> PolygonsVec;
+            typedef PolygonsVec::iterator PolygonsVecItor;
+            typedef PolygonsVec::const_iterator PolygonsVecConstItor;
+
+            typedef CVector<Planef> PlanesVec;
+            typedef PlanesVec::iterator PlanesVecItor;
+            typedef PlanesVec::const_iterator PlanesVecConstItor;
+
+            typedef CVector<SMaterial> MaterialsVec;
+            typedef MaterialsVec::iterator MaterialsVecItor;
+            typedef MaterialsVec::const_iterator MaterialsVecConstItor;
 
         public:
 
@@ -66,7 +92,7 @@ namespace fg {
              *
              * @param bt
              */
-            void SetType(BspType bt) {
+            void setType(BspType bt) {
                 m_bspType = bt;
             }
             /**
@@ -76,121 +102,10 @@ namespace fg {
 
             /**
              *
-             * @param polys
+             * @param polygons
              * @param busethreads
              */
-            void process(CVector<CPolygon>& polys);
-
-            ////////////////////////////////////////////////////////////////////
-            /**
-             *
-             * @return
-             */
-            CVector<CPolygon>& getPolygons(void) {
-                return m_polygons;
-            };
-            /**
-             *
-             * @return
-             */
-            CVector<CPolygon> const& getPolygons(void) const {
-                return m_polygons;
-            };
-            /**
-             *
-             * @return
-             */
-            CBspNode* getRoot(void) {
-                return m_nodes[0];
-            }
-            /**
-             *
-             * @return
-             */
-            const CBspNode* getRoot(void) const {
-                return m_nodes[0];
-            }
-            /**
-             *
-             * @return
-             */
-            CVector<CBspNode*>& getNodes(void) {
-                return m_nodes;
-            }
-            /**
-             *
-             * @return
-             */
-            CVector<CBspNode*> const& getNodes(void) const {
-                return m_nodes;
-            }
-            /**
-             *
-             * @param idx
-             * @return
-             */
-            CBspNode* GetNode(int idx) {
-                //ASSERT(idx < (int)m_nodes.size());
-                return m_nodes[idx];
-            }
-            /**
-             *
-             * @param idx
-             * @return
-             */
-            const CBspNode* GetNode(int idx) const {
-                //ASSERT(idx < (int)m_nodes.size());
-                return m_nodes[idx];
-            }
-            /**
-             *
-             * @param iplane
-             * @return
-             */
-            Planef& getPlane(int iplane) {
-                //ASSERT(iplane < (int)m_planes.size());
-                return m_planes[iplane];
-            }
-            /**
-             *
-             * @param iplane
-             * @return
-             */
-            Planef const& getPlane(int iplane) const {
-                //ASSERT(iplane < (int)m_planes.size());
-                return m_planes[iplane];
-            }
-            /**
-             *
-             * @param idx
-             * @return
-             */
-            CPolygon& getPolygon(int idx);
-            /**
-             *
-             * @param idx
-             * @return
-             */
-            CPolygon const& getPolygon(int idx) const;
-            /**
-             *
-             * @param idx
-             * @return
-             */
-            CBspLeaf* getLeaf(int idx) {
-                //ASSERT(idx < m_leafs.size());
-                return m_leafs[idx];
-            }
-            /**
-             *
-             * @param idx
-             * @return
-             */
-            const CBspLeaf* getLeaf(int idx) const {
-                //ASSERT(idx < m_leafs.size());
-                return m_leafs[idx];
-            }
-            ////////////////////////////////////////////////////////////////////
+            void process(PolygonsVec& polygons);
 
             /**
              *
@@ -208,87 +123,223 @@ namespace fg {
              * @return
              */
             int getCurrentLeaf(const Vector3f& pov, int nodeIdx = 0);
+
+            //------------------------------------------------------------------
+        public:
             /**
              *
-             * @param nodeIdx
-             * @param polys
+             * @return
              */
-            void R_Compile(int nodeIdx, CVector<CPolygon>& polys);
-
+            BspType getBspType(void) const {
+                return m_bspType;
+            }
+            //------------------------------------------------------------------
+            /**
+             *
+             * @return
+             */
+            NodesVec& getNodes(void) {
+                return m_nodes;
+            }
+            /**
+             *
+             * @return
+             */
+            NodesVec const& getNodes(void) const {
+                return m_nodes;
+            }
+            /**
+             *
+             * @return
+             */
+            LeafsVec& getLeafs(void) {
+                return m_leafs;
+            }
+            /**
+             *
+             * @return
+             */
+            LeafsVec const& getLeafs(void) const {
+                return m_leafs;
+            }
+            /**
+             *
+             * @return
+             */
+            PolygonsVec& getPolygons(void) {
+                return m_polygons;
+            }
+            /**
+             *
+             * @return
+             */
+            PolygonsVec const& getPolygons(void) const {
+                return m_polygons;
+            }
+            /**
+             *
+             * @return
+             */
+            PlanesVec& getPlanes(void) {
+                return m_planes;
+            }
+            /**
+             *
+             * @return
+             */
+            PlanesVec const& getPlanes(void) const {
+                return m_planes;
+            }
+            /**
+             *
+             * @return
+             */
+            MaterialsVec& getMaterials(void) {
+                return m_materials;
+            }
+            /**
+             *
+             * @return
+             */
+            MaterialsVec const& getMaterials(void) const {
+                return m_materials;
+            }
+            //------------------------------------------------------------------
+            /**
+             *
+             * @return
+             */
+            CBspNode* getRoot(void) {
+                return m_nodes[0];
+            }
+            /**
+             *
+             * @return
+             */
+            const CBspNode* getRoot(void) const {
+                return m_nodes[0];
+            }
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            CBspNode* getNode(unsigned int idx) {
+                if(idx >= m_nodes.size())
+                    return NULL;
+                return m_nodes[idx];
+            }
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            const CBspNode* getNode(unsigned int idx) const {
+                if(idx >= m_nodes.size())
+                    return NULL;
+                return m_nodes[idx];
+            }
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            Planef& getPlane(unsigned int idx) {
+                return m_planes[idx];
+            }
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            Planef const& getPlane(unsigned int idx) const {
+                return m_planes[idx];
+            }
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            SPolygon& getPolygon(unsigned int idx);
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            SPolygon const& getPolygon(unsigned int idx) const;
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            CBspLeaf* getLeaf(unsigned int idx) {
+                if(idx >= m_leafs.size())
+                    return NULL;
+                return m_leafs[idx];
+            }
+            /**
+             *
+             * @param idx
+             * @return
+             */
+            const CBspLeaf* getLeaf(unsigned int idx) const {
+                if(idx >= m_leafs.size())
+                    return NULL;
+                return m_leafs[idx];
+            }
+            //------------------------------------------------------------------
+        public:
+            /**
+             * 
+             * @return
+             */
+            int getBalance(void) const {
+                return m_balance;
+            }
+            /**
+             * 
+             * @param balance
+             */
+            void setBalance(unsigned int balance) {
+                m_balance = balance;
+            }
+            //------------------------------------------------------------------
         private:
             /**
              *
+             * @param nodeIdx
+             * @param polygons
+             */
+            void R_TerrainCompile(int nodeIdx, PolygonsVec& polygons);
+            /**
+             *
              * @param pNode
-             * @param polys
+             * @param polygons
+             * @param frontPlys
+             * @param backPolys
              */
-            void updateNodeBB(CBspNode* pNode, CVector<CPolygon>& polys);
-            /**
-             *
-             */
-            void makeRoot(void);
-            /**
-             *
-             * @param polys
-             */
-            void buildPlaneArray(CVector<CPolygon>& polygons);
-
+            void partitionTerrain(CBspNode* pNode,
+                                  PolygonsVec& polygons,
+                                  PolygonsVec& frontPlys,
+                                  PolygonsVec& backPolys);
             /**
              *
              * @param nodeIdx
-             * @param pols
+             * @param polygons
              */
-            void R_TerrainCompile(int nodeIdx, CVector<CPolygon>& polys);
-            /**
-             *
-             * @param polys
-             * @param pWantPoly
-             * @return
-             */
-            int getBestSplitter(CVector<CPolygon>& polys,
-                                CPolygon* pWantPoly = 0);
+            void R_Compile(int nodeIdx, PolygonsVec& polygons);
             /**
              *
              * @param pNode
-             * @param polys
+             * @param polygons
              * @param frontPolys
              * @param backPolys
              * @return
              */
             int partition(CBspNode* pNode,
-                          CVector<CPolygon>& polys,
-                          CVector<CPolygon>& frontPolys,
-                          CVector<CPolygon>& backPolys);
-            /**
-             *
-             * @param pNode
-             * @param polys
-             * @param frontPlys
-             * @param backPolys
-             */
-            void partitionTerrain(CBspNode* pNode,
-                                  CVector<CPolygon>& polys,
-                                  CVector<CPolygon>& frontPlys,
-                                  CVector<CPolygon>& backPolys);
-            /**
-             *
-             * @param polys
-             * @param pNode
-             */
-            void findSplitterPlane(CVector<CPolygon>& polys, CBspNode* pNode);
-            /**
-             *
-             * @param polys
-             * @param moe
-             * @return
-             */
-            Planef getOptimSpliterPlane(CVector<CPolygon>& polys, int moe = 16);
-            /**
-             *
-             * @param frontPolys
-             * @return
-             */
-            fgBool formConvex(CVector<CPolygon>& frontPolys);
-
+                          PolygonsVec& polygons,
+                          PolygonsVec& frontPolys,
+                          PolygonsVec& backPolys);
             /**
              *
              * @param nodeIdx
@@ -303,6 +354,50 @@ namespace fg {
                                       Vector3f& col);
             /**
              *
+             * @param pNode
+             * @param polygons
+             */
+            void updateNodeBB(CBspNode* pNode, PolygonsVec& polygons);
+            /**
+             *
+             */
+            void makeRoot(void);
+            /**
+             *
+             * @param polygons
+             */
+            void buildPlaneArray(PolygonsVec& polygons);
+
+            /**
+             *
+             * @param polygons
+             * @param pWantPoly
+             * @return
+             */
+            int getBestSplitter(PolygonsVec& polygons,
+                                SPolygon* pWantPoly = 0);
+
+            /**
+             *
+             * @param polygons
+             * @param pNode
+             */
+            void findSplitterPlane(PolygonsVec& polygons, CBspNode* pNode);
+            /**
+             *
+             * @param polygons
+             * @param moe
+             * @return
+             */
+            Planef getOptimSpliterPlane(PolygonsVec& polygons, int moe = 16);
+            /**
+             *
+             * @param frontPolys
+             * @return
+             */
+            fgBool formConvex(PolygonsVec& frontPolygons);
+            /**
+             *
              * @param pNn
              */
             void addNode(CBspNode* pNode);
@@ -311,17 +406,19 @@ namespace fg {
              * @param _nflags
              * @return
              */
-            CBspNode* createNode(unsigned int _nflags);
+            CBspNode* createNode(unsigned int flags);
 
         public:
             ///
-            CVector<CBspNode*> m_nodes;
+            NodesVec m_nodes;
             ///
-            CVector<CBspLeaf*> m_leafs;
+            LeafsVec m_leafs;
             ///
-            CVector<CPolygon> m_polygons;
+            PolygonsVec m_polygons;
             ///
-            CVector<Planef> m_planes;
+            PlanesVec m_planes;
+            ///
+            MaterialsVec m_materials;
             ///
             BspType m_bspType;
             ///

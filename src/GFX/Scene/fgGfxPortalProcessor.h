@@ -51,6 +51,10 @@ namespace fg {
             typedef CPortalProcessor self_type;
             ///
             typedef CPortalProcessor type;
+            ///
+            typedef CVector<CPortal> PortalsVec;
+            ///
+            typedef PortalsVec::iterator PortalsVecItor;
 
         public:
             /**
@@ -100,14 +104,14 @@ namespace fg {
              *
              * @return
              */
-            CVector<CPortal>& getPortals(void) {
+            PortalsVec& getPortals(void) {
                 return m_portals;
             }
             /**
              *
              * @return
              */
-            inline CVector<CPortal> const& getPortals(void) const {
+            inline PortalsVec const& getPortals(void) const {
                 return m_portals;
             }
             /**
@@ -148,7 +152,7 @@ namespace fg {
              * @param o
              * @return
              */
-            fgBool duplicatePortals(CVector<CPortal>& i, CVector<CPortal>& o);
+            fgBool duplicatePortals(PortalsVec& input, PortalsVec& output);
             /**
              *
              * @param idx
@@ -175,7 +179,7 @@ namespace fg {
 
         public:
             ///
-            CVector<CPortal> m_portals;
+            PortalsVec m_portals;
             ///
             CBspTree* m_pTree;
             ///

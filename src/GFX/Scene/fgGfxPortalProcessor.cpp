@@ -269,9 +269,9 @@ void gfx::CPortalProcessor::clipWithLeafSides(CBspLeaf* pLeaf, CPortal& portal) 
     ::std::set<int> sides;
     CPortal ap((const CPortal&)portal), bp;
     for(int i = pLeaf->m_polyIdx; i < pLeaf->m_polyIdx + pLeaf->m_nPolys; i++) {
-        CPolygon& poly = m_pTree->m_polygons[i];
-        if(sides.find(poly.m_planeIdx) == sides.end()) {
-            sides.insert(poly.m_planeIdx);
+        SPolygon& poly = m_pTree->m_polygons[i];
+        if(sides.find(poly.planeIdx) == sides.end()) {
+            sides.insert(poly.planeIdx);
             portal.split(poly, ap, bp);
             portal.clear();
             portal = ap;

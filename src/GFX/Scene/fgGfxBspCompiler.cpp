@@ -29,19 +29,19 @@ gfx::CBspCompiler::CBspCompiler() {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CBspCompiler::compile(CVector<CPolygon>& polys, fgBool usethreads) {
+fgBool gfx::CBspCompiler::compile(CVector<SPolygon>& polygons, fgBool usethreads) {
     m_usethreads = usethreads;
     m_bspTree.clear();
-    m_portalProcesor.clear();
-    m_pvsProcesor.clear();
-    m_bspTree.SetType(CBspTree::BSP_LEAFY);
-    if(polys.empty()) {
+    m_portalProcessor.clear();
+    m_pvsProcessor.clear();
+    m_bspTree.setType(CBspTree::BSP_LEAFY);
+    if(polygons.empty()) {
         return FG_FALSE;
     }
-    m_bspTree.process(polys);
+    m_bspTree.process(polygons);
     if(m_bspTree.m_bspType != CBspTree::BSP_TERRAIN) {
-        m_portalProcesor.process(m_bspTree);
-        m_pvsProcesor.process(m_bspTree, m_portalProcesor);
+        m_portalProcessor.process(m_bspTree);
+        m_pvsProcessor.process(m_bspTree, m_portalProcessor);
     }
     return FG_TRUE;
 }
@@ -75,7 +75,7 @@ void gfx::CBspCompiler::display(const Vector3f& camPos, CFrustum& frustum, fgBoo
                 if(!Local_IsLeafVisFromLeaf(m_bspTree.m_leafs,
                                             pNode->m_leafIdx,
                                             curLeaf,
-                                            m_pvsProcesor.m_pvs)) {
+                                            m_pvsProcessor.m_pvs)) {
                     isVisible = FG_FALSE;
                 }
             }
@@ -92,10 +92,10 @@ void gfx::CBspCompiler::display(const Vector3f& camPos, CFrustum& frustum, fgBoo
             continue;
         }
         int nCount;
-        CPolygon* pPolyh = pNode->getPolygons(nCount);
+        SPolygon* pPolyh = pNode->getPolygons(nCount);
         for(int i = 0; i < nCount; i++, pPolyh++) {
             if(!isVisible) {
-                gfx::primitives::drawAABBLines(pPolyh->m_bbox, fg::colors::getColor("red"));
+                gfx::primitives::drawAABBLines(pPolyh->bbox, fg::colors::getColor("red"));
                 if(is3D || 1) {
                     // gfx::CPrimitives::drawVertexData(pPolyh->m_vertexData, FG_GFX_POSITION_BIT, gfx::PrimitiveMode::TRIANGLE_STRIP);
                     //p_dlg->gl_3d.DrawPolyVertexes(*pPolyh);
@@ -105,7 +105,7 @@ void gfx::CBspCompiler::display(const Vector3f& camPos, CFrustum& frustum, fgBoo
                     }
                 }
             } else {
-                gfx::primitives::drawAABBLines(pPolyh->m_bbox, fg::colors::getColor("green"));
+                gfx::primitives::drawAABBLines(pPolyh->bbox, fg::colors::getColor("green"));
                 m_visiblePolygons.push_back(pPolyh);
             }
         }
@@ -115,14 +115,14 @@ void gfx::CBspCompiler::display(const Vector3f& camPos, CFrustum& frustum, fgBoo
 
 void gfx::CBspCompiler::render(void) {
     glDisable(GL_BLEND);
-    CVector<CPolygon*>::iterator end = m_visiblePolygons.end();
-    for(CVector<CPolygon*>::iterator it = m_visiblePolygons.begin(); it != end; it++) {
-        CPolygon* polygon = *it;
+    CVector<SPolygon*>::iterator end = m_visiblePolygons.end();
+    for(CVector<SPolygon*>::iterator it = m_visiblePolygons.begin(); it != end; it++) {
+        SPolygon* polygon = *it;
         if(!polygon) {
             continue;
         }
         if(1) {            
-            gfx::primitives::drawVertexData(polygon->m_vertexData,
+            gfx::primitives::drawVertexData(polygon->getVertexData(),
                                             FG_GFX_POSITION_BIT,
                                             gfx::PrimitiveMode::TRIANGLE_FAN);
         } else {
@@ -136,8 +136,8 @@ void gfx::CBspCompiler::render(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CBspCompiler::renderPortals(fgBool is3D) {
-    CVector<CPortal>::iterator end = m_portalProcesor.m_portals.end();
-    CVector<CPortal>::iterator begin = m_portalProcesor.m_portals.begin();
+    CVector<CPortal>::iterator end = m_portalProcessor.m_portals.end();
+    CVector<CPortal>::iterator begin = m_portalProcessor.m_portals.begin();
     for(CVector<CPortal>::iterator pPrt = begin; pPrt != end; pPrt++) {
         if(is3D) {
             if(pPrt->m_flags & CPortal::DUPLICATED) {
@@ -158,8 +158,8 @@ void gfx::CBspCompiler::renderPortals(fgBool is3D) {
 //------------------------------------------------------------------------------
 
 void gfx::CBspCompiler::clear(void) {
-    m_portalProcesor.clear();
-    m_pvsProcesor.clear();
+    m_portalProcessor.clear();
+    m_pvsProcessor.clear();
     m_bspTree.clear();
     m_visiblePolygons.clear_optimised();
 }

@@ -45,7 +45,7 @@ namespace fg {
         class CBspLeaf;
         class CBspTree;
         class CBspCompiler;
-        class CPolygon;
+        struct SPolygon;
         class CFrustum;
         class CPortal;
     }
@@ -59,6 +59,18 @@ namespace fg {
          */
         class CBspCompiler {
         public:
+            ///
+            typedef CBspCompiler self_type;
+            ///
+            typedef CBspCompiler type;
+
+            typedef CVector<SPolygon*> PPolygonsVec;
+            ///
+            typedef PPolygonsVec::iterator PPolygonsVecItor;
+            ///
+            typedef PPolygonsVec::const_iterator PPolygonsVecConstItor;
+
+        public:
             /**
              *
              */
@@ -69,6 +81,8 @@ namespace fg {
             virtual ~CBspCompiler() {
                 clear();
             };
+
+        public:
             /**
              *
              * @param brush
@@ -76,7 +90,7 @@ namespace fg {
              * @param usehthreads
              * @return
              */
-            fgBool compile(CVector<CPolygon>& polys, fgBool usehthreads);
+            fgBool compile(CVector<SPolygon>& polygons, fgBool usehthreads = FG_FALSE);
             /**
              *
              */
@@ -101,14 +115,84 @@ namespace fg {
             void renderPortals(fgBool is3D = FG_TRUE);
 
         public:
+            /**
+             *
+             * @return
+             */
+            CPortalProcessor& getPortalProcessor(void) {
+                return m_portalProcessor;
+            }
+            /**
+             *
+             * @return
+             */
+            CPortalProcessor const& getPortalProcessor(void) const {
+                return m_portalProcessor;
+            }
+            /**
+             *
+             * @return
+             */
+            CPortalProcessor* getPortalProcessorPtr(void) {
+                return &m_portalProcessor;
+            }
+            /**
+             *
+             * @return
+             */
+            CPvsProcessor& getPvsProcessor(void) {
+                return m_pvsProcessor;
+            }
+            /**
+             *
+             * @return
+             */
+            CPvsProcessor const& getPvsProcessor(void) const {
+                return m_pvsProcessor;
+            }
+            /**
+             *
+             * @return
+             */
+            CPvsProcessor* getPvsProcessorPtr(void) {
+                return &m_pvsProcessor;
+            }
+            /**
+             *
+             * @return
+             */
+            CBspTree& getBspTree(void) {
+                return m_bspTree;
+            }
+            /**
+             *
+             * @return
+             */
+            CBspTree const& getBspTree(void) const {
+                return m_bspTree;
+            }
+            /**
+             *
+             * @return
+             */
+            CBspTree* getBspTreePtr(void) {
+                return &m_bspTree;
+            }
+
+        public:
+            CBspTree::BspType getBspType(void) const {
+                return m_bspTree.getBspType();
+            }
+
+        private:
             ///
-            CPortalProcessor m_portalProcesor;
+            CPortalProcessor m_portalProcessor;
             ///
-            CPvsProcessor m_pvsProcesor;
+            CPvsProcessor m_pvsProcessor;
             ///
             CBspTree m_bspTree;
             ///
-            CVector<CPolygon*> m_visiblePolygons;
+            PPolygonsVec m_visiblePolygons;
             ///
             fgBool m_usethreads;
         };

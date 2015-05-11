@@ -47,13 +47,13 @@ namespace fg {
             };
 
             enum Axis {
-                X,
-                Y,
-                Z,
-                ANY_X,
-                ANY_Y,
-                ANY_Z,
-                ANY
+                X = 0,
+                Y = 1,
+                Z = 2,
+                ANY_X = 3,
+                ANY_Y = 4,
+                ANY_Z = 5,
+                ANY = 6
             };
 
             /// Normal vector

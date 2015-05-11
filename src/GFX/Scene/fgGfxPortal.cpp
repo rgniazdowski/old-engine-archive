@@ -109,7 +109,6 @@ void gfx::CPortal::split(Planef& plane, gfx::CPortal& a, gfx::CPortal& b) {
     float fB;
     float fA = plane.distance(itxA);
 
-    //FOREACH(CVector<Vector3f>, m_vertexes, vxI) {
     CVector<Vector3f>::iterator end = m_vertexes.end();
     for(CVector<Vector3f>::iterator it = m_vertexes.begin(); it != end; it++) {
         Vector3f &itxB = *it;
@@ -118,9 +117,7 @@ void gfx::CPortal::split(Planef& plane, gfx::CPortal& a, gfx::CPortal& b) {
         if(fB < GEpsilon && fB > -GEpsilon)fB = 0;
         if(fB > GEpsilon) {
             if(fA < -GEpsilon) {
-                float t = -fA / (fB - fA);
-                //iv.interpolate(itxA, itxB, t);
-                //interpolateVec3f(iv, itxA, itxB, t);
+                float t = -fA / (fB - fA);                
                 iv = math::mix(itxA, itxB, t);
                 a.m_vertexes.push_back(iv);
                 b.m_vertexes.push_back(iv);
@@ -129,7 +126,6 @@ void gfx::CPortal::split(Planef& plane, gfx::CPortal& a, gfx::CPortal& b) {
         } else if(fB < -GEpsilon) {
             if(fA > GEpsilon) {
                 float t = -fA / (fB - fA); // t of segment
-                //iv.interpolate(itxA, itxB, t);
                 iv = math::mix(itxA, itxB, t);
                 a.m_vertexes.push_back(iv);
                 b.m_vertexes.push_back(iv);

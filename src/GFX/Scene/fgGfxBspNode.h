@@ -38,7 +38,7 @@
 namespace fg {
     namespace gfx {
 
-        class CPolygon;
+        struct SPolygon;
         class CBspTree;
         class CBspNode;
         class CBspLeaf;
@@ -143,7 +143,7 @@ namespace fg {
              * @param count
              * @return
              */
-            CPolygon* getPolygons(int& count);
+            SPolygon* getPolygons(int& count);
 
         public:
             ///
@@ -161,11 +161,11 @@ namespace fg {
             ///
             int m_nPolys;
             ///
-            int m_polyIdx;
-            ///
-            CBspTree* m_pBsp;
+            int m_polyIdx;            
             ///
             AABoundingBox3Df m_bbox;
+            ///
+            CBspTree* m_pBsp;
         };
 
         //--------------------------------------------------------------------------------
@@ -198,30 +198,30 @@ namespace fg {
              * @param idx
              */
             void addPortalIdx(int idx) {
-                m_portIdxes.push_back(idx);
+                m_portalIdxes.push_back(idx);
             };
             /**
              *
              * @return
              */
             CVector<int>& getPortalIdxes(void) {
-                return m_portIdxes;
+                return m_portalIdxes;
             }
             /**
              *
              * @return
              */
             CVector<int> const& getPortalIdxes(void) const {
-                return m_portIdxes;
+                return m_portalIdxes;
             }
 
         public:
             ///
             int m_pvsIdx;
             ///
-            CVector<int> m_portIdxes;
-            ///
             unsigned long int m_flags;
+            ///
+            CVector<int> m_portalIdxes;            
         };
     }
 }

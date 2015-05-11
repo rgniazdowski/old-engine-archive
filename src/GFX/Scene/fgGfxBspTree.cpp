@@ -33,32 +33,32 @@ gfx::CBspTree::~CBspTree() {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CBspTree::process(CVector<CPolygon>& polys) {
-    CVector<CPolygon> loco;
+void gfx::CBspTree::process(PolygonsVec& polygons) {
+    PolygonsVec inputReady;
     clear();
 
     FG_LOG_DEBUG("GFX: Building BSP Tree...");
-    unsigned int n = polys.size();
-    loco.reserve(n);
+    unsigned int n = polygons.size();
+    inputReady.reserve(n);
     for(unsigned int i = 0; i < n; i++) {
-        polys[i].m_flags &= ~SPLITTER_POLY;
-        loco.push_back(polys[i]);
+        polygons[i].flags &= ~SPLITTER_POLY;
+        inputReady.push_back(polygons[i]);
     }
     makeRoot(); // sdd default root node
     FG_LOG_DEBUG("GFX: Preparing BSP...");
 
-    updateNodeBB(getRoot(), polys);
+    updateNodeBB(getRoot(), polygons);
     //V3 center = Root()->_bbox.GetCenter();
     m_balance = 6;
 
     dw_deltatime = timesys::ticks();
-    buildPlaneArray(loco);
+    buildPlaneArray(inputReady);
     CBspNode* pNode = m_nodes[0];
     pNode->m_planeIdx = 0;
     if(BSP_TERRAIN == m_bspType) {
-        R_TerrainCompile(0, loco);
+        R_TerrainCompile(0, inputReady);
     } else {
-        R_Compile(0, loco);
+        R_Compile(0, inputReady);
 
     }
     dw_deltatime = timesys::ticks() - dw_deltatime;
@@ -66,15 +66,15 @@ void gfx::CBspTree::process(CVector<CPolygon>& polys) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CBspTree::R_TerrainCompile(int nodeIdx, CVector<CPolygon>& polys) {
-    static unsigned int Deepth = 0;
-    CVector<CPolygon> frontPolys;
-    CVector<CPolygon> backPolys;
+void gfx::CBspTree::R_TerrainCompile(int nodeIdx, PolygonsVec& polygons) {
+    static unsigned int rDepth = 0;
+    PolygonsVec frontPolys;
+    PolygonsVec backPolys;
     CBspNode* pNode = m_nodes[nodeIdx];
-    Deepth++;
+    rDepth++;
 
-    findSplitterPlane(polys, pNode);
-    partitionTerrain(pNode, polys, frontPolys, backPolys);
+    findSplitterPlane(polygons, pNode);
+    partitionTerrain(pNode, polygons, frontPolys, backPolys);
 
     if(frontPolys.size()) {
         if(0 == backPolys.size()) {
@@ -130,27 +130,25 @@ void gfx::CBspTree::R_TerrainCompile(int nodeIdx, CVector<CPolygon>& polys) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-fgBool gfx::CBspTree::formConvex(CVector<CPolygon>& frontPolys) {
-    CPolygon& fp = frontPolys[0];
+fgBool gfx::CBspTree::formConvex(PolygonsVec& frontPolys) {
+    SPolygon& fp = frontPolys[0];
     unsigned int n = frontPolys.size();
     for(unsigned int i = 1; i < n; i++) {
-        if(CPolygon::ON_BACK == fp.classify(frontPolys[i])) {
+        if(SPolygon::ON_BACK == fp.classify(frontPolys[i])) {
             return FG_FALSE;
         }
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-void gfx::CBspTree::R_Compile(int nodeIdx, CVector<CPolygon>& polys) { // #FIXME
-    CVector<CPolygon> frontPolys;
-    CVector<CPolygon> backPolys;
+void gfx::CBspTree::R_Compile(int nodeIdx, PolygonsVec& polygons) { // #FIXME
+    PolygonsVec frontPolys;
+    PolygonsVec backPolys;
     CBspNode* pNode = m_nodes[nodeIdx];
-    int splitters = partition(pNode, polys, frontPolys, backPolys);
+    int splitters = partition(pNode, polygons, frontPolys, backPolys);
 
     if(0 == splitters && backPolys.size()) {
         unsigned int n = backPolys.size();
@@ -216,51 +214,45 @@ void gfx::CBspTree::R_Compile(int nodeIdx, CVector<CPolygon>& polys) { // #FIXME
         }
     }
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-// Select the best splitter
-
-int gfx::CBspTree::getBestSplitter(CVector<CPolygon>& polys,
-                                   CPolygon* pWantPoly) {
+int gfx::CBspTree::getBestSplitter(PolygonsVec& polygons,
+                                   SPolygon* pWantPoly) {
     int retval = -1;
     unsigned int splitCnt = 0;
     unsigned int bestscore = UINT_MAX - 1;
     unsigned int maxbacks = 0;
     unsigned int maxfronts = 0;
-    unsigned int n = polys.size();
+    unsigned int n = polygons.size();
     unsigned int bpIt = n;
 
     for(unsigned int i = 0; i < n; i++) {
-        //FOREACH(std::list<CPolygon>, polys, pPoly1) {
         unsigned int score = 0;
         unsigned int boths = 0;
         unsigned int planars = 0;
         unsigned int backs = 0;
         unsigned int fronts = 0;
-        CPolygon& polySpliter = polys[i];
+        SPolygon& polySpliter = polygons[i];
 
         if(!polySpliter.isSplitter()) {
 
-            //FOREACH(std::list<CPolygon>, polys, pPoly2) {
             for(unsigned int j = 0; j < n; j++) {
-                CPolygon::RelPos whereIs;
-                CPolygon& poly = polys[j];
-
-                //if(pPoly2 == pPoly1)
+                SPolygon::RelPos whereIs;
+                SPolygon& poly = polygons[j];
                 if(j == i)
                     continue;
                 whereIs = poly.classify(polySpliter);
                 switch(whereIs) {
-                    case CPolygon::ON_PLANE:
+                    case SPolygon::ON_PLANE:
                         ++planars;
                         break;
-                    case CPolygon::ON_FRONT:
+                    case SPolygon::ON_FRONT:
                         ++fronts;
                         break;
-                    case CPolygon::ON_BACK:
+                    case SPolygon::ON_BACK:
                         ++backs;
                         break;
-                    case CPolygon::ON_SPLIT:
+                    case SPolygon::ON_SPLIT:
                         ++boths;
                         break;
                 }
@@ -275,27 +267,25 @@ int gfx::CBspTree::getBestSplitter(CVector<CPolygon>& polys,
             maxbacks = math::max(maxbacks, backs);
         }
     }
-    if(bpIt != polys.size()) {
+    if(bpIt != polygons.size()) {
         // mark it as a splitter poly
-        polys[bpIt].setSplitter();
-        return polys[bpIt].m_planeIdx;
+        polygons[bpIt].setSplitter();
+        return polygons[bpIt].planeIdx;
     }
 
-    //FOREACH(std::list<CPolygon>, polys, pPoly1) {
     for(unsigned int i = 0; i < n; i++) {
-        if(!polys[i].isSplitter()) {
+        if(!polygons[i].isSplitter()) {
             // mark it as a splitter poly
-            polys[i].setSplitter();
-            return polys[i].m_planeIdx;
+            polygons[i].setSplitter();
+            return polygons[i].planeIdx;
         }
     }
     // all are on front so doesn't matter
-    return polys[0].m_planeIdx;
+    return polygons[0].planeIdx;
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-void gfx::CBspTree::buildPlaneArray(CVector<CPolygon>& polygons) {
+void gfx::CBspTree::buildPlaneArray(PolygonsVec& polygons) {
     //ASSERT(m_planes.size() == 0);
     fgBool outerLoop = FG_FALSE;
     // init the splitting planes
@@ -303,21 +293,21 @@ void gfx::CBspTree::buildPlaneArray(CVector<CPolygon>& polygons) {
         outerLoop = FG_FALSE;
         unsigned int n = polygons.size();
         for(unsigned int i = 0; i < n; i++) {
-            CPolygon& poly = polygons[i];
+            SPolygon& poly = polygons[i];
             poly.recalculate();
             fgBool isnot0 = (math::abs(poly.n.x) > EPSILON ||
                              math::abs(poly.n.y) > EPSILON ||
                              math::abs(poly.n.z) > EPSILON);
             if(isnot0) {
                 Planef plane(poly.n, poly.d);
-                poly.m_planeIdx = -1;
+                poly.planeIdx = -1;
                 //CVector<CPlane>::iterator fp = _planes.find(plane);
                 int fp = m_planes.find(plane);
                 if(fp < 0) {
-                    poly.m_planeIdx = m_planes.size();
+                    poly.planeIdx = m_planes.size();
                     m_planes.push_back(plane);
                 } else {
-                    poly.m_planeIdx = fp;
+                    poly.planeIdx = fp;
                 }
                 //ASSERT(pPoly->_planeIdx != -1);
             } else {
@@ -331,81 +321,79 @@ void gfx::CBspTree::buildPlaneArray(CVector<CPolygon>& polygons) {
         }
     } while(outerLoop);
 }
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CBspTree::partitionTerrain(CBspNode* pNode,
-                                     CVector<CPolygon>& polys,
-                                     CVector<CPolygon>& frontPolys,
-                                     CVector<CPolygon>& backPolys) {
-    while(polys.size()) {
-        CPolygon& curPoly = polys.back();
-        CPolygon::RelPos whereIs = curPoly.classify(pNode->getPlane());
+                                     PolygonsVec& polygons,
+                                     PolygonsVec& frontPolys,
+                                     PolygonsVec& backPolys) {
+    while(polygons.size()) {
+        SPolygon& curPoly = polygons.back();
+        SPolygon::RelPos whereIs = curPoly.classify(pNode->getPlane());
         switch(whereIs) {
-            case CPolygon::ON_PLANE:
+            case SPolygon::ON_PLANE:
                 if(math::isZero(math::dot(curPoly.n, pNode->getPlane().n) - 1.0f)) {
                     frontPolys.push_back(curPoly);
                 } else {
                     backPolys.push_back(curPoly);
                 }
                 break;
-            case CPolygon::ON_SPLIT:
+            case SPolygon::ON_SPLIT:
             {
-                CPolygon frontPoly;
-                CPolygon backPoly;
+                SPolygon frontPoly;
+                SPolygon backPoly;
                 curPoly.split(pNode->getPlane(), frontPoly, backPoly);
                 backPolys.push_back(backPoly);
                 frontPolys.push_back(frontPoly);
             }
                 break;
-            case CPolygon::ON_FRONT:
+            case SPolygon::ON_FRONT:
                 frontPolys.push_back(curPoly);
                 break;
-            case CPolygon::ON_BACK:
+            case SPolygon::ON_BACK:
                 backPolys.push_back(curPoly);
                 break;
             default:
                 break;
         }
-        polys.pop_back();
+        polygons.pop_back();
     }
     updateNodeBB(pNode, frontPolys);
     updateNodeBB(pNode, backPolys);
 }
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 int gfx::CBspTree::partition(CBspNode* pNode,
-                             CVector<CPolygon>& polys,
-                             CVector<CPolygon>& frontPolys,
-                             CVector<CPolygon>& backPolys) {
-    pNode->m_planeIdx = getBestSplitter(polys);
+                             PolygonsVec& polygons,
+                             PolygonsVec& frontPolys,
+                             PolygonsVec& backPolys) {
+    pNode->m_planeIdx = getBestSplitter(polygons);
 
-    int splitters = polys.size();
-    while(polys.size()) {
-        CPolygon& curPoly = polys.back();
+    int splitters = polygons.size();
+    while(polygons.size()) {
+        SPolygon& curPoly = polygons.back();
         if(curPoly.isSplitter())
             splitters--;
 
-        CPolygon::RelPos whereIs = curPoly.classify(pNode->getPlane());
+        SPolygon::RelPos whereIs = curPoly.classify(pNode->getPlane());
         switch(whereIs) {
-            case CPolygon::ON_PLANE:
+            case SPolygon::ON_PLANE:
                 if(math::isZero(math::dot(curPoly.n, pNode->getPlane().n) - 1.0f)) {
                     curPoly.setSplitter();
                     frontPolys.push_back(curPoly);
                 } else
                     backPolys.push_back(curPoly);
                 break;
-            case CPolygon::ON_FRONT:
+            case SPolygon::ON_FRONT:
                 frontPolys.push_back(curPoly);
                 break;
-            case CPolygon::ON_BACK:
+            case SPolygon::ON_BACK:
                 backPolys.push_back(curPoly);
                 break;
-            case CPolygon::ON_SPLIT:
+            case SPolygon::ON_SPLIT:
             {
-                CPolygon frontPoly;
-                CPolygon backPoly;
+                SPolygon frontPoly;
+                SPolygon backPoly;
 
                 curPoly.split(pNode->getPlane(), frontPoly, backPoly);
                 if(curPoly.isSplitter()) {
@@ -419,23 +407,21 @@ int gfx::CBspTree::partition(CBspNode* pNode,
             default:
                 break;
         }
-        polys.pop_back();
+        polygons.pop_back();
     }
     return splitters;
 
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-gfx::Planef gfx::CBspTree::getOptimSpliterPlane(CVector<CPolygon>& polys, int moe) {
+gfx::Planef gfx::CBspTree::getOptimSpliterPlane(PolygonsVec& polygons, int moe) {
     AABoundingBox3Df allBox;
     Vector3f V1(100, 100, 100);
     AABoundingBox3Df oneBox(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 1.0f));
-    unsigned int n = polys.size();
+    unsigned int n = polygons.size();
     for(unsigned int i = 0; i < n; i++) {
-        //FOREACH(std::list<CPolygon>, polys, pp) {
-        polys[i].recalculate();
-        allBox.merge(polys[i].m_bbox);
+        polygons[i].recalculate();
+        allBox.merge(polygons[i].bbox);
     }
 
     Vector3f allEx = allBox.getExtent();
@@ -459,13 +445,12 @@ gfx::Planef gfx::CBspTree::getOptimSpliterPlane(CVector<CPolygon>& polys, int mo
         ex.y = 0;
         ex.z = 1;
     }
-
     // make all of them on front to nail down the tree
     if(moe) {
         oneEx *= 8;
         if((allEx.x <= oneEx.x &&
             allEx.y <= oneEx.y &&
-            allEx.z <= oneEx.z) || (int)polys.size() <= moe) {
+            allEx.z <= oneEx.z) || (int)polygons.size() <= moe) {
             c = allBox.min; // one unit down
             c.x -= 1;
             c.y -= 1;
@@ -474,29 +459,25 @@ gfx::Planef gfx::CBspTree::getOptimSpliterPlane(CVector<CPolygon>& polys, int mo
     }
     return Planef(ex, c);
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-void gfx::CBspTree::findSplitterPlane(CVector<CPolygon>& polys, CBspNode* pNode) {
-    Planef plane = getOptimSpliterPlane(polys);
+void gfx::CBspTree::findSplitterPlane(PolygonsVec& polygons, CBspNode* pNode) {
+    Planef plane = getOptimSpliterPlane(polygons);
     pNode->m_planeIdx = m_planes.size();
     m_planes.push_back(plane);
 
 }
+//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------------
-
-void gfx::CBspTree::updateNodeBB(CBspNode* pNode, CVector<CPolygon>& polys) {
-    unsigned int n = polys.size();
-    //FOREACH(CVector<CPolygon>, polys, poly) {
+void gfx::CBspTree::updateNodeBB(CBspNode* pNode, PolygonsVec& polygons) {
+    unsigned int n = polygons.size();
     for(unsigned int i = 0; i < n; i++) {
-        polys[i].recalculate();
-        pNode->m_bbox.merge(polys[i].m_bbox);
-        getRoot()->m_bbox.merge(polys[i].m_bbox);
+        polygons[i].recalculate();
+        pNode->m_bbox.merge(polygons[i].bbox);
+        getRoot()->m_bbox.merge(polygons[i].bbox);
     }
 }
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CBspTree::clear(void) {
     CVector<CBspNode*>::iterator end = m_nodes.end();
@@ -511,8 +492,7 @@ void gfx::CBspTree::clear(void) {
     m_leafs.clear();
     dw_deltatime = timesys::ticks();
 }
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CBspTree::R_SegmentIntersect(int nodeIdx,
                                          Vector3f& a,
@@ -550,8 +530,7 @@ fgBool gfx::CBspTree::R_SegmentIntersect(int nodeIdx,
     }
     return FG_FALSE;
 }
-
-//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CBspTree::segmentIntersect(Vector3f& paa,
                                        Vector3f& pab,
@@ -561,7 +540,6 @@ fgBool gfx::CBspTree::segmentIntersect(Vector3f& paa,
     R_SegmentIntersect(0, paa, pab, col);
     return m_hitTest;
 }
-
 //------------------------------------------------------------------------------
 
 int gfx::CBspTree::getCurrentLeaf(const Vector3f& pov, int nodeIdx) {
@@ -591,14 +569,12 @@ int gfx::CBspTree::getCurrentLeaf(const Vector3f& pov, int nodeIdx) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon& gfx::CBspTree::getPolygon(int idx) {
-    //ASSERT(idx < (int)m_polygons.size());
+gfx::SPolygon& gfx::CBspTree::getPolygon(unsigned int idx) {
     return m_polygons[idx];
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon const& gfx::CBspTree::getPolygon(int idx) const {
-    //ASSERT(idx < (int)m_polygons.size());
+gfx::SPolygon const& gfx::CBspTree::getPolygon(unsigned int idx) const {
     return m_polygons[idx];
 }
 //------------------------------------------------------------------------------
@@ -620,9 +596,9 @@ void gfx::CBspTree::addNode(CBspNode* pNode) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CBspNode* gfx::CBspTree::createNode(unsigned int _nflags) {
-    if(_nflags & NODE_SOLID)
-        return new CBspNode(this, _nflags);
-    return new CBspLeaf(this, _nflags);
+gfx::CBspNode* gfx::CBspTree::createNode(unsigned int flags) {
+    if(flags & NODE_SOLID)
+        return new CBspNode(this, flags);
+    return new CBspLeaf(this, flags);
 }
 //------------------------------------------------------------------------------

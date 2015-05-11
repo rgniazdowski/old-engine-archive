@@ -20,29 +20,33 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-gfx::CPolygon::CPolygon(unsigned int reserve) {
+gfx::SPolygon::SPolygon(unsigned int reserve) :
+base_type(),
+planeIdx(-1),
+materialIdx(-1),
+bbox(),
+flags(0),
+vertexData(NULL) {
     if(reserve < 3)
         reserve = 4;
-    m_vertexData = new CVertexData4v();
-    m_vertexData->reserve(reserve);
-    m_planeIdx = -1;
-    m_flags = 0;
+    vertexData = new CVertexData4v();
+    vertexData->reserve(reserve);
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon::~CPolygon() {
-    if(m_vertexData) {
-        m_vertexData->clear(); // vertexex array
-        delete m_vertexData;
-        m_vertexData = NULL;
+gfx::SPolygon::~SPolygon() {
+    if(vertexData) {
+        vertexData->clear(); // vertexes array
+        delete vertexData;
+        vertexData = NULL;
     }
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::calcNormal(void) {
-    if(!m_vertexData)
+void gfx::SPolygon::calcNormal(void) {
+    if(!vertexData)
         return;
-    CVertexData4v *data4v = (CVertexData4v *)m_vertexData;
+    CVertexData4v *data4v = (CVertexData4v *)vertexData;
     fg::Vector3f &a = data4v->at(0).position;
     fg::Vector3f &b = data4v->at(1).position;
     fg::Vector3f &c = data4v->at(2).position;
@@ -50,60 +54,60 @@ void gfx::CPolygon::calcNormal(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CPolygon::operator ==(const CPolygon& p) {
+fgBool gfx::SPolygon::operator ==(const SPolygon& p) {
     if(this->n == p.n &&
        this->d == p.d &&
-       m_vertexData->size() == p.m_vertexData->size()) {
-        return !memcmp(m_vertexData->front(), p.m_vertexData->front(), sizeof (Vertex4v) * m_vertexData->size());
+       vertexData->size() == p.vertexData->size()) {
+        return !memcmp(vertexData->front(), p.vertexData->front(), sizeof (Vertex4v) * vertexData->size());
     }
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::create(int points, Vertex4v* pPoints) {
-    m_vertexData->clear();
+void gfx::SPolygon::create(int points, Vertex4v* pPoints) {
+    vertexData->clear();
     if(points < 3)
         return;
-    m_bbox.invalidate();
+    bbox.invalidate();
     for(int i = 0; i < points; i++) {
-        m_vertexData->append(pPoints[i].position,
+        vertexData->append(pPoints[i].position,
                              pPoints[i].normal,
                              pPoints[i].uv,
                              pPoints[i].color);
-        m_bbox.merge(pPoints[i].position);
+        bbox.merge(pPoints[i].position);
     }
     calcNormal();
     sortVertexes();
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::create(int points, Vector3f* pPoints) {
-    m_vertexData->clear();
+void gfx::SPolygon::create(int points, Vector3f* pPoints) {
+    vertexData->clear();
     Vector3f* pWalk = pPoints;
     if(points < 3)
         return;
-    m_bbox.invalidate();
+    bbox.invalidate();
     for(int i = 0; i < points; i++) {
         Vector3f &point = *(pWalk++);
-        m_vertexData->append(point);
-        m_bbox.merge(point);
+        vertexData->append(point);
+        bbox.merge(point);
     }
     calcNormal();
     sortVertexes();
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::sortVertexes(void) {
+void gfx::SPolygon::sortVertexes(void) {
     return;
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CPolygon::doesContainPoint(Vector3f& pi) {
+fgBool gfx::SPolygon::doesContainPoint(Vector3f& pi) {
     Vector3f v1;
     Vector3f v2;
     float sum = M_PIF * 2.0f;
-    Vertex4v *pData = (Vertex4v *)m_vertexData->front();
-    unsigned int n = m_vertexData->size();
+    Vertex4v *pData = (Vertex4v *)vertexData->front();
+    unsigned int n = vertexData->size();
     if(!n)
         return FG_FALSE;
     Vertex4v& lastVx = pData[n - 1];
@@ -126,87 +130,87 @@ fgBool gfx::CPolygon::doesContainPoint(Vector3f& pi) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon::CPolygon(const CPolygon& p) {
-    m_planeIdx = 0;
-    m_flags = 0;
-    m_vertexData = NULL;
+gfx::SPolygon::SPolygon(const SPolygon& p) {
+    planeIdx = 0;
+    flags = 0;
+    vertexData = NULL;
     this->operator =(p);
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon& gfx::CPolygon::operator =(const CPolygon& p) {
+gfx::SPolygon& gfx::SPolygon::operator =(const SPolygon& p) {
     if(this != &p) {
-        if(m_vertexData) {
-            m_vertexData->clear();
+        if(vertexData) {
+            vertexData->clear();
         } else {
-            m_vertexData = new CVertexData4v();
-            if(p.m_vertexData) {
-                if(p.m_vertexData->size()) {
-                    m_vertexData->reserve(p.m_vertexData->size());
+            vertexData = new CVertexData4v();
+            if(p.vertexData) {
+                if(p.vertexData->size()) {
+                    vertexData->reserve(p.vertexData->size());
                 }
             }
         }
-        copyProperties((CPolygon&)p);
-        Vertex4v *pData = (Vertex4v *)p.m_vertexData->front();
-        unsigned int n = p.m_vertexData->size();
+        copyProperties((SPolygon&)p);
+        Vertex4v *pData = (Vertex4v *)p.vertexData->front();
+        unsigned int n = p.vertexData->size();
         for(unsigned int i = 0; i < n; i++) {
             Vertex4v &vtx = (*(pData + i));
-            m_vertexData->append(vtx.position, vtx.normal, vtx.uv, vtx.color); // #FIXME
+            vertexData->append(vtx.position, vtx.normal, vtx.uv, vtx.color); // #FIXME
         }
     }
     return *this;
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::copyProperties(CPolygon& p) {
+void gfx::SPolygon::copyProperties(SPolygon& p) {
     this->n = p.n;
     this->axis = p.axis;
     this->d = p.d;
-    m_bbox = p.m_bbox;
-    m_flags = p.m_flags;
-    m_planeIdx = p.m_planeIdx;
+    bbox = p.bbox;
+    flags = p.flags;
+    planeIdx = p.planeIdx;
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::recalculate(void) {
-    m_bbox.invalidate();
-    Vertex4v *pData = (Vertex4v *)m_vertexData->front();
-    unsigned int n = m_vertexData->size();
+void gfx::SPolygon::recalculate(void) {
+    bbox.invalidate();
+    Vertex4v *pData = (Vertex4v *)vertexData->front();
+    unsigned int n = vertexData->size();
     for(unsigned int i = 0; i < n; i++) {
         Vertex4v &vtx = (*(pData + i));
-        m_bbox.merge(vtx.position);
+        bbox.merge(vtx.position);
     }
     calcNormal();
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::clear(void) {
-    m_bbox.invalidate();
-    m_vertexData->clear();
+void gfx::SPolygon::clear(void) {
+    bbox.invalidate();
+    vertexData->clear();
     this->n = Vector3f(0.0f, 0.0f, 0.0f); // invalid normal
     this->d = 0.0f;
     this->axis = Axis::ANY;
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::split(base_type& plane,
-                          CPolygon& a,
-                          CPolygon& b,
+void gfx::SPolygon::split(base_type& plane,
+                          SPolygon& a,
+                          SPolygon& b,
                           fgBool bAnyway) {
     a.copyProperties(*this);
     b.copyProperties(*this);
     Vertex4v iv;
-    //Vtx itxB = *m_vertexData.begin();
-    //Vtx itxA = m_vertexData.back();
-    Vertex4v itxA = *((Vertex4v*)m_vertexData->back());
+    //Vtx itxB = *vertexData.begin();
+    //Vtx itxA = vertexData.back();
+    Vertex4v itxA = *((Vertex4v*)vertexData->back());
     float fB = 0.0f;
     float fA = plane.distance(itxA.position);
 
-    Vertex4v *pData = (Vertex4v *)m_vertexData->front();
-    unsigned int n = m_vertexData->size();
+    Vertex4v *pData = (Vertex4v *)vertexData->front();
+    unsigned int n = vertexData->size();
     for(unsigned int i = 0; i < n; i++) {
         Vertex4v &itxB = (*(pData + i));
-        //FOREACH(CVector<Vtx>, m_vertexData, vxI) {
+        //FOREACH(CVector<Vtx>, vertexData, vxI) {
         //itxB = *vxI;
         fB = plane.distance(itxB.position);
         if(fB > .2f) {
@@ -214,65 +218,65 @@ void gfx::CPolygon::split(base_type& plane,
                 float t = -fA / (fB - fA);
                 iv = Vertex4v::interpolate(itxA, itxB, t);
                 //a << iv;
-                a.m_vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
+                a.vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
                 //b << iv;
-                b.m_vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
+                b.vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
             }
             //a << itxB;
-            a.m_vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
+            a.vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
         } else if(fB < -.2f) {
             if(fA > .2f) {
                 float t = -fA / (fB - fA); // t of segment
                 iv = Vertex4v::interpolate(itxA, itxB, t);
                 //a << iv;
-                a.m_vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
+                a.vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
                 //b << iv;
-                b.m_vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
+                b.vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
             }
             //b << itxB;
-            b.m_vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
+            b.vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
         } else {
             //a << itxB;
-            a.m_vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
+            a.vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
             //b << itxB;
-            b.m_vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
+            b.vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
         }
         itxA = itxB;
         fA = fB;
     }
 
     if(!bAnyway) {
-        if(b.m_vertexData->size() == m_vertexData->size() && a.m_vertexData->size() < 3)
+        if(b.vertexData->size() == vertexData->size() && a.vertexData->size() < 3)
             a.clear();
-        if(a.m_vertexData->size() == m_vertexData->size() && b.m_vertexData->size() < 3)
+        if(a.vertexData->size() == vertexData->size() && b.vertexData->size() < 3)
             b.clear();
-        if(a.m_vertexData->size() < 3)
+        if(a.vertexData->size() < 3)
             a.clear();
-        if(b.m_vertexData->size() < 3)
+        if(b.vertexData->size() < 3)
             b.clear();
     }
 
-    if(a.m_vertexData->size() >= 3)
+    if(a.vertexData->size() >= 3)
         a.recalculate();
-    if(b.m_vertexData->size() >= 3)
+    if(b.vertexData->size() >= 3)
         b.recalculate();
 }
 //------------------------------------------------------------------------------
 
-void gfx::CPolygon::clip(CPolygon& plane, CPolygon& pout) {
-    pout.m_vertexData->clear();
-    pout.m_bbox.invalidate();
+void gfx::SPolygon::clip(SPolygon& plane, SPolygon& pout) {
+    pout.vertexData->clear();
+    pout.bbox.invalidate();
     pout.copyProperties(*this);
     Vertex4v iv;
-    //Vertex4v& itxB = *((Vertex4v*)m_vertexData->front());
-    Vertex4v& itxA = *((Vertex4v*)m_vertexData->back());
+    //Vertex4v& itxB = *((Vertex4v*)vertexData->front());
+    Vertex4v& itxA = *((Vertex4v*)vertexData->back());
     float fB;
     int sB;
     float fA = plane.distance(itxA.position);
     int sA = plane.classify(itxA.position);
 
-    Vertex4v *pData = (Vertex4v *)m_vertexData->front();
-    unsigned int n = m_vertexData->size();
+    Vertex4v *pData = (Vertex4v *)vertexData->front();
+    unsigned int n = vertexData->size();
     for(unsigned int i = 0; i < n; i++) {
         Vertex4v &itxB = (*(pData + i));
         //itxB = *vxI;
@@ -282,29 +286,29 @@ void gfx::CPolygon::clip(CPolygon& plane, CPolygon& pout) {
             if(sA < 0) {
                 float t = -fA / (fB - fA);
                 iv = Vertex4v::interpolate(itxA, itxB, t);
-                pout.m_vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
+                pout.vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
             }
             //pout << itxB;
-            pout.m_vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
+            pout.vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
         } else if(sB < 0) {
             if(sA > 0) {
                 float t = -fA / (fB - fA); // t of segment
                 iv = Vertex4v::interpolate(itxA, itxB, t);
-                pout.m_vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
+                pout.vertexData->append(iv.position, iv.normal, iv.uv, iv.color);
             }
         } else {
-            pout.m_vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
+            pout.vertexData->append(itxB.position, itxB.normal, itxB.uv, itxB.color);
         }
         itxA = itxB;
         fA = fB;
     }
     pout.recalculate();
-    //ASSERT(pout.m_vertexData.size() >= 3);
+    //ASSERT(pout.vertexData.size() >= 3);
 }
 //------------------------------------------------------------------------------
 
-int gfx::CPolygon::classify(Vector3f& point) {
-    Vector3f vdir = point - ((Vertex4v*)m_vertexData->front())->position;
+int gfx::SPolygon::classify(Vector3f& point) {
+    Vector3f vdir = point - ((Vertex4v*)vertexData->front())->position;
     float d = math::dot(vdir, this->n);
 
     if(d < -.2f)
@@ -316,13 +320,13 @@ int gfx::CPolygon::classify(Vector3f& point) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CPolygon::RelPos gfx::CPolygon::classify(base_type& plane) {
+gfx::SPolygon::RelPos gfx::SPolygon::classify(base_type& plane) {
     unsigned int fronts = 0, backs = 0, coinciss = 0;
-    unsigned int vxes = m_vertexData->size();
+    unsigned int vxes = vertexData->size();
     float rdp = 0.0f;
 
-    Vertex4v *pData = (Vertex4v *)m_vertexData->front();
-    unsigned int n = m_vertexData->size();
+    Vertex4v *pData = (Vertex4v *)vertexData->front();
+    unsigned int n = vertexData->size();
     for(unsigned int i = 0; i < n; i++) {
         Vertex4v &vertex = (*(pData + i));
         rdp = plane.distance(vertex.position);
@@ -350,11 +354,11 @@ gfx::CPolygon::RelPos gfx::CPolygon::classify(base_type& plane) {
 }
 //------------------------------------------------------------------------------
 
-Vector3f gfx::CPolygon::getCenter(void) const {
+Vector3f gfx::SPolygon::getCenter(void) const {
     Vector3f ret;
-    if(!m_vertexData)
+    if(!vertexData)
         return ret;
-    CVertexData4v *data4v = (CVertexData4v *)m_vertexData;
+    CVertexData4v *data4v = (CVertexData4v *)vertexData;
     for(unsigned int i = 0; i < data4v->size(); ++i) {
         ret += data4v->at(i).position;
     }
