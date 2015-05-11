@@ -24,9 +24,6 @@
     #ifndef FG_INC_GFX_SHADER_DEFS
         #include "GFX/Shaders/fgGFXShaderDefs.h"
     #endif
-    #ifndef FG_INC_GFX_SHADER_PROGRAM
-        #include "GFX/Shaders/fgGFXShaderProgram.h"
-    #endif
     #ifndef FG_INC_GFX_TYPES
         #include "fgGfxTypes.h"
     #endif
@@ -70,15 +67,22 @@ namespace fg {
 
         class CDrawingBatch;
         struct SMaterial;
+        class CShaderProgram;
+        class CTextureResource;
 
         /**
          * Special class representing a single draw call
          */
         class CDrawCall : public CDrawable {
-            friend class fg::gfx::CDrawingBatch;
-            
+            friend class ::fg::gfx::CDrawingBatch;
+
         public:
-            typedef fg::gfx::CDrawable base_type;
+            ///
+            typedef CDrawable base_type;
+            ///
+            typedef CDrawCall self_type;
+            ///
+            typedef CDrawCall type;
 
         private:
             /// Attribute binding data
@@ -346,12 +350,12 @@ namespace fg {
             // Can be null, which would mean that this draw call does not care about such thing
             // However it should be avoided. Shader program knows if it's being currently used.
             // Also only through shader manager given shader program can be set as active.
-            void setShaderProgram(gfx::CShaderProgram* pProgram = NULL);
+            void setShaderProgram(CShaderProgram* pProgram = NULL);
             /**
              * Returns the currently used shader program for this draw call
              * @return 
              */
-            gfx::CShaderProgram* getShaderProgram(void) const;
+            CShaderProgram* getShaderProgram(void) const;
 
             ////////////////////////////////////////////////////////////////////
             
