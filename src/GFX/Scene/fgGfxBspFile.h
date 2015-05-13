@@ -26,6 +26,7 @@
 namespace fg {
     namespace gfx {
 
+        struct SPolygon;
         class CBspTree;
         class CBspCompiler;
         class CPortalProcessor;
@@ -178,15 +179,48 @@ namespace fg {
             fgBool load(CBspCompiler* pBspCompiler, fgBool closeAfter = FG_TRUE);
 
         private:
+            typedef CVector<SPolygon> PolygonsVec;
+            typedef PolygonsVec::iterator PolygonsVecItor;
+
             /**
              *
              */
-            void prepareTag(void);
+            void zeroHeader(void);
+            /**
+             *
+             */
+            void prepareTags(void);
             /**
              *
              * @return
              */
             fgBool checkTag(void);
+
+            /**
+             * Check whether or not the secondary binary file tag is for polygons
+             * @return  FG_TRUE if the current tag is for polygons,
+             *          FG_FALSE otherwise.
+             */
+            fgBool checkPolygonsTag(void);
+
+            /**
+             * 
+             * @param output
+             * @return
+             */
+            fgBool readPolygonsBinary(PolygonsVec& output);
+            /**
+             *
+             * @param output
+             * @return
+             */
+            fgBool readPolygonsText(PolygonsVec& output);
+
+            /**
+             *
+             * @return
+             */
+            fgBool readPolygonsHelper(PolygonsVec& output);
 
             /**
              *
@@ -228,8 +262,25 @@ namespace fg {
             fgBool readPvsProcessor(CPvsProcessor* pPvsProc);
 
         private:
+            constexpr static const unsigned char FG_BINARY_TAG[9] = {
+                                                           (unsigned char)('f' + CHAR_OFFSET),
+                                                           (unsigned char)('g' + CHAR_OFFSET),
+                                                           (unsigned char)('_' + CHAR_OFFSET),
+                                                           (unsigned char)('b' + CHAR_OFFSET),
+                                                           (unsigned char)('i' + CHAR_OFFSET),
+                                                           (unsigned char)('n' + CHAR_OFFSET),
+                                                           (unsigned char)('a' + CHAR_OFFSET),
+                                                           (unsigned char)('r' + CHAR_OFFSET),
+                                                           (unsigned char)('y' + CHAR_OFFSET)
+            };
             ///
             SBinMainHeader m_mainHeader;
+            /// fg_binary
+            unsigned char m_bfTag[9];
+            ///
+            fgBool m_isBinary;
+            ///
+            fgBool m_isPolygonsText;
 
         };
     } // namespace gfx

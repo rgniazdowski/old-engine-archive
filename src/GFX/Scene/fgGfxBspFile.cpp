@@ -16,13 +16,25 @@
 
 #include "fgGfxBspFile.h"
 #include "fgGfxBspCompiler.h"
+#include "Util/fgStrings.h"
 
 using namespace fg;
 
 //------------------------------------------------------------------------------
 
+constexpr const unsigned char gfx::CBspFile::FG_BINARY_TAG[9];
+
+//------------------------------------------------------------------------------
+
 gfx::CBspFile::CBspFile() :
-base_type() { }
+base_type(),
+m_mainHeader(),
+m_bfTag(),
+m_isBinary(FG_FALSE),
+m_isPolygonsText(FG_FALSE) {
+    zeroHeader();
+
+}
 
 //------------------------------------------------------------------------------
 
@@ -43,7 +55,7 @@ fgBool gfx::CBspFile::save(const CBspTree* pBspTree, fgBool closeAfter) {
         status = open(Mode::BINARY | Mode::WRITE);
     }
     if(status) {
-        prepareTag();
+        prepareTags();
         m_mainHeader.hasBsp = FG_TRUE;
         m_mainHeader.hasPortalProc = FG_FALSE;
         m_mainHeader.hasPvsProc = FG_FALSE;
@@ -68,6 +80,7 @@ fgBool gfx::CBspFile::save(const CBspTree* pBspTree, fgBool closeAfter) {
 
 fgBool gfx::CBspFile::load(CBspTree* pBspTree, fgBool closeAfter) {
     fgBool status = FG_TRUE;
+    m_isBinary = FG_FALSE;
     if(!pBspTree)
         status = FG_FALSE;
     if(isOpen() && status) {
@@ -76,11 +89,25 @@ fgBool gfx::CBspFile::load(CBspTree* pBspTree, fgBool closeAfter) {
     if(status) {
         status = open(Mode::BINARY | Mode::READ);
     }
+    zeroHeader();
+    // load the special tag for indicating whether or not this file is in binary
+    if(status)
+        status = (fgBool)!!(this->read(m_bfTag, sizeof (m_bfTag), 1));
     if(status)
         status = (fgBool)!!(this->read(&m_mainHeader, sizeof (m_mainHeader), 1));
+    status = (fgBool)(checkTag() && status);
 
-    if(status)
-        status = checkTag();
+    if(!status) {
+        PolygonsVec polygonsVec;
+        // this helper will check the tags, rewind the file if necessary
+        // and load the polygons in text or binary format
+        status = readPolygonsHelper(polygonsVec);
+        if(status) {
+            pBspTree->setType((CBspTree::BspType)m_mainHeader.bspType);
+            pBspTree->setBalance(m_mainHeader.balance);
+            pBspTree->process(polygonsVec);
+        }
+    }
 
     if(status && m_mainHeader.hasBsp)
         status = readBspTree(pBspTree);
@@ -102,13 +129,12 @@ fgBool gfx::CBspFile::save(const CBspCompiler* pBspCompiler, fgBool closeAfter) 
     if(status) {
         status = open(Mode::BINARY | Mode::WRITE);
     }
-
     const CBspTree* pBspTree = NULL;
     const CPvsProcessor* pPvsProc = NULL;
     const CPortalProcessor* pPortalProc = NULL;
 
     if(status) {
-        prepareTag();
+        prepareTags();
         pBspTree = &pBspCompiler->getBspTree();
         pPvsProc = &pBspCompiler->getPvsProcessor();
         pPortalProc = &pBspCompiler->getPortalProcessor();
@@ -122,6 +148,7 @@ fgBool gfx::CBspFile::save(const CBspCompiler* pBspCompiler, fgBool closeAfter) 
         m_mainHeader.numPolygons = pBspTree->getPolygons().size();
         m_mainHeader.numPlanes = pBspTree->getPlanes().size();
         m_mainHeader.numMaterials = pBspTree->getMaterials().size();
+        status = (fgBool)!!(this->write(&m_bfTag, sizeof (m_bfTag), 1));
         status = (fgBool)!!(this->write(&m_mainHeader, sizeof (m_mainHeader), 1));
     }
 
@@ -154,11 +181,26 @@ fgBool gfx::CBspFile::load(CBspCompiler* pBspCompiler, fgBool closeAfter) {
     CBspTree* pBspTree = NULL;
     CPvsProcessor* pPvsProc = NULL;
     CPortalProcessor* pPortalProc = NULL;
-
+    zeroHeader();
+    // load the special tag for indicating whether or not this file is in binary
+    if(status)
+        status = (fgBool)!!(this->read(m_bfTag, sizeof (m_bfTag), 1));
     if(status)
         status = (fgBool)!!(this->read(&m_mainHeader, sizeof (m_mainHeader), 1));
-
     status = (fgBool)(checkTag() && status);
+
+    if(!status) {
+        PolygonsVec polygonsVec;
+        // this helper will check the tags, rewind the file if necessary
+        // and load the polygons in text or binary format
+        status = readPolygonsHelper(polygonsVec);
+        if(status) {
+            pBspTree = pBspCompiler->getBspTreePtr();
+            pBspTree->setType((CBspTree::BspType)m_mainHeader.bspType);
+            pBspTree->setBalance(m_mainHeader.balance);
+            pBspCompiler->compile(polygonsVec);
+        }
+    }
 
     if(status && m_mainHeader.hasBsp) {
         pBspTree = pBspCompiler->getBspTreePtr();
@@ -182,30 +224,221 @@ fgBool gfx::CBspFile::load(CBspCompiler* pBspCompiler, fgBool closeAfter) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CBspFile::prepareTag(void) {
-    m_mainHeader.tag[0] = (unsigned char)('f' + 96);
-    m_mainHeader.tag[1] = (unsigned char)('g' + 96);
-    m_mainHeader.tag[2] = (unsigned char)('_' + 96);
-    m_mainHeader.tag[3] = (unsigned char)('b' + 96);
-    m_mainHeader.tag[4] = (unsigned char)('s' + 96);
-    m_mainHeader.tag[5] = (unsigned char)('p' + 96);
+void gfx::CBspFile::zeroHeader(void) {
+    memset(&m_mainHeader, 0, sizeof (m_mainHeader));
+}
+//------------------------------------------------------------------------------
+
+void gfx::CBspFile::prepareTags(void) {
+    // Tag for the bsp binary file
+    m_mainHeader.tag[0] = (unsigned char)('f' + CHAR_OFFSET);
+    m_mainHeader.tag[1] = (unsigned char)('g' + CHAR_OFFSET);
+    m_mainHeader.tag[2] = (unsigned char)('_' + CHAR_OFFSET);
+    m_mainHeader.tag[3] = (unsigned char)('b' + CHAR_OFFSET);
+    m_mainHeader.tag[4] = (unsigned char)('s' + CHAR_OFFSET);
+    m_mainHeader.tag[5] = (unsigned char)('p' + CHAR_OFFSET);
+    // Tag for the general binary file FG
+    m_bfTag[0] = (unsigned char)('f' + CHAR_OFFSET);
+    m_bfTag[1] = (unsigned char)('g' + CHAR_OFFSET);
+    m_bfTag[2] = (unsigned char)('_' + CHAR_OFFSET);
+    m_bfTag[3] = (unsigned char)('b' + CHAR_OFFSET);
+    m_bfTag[4] = (unsigned char)('i' + CHAR_OFFSET);
+    m_bfTag[5] = (unsigned char)('n' + CHAR_OFFSET);
+    m_bfTag[6] = (unsigned char)('a' + CHAR_OFFSET);
+    m_bfTag[7] = (unsigned char)('r' + CHAR_OFFSET);
+    m_bfTag[8] = (unsigned char)('y' + CHAR_OFFSET);
+
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CBspFile::checkTag(void) {
-    fgBool status = FG_FALSE;
-    const char *tag = "fg_bsp";
-    unsigned int cc = 0;
-    if(m_mainHeader.tag[0] == (unsigned char)('f' + 96)) {
-        for(unsigned int i = 0; i < 6; i++) {
-            m_mainHeader.tag[i] -= 96;
-            if(m_mainHeader.tag[i] == (unsigned char)tag[i])
+    fgBool status = FG_TRUE;
+    m_isBinary = FG_TRUE;
+    const unsigned int BinaryTagLen = 9;
+    const unsigned int TagLen = 6;
+    const char *tag = "fg_bsp"; // 6
+    for(unsigned int i = 0; i < BinaryTagLen; i++) {
+        if(m_bfTag[i] != FG_BINARY_TAG[i])
+            status = FG_FALSE;
+    }
+    m_isBinary = status;
+    for(unsigned int i = 0; i < TagLen; i++) {
+        m_mainHeader.tag[i] -= CHAR_OFFSET;
+        if(m_mainHeader.tag[i] != (unsigned char)tag[i])
+            status = FG_FALSE;
+        m_mainHeader.tag[i] += CHAR_OFFSET;
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CBspFile::checkPolygonsTag(void) {
+    fgBool status = FG_TRUE;
+    const unsigned int TagLen = 6;
+    const char *tag = "fg_plg"; // 6
+    for(unsigned int i = 0; i < TagLen; i++) {
+        m_mainHeader.tag[i] -= CHAR_OFFSET;
+        if(m_mainHeader.tag[i] != (unsigned char)tag[i])
+            status = FG_FALSE;
+        m_mainHeader.tag[i] += CHAR_OFFSET;
+    }
+    if(!status && !m_isBinary) {
+        unsigned char cc = 0;
+        // check if the tag is readable (without char offset)
+        for(unsigned int i = 0; i < TagLen; i++) {
+            if(m_mainHeader.tag[i] == (unsigned char)tag[i]) {
                 cc++;
-            m_mainHeader.tag[i] += 96;
+            }
+        }
+        if(cc == TagLen) {
+            // all chars match
+            m_isPolygonsText = FG_TRUE;
+            status = FG_TRUE;
         }
     }
-    if(cc == 6)
-        status = FG_TRUE;
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CBspFile::readPolygonsBinary(PolygonsVec& output) {
+    fgBool status = FG_TRUE;
+    if(!isOpen())
+        status = FG_FALSE;
+    status = (status && (checkTag() || checkPolygonsTag()));
+    status = (status && m_isBinary);
+    const unsigned int numPolygons = m_mainHeader.numPolygons;
+    if(status) {
+        output.reserve(numPolygons);
+        output.resize(numPolygons);
+        SBinDataVecChunkHeader polysH;
+        status = (fgBool)!!(this->read(&polysH, sizeof (polysH), 1));
+        status = (status && polysH.numChunks == numPolygons);
+        status = (status && polysH.chunkType == ChunkType::POLYGONS);
+    }
+    for(unsigned int i = 0; i < numPolygons && status; i++) {
+        SPolygon& polygon = output[i];
+        // Size to read from the polygon
+        // It should be somehow guaranteed that CVertexData* pointer is last in the structure
+        // Pragma pack?
+        const unsigned int beginSize = sizeof (Planef) + sizeof (int) * 2 +
+                sizeof (unsigned int) +
+                sizeof (AABoundingBox3Df);
+        status = (fgBool)!!(this->read(&polygon, beginSize, 1));
+        if(!status)
+            continue;
+        SBinPolygonVertexDataHeader vertexDataH;
+        status = (fgBool)!!(this->read(&vertexDataH, sizeof (SBinPolygonVertexDataHeader), 1));
+        if(!status)
+            continue;
+        status = (vertexDataH.vertexStride == Vertex4v::stride());
+        if(polygon.getVertexData() == NULL) {
+            // this should not happen
+            status = FG_FALSE;
+            continue;
+        }
+        polygon.getVertexData()->reserve(vertexDataH.numVertices);
+        polygon.getVertexData()->resize(vertexDataH.numVertices);
+
+        status = (fgBool)!!(this->read(polygon.getVertexData()->front(),
+                                       polygon.getVertexData()->stride(),
+                                       vertexDataH.numVertices)
+                            == (int)vertexDataH.numVertices);
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CBspFile::readPolygonsText(PolygonsVec& output) {
+    fgBool status = FG_TRUE;
+    if(!isOpen() || m_isBinary || !m_isPolygonsText)
+        return FG_FALSE;
+    char buf[192];
+    unsigned int nPolygons = 0;
+    SPolygon* polygon = NULL;
+    Vertex4v* vertex = NULL;
+    while(this->readString(buf, 192)) {
+        if(strings::startsWith(buf, "#"))
+            continue;
+        char tmp[64];
+        if(strings::startsWith(buf, "polygon", FG_FALSE)) {
+            // new polygon
+            nPolygons++;
+            output.push_back(SPolygon());
+            polygon = &output[nPolygons - 1];
+            vertex = NULL;
+        } else if(strings::startsWith(buf, "xyz", FG_FALSE) && polygon) {
+            Vector3f pos;
+            sscanf(buf, "xyz %f %f %f %s", &pos.x, &pos.y, &pos.z, tmp);
+            polygon->getVertexData()->append(pos);
+            int nVertex = polygon->getVertexData()->size() - 1;
+            vertex = ((Vertex4v*)polygon->getVertexData()->front()) + nVertex;
+        } else if(strings::startsWith(buf, "normal", FG_FALSE) && vertex) {
+            // overwrite
+            sscanf(buf, "normal %f %f %f %s", &vertex->normal.x,
+                   &vertex->normal.y,
+                   &vertex->normal.z,
+                   tmp);
+        } else if(strings::startsWith(buf, "uv", FG_FALSE) && vertex) {
+            sscanf(buf, "uv %f %f %s", &vertex->uv.x,
+                   &vertex->uv.y,
+                   tmp);
+            // x s r
+            // y t g
+        } else if(strings::startsWith(buf, "color", FG_FALSE) && vertex) {
+            sscanf(buf, "color %f %f %f %f %s", &vertex->color.r,
+                   &vertex->color.g,
+                   &vertex->color.b,
+                   &vertex->color.a,
+                   tmp);
+        }
+    }
+    status = (fgBool)!!(nPolygons > 0);
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CBspFile::readPolygonsHelper(PolygonsVec& output) {
+    fgBool status = FG_TRUE;
+    if(!isOpen())
+        return FG_FALSE;
+    fgBool noHeader = FG_FALSE;
+    if(!m_isBinary) {
+        // if the file is not binary then probably this is plain text
+        // file without any tags - need to rewind
+        if(!checkPolygonsTag()) {
+            noHeader = FG_TRUE;
+            m_isPolygonsText = FG_TRUE;
+            zeroHeader();
+            this->setPosition(0, FG_FILE_SEEK_SET);
+            status = FG_TRUE;
+            m_mainHeader.balance = 6;
+            m_mainHeader.bspType = (int)CBspTree::BSP_LEAFY;
+        }
+    } else {
+        m_isPolygonsText = FG_FALSE;
+        // this file is not valid bsp binary
+        // check if it's polygons only
+        status = checkPolygonsTag();
+    }
+    if(status && !noHeader) {
+        // it's polygons only - in binary format
+        // need to load the polygons into an array
+        // and compile the whole tree
+        // main header is compatible - hasBsp and others are 0s
+        // only numPolygons matters
+        m_mainHeader.hasBsp = FG_FALSE;
+        m_mainHeader.hasPortalProc = FG_FALSE;
+        m_mainHeader.hasPvsProc = FG_FALSE;
+        if(m_mainHeader.bspType > 1)
+            m_mainHeader.bspType = 0;
+        if(m_mainHeader.bspType < 0)
+            m_mainHeader.bspType = 0;
+        output.reserve(m_mainHeader.numPolygons);
+        status = readPolygonsBinary(output);
+    } else if(status && m_isPolygonsText) {
+        // no need to reserve - plain text file does not contain that info
+        status = readPolygonsText(output);
+    }
     return status;
 }
 //------------------------------------------------------------------------------
@@ -456,46 +689,9 @@ fgBool gfx::CBspFile::readBspTree(CBspTree* pBspTree) {
     //--------------------------------------------------------------------------
     // READING POLYGONS
     CBspTree::PolygonsVec& polygons = pBspTree->getPolygons();
-    const unsigned int numPolygons = m_mainHeader.numPolygons;
-    if(status) {
-        polygons.reserve(numPolygons);
-        polygons.resize(numPolygons);
-        SBinDataVecChunkHeader polysH;
-        status = (fgBool)!!(this->read(&polysH, sizeof (polysH), 1));
-        status = (status && polysH.numChunks == numPolygons);
-        status = (status && polysH.chunkType == ChunkType::POLYGONS);
-    }
-    for(unsigned int i = 0; i < numPolygons && status; i++) {
-        SPolygon& polygon = polygons[i];
-        // Size to read from the polygon
-        // It should be somehow guaranteed that CVertexData* pointer is last in the structure
-        // Pragma pack?
-        const unsigned int beginSize = sizeof (Planef) + sizeof (int) * 2 +
-                sizeof (unsigned int) +
-                sizeof (AABoundingBox3Df);
-        status = (fgBool)!!(this->read(&polygon, beginSize, 1));
-        if(!status)
-            continue;
-        SBinPolygonVertexDataHeader vertexDataH;
-        status = (fgBool)!!(this->read(&vertexDataH, sizeof (SBinPolygonVertexDataHeader), 1));
-        if(!status)
-            continue;
-        status = (vertexDataH.vertexStride == Vertex4v::stride());
-        if(polygon.getVertexData() == NULL) {
-            // this should not happen
-            status = FG_FALSE;
-            continue;
-        }
-        polygon.getVertexData()->reserve(vertexDataH.numVertices);
-        polygon.getVertexData()->resize(vertexDataH.numVertices);
-
-        status = (fgBool)!!(this->read(polygon.getVertexData()->front(),
-                                       polygon.getVertexData()->stride(),
-                                       vertexDataH.numVertices)
-                            == (int)vertexDataH.numVertices);
-    }
+    status = (fgBool)!!(status && readPolygonsBinary(polygons));
     //--------------------------------------------------------------------------
-    // PLANES
+    // READING PLANES
     CBspTree::PlanesVec& planes = pBspTree->getPlanes();
     const unsigned int numPlanes = m_mainHeader.numPlanes;
 
@@ -513,7 +709,7 @@ fgBool gfx::CBspFile::readBspTree(CBspTree* pBspTree) {
         status = (fgBool)!!(this->read(&plane, sizeof (Planef), 1));
     }
     //--------------------------------------------------------------------------
-    // MATERIALS - BINARY
+    // READING MATERIALS - BINARY
     {
         CBspTree::MaterialsVec& materials = pBspTree->getMaterials();
         const unsigned int numMaterials = m_mainHeader.numMaterials;
