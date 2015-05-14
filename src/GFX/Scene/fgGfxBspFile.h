@@ -66,7 +66,6 @@ namespace fg {
                 INVALID = 0,
                 NONE = 0,
                 BSP_NODES,
-                BSP_LEAFS,
                 POLYGONS,
                 PLANES,
                 MATERIALS,
@@ -221,6 +220,19 @@ namespace fg {
              * @return
              */
             fgBool readPolygonsHelper(PolygonsVec& output);
+
+            /**
+             *
+             * @param pNode
+             * @return
+             */
+            CBspNode* readNodeHelper(void);
+            /**
+             * 
+             * @param pNode
+             * @return 
+             */
+            fgBool writeNodeHelper(const CBspNode* pNode);
 
             /**
              *

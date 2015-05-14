@@ -443,6 +443,75 @@ fgBool gfx::CBspFile::readPolygonsHelper(PolygonsVec& output) {
 }
 //------------------------------------------------------------------------------
 
+gfx::CBspNode* gfx::CBspFile::readNodeHelper(void) {
+    if(!isOpen())
+        return FG_FALSE;
+    fgBool status = FG_TRUE;
+
+    CBspNode* pNode = new CBspNode(NULL, 0);
+    CBspLeaf* pLeaf = NULL;
+
+    // Now this is tricky - first need to load the pNode part -
+    // then can read the rest and ... switch the data
+    
+    status = (fgBool)!!(this->read(static_cast<CBspNode*>(pNode), sizeof (CBspNode), 1));
+    if(!status) {
+        delete pNode;
+        return NULL;
+    }
+    if(!pNode->isSolid() && !pNode->isRoot()) {
+        pLeaf = new CBspLeaf(NULL, 0);
+        // Need to switch / copy
+        CBspNode* pTmp = static_cast<CBspNode*>(pLeaf);
+        // copy the pNode data to pLeaf (Node part)
+        memcpy(pTmp, pNode, sizeof(CBspNode));
+        CBspNode nodeTmp(NULL, 0);
+        memcpy(pNode, &nodeTmp, sizeof(CBspNode));
+        delete pNode;
+        pNode = pTmp;
+
+        this->read(&pLeaf->m_pvsIdx, sizeof (int), 1);
+        this->read(&pLeaf->m_flags, sizeof (unsigned long int), 1);
+        int numIdxs = 0;
+        this->read(&numIdxs, sizeof (unsigned int), 1);
+        if(numIdxs) {
+            pLeaf->m_portalIdxes.reserve(numIdxs);
+            pLeaf->m_portalIdxes.resize(numIdxs);
+            status = (fgBool)!!(this->read(&pLeaf->m_portalIdxes.front(),
+                                           sizeof (int), numIdxs)
+                                == numIdxs);
+        }
+    }
+    return pNode;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CBspFile::writeNodeHelper(const CBspNode* pNode) {
+    if(!pNode)
+        return FG_FALSE;
+    if(!isOpen())
+        return FG_FALSE;
+    fgBool status = FG_TRUE;
+
+    // will now write CBspNode - it's like a node with additional integers and
+    // CVector<int> which needs to be saved/read manually
+    status = (fgBool)!!(this->write(static_cast<const CBspNode*>(pNode), sizeof (CBspNode), 1));
+    if(!status)
+        return FG_FALSE;
+    if(!pNode->isSolid() && !pNode->isRoot()) {
+        const CBspLeaf* pLeaf = static_cast<const CBspLeaf*>(pNode);
+
+        this->write(&pLeaf->m_pvsIdx, sizeof (int), 1);
+        this->write(&pLeaf->m_flags, sizeof (unsigned long int), 1);
+        int numIdxs = pLeaf->m_portalIdxes.size();
+        this->write(&numIdxs, sizeof (unsigned int), 1);
+        if(numIdxs)
+            this->write(&pLeaf->m_portalIdxes.front(), sizeof (int), numIdxs);
+    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::CBspFile::writeBspTree(const CBspTree* pBspTree) {
     fgBool status = FG_TRUE;
     if(!pBspTree)
@@ -456,7 +525,7 @@ fgBool gfx::CBspFile::writeBspTree(const CBspTree* pBspTree) {
     // the main header should be already written
 
     //--------------------------------------------------------------------------
-    // NODES
+    // WRITE NODES
     CBspTree::NodesVec const& nodesVec = pBspTree->getNodes();
     const unsigned int numNodes = nodesVec.size();
     if(!numNodes)
@@ -473,41 +542,10 @@ fgBool gfx::CBspFile::writeBspTree(const CBspTree* pBspTree) {
             status = FG_FALSE;
             break;
         }
-        status = (fgBool)!!(this->write(pNode, sizeof (CBspNode), 1));
+        status = writeNodeHelper(pNode);
     }
     //--------------------------------------------------------------------------
-    // LEAFS
-    CBspTree::LeafsVec const& leafsVec = pBspTree->getLeafs();
-    const unsigned int numLeafs = leafsVec.size();
-    if(!numLeafs)
-        status = FG_FALSE;
-    if(status) {
-        SBinDataVecChunkHeader leafsH;
-        leafsH.chunkType = ChunkType::BSP_LEAFS;
-        leafsH.numChunks = numLeafs;
-        status = (fgBool)!!(this->write(&leafsH, sizeof (leafsH), 1));
-    }
-    for(unsigned int i = 0; i < numLeafs && status; i++) {
-        CBspLeaf* pLeaf = leafsVec[i];
-        if(!pLeaf) {
-            status = FG_FALSE;
-            break;
-        }
-        // will now write CBspLeaf - it's like a node with additional integers and
-        // CVector<int> which needs to be saved/read manually
-        status = (fgBool)!!(this->write(static_cast<CBspNode*>(pLeaf), sizeof (CBspNode), 1));
-        if(!status)
-            continue;
-
-        this->write(&pLeaf->m_pvsIdx, sizeof (int), 1);
-        this->write(&pLeaf->m_flags, sizeof (unsigned long int), 1);
-        int numIdxs = pLeaf->m_portalIdxes.size();
-        this->write(&numIdxs, sizeof (unsigned int), 1);
-        if(numIdxs)
-            this->write(&pLeaf->m_portalIdxes.front(), sizeof (int), numIdxs);
-    }
-    //--------------------------------------------------------------------------
-    // POLYGONS
+    // WRITE POLYGONS
     CBspTree::PolygonsVec const& polygons = pBspTree->getPolygons();
     const unsigned int numPolygons = polygons.size();
     if(!numPolygons)
@@ -544,7 +582,7 @@ fgBool gfx::CBspFile::writeBspTree(const CBspTree* pBspTree) {
                                         polygon.getVertexData()->size()));
     }
     //--------------------------------------------------------------------------
-    // PLANES
+    // WRITE PLANES
     CBspTree::PlanesVec const& planes = pBspTree->getPlanes();
     const unsigned int numPlanes = planes.size();
     if(!numPlanes)
@@ -561,7 +599,7 @@ fgBool gfx::CBspFile::writeBspTree(const CBspTree* pBspTree) {
         status = (fgBool)!!(this->write(&plane, sizeof (Planef), 1));
     }
     //--------------------------------------------------------------------------
-    // MATERIALS - BINARY
+    // WRITE MATERIALS - BINARY
     {
         CBspTree::MaterialsVec const& materials = pBspTree->getMaterials();
         const unsigned int numMaterials = materials.size();
@@ -626,65 +664,34 @@ fgBool gfx::CBspFile::readBspTree(CBspTree* pBspTree) {
     const unsigned int numNodes = m_mainHeader.numNodes;
     nodesVec.reserve(numNodes);
     nodesVec.resize(numNodes);
+    CBspTree::LeafsVec& leafsVec = pBspTree->getLeafs();
+    const unsigned int numLeafs = m_mainHeader.numLeafs;
+    leafsVec.reserve(numLeafs);
+    leafsVec.resize(numLeafs);
 
     SBinDataVecChunkHeader nodesH;
     status = (fgBool)!!(this->read(&nodesH, sizeof (nodesH), 1));
     status = (fgBool)(status && nodesH.numChunks == numNodes);
     status = (fgBool)(status && nodesH.chunkType == ChunkType::BSP_NODES);
     for(unsigned int i = 0; i < numNodes && status; i++) {
-        nodesVec[i] = NULL;
-        CBspNode* pNode = new CBspNode(NULL, 0);
-        if(!pNode) {
-            status = FG_FALSE;
-            break;
-        }
+        nodesVec[i] = NULL;        
         // this is not universal solution - will be screwed up
         // if the file will be saved by 32bit app and loaded by 64bit app
         // reason? The whole structure/class is being read/saved
         // there is pointer inside -> it's 4 or 8 bytes...
-        status = (fgBool)!!(this->read(pNode, sizeof (CBspNode), 1));
-        pNode->setBsp(pBspTree);
-        nodesVec[i] = pNode;
-    }
-    //--------------------------------------------------------------------------
-    // READING LEAFS
-    CBspTree::LeafsVec& leafsVec = pBspTree->getLeafs();
-    const unsigned int numLeafs = m_mainHeader.numLeafs;
-    if(status) {
-        leafsVec.reserve(numLeafs);
-        leafsVec.resize(numLeafs);
-        SBinDataVecChunkHeader leafsH;
-        status = (fgBool)!!(this->read(&leafsH, sizeof (leafsH), 1));
-        status = (status && leafsH.numChunks == numLeafs);
-        status = (status && leafsH.chunkType == ChunkType::BSP_LEAFS);
-    }
-    for(unsigned int i = 0; i < numLeafs && status; i++) {
-        CBspLeaf* pLeaf = new CBspLeaf(NULL, 0);
-        if(!pLeaf) {
-            status = FG_FALSE;
-            break;
-        }
-        // will now read CBspLeaf - it's like a node with additional integers and
-        // CVector<int> which needs to be read manually
-        status = (fgBool)!!(this->read(static_cast<CBspNode*>(pLeaf), sizeof (CBspNode), 1));
-        if(!status) {
-            leafsVec[i] = NULL;
-            delete pLeaf;
+        CBspNode* pNode = readNodeHelper();
+        if(!pNode) {
+            // #FIXME
+            nodesVec[i] = NULL;
             continue;
         }
-        this->read(&pLeaf->m_pvsIdx, sizeof (int), 1);
-        this->read(&pLeaf->m_flags, sizeof (unsigned long int), 1);
-        int numIdxs = 0;
-        this->read(&numIdxs, sizeof (unsigned int), 1);
-        if(numIdxs) {
-            pLeaf->m_portalIdxes.reserve(numIdxs);
-            pLeaf->m_portalIdxes.resize(numIdxs);
-            status = (fgBool)!!(this->read(&pLeaf->m_portalIdxes.front(),
-                                           sizeof (int), numIdxs)
-                                == numIdxs);
+        pNode->setBsp(pBspTree);
+        nodesVec[i] = pNode;
+        if(pNode->isEmptyLeaf()) {
+            CBspLeaf* pLeaf = static_cast<CBspLeaf*>(pNode);
+            //pLeaf->m_leafIdx;
+            leafsVec[pLeaf->m_leafIdx] = pLeaf;
         }
-        pLeaf->setBsp(pBspTree);
-        leafsVec[i] = pLeaf;
     }
     //--------------------------------------------------------------------------
     // READING POLYGONS

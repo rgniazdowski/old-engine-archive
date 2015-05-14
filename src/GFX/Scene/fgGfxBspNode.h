@@ -94,6 +94,13 @@ namespace fg {
                 return m_nodeIdx[N_BACK];
             }
             /**
+             * 
+             * @return
+             */
+            fgBool isRoot(void) const {
+                return (fgBool)!!(m_idxParent < 0);
+            }
+            /**
              *
              * @return
              */

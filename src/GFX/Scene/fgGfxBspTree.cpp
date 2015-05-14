@@ -591,7 +591,7 @@ void gfx::CBspTree::addNode(CBspNode* pNode) {
 
     if(pNode->isEmptyLeaf()) {
         pNode->m_leafIdx = m_leafs.size();
-        m_leafs.push_back((CBspLeaf*)pNode);
+        m_leafs.push_back(static_cast<CBspLeaf*>(pNode));
     }
 }
 //------------------------------------------------------------------------------
