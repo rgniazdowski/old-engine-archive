@@ -16,8 +16,10 @@
  * License:
  **************************************************************/
 
+#include "fgEngineMain.h"
 #include "FlexiGameEditorMain.h"
 #include "CEditorResMgrPanel.h"
+
 
 #include <wx/msgdlg.h>
 

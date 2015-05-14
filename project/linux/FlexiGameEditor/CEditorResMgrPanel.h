@@ -64,7 +64,7 @@ public:
      *
      * @return
      */
-    fg::CEngineMain* getGameMain(void) const {
+    fg::CEngineMain* getEngineMain(void) const {
         return m_engineMain;
     }
     /**

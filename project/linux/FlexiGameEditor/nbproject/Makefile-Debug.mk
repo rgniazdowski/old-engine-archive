@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/CEditorScriptMgrPanel.o \
 	${OBJECTDIR}/CEngineGfxCanvas.o \
 	${OBJECTDIR}/CGfxHolderPanel.o \
+	${OBJECTDIR}/CPreviewBspBuilder.o \
 	${OBJECTDIR}/FlexiGameEditorApp.o \
 	${OBJECTDIR}/FlexiGameEditorMain.o
 
@@ -110,6 +111,11 @@ ${OBJECTDIR}/CGfxHolderPanel.o: CGfxHolderPanel.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/wx/include/gtk2-unicode-3.0 -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CGfxHolderPanel.o CGfxHolderPanel.cpp
+
+${OBJECTDIR}/CPreviewBspBuilder.o: CPreviewBspBuilder.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/wx/include/gtk2-unicode-3.0 -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CPreviewBspBuilder.o CPreviewBspBuilder.cpp
 
 ${OBJECTDIR}/FlexiGameEditorApp.o: FlexiGameEditorApp.cpp 
 	${MKDIR} -p ${OBJECTDIR}

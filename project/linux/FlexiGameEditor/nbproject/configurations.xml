@@ -11,6 +11,8 @@
       <itemPath>CEditorScriptMgrPanel.h</itemPath>
       <itemPath>CEngineGfxCanvas.h</itemPath>
       <itemPath>CGfxHolderPanel.h</itemPath>
+      <itemPath>CPreviewBspBuilder.h</itemPath>
+      <itemPath>CPreviewModeBase.h</itemPath>
       <itemPath>FlexiGameEditorApp.h</itemPath>
       <itemPath>FlexiGameEditorMain.h</itemPath>
     </logicalFolder>
@@ -28,6 +30,7 @@
       <itemPath>CEditorScriptMgrPanel.cpp</itemPath>
       <itemPath>CEngineGfxCanvas.cpp</itemPath>
       <itemPath>CGfxHolderPanel.cpp</itemPath>
+      <itemPath>CPreviewBspBuilder.cpp</itemPath>
       <itemPath>FlexiGameEditorApp.cpp</itemPath>
       <itemPath>FlexiGameEditorMain.cpp</itemPath>
     </logicalFolder>
@@ -185,6 +188,12 @@
       <item path="CGfxHolderPanel.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CGfxHolderPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CPreviewBspBuilder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CPreviewBspBuilder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CPreviewModeBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FlexiGameEditorApp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -346,6 +355,12 @@
       <item path="CGfxHolderPanel.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CGfxHolderPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CPreviewBspBuilder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CPreviewBspBuilder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CPreviewModeBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FlexiGameEditorApp.cpp" ex="false" tool="1" flavor2="0">
       </item>
