@@ -152,6 +152,51 @@ namespace fg {
             ////////////////////////////////////////////////////////////////////
 
             /**
+             * 
+             * @param eventCode
+             * @param pCallback
+             * @return
+             */
+            fgBool isRegistered(EventType eventCode,
+                                CFunctionCallback* pCallback);
+            /**
+             *
+             * @param eventCode
+             * @param pFunction
+             * @return
+             */
+            fgBool isRegistered(EventType eventCode,
+                                const CFunctionCallback::Function pFunction);
+            /**
+             *
+             * @param eventCode
+             * @param pPlainFunction
+             * @return
+             */
+            fgBool isRegistered(EventType eventCode,
+                                const CPlainFunctionCallback::PlainFunction pPlainFunction);
+            /**
+             *
+             * @param pCallback
+             * @return
+             */
+            EventType isRegistered(CFunctionCallback* pCallback);
+            /**
+             *
+             * @param pFunction
+             * @return
+             */
+            EventType isRegistered(const CFunctionCallback::Function pFunction);
+            /**
+             *
+             * @param pPlainFunction
+             * @return
+             */
+            EventType isRegistered(const CPlainFunctionCallback::PlainFunction pPlainFunction);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
              *
              * @param eventCode
              * @return

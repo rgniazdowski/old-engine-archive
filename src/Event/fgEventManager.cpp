@@ -152,6 +152,7 @@ fgBool event::CEventManager::destroy(void) {
     }
 
     event::CEventManager::clear();
+    m_init = FG_FALSE;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -167,6 +168,7 @@ void event::CEventManager::clear(void) {
 fgBool event::CEventManager::initialize(void) {
     m_eventStructs.reserve(INITIAL_PTR_VEC_SIZE);
     m_argLists.reserve(INITIAL_PTR_VEC_SIZE);
+    m_init = FG_TRUE;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -241,6 +243,124 @@ void event::CEventManager::throwEvent(EventType eventCode,
                                       void* pSystemData) {
     SThrownEvent event(eventCode, (void *)pSystemData);
     m_eventsQueue.push(event);
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CEventManager::isRegistered(EventType eventCode,
+                                          CFunctionCallback* pCallback) {
+    if(eventCode == event::INVALID || !pCallback) {
+        return FG_FALSE;
+    }
+
+    int idx = m_eventBinds[eventCode].find(pCallback);
+    if(idx < 0)
+        return FG_FALSE;
+
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CEventManager::isRegistered(EventType eventCode,
+                                          const CFunctionCallback::Function pFunction) {
+    fgBool status = FG_FALSE;
+    if(eventCode == event::INVALID || !pFunction) {
+        return status;
+    }
+    const unsigned int n = m_eventBinds[eventCode].size();
+    if(!n) {
+        return status;
+    }
+    CallbacksVec const& callbacks = m_eventBinds[eventCode];
+    for(unsigned int i = 0; i < n; i++) {
+        if(callbacks[i]->getFunction() == pFunction) {
+            status = FG_TRUE;
+            break;
+        }
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CEventManager::isRegistered(EventType eventCode,
+                                          const CPlainFunctionCallback::PlainFunction pPlainFunction) {
+    fgBool status = FG_FALSE;
+    if(eventCode == event::INVALID || !pPlainFunction) {
+        return status;
+    }
+    const unsigned int n = m_eventBinds[eventCode].size();
+    if(!n) {
+        return status;
+    }
+    CallbacksVec const& callbacks = m_eventBinds[eventCode];
+    for(unsigned int i = 0; i < n; i++) {
+        const CFunctionCallback* pCallback = callbacks[i];
+        if(!pCallback)
+            continue;
+        if(pCallback->getCallbackType() == event::PLAIN_FUNCTION_CALLBACK) {
+            const CPlainFunctionCallback* pPlainCB = dynamic_cast<const CPlainFunctionCallback*>(pCallback);
+            if(pPlainCB->getPlainFunction() == pPlainFunction) {
+                status = FG_TRUE;
+                break;
+            }
+        }
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+event::EventType event::CEventManager::isRegistered(CFunctionCallback* pCallback) {
+    if(!pCallback)
+        return event::INVALID;
+    EventType foundEvent = event::INVALID;
+    CallbackBindingMapItor it = m_eventBinds.begin();
+    CallbackBindingMapItor end = m_eventBinds.end();
+
+    for(; it != end; it++) {
+        const EventType eventCode = it->first;
+        if(isRegistered(eventCode, pCallback)) {
+            foundEvent = eventCode;
+            break;
+        }
+    }
+
+    return foundEvent;
+}
+//------------------------------------------------------------------------------
+
+event::EventType event::CEventManager::isRegistered(const CFunctionCallback::Function pFunction) {
+    if(!pFunction)
+        return event::INVALID;
+    EventType foundEvent = event::INVALID;
+    CallbackBindingMapItor it = m_eventBinds.begin();
+    CallbackBindingMapItor end = m_eventBinds.end();
+
+    for(; it != end; it++) {
+        const EventType eventCode = it->first;
+        if(isRegistered(eventCode, pFunction)) {
+            foundEvent = eventCode;
+            break;
+        }
+    }
+
+    return foundEvent;
+}
+//------------------------------------------------------------------------------
+
+event::EventType event::CEventManager::isRegistered(const CPlainFunctionCallback::PlainFunction pPlainFunction) {
+    if(!pPlainFunction)
+        return event::INVALID;
+    EventType foundEvent = event::INVALID;
+    CallbackBindingMapItor it = m_eventBinds.begin();
+    CallbackBindingMapItor end = m_eventBinds.end();
+
+    for(; it != end; it++) {
+        const EventType eventCode = it->first;
+        if(isRegistered(eventCode, pPlainFunction)) {
+            foundEvent = eventCode;
+            break;
+        }
+    }
+    return foundEvent;
 }
 //------------------------------------------------------------------------------
 
@@ -335,7 +455,7 @@ event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
     if(!pCallback || (int)eventCode < 0)
         return NULL;
     // Duplicate callbacks are not allowed for the same event
-    if(m_eventBinds[eventCode].find(pCallback) >= 0) {
+    if(isRegistered(eventCode, pCallback)) {
         return NULL;
     }
     m_eventBinds[eventCode].push_back(pCallback);
@@ -347,8 +467,9 @@ event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
                                                             CFunctionCallback::Function pFunction) {
     if(!pFunction || (int)eventCode < 0)
         return NULL;
-    // !! !!
-    // Need to check somehow for duplicates #FIXME
+    if(isRegistered(eventCode, pFunction)) {
+        return NULL;
+    }
     CFunctionCallback* pCallback = new CFunctionCallback(pFunction);
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
@@ -360,7 +481,9 @@ event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
                                                             void* pUserData) {
     if((int)eventCode < 0 || !pPlainFunction)
         return NULL;
-
+    if(isRegistered(eventCode, pPlainFunction)) {
+        return NULL;
+    }
     CFunctionCallback* pCallback = new CPlainFunctionCallback(pPlainFunction, pUserData);
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
