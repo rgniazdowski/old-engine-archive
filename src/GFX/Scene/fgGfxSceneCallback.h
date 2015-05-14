@@ -22,6 +22,11 @@
     #include "fgGfxSceneEvent.h"
 
 namespace fg {
+    namespace event {
+        const CallbackType SCENE_CALLBACK = 1000;
+        const CallbackType SCENE_FUNCTION_CALLBACK = 1001;
+        const CallbackType SCENE_METHOD_CALLBACK = 1002;
+    }
     namespace gfx {
 
         class CSceneNode;
@@ -117,6 +122,7 @@ namespace fg {
             CSceneCallback() {
                 m_pClassInstance = pClassInstance;
                 m_sceneMethod = pMethod;
+                m_callbackType = event::SCENE_METHOD_CALLBACK;
             }
             /**
              * 
@@ -124,6 +130,7 @@ namespace fg {
             virtual ~CSceneMethodCallback() {
                 m_pClassInstance = NULL;
                 m_sceneMethod = NULL;
+                m_callbackType = event::INVALID_CALLBACK;
             }
             /**
              * 
@@ -278,12 +285,14 @@ namespace fg {
             CSceneFunctionCallback(fgSceneFunction pFunction) :
             CSceneCallback() {
                 m_sceneFunction = pFunction;
+                m_callbackType = event::SCENE_FUNCTION_CALLBACK;
             }
             /**
              * 
              */
             virtual ~CSceneFunctionCallback() {
                 m_sceneFunction = NULL;
+                m_callbackType = event::INVALID_CALLBACK;
             }
             /**
              * 

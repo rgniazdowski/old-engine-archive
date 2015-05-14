@@ -18,6 +18,13 @@
 namespace fg {
     namespace event {
 
+        typedef unsigned int CallbackType;
+
+        const CallbackType INVALID_CALLBACK = 0;
+        const CallbackType FUNCTION_CALLBACK = 1;
+        const CallbackType PLAIN_FUNCTION_CALLBACK = 2;
+        const CallbackType METHOD_CALLBACK = 3;
+
         /**
          *
          */
@@ -94,11 +101,20 @@ namespace fg {
             inline Function const& getFunction(void) const {
                 return m_function;
             }
+            /**
+             *
+             */
+            inline CallbackType getCallbackType(void) const {
+                return m_callbackType;
+            }
+
+        protected:
+            ///
+            CallbackType m_callbackType;
 
         private:
             ///
             Function m_function;
-
         };
 
         /**
@@ -126,6 +142,7 @@ namespace fg {
             CFunctionCallback(),
             m_plainFunction(NULL),
             m_pUserData(NULL) {
+                m_callbackType = PLAIN_FUNCTION_CALLBACK;
                 // just to make sure that fgFunctionCallback::m_function is NULL
                 // this is because of virtual inheritance
                 CFunctionCallback::setFunction((CFunctionCallback::Function)NULL);
@@ -137,6 +154,7 @@ namespace fg {
             CPlainFunctionCallback(PlainFunction pPlainFunction, void *pUserData = NULL) {
                 m_plainFunction = pPlainFunction;
                 m_pUserData = pUserData;
+                m_callbackType = PLAIN_FUNCTION_CALLBACK;
                 CFunctionCallback::setFunction((CFunctionCallback::Function)NULL);
 
             }
@@ -146,6 +164,7 @@ namespace fg {
             virtual ~CPlainFunctionCallback() {
                 m_plainFunction = NULL;
                 m_pUserData = NULL;
+                m_callbackType = INVALID_CALLBACK;
             }
             /**
              * 
@@ -180,7 +199,7 @@ namespace fg {
             virtual fgBool Call(CArgumentList *pArgv) {
                 // #FIXME - this is for compatibility with other functions
                 if(m_plainFunction != NULL)
-                    return m_plainFunction(NULL, m_pUserData);
+                    return m_plainFunction((void *)pArgv, m_pUserData);
                 else
                     return CFunctionCallback::Call(pArgv);
                 return FG_FALSE;
@@ -242,13 +261,16 @@ namespace fg {
             CMethodCallback(TClass* pClassInstance, ClassMethod pMethod) :
             CFunctionCallback(),
             m_pClassInstance(pClassInstance),
-            m_method(pMethod) { }
+            m_method(pMethod) {
+                m_callbackType = METHOD_CALLBACK;
+            }
             /**
              * 
              */
             virtual ~CMethodCallback() {
                 m_pClassInstance = NULL;
                 m_method = NULL;
+                m_callbackType = INVALID_CALLBACK;
             }
             /**
              * 
@@ -265,6 +287,8 @@ namespace fg {
             void setClass(TClass* pClassInstance) {
                 m_pClassInstance = pClassInstance;
             }
+            using base_type::Call;
+            
             /**
              * 
              * @return 

@@ -26,17 +26,16 @@ namespace fg {
     namespace event {
 
         ///
-        typedef std::map<int, fg::CVector<fg::event::CFunctionCallback *> > CallbackBindingMap;
-        ///
-        typedef CallbackBindingMap::iterator CallbackBindingMapItor;
-
-        ///
         typedef fg::CVector<fg::event::CFunctionCallback *> CallbacksVec;
-
         ///
         typedef CallbacksVec::iterator CallbacksVecItor;
         ///
         typedef CallbacksVec::const_iterator CallbacksVecConstItor;
+
+        ///
+        typedef std::map<int, CallbacksVec> CallbackBindingMap;
+        ///
+        typedef CallbackBindingMap::iterator CallbackBindingMapItor;
 
         ///
         typedef std::queue<fg::event::SThrownEvent> EventsQueue;

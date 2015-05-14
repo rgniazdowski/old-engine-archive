@@ -29,7 +29,7 @@ using namespace fg;
 
 script::CScriptCallback::CScriptCallback(lua_State *L,
                                          const char *info,
-                                         unsigned short int _argc,
+                                         const unsigned short int _argc,
                                          CallbackType _type) :
 m_luaState(L),
 m_script(),
@@ -288,12 +288,13 @@ fgBool script::CScriptCallback::Call(void *pSystemData) {
  * SCRIPT GUI CALLBACK - SPECIAL CALLBACK TO BE USED IN GUI 
  */
 
-script::CScriptGuiCallback::CScriptGuiCallback(gui::CGuiMain *pGuiMain, lua_State *L,
+script::CScriptGuiCallback::CScriptGuiCallback(fg::gui::CGuiMain *pGuiMain, lua_State *L,
                                                const char *info,
                                                const unsigned short int _argc) :
 CScriptCallback(L, info, _argc, SCRIPT),
 gui::CGuiCallback(pGuiMain) {
     event::CFunctionCallback::setFunction((event::CFunctionCallback::Function)NULL);
+    m_callbackType = event::SCRIPT_GUI_CALLBACK;
 }
 //------------------------------------------------------------------------------
 
@@ -345,6 +346,7 @@ script::CScriptSceneCallback::CScriptSceneCallback(lua_State *L,
 CScriptCallback(L, info, _argc, SCRIPT),
 gfx::CSceneCallback() {
     event::CFunctionCallback::setFunction((event::CFunctionCallback::Function)NULL);
+    m_callbackType = event::SCRIPT_SCENE_CALLBACK;
 }
 //------------------------------------------------------------------------------
 

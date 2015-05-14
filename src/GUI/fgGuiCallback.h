@@ -25,6 +25,11 @@ namespace fg {
 typedef fgBool(*fgGuiWidgetEventHandlerFunc) (fg::gui::CGuiMain *guiMain, fg::gui::CWidget *widget);
 
 namespace fg {
+    namespace event {
+        const CallbackType GUI_CALLBACK = 10;
+        const CallbackType GUI_METHOD_CALLBACK = 11;
+        const CallbackType GUI_FUNCTION_CALLBACK = 12;
+    }
     namespace gui {
 
         /**
@@ -106,6 +111,7 @@ namespace fg {
             CGuiCallback(NULL) {
                 m_pClassInstance = pClassInstance;
                 m_guiMethod = pMethod;
+                m_callbackType = event::GUI_METHOD_CALLBACK;
             }
             /**
              * 
@@ -117,6 +123,7 @@ namespace fg {
             CGuiCallback(pGuiMain) {
                 m_pClassInstance = pClassInstance;
                 m_guiMethod = pMethod;
+                m_callbackType = event::GUI_METHOD_CALLBACK;
             }
             /**
              * 
@@ -124,6 +131,7 @@ namespace fg {
             virtual ~CGuiMethodCallback() {
                 m_pClassInstance = NULL;
                 m_guiMethod = NULL;
+                m_callbackType = event::INVALID_CALLBACK;
             }
             /**
              * 
@@ -241,6 +249,7 @@ namespace fg {
             CGuiFunctionCallback(fgGuiFunction pFunction) :
             CGuiCallback(NULL) {
                 m_guiFunction = pFunction;
+                m_callbackType = event::GUI_FUNCTION_CALLBACK;
             }
             /**
              * 
@@ -250,12 +259,14 @@ namespace fg {
             CGuiFunctionCallback(CGuiMain *pGuiMain, fgGuiFunction pFunction) :
             CGuiCallback(pGuiMain) {
                 m_guiFunction = pFunction;
+                m_callbackType = event::GUI_FUNCTION_CALLBACK;
             }
             /**
              * 
              */
             virtual ~CGuiFunctionCallback() {
                 m_guiFunction = NULL;
+                m_callbackType = event::INVALID_CALLBACK;
             }
             /**
              * 
