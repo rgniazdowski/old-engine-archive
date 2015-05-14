@@ -107,6 +107,58 @@ CEngineGfxCanvas::~CEngineGfxCanvas() {
 }
 //------------------------------------------------------------------------------
 
+unsigned int CEngineGfxCanvas::executeCallbacks(InternalCallbackType cbType) {
+    if((int)cbType >= NUM_ENGINE_CB_TYPES)
+        return 0;
+    unsigned int nCalls = 0;
+    const unsigned int n = m_onEngineCallbacks[(int)cbType].size();
+    for(unsigned int i = 0; i < n; i++) {
+        CallbackData &info = m_onEngineCallbacks[(int)cbType][i];
+        if(info.callback) {
+            info.callback((void *)this, (void *)info.userData);
+            nCalls++;
+        }
+    }
+    return nCalls;
+}
+//------------------------------------------------------------------------------
+
+fgBool CEngineGfxCanvas::registerCallback(InternalCallbackType cbType,
+                                          CallbackFuncPtr pCallback,
+                                          void* pUserData) {
+    if(!pCallback || isRegistered(pCallback))
+        return FG_FALSE;
+    CallbackData callbackInfo(pCallback, pUserData);
+    m_onEngineCallbacks[(int)cbType].push_back(callbackInfo);
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool CEngineGfxCanvas::isRegistered(CallbackFuncPtr pCallback,
+                                      InternalCallbackType cbType) {
+    if(!pCallback)
+        return FG_FALSE;
+    const unsigned int nTypes = NUM_ENGINE_CB_TYPES;
+    int cbTypeMax = 0;
+    int cbTypeIdx = 0;
+    if(cbType == INVALID_CALLBACK) {
+        cbTypeMax = nTypes - 1;
+    } else {
+        cbTypeMax = (int)cbType;
+        cbTypeIdx = (int)cbType;
+    }
+    for(; cbTypeIdx <= cbTypeMax; cbTypeIdx++) {
+        unsigned int n = m_onEngineCallbacks[cbTypeIdx].size();
+
+        // Check for duplicates
+        for(unsigned int i = 0; i < n; i++) {
+            CallbackData &info = m_onEngineCallbacks[cbTypeIdx][i];
+            if(info.callback == pCallback)
+                return FG_TRUE;
+        }
+    }
+    return FG_FALSE;
+}
 //------------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnCloseEvent(wxCloseEvent& event) {
@@ -193,7 +245,7 @@ void CEngineGfxCanvas::OnResized(wxSizeEvent& event) {
     if(m_appInit && m_engineMain) {
         m_engineMain->getGfxMain()->getMainWindow()->setup("FlexiGame::Editor", x, y);
         m_engineMain->getGuiMain()->setScreenSize(x, y);
-        fg::gfx::context::setScreenSize(x, y);        
+        fg::gfx::context::setScreenSize(x, y);
     }
     Refresh();
 }
@@ -282,6 +334,7 @@ fgBool CEngineGfxCanvas::OnGfxWindowSwapBuffer(void* pSystemData, void *pUserDat
 }
 
 //------------------------------------------------------------------------------
+
 void CEngineGfxCanvas::OnPaint(wxPaintEvent& event) {
     fgBool isSwapBuffers = FG_TRUE;
     static unsigned long int t1 = 0;
@@ -332,6 +385,7 @@ void CEngineGfxCanvas::closeProgram(void) {
     // if(m_paint && m_context && IsShown()) {
     //    wxGLCanvas::SetCurrent(*m_context);
     //}
+    executeCallbacks(ENGINE_DESTROYED);
     FG_LOG_DEBUG("Closing program...");
     if(m_engineMain) {
         m_engineMain->destroy();
@@ -397,7 +451,8 @@ fgBool CEngineGfxCanvas::initProgram(void) {
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
-    
+
+    executeCallbacks(ENGINE_INITIALIZED);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

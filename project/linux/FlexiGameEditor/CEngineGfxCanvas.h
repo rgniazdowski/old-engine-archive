@@ -109,6 +109,20 @@ public:
     typedef CEngineGfxCanvas type;
     typedef wxGLCanvas base_type;
 
+    // System data is always set to (void *)this
+    typedef fgBool(*CallbackFuncPtr)(void *systemData, void *userData);
+    ///
+    typedef CallbackFuncPtr callback_type;
+
+public:
+
+    enum InternalCallbackType {
+        INVALID_CALLBACK = -1,
+        ENGINE_INITIALIZED = 0,
+        ENGINE_DESTROYED = 1,
+        NUM_ENGINE_CB_TYPES = 2
+    };
+
 private:
     ///
     wxGLContext* m_context;
@@ -146,6 +160,37 @@ private:
     ///
     wxPoint m_screenSize;
 
+    /**
+     *
+     */
+    struct CallbackData {
+        ///
+        CallbackFuncPtr callback;
+        ///
+        void *userData;
+        /**
+         *
+         */
+        CallbackData() : userData(NULL), callback(NULL) { }
+        /**
+         *
+         * @param pUserData
+         * @param pCallback
+         */
+        CallbackData(CallbackFuncPtr pCallback, void *pUserData) :
+        callback(pCallback),
+        userData(pUserData) { }
+    };
+
+    ///
+    typedef fg::CVector<CallbackData> CallbacksVec;
+    ///
+    typedef typename CallbacksVec::iterator CallbacksVecItor;
+    /// 
+    CallbacksVec m_onEngineCallbacks[NUM_ENGINE_CB_TYPES];
+
+    unsigned int executeCallbacks(InternalCallbackType cbType);
+
 public:
     /**
      *
@@ -179,6 +224,23 @@ public:
      */
     fgBool update(void);
 
+    //--------------------------------------------------------------------------
+    /**
+     *
+     * @param pCallback
+     * @param pUserData
+     * @return
+     */
+    fgBool registerCallback(InternalCallbackType cbType,
+                            CallbackFuncPtr pCallback,
+                            void* pUserData = NULL);
+    /**
+     *
+     * @param pCallback
+     * @return
+     */
+    fgBool isRegistered(CallbackFuncPtr pCallback,
+                        InternalCallbackType cbType = INVALID_CALLBACK);
     //--------------------------------------------------------------------------
 
     /**
