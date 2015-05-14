@@ -35,7 +35,7 @@ m_argListsFreeSlots() {
 //------------------------------------------------------------------------------
 
 event::CEventManager::~CEventManager() {
-    event::CEventManager::destroy();
+    self_type::destroy();
 }
 //------------------------------------------------------------------------------
 

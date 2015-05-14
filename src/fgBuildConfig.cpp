@@ -205,6 +205,11 @@ namespace fg {
     #else
         false,
     #endif
+    #ifdef FG_USING_PLATFORM_MOBILE
+        true,
+    #else
+        false,
+    #endif
     #ifdef FG_USING_PLATFORM_MACOSX
         true,
     #else

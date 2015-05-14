@@ -77,6 +77,7 @@
         #undef FG_USING_PLATFORM_LINUX                  //  Is the target platform Linux?
         #undef FG_USING_PLATFORM_ANDROID                //  Is the target platform Android?
         #undef FG_USING_PLATFORM_IOS                    //  Is the target platform iOS?
+        #undef FG_USING_PLATFORM_MOBILE                 //  Is the target platform mobile? (Android/iOS/Other)
         #undef FG_USING_PLATFORM_MACOSX                 //  Is the target platform MACOS/X
         #undef FG_USING_CYGWIN                          //  Is Cygwin used for current build?
         #undef FG_USING_MINGW                           //  Is MinGW used for current build?
@@ -370,6 +371,11 @@
 
 /*************************** OTHER DEFINITIONS / STRUCTURES ***************************/
 
+    #if defined(FG_USING_PLATFORM_ANDROID) || defined(FG_USING_PLATFORM_IOS) || defined(FG_USING_MARMALADE)
+        #undef FG_USING_PLATFORM_MOBILE
+        #define FG_USING_PLATFORM_MOBILE
+    #endif
+
 //
 // SPECIAL STRUCT DEFINITION - EASY ACCESS
 //
@@ -414,6 +420,7 @@ namespace fg {
         bool isPlatformLinux; //    Is the target platform Linux?
         bool isPlatformAndroid; //  Is the target platform Android?
         bool isPlatformIOS; //      Is the target platform iOS?
+        bool isPlatformMobile; //   Is the target platform mobile?
         bool isPlatformMACOSX; //   Is the target platform MACOS/X
         bool usingCygwin; //        Is Cygwin used for current build?
         bool usingMinGW; //         Is MinGW used for current build?

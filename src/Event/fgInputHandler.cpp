@@ -243,8 +243,9 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
     // Throwing the proper event
     //
     if(m_eventMgr) { // #FIXME
-        //STouch *touchEvent = fgMalloc<STouch>();
+#if defined(FG_USING_PLATFORM_MOBILE)
         STouch *touchEvent = (STouch *)m_eventMgr->requestEventStruct();
+        CArgumentList *argList = m_eventMgr->requestArgumentList();
         touchEvent->eventType = event::TOUCH_PRESSED;
         touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_TRUE;
@@ -252,9 +253,21 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
         touchEvent->x = point.x;
         touchEvent->y = point.y;
 
-        CArgumentList *argList = m_eventMgr->requestArgumentList();
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_PRESSED, argList);
+#else
+        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+        CArgumentList* argList = m_eventMgr->requestArgumentList();
+        mouseEvent->eventType = event::MOUSE_PRESSED;
+        mouseEvent->timeStamp = timesys::ticks();
+        mouseEvent->pressed = FG_TRUE;
+        mouseEvent->buttonID = touchID;
+        mouseEvent->x = point.x;
+        mouseEvent->y = point.y;
+
+        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)mouseEvent);
+        m_eventMgr->throwEvent(event::MOUSE_PRESSED, argList);
+#endif
 
         // Throw also more general event
         //touchEvent = new fgTouchEvent(*touchEvent);
@@ -265,7 +278,9 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
 }
 //------------------------------------------------------------------------------
 
-void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touchID, fgPointerState state) {
+void event::CInputHandler::handlePointerMoved(Vector2i point,
+                                              unsigned int touchID,
+                                              fgPointerState state) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
@@ -282,10 +297,9 @@ void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touch
     // Throwing the proper event
     //
     if(m_eventMgr) {
-        //STouch *touchEvent = fgMalloc<STouch>();
+#if defined(FG_USING_PLATFORM_MOBILE)
         STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
         CArgumentList *argList = m_eventMgr->requestArgumentList();
-
         touchEvent->eventType = event::TOUCH_MOTION;
         touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = m_rawTouches[touchID].m_pressed;
@@ -293,10 +307,21 @@ void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touch
         touchEvent->x = point.x;
         touchEvent->y = point.y;
 
-        //CArgumentList *argList = new CArgumentList();
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_MOTION, argList);
+#else
+        SMouse *mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+        CArgumentList *argList = m_eventMgr->requestArgumentList();
+        mouseEvent->eventType = event::MOUSE_MOTION;
+        mouseEvent->timeStamp = timesys::ticks();
+        mouseEvent->pressed = m_rawTouches[touchID].m_pressed;
+        mouseEvent->buttonID = touchID;
+        mouseEvent->x = point.x;
+        mouseEvent->y = point.y;
 
+        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)mouseEvent);
+        m_eventMgr->throwEvent(event::MOUSE_MOTION, argList);
+#endif
         // Throw also more general event
         //touchEvent = new fgTouchEvent(*touchEvent);
         //argList = new fgArgumentList();
@@ -337,10 +362,9 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
     // Throwing the proper event
     //
     if(m_eventMgr) {
-        //STouch *touchEvent = fgMalloc<STouch>();
-        STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
-        CArgumentList *argList = m_eventMgr->requestArgumentList();
-
+#if defined(FG_USING_PLATFORM_MOBILE)
+        STouch* touchEvent = (STouch*)m_eventMgr->requestEventStruct();
+        CArgumentList* argList = m_eventMgr->requestArgumentList();
         touchEvent->eventType = event::TOUCH_RELEASED;
         touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_FALSE; // Touch is released
@@ -348,9 +372,21 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
         touchEvent->x = point.x;
         touchEvent->y = point.y;
 
-        //CArgumentList *argList = new CArgumentList();
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_RELEASED, argList);
+#else
+        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+        CArgumentList* argList = m_eventMgr->requestArgumentList();
+        mouseEvent->eventType = event::MOUSE_RELEASED;
+        mouseEvent->timeStamp = timesys::ticks();
+        mouseEvent->pressed = FG_FALSE; // Touch is released
+        mouseEvent->buttonID = touchID;
+        mouseEvent->x = point.x;
+        mouseEvent->y = point.y;
+
+        argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)mouseEvent);
+        m_eventMgr->throwEvent(event::MOUSE_RELEASED, argList);
+#endif
 
         // Throw also more general event
         //touchEvent = new fgTouchEvent(*touchEvent);
@@ -495,10 +531,9 @@ void event::CInputHandler::processData(void) {
                     // Throwing the proper event
                     //
                     if(m_eventMgr) {
-                        //STouch *touchEvent = fgMalloc<STouch>();
-                        STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
-                        CArgumentList *argList = m_eventMgr->requestArgumentList();
-
+#if defined(FG_USING_PLATFORM_MOBILE)
+                        STouch* touchEvent = (STouch*)m_eventMgr->requestEventStruct();
+                        CArgumentList* argList = m_eventMgr->requestArgumentList();
                         touchEvent->eventType = event::TOUCH_TAP_FINISHED;
                         touchEvent->timeStamp = timesys::ticks();
                         touchEvent->pressed = FG_FALSE;
@@ -506,9 +541,21 @@ void event::CInputHandler::processData(void) {
                         touchEvent->x = touchPtr.m_tapX;
                         touchEvent->y = touchPtr.m_tapY;
 
-                        //CArgumentList *argList = new CArgumentList();
                         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
                         m_eventMgr->throwEvent(event::TOUCH_TAP_FINISHED, argList);
+#else
+                        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+                        CArgumentList* argList = m_eventMgr->requestArgumentList();
+                        mouseEvent->eventType = event::MOUSE_TAP_FINISHED;
+                        mouseEvent->timeStamp = timesys::ticks();
+                        mouseEvent->pressed = FG_FALSE;
+                        mouseEvent->buttonID = touchPtr.m_touchID;
+                        mouseEvent->x = touchPtr.m_tapX;
+                        mouseEvent->y = touchPtr.m_tapY;
+
+                        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)mouseEvent);
+                        m_eventMgr->throwEvent(event::MOUSE_TAP_FINISHED, argList);
+#endif
 
                         //touchEvent = new fgTouchEvent(*touchEvent);
                         //argList = new fgArgumentList();

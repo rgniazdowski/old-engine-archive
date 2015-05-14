@@ -51,6 +51,9 @@ namespace fg {
         const EventType MOUSE_RELEASED = 7;
         /// 
         const EventType MOUSE_MOTION = 8;
+        ///
+        const EventType MOUSE_TAP_FINISHED = TOUCH_TAP_FINISHED;
+
         //const EventType MOUSE=9;
 
         /// 
@@ -92,7 +95,7 @@ namespace fg {
         const EventType PROGRAM_SUSPEND = 25;
         ///
         const EventType PROGRAM_RESUME = 26;
-        
+
         /// 
         const EventType LOADING_BEGIN = 27;
         /// 
@@ -187,7 +190,12 @@ namespace fg {
         struct STouch : SEventBase {
             int x;
             int y;
-            unsigned int touchID;
+
+            union {
+                unsigned int touchID;
+                unsigned int buttonID;
+                unsigned int pointerID;
+            };
             fgBool pressed;
         };
 
@@ -197,7 +205,12 @@ namespace fg {
         struct SMouse : SEventBase {
             int x;
             int y;
-            unsigned int buttonID;
+
+            union {
+                unsigned int touchID;
+                unsigned int buttonID;
+                unsigned int pointerID;
+            };
             fgBool pressed;
 
         };
