@@ -305,11 +305,12 @@ void CEngineMain::setEventManager(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CEngineMain::initSubsystems(void) {
+fgBool CEngineMain::initialize(void) {
     float t1 = timesys::ms();
     // DEVICE YIELD
     if(m_gfxMain)
         return FG_FALSE;
+    base_type::initialize();
     m_gfxMain = new gfx::CGfxMain();
     int w, h;
     w = m_mainConfig->getParameterInt("MainConfig.hardware", "screenWidth");
@@ -437,6 +438,7 @@ fgBool CEngineMain::initSubsystems(void) {
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     m_gfxMain->getLoader()->update(10.0f);
+    m_init = FG_TRUE;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -605,12 +607,12 @@ fgBool CEngineMain::closeSybsystems(void) {
     // DEVICE YIELD
     if(m_gfxMain)
         m_gfxMain->closeGFX();
-
+    base_type::destroy();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool CEngineMain::quit(void) {
+fgBool CEngineMain::destroy(void) {
     FG_LOG_DEBUG("Game main quit requested");
     executeEvent(event::PROGRAM_QUIT);
     this->update(FG_TRUE);
@@ -638,7 +640,7 @@ fgBool CEngineMain::display(void) {
         return FG_FALSE;
     }
     // This should be synchronized to 60FPS, meaning that should be called in display / render
-    // maybe should give some cathegories ?
+    // maybe should give some categories ?
     timesys::markTick(timesys::TICK_DISPLAY);
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling)
@@ -657,7 +659,7 @@ fgBool CEngineMain::display(void) {
         profile::g_debugProfiling->end("GUI::display");
     }
 #endif
-    executeEvent(event::DISPLAY_SHOT);
+    executeEvent(event::DISPLAY_SHOT, (void*)this);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -682,7 +684,7 @@ fgBool CEngineMain::render(void) {
     }
     timesys::markTick(timesys::TICK_RENDER);
     m_hardwareState->calculateFPS();
-    executeEvent(event::RENDER_SHOT);
+    executeEvent(event::RENDER_SHOT, (void*)this);
 #if !defined(FG_USING_MARMALADE)
     if(fpsc < 0) {
         usleep(50 * 1000);
@@ -750,7 +752,7 @@ fgBool CEngineMain::update(fgBool force) {
     timesys::markTick(timesys::TICK_UPDATE);
     m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
                              m_gfxMain->getMainWindow()->getHeight());
-    executeEvent(event::UPDATE_SHOT);
+    executeEvent(event::UPDATE_SHOT, (void*)this);
     // Update logic manager
     if(m_gameMain)
         m_gameMain->update();

@@ -87,13 +87,12 @@ namespace fg {
         void unregisterGameCallbacks(void);
 
     public:
-
         /**
          * This needs to be called first before everything else.
          * Function creates and initializes various subsystems
          * @return  FG_TRUE if everything was initialized successfully, FG_FALSE otherwise
          */
-        fgBool initSubsystems(void);
+        virtual fgBool initialize(void);
 
         /**
          *  Loads main configuration files determining the next steps of game initialization
@@ -124,7 +123,14 @@ namespace fg {
          * This function releases the resources and closes the subsystems
          * @return
          */
-        fgBool quit(void);
+        virtual fgBool destroy(void);
+        /**
+         *
+         * @return
+         */
+        fgBool quit(void) {
+            return this->destroy();
+        }
 
         /**
          * Now main display function creates the buffer (vertex/color/texture
@@ -313,7 +319,7 @@ namespace fg {
          */
         void setEventManager(void);
 
-    private:
+    private:        
         ///
         fgBool m_isFpsLocked;
         /// Fixed FPS

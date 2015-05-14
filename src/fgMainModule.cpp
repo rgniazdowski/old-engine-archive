@@ -464,7 +464,7 @@ fgBool CMainModule::initProgram(void) {
         return FG_FALSE;
     }
     // Initialize the main subsystems (gui, gfx and others)
-    if(!m_engineMain->initSubsystems()) {
+    if(!m_engineMain->initialize()) {
         return FG_FALSE;
     }
     // Preload any required resources
@@ -579,7 +579,7 @@ fgBool CMainModule::mainLoopStep(void) {
 void CMainModule::closeProgram(void) {
     FG_LOG_DEBUG("Closing program...");
     if(m_engineMain) {
-        m_engineMain->closeSybsystems();
+        m_engineMain->destroy();
         delete m_engineMain;
     }
     m_engineMain = NULL;

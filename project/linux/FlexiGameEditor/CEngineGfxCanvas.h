@@ -18,7 +18,6 @@
 
     #include "Event/fgEventDefinitions.h"
     #include "Scripting/fgScriptSubsystem.h"
-    #include "GameLogic/fgGameMain.h"
 
     #include "wx/wx.h"
     #include "wx/glcanvas.h"
@@ -61,14 +60,12 @@ public:
      *
      */
     void start(void);
-
     /**
      * 
      */
     inline void stop(void) {
         base_type::Stop();
     }
-
     /**
      *
      * @return
@@ -93,7 +90,7 @@ public:
     inline void setFpsAndRestart(float fps) {
         setFps(fps);
         Stop();
-        start();        
+        start();
     }
 };
 
@@ -159,7 +156,7 @@ public:
      */
     virtual ~CEngineGfxCanvas();
 
-    ////////////////////////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------
 
     /**
      *
@@ -182,7 +179,7 @@ public:
      */
     fgBool update(void);
 
-    ////////////////////////////////////////////////////////////////////////////
+    //--------------------------------------------------------------------------
 
     /**
      * 

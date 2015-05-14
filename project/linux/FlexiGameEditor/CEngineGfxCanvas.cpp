@@ -8,9 +8,9 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
+#include "fgEngineMain.h"
 #include "CEngineGfxCanvas.h"
 
-#include "fgEngineMain.h"
 #include "Event/fgEventManager.h"
 #include "Event/fgInputHandler.h"
 #include "Hardware/fgHardwareState.h"
@@ -91,7 +91,7 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPA
         m_engineMain = *engineMainOrig;
     }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 CEngineGfxCanvas::~CEngineGfxCanvas() {
     FG_LOG_DEBUG("WX: Main destructor called");
@@ -105,7 +105,9 @@ CEngineGfxCanvas::~CEngineGfxCanvas() {
     }
     m_onSwapCallback = NULL;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnCloseEvent(wxCloseEvent& event) {
     //printf("CLOSE EVENT: THREAD ID: %lu\n", pthread_self());
@@ -114,7 +116,7 @@ void CEngineGfxCanvas::OnCloseEvent(wxCloseEvent& event) {
     this->m_appInit = FG_FALSE;
     closeProgram();
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnMouseMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_engineMain) {
@@ -195,7 +197,7 @@ void CEngineGfxCanvas::OnResized(wxSizeEvent& event) {
     }
     Refresh();
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnIdle(wxIdleEvent& event) {
     static long int t1 = 0;
@@ -255,7 +257,7 @@ void CEngineGfxCanvas::OnIdle(wxIdleEvent& event) {
     usleep(1000 * 5);
     event.RequestMore();
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool CEngineGfxCanvas::OnGfxWindowSwapBuffer(void* pSystemData, void *pUserData) {
     if(!pSystemData || !pUserData) {
@@ -271,7 +273,7 @@ fgBool CEngineGfxCanvas::OnGfxWindowSwapBuffer(void* pSystemData, void *pUserDat
         gfxCanvas->SetCurrent(*(gfxCanvas->m_context));
         wxClientDC dc(gfxCanvas);
         glFlush();
-        gfxCanvas->SwapBuffers();        
+        gfxCanvas->SwapBuffers();
     } else {
         //gfxCanvas->getGameMain()->removeCallbacks(fg::event::SWAP_BUFFERS);
         gfxCanvas->getEngineMain()->deleteCallback(fg::event::SWAP_BUFFERS, gfxCanvas->getRefOnSwapCallback());
@@ -279,7 +281,7 @@ fgBool CEngineGfxCanvas::OnGfxWindowSwapBuffer(void* pSystemData, void *pUserDat
     return FG_TRUE;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void CEngineGfxCanvas::OnPaint(wxPaintEvent& event) {
     fgBool isSwapBuffers = FG_TRUE;
     static unsigned long int t1 = 0;
@@ -324,7 +326,7 @@ void CEngineGfxCanvas::OnPaint(wxPaintEvent& event) {
         SwapBuffers();
     }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void CEngineGfxCanvas::closeProgram(void) {
     // if(m_paint && m_context && IsShown()) {
@@ -332,7 +334,7 @@ void CEngineGfxCanvas::closeProgram(void) {
     //}
     FG_LOG_DEBUG("Closing program...");
     if(m_engineMain) {
-        m_engineMain->closeSybsystems();
+        m_engineMain->destroy();
         delete m_engineMain;
     }
     m_engineMain = NULL;
@@ -348,7 +350,7 @@ void CEngineGfxCanvas::closeProgram(void) {
     fg::profile::g_debugProfiling = NULL;
 #endif
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool CEngineGfxCanvas::initProgram(void) {
     using namespace fg;
@@ -383,7 +385,7 @@ fgBool CEngineGfxCanvas::initProgram(void) {
     m_engineMain->getMainConfig()->setParameterInt("MainConfig.hardware", "screenHeight", m_screenSize.y);
 
     // Initialize the main subsystems (gui, gfx and others)
-    if(!this->m_engineMain->initSubsystems()) {
+    if(!this->m_engineMain->initialize()) {
         return FG_FALSE;
     }
     // Preload any required resources
@@ -398,7 +400,7 @@ fgBool CEngineGfxCanvas::initProgram(void) {
     
     return FG_TRUE;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool CEngineGfxCanvas::displayAndRender(void) {
     fgBool status = FG_TRUE;
@@ -437,7 +439,7 @@ fgBool CEngineGfxCanvas::displayAndRender(void) {
 #endif
     return status;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool CEngineGfxCanvas::update(void) {
     if(!m_appInit) {
