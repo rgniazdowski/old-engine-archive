@@ -86,7 +86,7 @@ m_gameMain(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
-    if(!event::CEventManager::initialize()) {
+    if(!base_type::initialize()) {
 
     }
     // #FIXME srand init ?
@@ -109,6 +109,7 @@ m_gameFreeLookCallback(NULL) {
     m_joypadController->initialize(); // #FIXME
 #endif
     m_hardwareState = new CHardwareState();
+    m_init = FG_FALSE;
     registerGameCallbacks();
 }
 //------------------------------------------------------------------------------
@@ -237,6 +238,44 @@ CEngineMain::~CEngineMain() {
 }
 //------------------------------------------------------------------------------
 
+fgBool CEngineMain::releaseResources(void) {
+    if(m_resourceMgr) {
+        FG_LOG_DEBUG("Releasing resources...");
+        return m_resourceMgr->destroy();
+    }
+    return FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+fgBool CEngineMain::closeSybsystems(void) {
+    FG_LOG_DEBUG("Closing subsystems...");
+    if(m_gfxMain)
+        m_gfxMain->releaseTextures();
+
+    CEngineMain::releaseResources();
+    if(m_inputHandler)
+        m_inputHandler->setEventManager(NULL);
+    // DEVICE YIELD
+    if(m_gfxMain)
+        m_gfxMain->closeGFX();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool CEngineMain::destroy(void) {
+    FG_LOG_DEBUG("Game main quit requested");
+    executeEvent(event::PROGRAM_QUIT);
+    this->update(FG_TRUE);
+    fgBool status = FG_TRUE;
+    if(!releaseResources())
+        status = FG_FALSE;
+    if(!closeSybsystems())
+        status = FG_FALSE;
+    unregisterGameCallbacks();
+    return status;
+}
+//------------------------------------------------------------------------------
+
 void CEngineMain::registerGameCallbacks(void) {
     if(!m_gameTouchCallback)
         m_gameTouchCallback = new event::CMethodCallback<CEngineMain>(this, &CEngineMain::gameTouchHandler);
@@ -310,7 +349,7 @@ fgBool CEngineMain::initialize(void) {
     // DEVICE YIELD
     if(m_gfxMain)
         return FG_FALSE;
-    base_type::initialize();
+    //base_type::initialize();
     m_gfxMain = new gfx::CGfxMain();
     int w, h;
     w = m_mainConfig->getParameterInt("MainConfig.hardware", "screenWidth");
@@ -584,44 +623,6 @@ fgBool CEngineMain::loadResources(void) {
     }
     this->update(FG_TRUE);
     return FG_TRUE;
-}
-//------------------------------------------------------------------------------
-
-fgBool CEngineMain::releaseResources(void) {
-    if(m_resourceMgr) {
-        FG_LOG_DEBUG("Releasing resources...");
-        return m_resourceMgr->destroy();
-    }
-    return FG_FALSE;
-}
-//------------------------------------------------------------------------------
-
-fgBool CEngineMain::closeSybsystems(void) {
-    FG_LOG_DEBUG("Closing subsystems...");
-    if(m_gfxMain)
-        m_gfxMain->releaseTextures();
-
-    CEngineMain::releaseResources();
-    if(m_inputHandler)
-        m_inputHandler->setEventManager(NULL);
-    // DEVICE YIELD
-    if(m_gfxMain)
-        m_gfxMain->closeGFX();
-    base_type::destroy();
-    return FG_TRUE;
-}
-//------------------------------------------------------------------------------
-
-fgBool CEngineMain::destroy(void) {
-    FG_LOG_DEBUG("Game main quit requested");
-    executeEvent(event::PROGRAM_QUIT);
-    this->update(FG_TRUE);
-    fgBool status = FG_TRUE;
-    if(!releaseResources())
-        status = FG_FALSE;
-    if(!closeSybsystems())
-        status = FG_FALSE;
-    return status;
 }
 //------------------------------------------------------------------------------
 
