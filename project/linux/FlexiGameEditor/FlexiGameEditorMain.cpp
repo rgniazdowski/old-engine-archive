@@ -30,7 +30,7 @@
 #include <wx/font.h>
 //*)
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 //helper functions
 
@@ -58,7 +58,7 @@ wxString wxbuildinfo(wxbuildinfoformat format) {
 
     return wxbuild;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////////////
 //(*IdInit(FlexiGameEditorFrame)
@@ -95,12 +95,12 @@ BEGIN_EVENT_TABLE(FlexiGameEditorFrame, wxFrame)
 //*)
 EVT_IDLE(FlexiGameEditorFrame::OnIdle)
 END_EVENT_TABLE()
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 CEditorResMgrPanel *g_resMgrPanel = NULL;
 
 FlexiGameEditorFrame::FlexiGameEditorFrame(wxWindow* parent, wxWindowID id) : wxFrame(),
 m_previewMode(FG_PREVIEW_HIDDEN),
-m_gfxMainCanvas(NULL),
+m_engineGfxCanvas(NULL),
 m_renderTimer(NULL),
 m_gfxHolderPanel(NULL),
 m_previewTabNames(),
@@ -250,7 +250,7 @@ m_engineMain(NULL) {
     __wxStatusBarStyles_1[1] = wxSB_SUNKEN;
     MainStatusBar->SetStatusStyles(2, __wxStatusBarStyles_1);
 
-    Connect(idMainNotebook, wxEVT_CONTEXT_MENU, (wxObjectEventFunction)&FlexiGameEditorFrame::onContextMenu);
+    Connect(idMainNotebook, wxEVT_CONTEXT_MENU, (wxObjectEventFunction) & FlexiGameEditorFrame::onContextMenu);
 
     m_previewTabNames[FG_PREVIEW_HIDDEN] = wxT("Hidden");
     m_previewTabNames[FG_PREVIEW_GAME] = wxT("Game view");
@@ -262,27 +262,49 @@ m_engineMain(NULL) {
     m_previewTabNames[FG_PREVIEW_MODEL_VIEWER] = wxT("Model Viewer");
     //FG_PREVIEW_NUM_MODES
 
+    m_previews[FG_PREVIEW_HIDDEN] = NULL;
+    m_previews[FG_PREVIEW_GAME] = NULL;
+    m_previews[FG_PREVIEW_SCENE_MANAGER] = NULL;
+    m_previews[FG_PREVIEW_SHADER_MANAGER] = NULL;
+    m_previews[FG_PREVIEW_BSP_BUILDER] = new fg::editor::CPreviewBspBuilder(&m_engineMain);
+    m_previews[FG_PREVIEW_BSP_BUILDER]->setName(m_previewTabNames[FG_PREVIEW_BSP_BUILDER]);
+    m_previews[FG_PREVIEW_PARTICLE_EDITOR] = NULL;
+    m_previews[FG_PREVIEW_GUI_EDITOR] = NULL;
+    m_previews[FG_PREVIEW_MODEL_VIEWER] = NULL;
+
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
     m_gfxHolderPanel = new CGfxHolderPanel(MainNotebook);
-    m_gfxMainCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args, &m_engineMain);
-    m_gfxHolderPanel->setGfxCanvas(m_gfxMainCanvas);
+    m_engineGfxCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args, &m_engineMain);
+    m_gfxHolderPanel->setGfxCanvas(m_engineGfxCanvas);
     m_gfxHolderPanel->setContextMenu(&GfxCanvasContextMenu);
-    
+
     MainNotebook->InsertPage(0, m_gfxHolderPanel, m_previewTabNames[FG_PREVIEW_GAME], true);
-    
-    m_renderTimer = new CRenderTimer(m_gfxMainCanvas);
+
+    m_renderTimer = new CRenderTimer(m_engineGfxCanvas);
     m_renderTimer->start();
 
     g_resMgrPanel = new CEditorResMgrPanel(MainNotebook);
     MainNotebook->AddPage(g_resMgrPanel, "Resource manager 1");
 
+    wxPanel* panel1 = new wxPanel(BottomNotebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO);
+    BottomNotebook->AddPage(panel1, "Bottom panel yolox");
     Layout();
 
     fg::timesys::init();
     m_previewMode = FG_PREVIEW_GAME;
+
+    {
+        m_engineGfxCanvas->registerCallback(CEngineGfxCanvas::ENGINE_INITIALIZED,
+                                            *fg::editor::CPreviewBspBuilder::engineInit,
+                                            m_previews[FG_PREVIEW_BSP_BUILDER]);
+
+        m_engineGfxCanvas->registerCallback(CEngineGfxCanvas::ENGINE_DESTROYED,
+                                            *fg::editor::CPreviewBspBuilder::engineInit,
+                                            m_previews[FG_PREVIEW_BSP_BUILDER]);
+    }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 
 FlexiGameEditorFrame::~FlexiGameEditorFrame() {
@@ -291,17 +313,24 @@ FlexiGameEditorFrame::~FlexiGameEditorFrame() {
     m_renderTimer->Stop();
     delete m_renderTimer;
     m_renderTimer = NULL;
+
+    for(unsigned int i = 0; i < FG_PREVIEW_NUM_MODES; i++) {
+        if(m_previews[i]) {
+            delete m_previews[i];
+            m_previews[i] = NULL;
+        }
+    }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnIdle(wxIdleEvent& event) {
-    if(m_gfxMainCanvas) {
+    if(m_engineGfxCanvas) {
         g_resMgrPanel->setEngineMain(m_engineMain);
     }
     usleep(1000 * 1); // 100 fps ?
     //usleep(1000 * 20); // 50 fps ?
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode, fgBool toggle) {
     if(previewMode == FG_PREVIEW_HIDDEN) {
@@ -326,7 +355,14 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
             if(page == (wxWindow *)m_gfxHolderPanel) {
                 // The page already exists and has proper GfxHolder inside
                 MainNotebook->ChangeSelection(i);
+                for(unsigned int p = 0; p < FG_PREVIEW_NUM_MODES; p++) {
+                    if(m_previews[p])
+                        m_previews[p]->activate(FG_FALSE);
+                }
                 m_previewMode = previewMode;
+                if(m_previews[m_previewMode]) {
+                    m_previews[m_previewMode]->activate(FG_TRUE);
+                }
                 return FG_TRUE;
             } else {
                 // well this means that the page contains a dummy
@@ -366,11 +402,18 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
         activated = FG_TRUE;
     }
     if(activated) {
+        for(unsigned int p = 0; p < FG_PREVIEW_NUM_MODES; p++) {
+            if(m_previews[p])
+                m_previews[p]->activate(FG_FALSE);
+        }
         m_previewMode = previewMode;
+        if(m_previews[m_previewMode]) {
+            m_previews[m_previewMode]->activate(FG_TRUE);
+        }
     }
     return activated;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool FlexiGameEditorFrame::closePreviewPanel(EnginePreviewMode previewMode) {
     if(previewMode == FG_PREVIEW_HIDDEN) {
@@ -391,6 +434,9 @@ fgBool FlexiGameEditorFrame::closePreviewPanel(EnginePreviewMode previewMode) {
             // need to remove it
 
             if(page == (wxWindow *)m_gfxHolderPanel) {
+                if(m_previews[tabPreviewMode]) {
+                    m_previews[tabPreviewMode]->activate(FG_FALSE);
+                }
                 // The page already exists and has proper GfxHolder inside
                 // remove the page
                 m_gfxHolderPanel->getGfxCanvas()->setSuspend(FG_TRUE);
@@ -400,6 +446,9 @@ fgBool FlexiGameEditorFrame::closePreviewPanel(EnginePreviewMode previewMode) {
                 printf("Removed page: %d -> new selection %d | NUM %d\n", i, i > 0 ? i - 1 : i + 1, nPages);
                 return FG_TRUE;
             } else {
+                if(m_previews[tabPreviewMode]) {
+                    m_previews[tabPreviewMode]->activate(FG_FALSE);
+                }
                 // well this means that the page contains a dummy
                 // need to erase it and fix it
                 MainNotebook->SetSelection(i > 0 ? i - 1 : i + 1);
@@ -412,7 +461,7 @@ fgBool FlexiGameEditorFrame::closePreviewPanel(EnginePreviewMode previewMode) {
     }
     return FG_FALSE;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const wxString& name) {
     unsigned int n = (unsigned int)FG_PREVIEW_NUM_MODES;
@@ -423,7 +472,7 @@ EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const wxString& name) {
     }
     return FG_PREVIEW_HIDDEN;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const std::string& name) {
     unsigned int n = (unsigned int)FG_PREVIEW_NUM_MODES;
@@ -435,7 +484,7 @@ EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const std::string& name) 
 
     return FG_PREVIEW_HIDDEN;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const char* name) {
     unsigned int n = (unsigned int)FG_PREVIEW_NUM_MODES;
@@ -446,19 +495,19 @@ EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const char* name) {
     }
     return FG_PREVIEW_HIDDEN;
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnQuit(wxCommandEvent& event) {
-    if(m_gfxMainCanvas) {
-        if(m_gfxMainCanvas->isInitialized()) {
-            m_gfxMainCanvas->setExit(FG_TRUE);
-            m_gfxMainCanvas->update();
-            m_gfxMainCanvas->closeProgram();
+    if(m_engineGfxCanvas) {
+        if(m_engineGfxCanvas->isInitialized()) {
+            m_engineGfxCanvas->setExit(FG_TRUE);
+            m_engineGfxCanvas->update();
+            m_engineGfxCanvas->closeProgram();
         }
     }
     Close();
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnAbout(wxCommandEvent& event) {
     wxString msg = wxbuildinfo(long_f);
@@ -480,49 +529,50 @@ void FlexiGameEditorFrame::OnAbout(wxCommandEvent& event) {
         activatePreviewPanel(FG_PREVIEW_GAME);
      */
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuEngineInitialize(wxCommandEvent& event) {
-    if(m_gfxMainCanvas) {
-        if(m_gfxMainCanvas->isPaintReady()) {
-            m_gfxMainCanvas->setInitializeFlag(FG_TRUE);
+    if(m_engineGfxCanvas) {
+        if(m_engineGfxCanvas->isPaintReady()) {
+            m_engineGfxCanvas->setInitializeFlag(FG_TRUE);
         }
     }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuEngineFreezeFrame(wxCommandEvent& event) {
-    if(m_gfxMainCanvas) {
-        static bool toggle = true;
+    if(m_engineGfxCanvas) {
+        static bool toggle = false;
         toggle = !toggle;
-        m_gfxMainCanvas->Show(toggle);
-        this->Layout();
-        //m_gfxPanel->setSuspend(FG_TRUE);
+        //m_gfxMainCanvas->Show(toggle);
+        //this->Layout();
+
+        m_engineGfxCanvas->setFrameFreeze((fgBool)toggle);
         //MainNotebook->RemovePage(0);
         //MainNotebook->InsertPage(0, m_gfxPanel, wxT("Scene Manager"));
         //m_gfxPanel->setSuspend(FG_FALSE);
-        if(m_gfxMainCanvas->isInitialized()) {
+        if(m_engineGfxCanvas->isInitialized()) {
             // toggle frame freeze
             //m_gfxPanel->setFrameFreeze(!m_gfxPanel->isFrameFreeze());
         }
     }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuEngineQuit(wxCommandEvent& event) {
-    if(m_gfxMainCanvas) {
-        if(m_gfxMainCanvas->isInitialized()) {
-            m_gfxMainCanvas->setExit(FG_TRUE);
+    if(m_engineGfxCanvas) {
+        if(m_engineGfxCanvas->isInitialized()) {
+            m_engineGfxCanvas->setExit(FG_TRUE);
         }
     }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnLeftNotebookPageChanged(wxNotebookEvent& event) { }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnBottomNotebookPageChanged(wxNotebookEvent& event) { }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMainNotebookPageChanged(wxNotebookEvent& event) {
     if(!MainNotebook) {
@@ -551,53 +601,53 @@ void FlexiGameEditorFrame::OnMainNotebookPageChanged(wxNotebookEvent& event) {
     //ctrlEvent.Veto(); // changing?
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsResourceManager(wxCommandEvent& event) { }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsScriptManager(wxCommandEvent& event) { }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsEventManager(wxCommandEvent& event) { }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsFlexiGUIEditor(wxCommandEvent& event) {
     activatePreviewPanel(FG_PREVIEW_GUI_EDITOR);
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsSceneManager(wxCommandEvent& event) {
     activatePreviewPanel(FG_PREVIEW_SCENE_MANAGER);
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsShaderManager(wxCommandEvent& event) {
     activatePreviewPanel(FG_PREVIEW_SHADER_MANAGER);
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsBSPBuilder(wxCommandEvent& event) {
     activatePreviewPanel(FG_PREVIEW_BSP_BUILDER);
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsParticleEditor(wxCommandEvent& event) {
     activatePreviewPanel(FG_PREVIEW_PARTICLE_EDITOR);
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsModelViewer(wxCommandEvent& event) {
     activatePreviewPanel(FG_PREVIEW_MODEL_VIEWER);
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnMenuToolsOptions(wxCommandEvent& event) {
     //if(event.GetId() == idMenuToolsOptions) {
     //    printf("OnMenuToolsOptions -- ID MATCH: %l\n", idMenuToolsOptions);
     //}
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void FlexiGameEditorFrame::OnGfxContextItemCloseViewSelected(wxCommandEvent& event) {
     if(MainNotebook) {
@@ -610,4 +660,4 @@ void FlexiGameEditorFrame::OnGfxContextItemCloseViewSelected(wxCommandEvent& eve
         }
     }
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------

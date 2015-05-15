@@ -8,6 +8,8 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
+#include "fgEngineMain.h"
+
 #include "CGfxHolderPanel.h"
 #include "CEngineGfxCanvas.h"
 
@@ -17,12 +19,17 @@ END_EVENT_TABLE()
 //-----------------------------------------------------------------------------
 
 CGfxHolderPanel::CGfxHolderPanel(wxWindow* parent, CEngineGfxCanvas* gfxCanvas) :
-wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO) {
+wxPanel(parent, wxID_ANY,
+        wxDefaultPosition, wxDefaultSize,
+        wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO | wxWANTS_CHARS) {
     m_boxSizer = new wxBoxSizer(wxHORIZONTAL);
     m_gfxCanvas = gfxCanvas;
     m_contextMenu = NULL;
     this->SetSizer(m_boxSizer);
     activateGfxCanvas();
+
+    this->Bind(wxEVT_KEY_DOWN, &CGfxHolderPanel::OnKeyPressed, this);
+    this->Bind(wxEVT_KEY_UP, &CGfxHolderPanel::OnKeyReleased, this);
 }
 //-----------------------------------------------------------------------------
 
@@ -30,6 +37,57 @@ CGfxHolderPanel::~CGfxHolderPanel() {
     removeGfxCanvas();
     m_gfxCanvas = NULL;
     m_contextMenu = NULL;
+}
+//-----------------------------------------------------------------------------
+
+void CGfxHolderPanel::OnKeyPressed(wxKeyEvent& event) {
+#if 0
+    wxChar uc = event.GetUnicodeKey();
+        if(uc != WXK_NONE) {
+            // It's a "normal" character. Notice that this includes
+            // control characters in 1..31 range, e.g. WXK_RETURN or
+            // WXK_BACK, so check for them explicitly.
+            if(uc >= 32) {
+               // FG_LOG_DEBUG("You pressed '%c'", uc);
+            } else {
+                // It's a control character
+            }
+        } else // No Unicode equivalent.
+        {
+            // It's a special key, deal with all the known ones:
+            switch(event.GetKeyCode()) {
+                case WXK_LEFT:
+                case WXK_RIGHT:
+
+                    break;
+                case WXK_F1:
+
+                    break;
+            }
+        }
+#endif
+    if(this->m_gfxCanvas) {
+        fg::CEngineMain* pEngineMain = m_gfxCanvas->getEngineMain();
+        if(!pEngineMain)
+            return;
+        int keyCode = event.GetKeyCode();
+        pEngineMain->getInputHandler()->addKeyPressed(keyCode);
+        FG_LOG_DEBUG("WX: GfxHolderPanel: Key pressed event: id:%d, char[%c]",
+                     keyCode, (char)keyCode);
+    }
+}
+//-----------------------------------------------------------------------------
+
+void CGfxHolderPanel::OnKeyReleased(wxKeyEvent& event) {
+    if(this->m_gfxCanvas) {
+        fg::CEngineMain* pEngineMain = m_gfxCanvas->getEngineMain();
+        if(!pEngineMain)
+            return;
+        int keyCode = event.GetKeyCode();
+        pEngineMain->getInputHandler()->addKeyUp(keyCode);
+        FG_LOG_DEBUG("WX: GfxHolderPanel: Key released event: id:%d, char[%c]",
+                     keyCode, (char)keyCode);
+    }
 }
 //-----------------------------------------------------------------------------
 

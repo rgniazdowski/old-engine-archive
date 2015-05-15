@@ -30,29 +30,31 @@
 
     #include "CEngineGfxCanvas.h"
     #include "CGfxHolderPanel.h"
+    #include "CPreviewModeBase.h"
+    #include "CPreviewBspBuilder.h"
 
 /**
  *
  */
 enum EnginePreviewMode {
     /// Hidden - invalid preview mode
-    FG_PREVIEW_HIDDEN,
+    FG_PREVIEW_HIDDEN = 0,
     /// Gfx preview for Game
-    FG_PREVIEW_GAME,
+    FG_PREVIEW_GAME = 1,
     /// Special gfx preview mode - scene management
-    FG_PREVIEW_SCENE_MANAGER,
+    FG_PREVIEW_SCENE_MANAGER = 2,
     /// Shader management - testing, writing shaders
-    FG_PREVIEW_SHADER_MANAGER,
+    FG_PREVIEW_SHADER_MANAGER = 3,
     /// BSP Builder preview mode - editing for BSP trees
-    FG_PREVIEW_BSP_BUILDER,
+    FG_PREVIEW_BSP_BUILDER = 4,
     /// Particle editing gfx preview
-    FG_PREVIEW_PARTICLE_EDITOR,
+    FG_PREVIEW_PARTICLE_EDITOR = 5,
     /// Special XML editor for GUI structures
-    FG_PREVIEW_GUI_EDITOR,
+    FG_PREVIEW_GUI_EDITOR = 6,
     /// Model viewer, saver/exporter
-    FG_PREVIEW_MODEL_VIEWER,
+    FG_PREVIEW_MODEL_VIEWER = 7,
     /// Total number of 3D preview modes
-    FG_PREVIEW_NUM_MODES
+    FG_PREVIEW_NUM_MODES = 8
 };
 
 /**
@@ -76,7 +78,7 @@ private:
     /// This will also match the currently selected main notebook tab
     EnginePreviewMode m_previewMode;
     /// This is a special gfx context panel - only one can be active
-    CEngineGfxCanvas* m_gfxMainCanvas;
+    CEngineGfxCanvas* m_engineGfxCanvas;
     /// Special render timer for calling Refresh() with hard coded fps
     CRenderTimer* m_renderTimer;
     /// Special holding panels for gfx context - it's required because,
@@ -86,6 +88,8 @@ private:
     CGfxHolderPanel* m_gfxHolderPanel;
     /// List of proper names for main notebook tabs
     wxString m_previewTabNames[FG_PREVIEW_NUM_MODES];
+    ///
+    fg::editor::CPreviewModeBase* m_previews[FG_PREVIEW_NUM_MODES];
     ///
     fg::CEngineMain* m_engineMain;
 

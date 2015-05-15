@@ -65,7 +65,7 @@ fg::gfx::CBspCompiler *bspCompiler = NULL;
 //-----------------------------------------------------------------------------
 
 CEngineGfxCanvas::CEngineGfxCanvas(wxWindow* parent, int* args, fg::CEngineMain **engineMainOrig) :
-wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE) {
+wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxWANTS_CHARS | wxFULL_REPAINT_ON_RESIZE) {
     m_context = new wxGLContext(this);
 
     // To avoid flashing on MSW
@@ -220,18 +220,21 @@ void CEngineGfxCanvas::OnMouseLeftWindow(wxMouseEvent& event) {
 //-----------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnKeyPressed(wxKeyEvent& event) {
+    return;
     if(this->m_appInit && this->m_engineMain) {
         int keyCode = event.GetKeyCode();
-        this->m_engineMain->getInputHandler()->addKeyDown(keyCode);
-        FG_LOG_DEBUG("WX: Key pressed event: id:%d, char[%c]", keyCode, (char)keyCode);
+        this->m_engineMain->getInputHandler()->addKeyPressed(keyCode);
+        FG_LOG_DEBUG("WX: GfxCanvas: Key pressed event: id:%d, char[%c]", keyCode, (char)keyCode);
     }
 }
 //-----------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnKeyReleased(wxKeyEvent& event) {
+    return;
     if(this->m_appInit && this->m_engineMain) {
         int keyCode = event.GetKeyCode();
         this->m_engineMain->getInputHandler()->addKeyUp(keyCode);
+        FG_LOG_DEBUG("WX: GfxCanvas: Key released event: id:%d, char[%c]", keyCode, (char)keyCode);
     }
 }
 //-----------------------------------------------------------------------------

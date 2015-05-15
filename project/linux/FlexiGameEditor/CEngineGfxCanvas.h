@@ -263,7 +263,7 @@ public:
     void OnMouseReleased(wxMouseEvent& event);
     void OnMouseLeftWindow(wxMouseEvent& event);
     void OnKeyPressed(wxKeyEvent& event);
-    void OnKeyReleased(wxKeyEvent& event);
+    void OnKeyReleased(wxKeyEvent& event);    
     void OnCloseEvent(wxCloseEvent& event);
 
     /**

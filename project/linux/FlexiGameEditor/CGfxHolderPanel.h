@@ -49,6 +49,9 @@ public:
      */
     void activateGfxCanvas(void);
 
+    void OnKeyPressed(wxKeyEvent& event);
+    void OnKeyReleased(wxKeyEvent& event);
+
     /**
      *
      * @param
