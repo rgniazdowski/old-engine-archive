@@ -130,7 +130,7 @@ namespace fg {
              * @param _d
              */
             void set(Axis _axis, value_type _d) {
-                this->d = d;
+                this->d = _d;
                 switch(_axis) {
                     case Axis::X:
                         this->n = vector_type((value_type)1, 0, 0);

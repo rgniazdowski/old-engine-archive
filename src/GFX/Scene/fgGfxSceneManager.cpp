@@ -845,9 +845,9 @@ void gfx::CSceneManager::sortCalls(void) {
     m_pickSelection.init(m_MVP, m_camera, m_stateFlags);
     if(m_pickSelection.shouldCheck) {
         fgBool groundStatus = m_groundGrid.rayIntersect(m_pickSelection.rayEye,
-                                                         m_pickSelection.rayDir,
-                                                         m_pickSelection.groundIntersectionPoint,
-                                                         FG_TRUE);
+                                                        m_pickSelection.rayDir,
+                                                        m_pickSelection.groundIntersectionPoint,
+                                                        FG_TRUE);
         if(!groundStatus)
             m_pickSelection.groundIntersectionPoint = Vector3f();
     }
