@@ -60,12 +60,17 @@ using namespace fg;
  *
  */
 event::CInputHandler::CInputHandler(CEventManager *eventMgr) :
+m_keysDownPool(),
+m_keysUpPool(),
+m_keyDownBinds(),
+m_keyUpBinds(),
 m_eventMgr(eventMgr),
 m_init(FG_FALSE),
 m_useMultitouch(FG_FALSE),
 m_pointerAvailable(FG_FALSE) {
     memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
+    memset((void *)m_keyRepeats, 0, sizeof (m_keyRepeats));
 }
 //------------------------------------------------------------------------------
 
@@ -459,13 +464,24 @@ event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(int keyCode,
 }
 //------------------------------------------------------------------------------
 
-void event::CInputHandler::addKeyDown(int keyCode) {
+void event::CInputHandler::addKeyPressed(int keyCode) {
     m_keysDownPool.push_back(keyCode);
+    if(m_keysDownPool.find(keyCode) < 0 && !m_keyRepeats[keyCode])
+        m_keysPressedPool.push_back(keyCode);
+    m_keyRepeats[keyCode]++;
 }
 //------------------------------------------------------------------------------
 
 void event::CInputHandler::addKeyUp(int keyCode) {
-    m_keysUpPool.push_back(keyCode);
+    if(m_keysUpPool.find(keyCode) < 0)
+        m_keysUpPool.push_back(keyCode);
+    CVector<int>::iterator itor = m_keysDownPool.findItor(keyCode);
+    if(itor != m_keysDownPool.end())
+        m_keysDownPool.erase(itor);
+    itor = m_keysPressedPool.findItor(keyCode);
+    if(itor != m_keysPressedPool.end())
+        m_keysPressedPool.erase(itor);
+    m_keyRepeats[keyCode] = 0;
 }
 //------------------------------------------------------------------------------
 
@@ -475,11 +491,48 @@ void event::CInputHandler::processData(void) {
     // Please note that these will come from external event queue (low level)
     // could be SDL2 event queue, or glu/freeglut/X, Marmalade...
     //
+
+    // Throw events for keys that just had been pressed down
+    // this is called once
+    for(int i = 0; i < (int)m_keysPressedPool.size(); i++) {
+        int keyCode = m_keysPressedPool[i];
+        {
+            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
+            CArgumentList* argList = m_eventMgr->requestArgumentList();
+            keyEvent->eventType = event::KEY_PRESSED;
+            keyEvent->timeStamp = timesys::ticks();
+            keyEvent->pressed = FG_TRUE;
+            keyEvent->repeats = 1;
+            keyEvent->keyCode = keyCode;
+
+            argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
+            m_eventMgr->throwEvent(event::KEY_PRESSED, argList);
+        }
+    }
+    m_keysPressedPool.clear();    
+
+    // Keys being still down - continuous callbacks
     for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
         int keyCode = m_keysDownPool[i];
+        {
+            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
+            CArgumentList* argList = m_eventMgr->requestArgumentList();
+            keyEvent->eventType = event::KEY_DOWN;
+            keyEvent->timeStamp = timesys::ticks();
+            keyEvent->pressed = FG_TRUE;
+            keyEvent->repeats = m_keyRepeats[keyCode];
+            keyEvent->keyCode = keyCode;
+
+            argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
+            m_eventMgr->throwEvent(event::KEY_DOWN, argList);
+        }
         CallbackBindingMap::iterator found = m_keyDownBinds.find(keyCode);
         if(found == m_keyDownBinds.end())
             continue;
+        // This callbacks are for chosen keys
+        // They do not need any arguments
+        // Those callbacks are designed for continuous calling
+        // if the key is pressed
         for(int j = 0; j < (int)m_keyDownBinds[keyCode].size(); j++) {
             // There's no need for argument list
             m_keyDownBinds[keyCode][j]->Call();
@@ -487,8 +540,21 @@ void event::CInputHandler::processData(void) {
     }
     m_keysDownPool.clear();
 
+    // Keys that just had been released
     for(int i = 0; i < (int)m_keysUpPool.size(); i++) {
         int keyCode = m_keysUpPool[i];
+        // Throw proper key release event
+        {
+            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
+            CArgumentList* argList = m_eventMgr->requestArgumentList();
+            keyEvent->eventType = event::KEY_UP;
+            keyEvent->timeStamp = timesys::ticks();
+            keyEvent->pressed = FG_FALSE;
+            keyEvent->keyCode = keyCode;
+
+            argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
+            m_eventMgr->throwEvent(event::KEY_UP, argList);
+        }
         CallbackBindingMap::iterator found = m_keyUpBinds.find(keyCode);
         if(found == m_keyUpBinds.end())
             continue;

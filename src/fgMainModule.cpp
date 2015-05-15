@@ -209,8 +209,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_KEYDOWN: /**< Key pressed */
                 if(this->m_engineMain) {
                     // #FIXME
-                    if(!event.key.repeat)
-                        this->m_engineMain->getInputHandler()->addKeyDown((int)event.key.keysym.sym);
+                    this->m_engineMain->getInputHandler()->addKeyPressed((int)event.key.keysym.sym);
                 }
                 break;
             case SDL_KEYUP: /**< Key released */

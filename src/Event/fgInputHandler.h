@@ -18,8 +18,6 @@
     #include "Math/fgMathLib.h"
     #include "Event/fgEventManager.h"
 
-    #include <map>
-
     #define FG_INPUT_MAX_TOUCH_POINTS 10
 
     #if defined(FG_USING_MARMALADE)
@@ -92,7 +90,11 @@ namespace fg {
             ///
             CVector<int> m_keysDownPool;
             ///
+            CVector<int> m_keysPressedPool;
+            ///
             CVector<int> m_keysUpPool;
+            ///
+            int m_keyRepeats[384];
             /// int - keyCode, value - vector of callbacks to call
             /// Binding for key down events
             CallbackBindingMap m_keyDownBinds;
@@ -175,7 +177,7 @@ namespace fg {
              * Add key code to the pool of pressed down keys
              * @param keyCode
              */
-            void addKeyDown(int keyCode);
+            void addKeyPressed(int keyCode);
             /**
              * Add key code to the pool of released (up) keys
              * @param keyCode
@@ -219,6 +221,16 @@ namespace fg {
              */
             int maxOffsetForTap(void) const {
                 return MAX_OFFSET_FOR_TAP;
+            }
+            /**
+             * 
+             * @param keyCode
+             * @return
+             */
+            int getKeyRepeats(int keyCode) {
+                if(keyCode >= 384)
+                    return 0;
+                return m_keyRepeats[keyCode];
             }
 
             /**

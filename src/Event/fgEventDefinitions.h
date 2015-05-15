@@ -75,78 +75,82 @@ namespace fg {
         const EventType KEY_DOWN = 16;
         /// 
         const EventType KEY_UP = 17;
+        ///
+        const EventType KEY_PRESSED = 18;
+        ///
+        const EventType KEY_RELEASED = KEY_UP;
 
         /// 
-        const EventType RESOURCE_CREATED = 18;
+        const EventType RESOURCE_CREATED = 30;
         /// 
-        const EventType RESOURCE_REMOVED = 19;
+        const EventType RESOURCE_REMOVED = 31;
         /// 
-        const EventType RESOURCE_DISPOSED = 20;
+        const EventType RESOURCE_DISPOSED = 32;
         /// 
-        const EventType RESOURCE_DESTROYED = 21;
+        const EventType RESOURCE_DESTROYED = 33;
         /// 
-        const EventType RESOURCE_REQUESTED = 22;
+        const EventType RESOURCE_REQUESTED = 34;
 
         /// 
-        const EventType PROGRAM_INIT = 23;
+        const EventType PROGRAM_INIT = 40;
         ///
-        const EventType PROGRAM_QUIT = 24;
+        const EventType PROGRAM_QUIT = 41;
         ///
-        const EventType PROGRAM_SUSPEND = 25;
+        const EventType PROGRAM_SUSPEND = 42;
         ///
-        const EventType PROGRAM_RESUME = 26;
+        const EventType PROGRAM_RESUME = 43;
 
         /// 
-        const EventType LOADING_BEGIN = 27;
+        const EventType LOADING_BEGIN = 50;
         /// 
-        const EventType LOADING_FINISHED = 28;
+        const EventType LOADING_FINISHED = 51;
         /// 
-        const EventType SPLASHSCREEN = 29;
+        const EventType SPLASHSCREEN = 52;
         ///
-        const EventType SWAP_BUFFERS = 30;
+        const EventType SWAP_BUFFERS = 53;
         ///
-        const EventType UPDATE_SHOT = 31;
+        const EventType UPDATE_SHOT = 54;
         ///
         const EventType IDLE = UPDATE_SHOT;
         ///
-        const EventType DISPLAY_SHOT = 32;
+        const EventType DISPLAY_SHOT = 55;
         ///
-        const EventType RENDER_SHOT = 33;
+        const EventType RENDER_SHOT = 56;
 
         ///
-        const EventType FRAME_FREEZE = 34;
+        const EventType FRAME_FREEZE = 57;
 
         /// 
-        const EventType VERTEX_STREAM_READY = 35;
+        const EventType VERTEX_STREAM_READY = 60;
         /// 
-        const EventType CAMERA_CHANGED = 36;
+        const EventType CAMERA_CHANGED = 61;
 
         /// 
-        const EventType SOUND_PLAYED = 37;
+        const EventType SOUND_PLAYED = 70;
 
         /// 
-        const EventType MENU_CHANGED = 38;
+        const EventType MENU_CHANGED = 80;
         /// 
-        const EventType WIDGET_STATE_CHANGED = 39;
+        const EventType WIDGET_STATE_CHANGED = 81;
 
         /// 
-        const EventType SENSORS_CHANGED = 40;
+        const EventType SENSORS_CHANGED = 90;
 
         /// 
-        const EventType GAME_CONTROLLER_ADDED = 41;
+        const EventType GAME_CONTROLLER_ADDED = 100;
         /// 
-        const EventType GAME_CONTROLLER_REMOVED = 42;
+        const EventType GAME_CONTROLLER_REMOVED = 101;
         /// 
-        const EventType GAME_CONTROLLER_BUTTON = 43;
+        const EventType GAME_CONTROLLER_BUTTON = 102;
         /// 
-        const EventType GAME_CONTROLLER_AXIS = 44;
+        const EventType GAME_CONTROLLER_AXIS = 103;
 
         /// 
-        const EventType RESERVED1 = 45;
+        const EventType RESERVED1 = 110;
         /// 
-        const EventType RESERVED2 = 46;
+        const EventType RESERVED2 = 111;
         /// 
-        const EventType RESERVED3 = 47;
+        const EventType RESERVED3 = 112;
 
         /// 
         const EventType LAST_STANDARD_EVENT_CODE = RESERVED3;
@@ -278,6 +282,7 @@ namespace fg {
                 int which;
             };
             fgBool pressed;
+            int repeats;
         };
 
         /**
