@@ -241,6 +241,14 @@ public:
      */
     fgBool isRegistered(CallbackFuncPtr pCallback,
                         InternalCallbackType cbType = INVALID_CALLBACK);
+
+    /**
+     * 
+     * @param pCallback
+     * @param cbType
+     * @return
+     */
+    fgBool removeCallback(CallbackFuncPtr pCallback, InternalCallbackType cbType = INVALID_CALLBACK);
     //--------------------------------------------------------------------------
 
     /**

@@ -16,6 +16,8 @@
  * License:
  **************************************************************/
 
+#include "fgLog.h"
+
 #include "FlexiGameEditorApp.h"
 
 #include <pthread.h>
@@ -28,7 +30,7 @@
 //*)
 
 IMPLEMENT_APP(FlexiGameEditorApp);
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 bool FlexiGameEditorApp::OnInit() {
     bool returnVal = true;
@@ -57,4 +59,10 @@ bool FlexiGameEditorApp::OnInit() {
     return returnVal;
 
 }
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+int FlexiGameEditorApp::OnExit(void) {
+    FG_LOG_DEBUG("WX: FlexiGame::Editor closing...");
+    return base_type::OnExit();
+}
+//------------------------------------------------------------------------------

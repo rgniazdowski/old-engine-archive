@@ -21,7 +21,7 @@
 
 /**
  * @mainpage Cyclone Reference
- *
+ * 
  * Cyclone is a general purpose and robust system for real-time
  * simulation of rigid bodies. The library was designed to be used in
  * computer games, but may be applicable to other areas of simulation

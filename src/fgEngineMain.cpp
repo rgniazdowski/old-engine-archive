@@ -224,6 +224,7 @@ CEngineMain::~CEngineMain() {
         m_scriptSubsystem = NULL;
     }
     if(m_hardwareState) {
+        FG_LOG_DEBUG("Destroying hardware state instance...");
         delete m_hardwareState;
         m_hardwareState = NULL;
     }
@@ -235,6 +236,7 @@ CEngineMain::~CEngineMain() {
     // MessageSubsystem is a special LOG wrapper
     FG_MessageSubsystem->deleteInstance();
     // >> Main Game object destruction - end
+    FG_LOG_DEBUG("FlexiGame::Engine object is destroyed.");
 }
 //------------------------------------------------------------------------------
 

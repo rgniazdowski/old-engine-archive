@@ -94,7 +94,7 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxWANTS_CHA
 //------------------------------------------------------------------------------
 
 CEngineGfxCanvas::~CEngineGfxCanvas() {
-    FG_LOG_DEBUG("WX: Main destructor called");
+    FG_LOG_DEBUG("WX: Main destructor[CEngineGfxCanvas] called...");
     //if(m_context && IsShown())
     //    wxGLCanvas::SetCurrent(*m_context);
     closeProgram();
@@ -110,12 +110,14 @@ CEngineGfxCanvas::~CEngineGfxCanvas() {
 unsigned int CEngineGfxCanvas::executeCallbacks(InternalCallbackType cbType) {
     if((int)cbType >= NUM_ENGINE_CB_TYPES)
         return 0;
+    const char *cbTpNames[2] = {"EngineInitialized", "EngineDestroyed"};
     unsigned int nCalls = 0;
     const unsigned int n = m_onEngineCallbacks[(int)cbType].size();
     for(unsigned int i = 0; i < n; i++) {
         CallbackData &info = m_onEngineCallbacks[(int)cbType][i];
         if(info.callback) {
-            info.callback((void *)this, (void *)info.userData);
+            FG_LOG_DEBUG("WX: Calling internal callback for event: '%s'...", cbTpNames[(int)cbType]);
+            fgBool status = info.callback((void *)this, (void *)info.userData);
             nCalls++;
         }
     }
@@ -129,6 +131,8 @@ fgBool CEngineGfxCanvas::registerCallback(InternalCallbackType cbType,
     if(!pCallback || isRegistered(pCallback))
         return FG_FALSE;
     CallbackData callbackInfo(pCallback, pUserData);
+    const char *cbTpNames[2] = {"EngineInitialized", "EngineDestroyed"};
+    FG_LOG_DEBUG("WX: Registering callback for internal event: '%s'...", cbTpNames[(int)cbType]);
     m_onEngineCallbacks[(int)cbType].push_back(callbackInfo);
     return FG_TRUE;
 }
@@ -160,10 +164,37 @@ fgBool CEngineGfxCanvas::isRegistered(CallbackFuncPtr pCallback,
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
+fgBool CEngineGfxCanvas::removeCallback(CallbackFuncPtr pCallback,
+                                      InternalCallbackType cbType) {
+    if(!pCallback)
+        return FG_FALSE;
+    const unsigned int nTypes = NUM_ENGINE_CB_TYPES;
+    int cbTypeMax = 0;
+    int cbTypeIdx = 0;
+    if(cbType == INVALID_CALLBACK) {
+        cbTypeMax = nTypes - 1;
+    } else {
+        cbTypeMax = (int)cbType;
+        cbTypeIdx = (int)cbType;
+    }
+    unsigned int cnt = 0;
+    for(; cbTypeIdx <= cbTypeMax; cbTypeIdx++) {
+        unsigned int n = m_onEngineCallbacks[cbTypeIdx].size();
+        for(unsigned int i = 0; i < n; i++) {
+            CallbackData &info = m_onEngineCallbacks[cbTypeIdx][i];
+            if(info.callback == pCallback) {
+                info.callback = NULL;
+                info.userData = NULL;
+                cnt++;
+            }
+        }
+    }
+    return (fgBool)!!(cnt > 0);
+}
+//------------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnCloseEvent(wxCloseEvent& event) {
-    //printf("CLOSE EVENT: THREAD ID: %lu\n", pthread_self());
-    FG_LOG_DEBUG("WX: Close event callback");
+    FG_LOG_DEBUG("WX: Close event callback...");
     this->m_isExit = FG_TRUE;
     this->m_appInit = FG_FALSE;
     closeProgram();
@@ -176,7 +207,6 @@ void CEngineGfxCanvas::OnMouseMoved(wxMouseEvent& event) {
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
         this->m_engineMain->getInputHandler()->handlePointerMoved(fg::Vector2i(x, y), FG_DEFAULT_POINTER_ID, event.Dragging());
-        //printf("MOUSE MOVED: THREAD ID: %lu\n", pthread_self());
     }
 }
 //-----------------------------------------------------------------------------
@@ -266,7 +296,7 @@ void CEngineGfxCanvas::OnIdle(wxIdleEvent& event) {
     f++;
     if(time(NULL) != t1) {
         t1 = time(NULL);
-        FG_LOG_DEBUG("WX: IDLE FPS: %d", f);
+        //FG_LOG_DEBUG("WX: IDLE FPS: %d", f);
         //printf("IDLE: THREAD ID: %lu\n", pthread_self());
         f = 0;
     }
@@ -352,7 +382,7 @@ void CEngineGfxCanvas::OnPaint(wxPaintEvent& event) {
     if(t2 - t1 > 1000) {
         float fps = ((float)f) / (1000.0f / (float)(t2 - t1));
         t1 = t2;
-        FG_LOG_DEBUG("WX: Paint Event: FPS: %.1f", fps);
+        //FG_LOG_DEBUG("WX: Paint Event: FPS: %.1f", fps);
         f = 0;
     }
 
@@ -392,8 +422,10 @@ void CEngineGfxCanvas::closeProgram(void) {
     FG_LOG_DEBUG("Closing program...");
     if(m_engineMain) {
         m_engineMain->destroy();
+        FG_LOG_DEBUG("Calling engine destructor...");
         delete m_engineMain;
     }
+    FG_LOG_DEBUG("Finished closing program...");
     m_engineMain = NULL;
     *m_engineMainOrig = m_engineMain;
     m_appInit = FG_FALSE;

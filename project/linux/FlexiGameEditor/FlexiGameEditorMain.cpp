@@ -296,11 +296,11 @@ m_engineMain(NULL) {
 
     {
         m_engineGfxCanvas->registerCallback(CEngineGfxCanvas::ENGINE_INITIALIZED,
-                                            *fg::editor::CPreviewBspBuilder::engineInit,
+                                            &fg::editor::CPreviewBspBuilder::engineInit,
                                             m_previews[FG_PREVIEW_BSP_BUILDER]);
 
         m_engineGfxCanvas->registerCallback(CEngineGfxCanvas::ENGINE_DESTROYED,
-                                            *fg::editor::CPreviewBspBuilder::engineInit,
+                                            &fg::editor::CPreviewBspBuilder::engineDestroy,
                                             m_previews[FG_PREVIEW_BSP_BUILDER]);
     }
 }
@@ -310,12 +310,19 @@ m_engineMain(NULL) {
 FlexiGameEditorFrame::~FlexiGameEditorFrame() {
     //(*Destroy(FlexiGameEditorFrame)
     //*)
+    FG_LOG_DEBUG("WX: Main frame: stopping render timer...");
     m_renderTimer->Stop();
     delete m_renderTimer;
     m_renderTimer = NULL;
 
+    if(m_engineGfxCanvas) {
+        m_engineGfxCanvas->removeCallback(&fg::editor::CPreviewBspBuilder::engineDestroy);
+        m_engineGfxCanvas->removeCallback(&fg::editor::CPreviewBspBuilder::engineInit);
+    }
+
     for(unsigned int i = 0; i < FG_PREVIEW_NUM_MODES; i++) {
         if(m_previews[i]) {
+            FG_LOG_DEBUG("WX: Main frame: Deleting preview: '%s'", m_previews[i]->getNameStr());
             delete m_previews[i];
             m_previews[i] = NULL;
         }

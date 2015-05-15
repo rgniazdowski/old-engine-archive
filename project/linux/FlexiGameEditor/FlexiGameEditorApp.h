@@ -20,7 +20,13 @@
  */
 class FlexiGameEditorApp : public wxApp {
 public:
+    typedef FlexiGameEditorApp self_type;
+    typedef FlexiGameEditorApp type;
+    typedef wxApp base_type;
+
+public:
     virtual bool OnInit();
+    virtual int OnExit();
 
 private:
     ///

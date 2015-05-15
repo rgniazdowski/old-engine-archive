@@ -70,6 +70,8 @@ m_keyboardHandlerCB(NULL) {
 //------------------------------------------------------------------------------
 
 editor::CPreviewBspBuilder::~CPreviewBspBuilder() {
+    FG_LOG_DEBUG("WX: BSP Editor Preview mode: Destroying internal data...");
+    refreshInternals();
     unregisterCallbacks();
     if(m_displayShotCB) {
         delete m_displayShotCB;
@@ -208,6 +210,7 @@ void editor::CPreviewBspBuilder::activatePreviewSide(PreviewSide previewSide) {
 fgBool editor::CPreviewBspBuilder::registerCallbacks(void) {
     if(!getEngineMain())
         return FG_FALSE;
+    FG_LOG_DEBUG("WX: BSP Editor: registering callbacks...");
     fg::CEngineMain* pEngineMain = getEngineMain();
     if(!pEngineMain->isRegistered(fg::event::DISPLAY_SHOT, m_displayShotCB)) {
         pEngineMain->addCallback(fg::event::DISPLAY_SHOT, m_displayShotCB);
@@ -248,8 +251,8 @@ fgBool editor::CPreviewBspBuilder::registerCallbacks(void) {
 fgBool editor::CPreviewBspBuilder::unregisterCallbacks(void) {
     if(!getEngineMain())
         return FG_FALSE;
+    FG_LOG_DEBUG("WX: BSP Editor: removing callbacks...");
     fg::CEngineMain* pEngineMain = getEngineMain();
-
     pEngineMain->removeCallback(fg::event::DISPLAY_SHOT, m_displayShotCB);
     pEngineMain->removeCallback(fg::event::UPDATE_SHOT, m_updateShotCB);
     pEngineMain->removeCallback(fg::event::RENDER_SHOT, m_renderShotCB);
@@ -274,9 +277,9 @@ fgBool editor::CPreviewBspBuilder::engineInit(void* systemData, void* userData) 
     // it's from where the programInit/Quit events are thrown (internal cb)
     CPreviewBspBuilder *pSelf = static_cast<CPreviewBspBuilder*>(userData);
     CEngineGfxCanvas* pGfxCanvas = static_cast<CEngineGfxCanvas*>(systemData);
-    fg::CEngineMain* pEngineMain = pGfxCanvas->getEngineMain();
-    pSelf->registerCallbacks();
+    fg::CEngineMain* pEngineMain = pGfxCanvas->getEngineMain();    
     pSelf->refreshInternals();
+    pSelf->registerCallbacks();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -289,9 +292,9 @@ fgBool editor::CPreviewBspBuilder::engineDestroy(void* systemData, void* userDat
     // it's from where the programInit/Quit events are thrown (internal cb)
     CPreviewBspBuilder *pSelf = static_cast<CPreviewBspBuilder*>(userData);
     CEngineGfxCanvas* pGfxCanvas = static_cast<CEngineGfxCanvas*>(systemData);
-    fg::CEngineMain* pEngineMain = pGfxCanvas->getEngineMain();
-    pSelf->unregisterCallbacks();
+    fg::CEngineMain* pEngineMain = pGfxCanvas->getEngineMain();    
     pSelf->refreshInternals();
+    pSelf->unregisterCallbacks();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
