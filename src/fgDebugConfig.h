@@ -25,32 +25,24 @@
 namespace fg {
 
     struct SDebugConfig {
-    #if !defined(FG_DEBUG)
-        // When not in Debug mode, this will be a union
-        // No data here will be any good on release build
-
-        union {
-    #endif
-            bool isDebug; // Is debug build active?
-            bool isVerbose; // Is there some verbosity active?
-            int verboseLevel; // The exact verbosity level
-            bool physicsBBoxShow; // Whether to show bounding boxes debug info for physics simulation
-            bool guiBBoxShow; // Whether to show bounding boxes debug info (GUI)
-            bool gfxBBoxShow; // Whether to show bounding boxes in GFX?
-            bool gfxTreeBBoxShow; // Whether to show bounding boxes of spatial trees in GFX?
-            bool gfxFrustumShow; // Whether to show frustum boxes?
-            bool gfxLightShow; // Whether to show light sources?
-            bool gfxDumpConfig; // If true, this will dump available configs in EGL
-            bool gfxDumpDisplay; // If true, this will dump available display resolutions
-            bool labelsShow; // Whether to show labels (any kind)
-            bool dumpConfig; // Dump configs on load?
-            bool forceFullscreen; // Is fullscreen forced?
-            bool isDebugProfiling; // Is debug profiling enabled?
-            bool consoleShow; // Is special console being displayed?
-            int empty;
-    #if !defined(FG_DEBUG)
-        };
-    #endif
+        bool isDebug; // Is debug build active?
+        bool isVerbose; // Is there some verbosity active?
+        int verboseLevel; // The exact verbosity level
+        bool physicsBBoxShow; // Whether to show bounding boxes debug info for physics simulation
+        bool guiBBoxShow; // Whether to show bounding boxes debug info (GUI)
+        bool gfxBBoxShow; // Whether to show bounding boxes in GFX?
+        bool gfxTreeBBoxShow; // Whether to show bounding boxes of spatial trees in GFX?
+        bool gfxFrustumShow; // Whether to show frustum boxes?
+        bool gfxLightShow; // Whether to show light sources?
+        bool gfxDumpConfig; // If true, this will dump available configs in EGL
+        bool gfxDumpDisplay; // If true, this will dump available display resolutions
+        bool gameFreeLook; // If true, the free look camera and flying is active (like noclip)
+        bool labelsShow; // Whether to show labels (any kind)
+        bool dumpConfig; // Dump configs on load?
+        bool forceFullscreen; // Is fullscreen forced?
+        bool isDebugProfiling; // Is debug profiling enabled?
+        bool consoleShow; // Is special console being displayed?
+        int empty;
     };
 
     extern struct SDebugConfig g_DebugConfig;

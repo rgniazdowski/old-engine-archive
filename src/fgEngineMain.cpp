@@ -852,6 +852,9 @@ fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
+    if(!fg::g_DebugConfig.gameFreeLook)
+        return FG_FALSE;
+    
     event::EventType type = pEvent->code;
     static int lastx = 128000;
     static int lasty = 128000;
