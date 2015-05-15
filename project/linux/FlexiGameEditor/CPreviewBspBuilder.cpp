@@ -15,38 +15,61 @@
  */
 
 #include "fgEngineMain.h"
+#include "fgDebugConfig.h"
+
+#include "GFX/Scene/fgGfx3DScene.h"
+#include "GFX/Scene/fgGfxBspCompiler.h"
+#include "GFX/Scene/fgGfxBspTree.h"
+#include "GFX/Scene/fgGfxBspNode.h"
+#include "GFX/Scene/fgGfxBspFile.h"
+
+#include "GFX/fgGfxCameraAnimation.h"
+#include "GFX/fgGfxDrawingBatch.h"
+#include "GFX/fgGfxPrimitives.h"
+#include "GFX/fgGfxPlane.h"
+#include "GFX/fgGfxPolygon.h"
+
+#include "GUI/fgGuiDrawer.h"
+
 #include "CPreviewBspBuilder.h"
 #include "CEngineGfxCanvas.h"
 
+using namespace fg;
+
 //------------------------------------------------------------------------------
 
-CPreviewBspBuilder::CPreviewBspBuilder(fg::CEngineMain** pEngineMainOrig) :
+editor::CPreviewBspBuilder::CPreviewBspBuilder(fg::CEngineMain** pEngineMainOrig) :
 base_type(pEngineMainOrig),
 m_displayShotCB(NULL),
 m_updateShotCB(NULL),
 m_renderShotCB(NULL),
 m_mouseHandlerCB(NULL),
 m_keyboardHandlerCB(NULL) {
-    m_displayShotCB = new fg::event::CPlainFunctionCallback(&CPreviewBspBuilder::displayHandler,
-                                                            this);
+    {
+        using namespace fg::event;
+        m_displayShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::displayHandler,
+                                                     this);
 
-    m_updateShotCB = new fg::event::CPlainFunctionCallback(&CPreviewBspBuilder::updateHandler,
-                                                           this);
+        m_updateShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::updateHandler,
+                                                    this);
 
-    m_renderShotCB = new fg::event::CPlainFunctionCallback(&CPreviewBspBuilder::renderHandler,
-                                                           this);
+        m_renderShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::renderHandler,
+                                                    this);
 
-    m_mouseHandlerCB = new fg::event::CMethodCallback<self_type>(this,
-                                                                 &CPreviewBspBuilder::mouseHandler);
+        m_mouseHandlerCB = new CMethodCallback<self_type>(this,
+                                                          &CPreviewBspBuilder::mouseHandler);
 
-    m_keyboardHandlerCB = new fg::event::CMethodCallback<self_type>(this,
-                                                                    &CPreviewBspBuilder::keyboardHandler);
-
+        m_keyboardHandlerCB = new CMethodCallback<self_type>(this,
+                                                             &CPreviewBspBuilder::keyboardHandler);
+    }
+    m_previewSide = FREE_LOOK;
+    m_bspCompiler = new gfx::CBspCompiler();
+    m_bspFile = new gfx::CBspFile();
     refreshInternals();
 }
 //------------------------------------------------------------------------------
 
-CPreviewBspBuilder::~CPreviewBspBuilder() {
+editor::CPreviewBspBuilder::~CPreviewBspBuilder() {
     unregisterCallbacks();
     if(m_displayShotCB) {
         delete m_displayShotCB;
@@ -71,10 +94,19 @@ CPreviewBspBuilder::~CPreviewBspBuilder() {
     m_isActive = FG_FALSE;
     m_previewID = 0;
     m_name.clear();
+    if(m_bspFile) {
+        delete m_bspFile;
+        m_bspFile = NULL;
+    }
+    if(m_bspCompiler) {
+        delete m_bspCompiler;
+        m_bspCompiler = NULL;
+    }
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::activate(fgBool toggle) {
+fgBool editor::CPreviewBspBuilder::activate(fgBool toggle) {
+    refreshInternals();
     // Engine main instance is not initialized - cannot do anything
     if(!getEngineMain())
         return FG_FALSE;
@@ -87,16 +119,93 @@ fgBool CPreviewBspBuilder::activate(fgBool toggle) {
         fgBool status = unregisterCallbacks();
         m_isActive = FG_FALSE;
     }
+
+    if(m_isActive) {
+        fg::g_DebugConfig.gameFreeLook = false;
+        m_p3DScene->setHideAll(FG_TRUE);
+        m_p3DScene->setPickSelectionOnClick(FG_TRUE);
+        m_p3DScene->setPickSelectionBox(FG_FALSE);        
+        m_p3DScene->setPickSelectionGroup(FG_FALSE);
+        m_p3DScene->setShowGroundGrid(FG_TRUE);
+        activatePreviewSide(m_previewSide);
+    } else {
+        m_p3DScene->setHideAll(FG_FALSE);
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-void CPreviewBspBuilder::refreshInternals(void) {
-    
+void editor::CPreviewBspBuilder::refreshInternals(void) {
+    if(getEngineMain()) {
+        m_p3DScene = getEngineMain()->getGfxMain()->get3DScene();
+        m_pCamera = getEngineMain()->getGfxMain()->get3DSceneCamera();
+        m_pGuiDrawer = getEngineMain()->getGuiMain()->getDrawer();
+    } else {
+        m_p3DScene = NULL;
+        m_pCamera = NULL;
+        m_pGuiDrawer = NULL;
+    }
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::registerCallbacks(void) {
+void editor::CPreviewBspBuilder::activatePreviewSide(PreviewSide previewSide) {
+    if(!getEngineMain() || !m_p3DScene)
+        return;
+    gfx::Planef plane;
+    switch(previewSide) {
+        case PreviewSide::FREE_LOOK:
+            m_p3DScene->setGroundPlane(gfx::Planef::Y, m_p3DScene->getGroundLevel());
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera on the side, looks at the center
+            break;
+        case PreviewSide::LEFT:            
+            plane.n = Vec3f(-1.0f, 0.0f, 0.0f);
+            plane.d = m_p3DScene->getGroundLevel();
+            m_p3DScene->setGroundPlane(plane);
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera on the left side, looks to the right
+            break;
+        case PreviewSide::RIGHT:
+            plane.n = Vec3f(1.0f, 0.0f, 0.0f);
+            plane.d = m_p3DScene->getGroundLevel();
+            m_p3DScene->setGroundPlane(plane);
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera on the right side, looks to the left
+            break;
+        case PreviewSide::TOP:
+            plane.n = Vec3f(0.0f, 1.0f, 0.0f);
+            plane.d = m_p3DScene->getGroundLevel();
+            m_p3DScene->setGroundPlane(plane);
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera over, points down
+            break;
+        case PreviewSide::BOTTOM:
+            plane.n = Vec3f(0.0f, -1.0f, 0.0f);
+            plane.d = m_p3DScene->getGroundLevel();
+            m_p3DScene->setGroundPlane(plane);
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera below, points up
+            break;
+        case PreviewSide::FRONT:
+            plane.n = Vec3f(0.0f, 0.0f, 1.0f);
+            plane.d = m_p3DScene->getGroundLevel();
+            m_p3DScene->setGroundPlane(plane);
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera at +Z looks at -Z
+            break;
+        case PreviewSide::BACK:
+            plane.n = Vec3f(0.0f, 0.0f, -1.0f);
+            plane.d = m_p3DScene->getGroundLevel();
+            m_p3DScene->setGroundPlane(plane);
+            m_pCamera->setType(gfx::CCameraAnimation::FREE);
+            // camera at -Z looks at +Z
+            break;
+    }
+    m_previewSide = previewSide;
+}
+//------------------------------------------------------------------------------
+
+fgBool editor::CPreviewBspBuilder::registerCallbacks(void) {
     if(!getEngineMain())
         return FG_FALSE;
     fg::CEngineMain* pEngineMain = getEngineMain();
@@ -123,15 +232,20 @@ fgBool CPreviewBspBuilder::registerCallbacks(void) {
     if(!pEngineMain->isRegistered(fg::event::KEY_UP, m_keyboardHandlerCB)) {
         pEngineMain->addCallback(fg::event::KEY_UP, m_keyboardHandlerCB);
     }
+    // Remember that Key down is called continuously
     if(!pEngineMain->isRegistered(fg::event::KEY_DOWN, m_keyboardHandlerCB)) {
         pEngineMain->addCallback(fg::event::KEY_DOWN, m_keyboardHandlerCB);
+    }
+    // Key pressed is called once (for the first press the down/pressed is thrown together)
+    if(!pEngineMain->isRegistered(fg::event::KEY_PRESSED, m_keyboardHandlerCB)) {
+        pEngineMain->addCallback(fg::event::KEY_PRESSED, m_keyboardHandlerCB);
     }
     m_callbacksRegistered = FG_TRUE;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::unregisterCallbacks(void) {
+fgBool editor::CPreviewBspBuilder::unregisterCallbacks(void) {
     if(!getEngineMain())
         return FG_FALSE;
     fg::CEngineMain* pEngineMain = getEngineMain();
@@ -146,12 +260,13 @@ fgBool CPreviewBspBuilder::unregisterCallbacks(void) {
 
     pEngineMain->removeCallback(fg::event::KEY_UP, m_keyboardHandlerCB);
     pEngineMain->removeCallback(fg::event::KEY_DOWN, m_keyboardHandlerCB);
+    pEngineMain->removeCallback(fg::event::KEY_PRESSED, m_keyboardHandlerCB);
     m_callbacksRegistered = FG_FALSE;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::engineInit(void* systemData, void* userData) {
+fgBool editor::CPreviewBspBuilder::engineInit(void* systemData, void* userData) {
     if(!systemData || !userData)
         return FG_FALSE;
     // user data is the pointer to the CPreviewBspBuilder object
@@ -161,11 +276,12 @@ fgBool CPreviewBspBuilder::engineInit(void* systemData, void* userData) {
     CEngineGfxCanvas* pGfxCanvas = static_cast<CEngineGfxCanvas*>(systemData);
     fg::CEngineMain* pEngineMain = pGfxCanvas->getEngineMain();
     pSelf->registerCallbacks();
+    pSelf->refreshInternals();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::engineDestroy(void* systemData, void* userData) {
+fgBool editor::CPreviewBspBuilder::engineDestroy(void* systemData, void* userData) {
     if(!systemData || !userData)
         return FG_FALSE;
     // user data is the pointer to the CPreviewBspBuilder object
@@ -175,11 +291,12 @@ fgBool CPreviewBspBuilder::engineDestroy(void* systemData, void* userData) {
     CEngineGfxCanvas* pGfxCanvas = static_cast<CEngineGfxCanvas*>(systemData);
     fg::CEngineMain* pEngineMain = pGfxCanvas->getEngineMain();
     pSelf->unregisterCallbacks();
+    pSelf->refreshInternals();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::displayHandler(void* systemData, void* userData) {
+fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userData) {
     if(!userData)
         return FG_FALSE;
     // user data is the pointer to the CPreviewBspBuilder object
@@ -188,12 +305,12 @@ fgBool CPreviewBspBuilder::displayHandler(void* systemData, void* userData) {
     fg::CEngineMain* pEngineMain = static_cast<fg::CEngineMain*>(systemData);
     if(!pSelf->isActive())
         return FG_FALSE;
-    
+
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::updateHandler(void* systemData, void* userData) {
+fgBool editor::CPreviewBspBuilder::updateHandler(void* systemData, void* userData) {
     if(!userData)
         return FG_FALSE;
     // user data is the pointer to the CPreviewBspBuilder object
@@ -207,7 +324,7 @@ fgBool CPreviewBspBuilder::updateHandler(void* systemData, void* userData) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::renderHandler(void* systemData, void* userData) {
+fgBool editor::CPreviewBspBuilder::renderHandler(void* systemData, void* userData) {
     if(!userData)
         return FG_FALSE;
     // user data is the pointer to the CPreviewBspBuilder object
@@ -221,7 +338,7 @@ fgBool CPreviewBspBuilder::renderHandler(void* systemData, void* userData) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::mouseHandler(fg::event::CArgumentList* argv) {
+fgBool editor::CPreviewBspBuilder::mouseHandler(fg::event::CArgumentList* argv) {
     if(!argv || !m_isActive)
         return FG_FALSE;
     fg::event::SEvent *pEvent = (fg::event::SEvent *)argv->getValueByID(0);
@@ -238,7 +355,7 @@ fgBool CPreviewBspBuilder::mouseHandler(fg::event::CArgumentList* argv) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CPreviewBspBuilder::keyboardHandler(fg::event::CArgumentList* argv) {
+fgBool editor::CPreviewBspBuilder::keyboardHandler(fg::event::CArgumentList* argv) {
     if(!argv || !m_isActive)
         return FG_FALSE;
     fg::event::SEvent* pEvent = (fg::event::SEvent *)argv->getValueByID(0);
