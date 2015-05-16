@@ -9,7 +9,6 @@
  ******************************************************************************/
 
 #include "fgEngineMain.h"
-#include "CEngineGfxCanvas.h"
 
 #include "Event/fgEventManager.h"
 #include "Event/fgInputHandler.h"
@@ -19,10 +18,8 @@
 #include "fgDebugConfig.h"
 #include "fgLog.h"
 
-#include <cstdlib>
-#include <cstdio>
-#include <cmath>
-#include <map>
+#include "CEngineGfxCanvas.h"
+
 //-----------------------------------------------------------------------------
 
 CRenderTimer::CRenderTimer(CEngineGfxCanvas* gfxCanvas, float fps) :

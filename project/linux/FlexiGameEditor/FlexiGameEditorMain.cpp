@@ -245,6 +245,7 @@ m_engineMain(NULL) {
     Connect(idGfxContextMenuCloseView,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FlexiGameEditorFrame::OnGfxContextItemCloseViewSelected);
     //*)
     ////////////////////////////////////////////////////////////////////////////
+    fg::timesys::init();
 
     __wxStatusBarStyles_1[0] = wxSB_SUNKEN;
     __wxStatusBarStyles_1[1] = wxSB_SUNKEN;
@@ -291,9 +292,7 @@ m_engineMain(NULL) {
     BottomNotebook->AddPage(panel1, "Bottom panel yolox");
     Layout();
 
-    fg::timesys::init();
     m_previewMode = FG_PREVIEW_GAME;
-
     {
         m_engineGfxCanvas->registerCallback(CEngineGfxCanvas::ENGINE_INITIALIZED,
                                             &fg::editor::CPreviewBspBuilder::engineInit,
@@ -330,6 +329,27 @@ FlexiGameEditorFrame::~FlexiGameEditorFrame() {
 }
 //------------------------------------------------------------------------------
 
+int FlexiGameEditorFrame::FilterEvent(wxEvent& event) {
+    if(!m_engineGfxCanvas || !m_gfxHolderPanel) {
+        return wxEventFilter::Event_Skip;
+    }
+    if(m_engineGfxCanvas->isSuspend() || 
+       m_engineGfxCanvas->isExit() || 
+       !m_engineGfxCanvas->isPaintReady() || 
+       m_engineGfxCanvas->isFrameFreeze()) {
+        return wxEventFilter::Event_Skip;
+    }
+    if(event.GetEventType() == wxEVT_KEY_DOWN) {        
+        m_gfxHolderPanel->OnKeyPressed((wxKeyEvent&)event);
+        return wxEventFilter::Event_Skip;
+    }
+    if(event.GetEventType() == wxEVT_KEY_UP) {
+        m_gfxHolderPanel->OnKeyReleased((wxKeyEvent&)event);
+        return wxEventFilter::Event_Skip;
+    }
+    return wxEventFilter::Event_Skip;
+}
+//------------------------------------------------------------------------------
 void FlexiGameEditorFrame::OnIdle(wxIdleEvent& event) {
     if(m_engineGfxCanvas) {
         g_resMgrPanel->setEngineMain(m_engineMain);

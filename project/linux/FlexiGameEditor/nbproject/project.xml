@@ -29,9 +29,11 @@
             </formatting>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>callbacks</word>
             <word>cb</word>
             <word>gfx</word>
             <word>int</word>
+            <word>pos</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

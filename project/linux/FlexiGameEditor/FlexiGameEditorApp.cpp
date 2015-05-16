@@ -33,6 +33,7 @@ IMPLEMENT_APP(FlexiGameEditorApp);
 //------------------------------------------------------------------------------
 
 bool FlexiGameEditorApp::OnInit() {
+    m_mainFrame = NULL;
     bool returnVal = true;
     if(false) {
         //(*AppInitialize
@@ -52,6 +53,7 @@ bool FlexiGameEditorApp::OnInit() {
             Frame->SetAutoLayout(true);
             Frame->Show();
             SetTopWindow(Frame);
+            m_mainFrame = Frame;
         }
         returnVal = wxsOK;
     }
@@ -62,7 +64,16 @@ bool FlexiGameEditorApp::OnInit() {
 //------------------------------------------------------------------------------
 
 int FlexiGameEditorApp::OnExit(void) {
+    m_mainFrame = NULL;
     FG_LOG_DEBUG("WX: FlexiGame::Editor closing...");
     return base_type::OnExit();
+}
+//------------------------------------------------------------------------------
+
+int FlexiGameEditorApp::FilterEvent(wxEvent& event) {
+    if(m_mainFrame) {
+        return m_mainFrame->FilterEvent(event);
+    }
+    return wxEventFilter::Event_Skip;
 }
 //------------------------------------------------------------------------------

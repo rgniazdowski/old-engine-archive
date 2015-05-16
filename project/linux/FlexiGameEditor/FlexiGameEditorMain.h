@@ -136,6 +136,8 @@ public:
     EnginePreviewMode getPreviewMode(const char* name);
 
 
+    int FilterEvent(wxEvent& event);
+
 private:
 
     void OnIdle(wxIdleEvent& event);

@@ -28,8 +28,8 @@ wxPanel(parent, wxID_ANY,
     this->SetSizer(m_boxSizer);
     activateGfxCanvas();
 
-    this->Bind(wxEVT_KEY_DOWN, &CGfxHolderPanel::OnKeyPressed, this);
-    this->Bind(wxEVT_KEY_UP, &CGfxHolderPanel::OnKeyReleased, this);
+    //this->Bind(wxEVT_KEY_DOWN, &CGfxHolderPanel::OnKeyPressed, this);
+    //this->Bind(wxEVT_KEY_UP, &CGfxHolderPanel::OnKeyReleased, this);
 }
 //-----------------------------------------------------------------------------
 
@@ -42,36 +42,38 @@ CGfxHolderPanel::~CGfxHolderPanel() {
 
 void CGfxHolderPanel::OnKeyPressed(wxKeyEvent& event) {
 #if 0
-    wxChar uc = event.GetUnicodeKey();
+
+#endif
+    if(this->m_gfxCanvas) {
+        if(this->m_gfxCanvas->isSuspend())
+            return;
+        fg::CEngineMain* pEngineMain = m_gfxCanvas->getEngineMain();
+        if(!pEngineMain)
+            return;
+        int keyCode = 0;
+        wxChar uc = event.GetUnicodeKey();
         if(uc != WXK_NONE) {
             // It's a "normal" character. Notice that this includes
             // control characters in 1..31 range, e.g. WXK_RETURN or
             // WXK_BACK, so check for them explicitly.
             if(uc >= 32) {
-               // FG_LOG_DEBUG("You pressed '%c'", uc);
+                keyCode = uc;
             } else {
                 // It's a control character
             }
-        } else // No Unicode equivalent.
-        {
+        } else {
+            // No Unicode equivalent.
+            keyCode = event.GetKeyCode();
             // It's a special key, deal with all the known ones:
-            switch(event.GetKeyCode()) {
+            /*switch(event.GetKeyCode()) {
                 case WXK_LEFT:
                 case WXK_RIGHT:
-
-                    break;
                 case WXK_F1:
-
                     break;
-            }
+            }*/
         }
-#endif
-    if(this->m_gfxCanvas) {
-        fg::CEngineMain* pEngineMain = m_gfxCanvas->getEngineMain();
-        if(!pEngineMain)
-            return;
-        int keyCode = event.GetKeyCode();
-        pEngineMain->getInputHandler()->addKeyPressed(keyCode);
+        if(keyCode != 0)
+            pEngineMain->getInputHandler()->addKeyPressed(keyCode);
         FG_LOG_DEBUG("WX: GfxHolderPanel: Key pressed event: id:%d, char[%c]",
                      keyCode, (char)keyCode);
     }
@@ -80,11 +82,25 @@ void CGfxHolderPanel::OnKeyPressed(wxKeyEvent& event) {
 
 void CGfxHolderPanel::OnKeyReleased(wxKeyEvent& event) {
     if(this->m_gfxCanvas) {
+        if(this->m_gfxCanvas->isSuspend())
+            return;
         fg::CEngineMain* pEngineMain = m_gfxCanvas->getEngineMain();
         if(!pEngineMain)
             return;
-        int keyCode = event.GetKeyCode();
-        pEngineMain->getInputHandler()->addKeyUp(keyCode);
+        int keyCode = 0;
+        wxChar uc = event.GetUnicodeKey();
+        if(uc != WXK_NONE) {
+            if(uc >= 32) {
+                keyCode = uc;
+            } else {
+                // It's a control character
+            }
+        } else {
+            // No Unicode equivalent.
+            keyCode = event.GetKeyCode();
+        }
+        if(keyCode != 0)
+            pEngineMain->getInputHandler()->addKeyUp(keyCode);
         FG_LOG_DEBUG("WX: GfxHolderPanel: Key released event: id:%d, char[%c]",
                      keyCode, (char)keyCode);
     }

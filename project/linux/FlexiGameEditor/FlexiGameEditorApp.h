@@ -15,6 +15,8 @@
 
     #include <wx/app.h>
 
+class FlexiGameEditorFrame;
+
 /**
  *
  */
@@ -27,10 +29,13 @@ public:
 public:
     virtual bool OnInit();
     virtual int OnExit();
+    virtual int FilterEvent(wxEvent& event);
 
 private:
     ///
     fgBool m_isInit;
+    ///
+    FlexiGameEditorFrame* m_mainFrame;
 };
 
     #undef FG_INC_FLEXI_GAME_EDITOR_APP_BLOCK

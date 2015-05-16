@@ -21,6 +21,7 @@
     #include "fgBool.h"
 
     #include <wx/string.h>
+    #include <wx/menu.h>
 
 namespace fg {
     class CEngineMain;
@@ -143,8 +144,24 @@ namespace fg {
             fgBool areCallbacksRegistered(void) const {
                 return m_callbacksRegistered;
             }
+            /**
+             * 
+             * @return
+             */
+            wxMenu* getContextMenu(void) {
+                return &m_contextMenu;
+            }
+            /**
+             * 
+             * @return
+             */
+            wxEvtHandler* getEventHandler(void) {
+                return (wxEvtHandler*)&m_contextMenu;
+            }
 
         protected:
+            /// Context menu - internal
+            wxMenu m_contextMenu;
             /// Name of this preview mode
             wxString m_name;
             /// This preview mode identification number.
