@@ -58,8 +58,9 @@ gfx::CScene3D::~CScene3D() {
 //------------------------------------------------------------------------------
 
 void gfx::CScene3D::sortCalls(void) {
-    if(!getShaderManager())
+    if(!getShaderManager()) {
         return;
+    }
     if(isLinearTraverse()) {
         CSceneManager::sortCalls();
         return;
@@ -70,7 +71,7 @@ void gfx::CScene3D::sortCalls(void) {
     // Update the MVP based on the main camera properties
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum &frustum = getMVP()->getFrustum();
-    // Remove from the queue any remaining nodes (SceneNode)
+    // Remove from the queue any remaining nodes (CSceneNode)
     getNodeQueue().clear();
     //
     // Pick selection init
@@ -79,10 +80,10 @@ void gfx::CScene3D::sortCalls(void) {
     if(m_pickSelection.shouldCheck) {
         fgBool groundStatus = getGroundGrid().rayIntersect(m_pickSelection.rayEye,
                                                             m_pickSelection.rayDir,
-                                                            m_pickSelection.groundIntersectionPoint,
+                                                            m_pickSelection.groundIntersectionPoint[1],
                                                             FG_TRUE);
         if(!groundStatus) {
-            m_pickSelection.groundIntersectionPoint = Vector3f();
+            m_pickSelection.groundIntersectionPoint[1] = Vector3f();
         }
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
@@ -192,13 +193,10 @@ void gfx::CScene3D::sortCalls(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CScene3D::render(void) {
-    if(isHideAll()) {
-        return;
-    }
     // Calling underlying render function of the scene manager
     // This uses the special node queue, which contains only visible scene nodes
     // at the current render frame
-    // This node queue was updated in Scene3D::sortCalls
+    // This node queue was updated in CScene3D::sortCalls
     CSceneManager::render();
     CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
     pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
@@ -210,7 +208,6 @@ void gfx::CScene3D::render(void) {
         if(!pTreeNode)
             continue;
 #if defined(FG_DEBUG)
-
         float d = ((float)pTreeNode->depth / (float)m_octree->getMaxDepth()) + 0.2f;
         if(d > 1.0f) d = 1.0f;
         if(FG_DEBUG_CFG_OPTION(gfxTreeBBoxShow)) {
@@ -345,7 +342,7 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                     }
                     m_collisionsInfo.insert(childNode, sceneNode);
                     if(nodeType != gfx::SCENE_NODE_TRIGGER && childType != gfx::SCENE_NODE_TRIGGER) {
-                        FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                        FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
                         event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getInternalEventManager()->requestEventStruct();
                         collisionEvent->eventType = event::SCENE_NODE_COLLISION;
                         collisionEvent->pNodeA = const_cast<CSceneNode*>(sceneNode);
@@ -375,11 +372,11 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                 }
                 // the collision is not occurring in this frame
                 m_collisionsInfo.remove(childNode, sceneNode);
-                FG_LOG_DEBUG("*REMOVING*  Collision ENDED between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                FG_LOG_DEBUG("*REMOVING*  Collision ENDED between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
             }
 
             if(isCollision && m_physicsWorld->hasMoreContacts()) {
-                //printf("*YES*  Collision occurred between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                //FG_LOG_DEBUG("*YES*  Collision occurred between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
                 {
                     // #FIXME - physics fine collision detect / update
                     physics::CCollisionBody *b1 = sceneNode->getCollisionBody();

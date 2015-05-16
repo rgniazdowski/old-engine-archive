@@ -376,6 +376,15 @@ void gfx::CSceneManager::reportSelectionClick(const fgBool state) {
         if(!isPickSelectionToggle()) {
             clearSelection();
         }
+        m_pickSelection.init(m_MVP, m_camera, m_stateFlags);
+        // Calculate initial ray intersection (on click)
+        fgBool groundStatus = m_groundGrid.rayIntersect(m_pickSelection.rayEye,
+                                                        m_pickSelection.rayDir,
+                                                        m_pickSelection.groundIntersectionPoint[0],
+                                                        FG_TRUE);
+        if(!groundStatus)
+            m_pickSelection.groundIntersectionPoint[0] = Vector3f();
+
     }
 }
 //------------------------------------------------------------------------------
@@ -846,10 +855,10 @@ void gfx::CSceneManager::sortCalls(void) {
     if(m_pickSelection.shouldCheck) {
         fgBool groundStatus = m_groundGrid.rayIntersect(m_pickSelection.rayEye,
                                                         m_pickSelection.rayDir,
-                                                        m_pickSelection.groundIntersectionPoint,
+                                                        m_pickSelection.groundIntersectionPoint[1],
                                                         FG_TRUE);
         if(!groundStatus)
-            m_pickSelection.groundIntersectionPoint = Vector3f();
+            m_pickSelection.groundIntersectionPoint[1] = Vector3f();
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
 
@@ -915,14 +924,9 @@ void gfx::CSceneManager::sortCalls(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneManager::render(void) {
-    if(isHideAll()) {
-        return;
-    }
     CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
     CShaderProgram* pProgram = pShaderMgr->getCurrentProgram();
     pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
-    //pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
-    //printf("fgGfxSceneManager::render(void)\n");
     // Will now render main skybox
     if(!isHideSkyBox()) {
         CShaderProgram* pSkyboxProgram = m_skybox.getShaderProgram();
@@ -933,72 +937,73 @@ void gfx::CSceneManager::render(void) {
             pShaderMgr->useProgram(pProgram);
         }
     }
-    // Calling underlying DrawingBatch render procedure
-    // This will contain drawcalls not associated with scene/octree/quadtree structure
-    CDrawingBatch::render();
-    NodePriorityQueueConstItor nodesItor, nodesEnd;
-    nodesEnd = m_nodeQueue.end();
-    nodesItor = m_nodeQueue.begin();
-    for(; nodesItor != nodesEnd; nodesItor++) {
-        if(isHideNodes()) {
-            // #FIXME
-            m_nodeQueue.clear(); //pop/clear
-            break; //continue/break
-        }
-        CSceneNode* pSceneNode = *nodesItor;
-        if(!pSceneNode)
-            continue;
-#if defined(FG_DEBUG)
-        if(g_DebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
-        }
-#endif       
-        pSceneNode->draw();
-#if defined(FG_DEBUG)
-        if(g_DebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->end("GFX::Scene::DrawNode");
-        }
-#endif
-        pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-#if defined(FG_DEBUG)
-        CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
-        SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;
-        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
-            CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
-            if(pSceneObj->getModel()) {
-                // Current aabb - it's in model space (local)
-                AABB3Df& modelBox = pSceneObj->getModel()->getRefAABB();
-                // Initial Bounding box
-                primitives::drawAABBLines(modelBox, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
-                // Draw transformed bounding box #FIXME - colors FUBAR
+    if(!isHideAll()) {
+        // Calling underlying DrawingBatch render procedure
+        // This will contain drawcalls not associated with scene/octree/quadtree structure
+        CDrawingBatch::render();
+        NodePriorityQueueConstItor nodesItor, nodesEnd;
+        nodesEnd = m_nodeQueue.end();
+        nodesItor = m_nodeQueue.begin();
+        for(; nodesItor != nodesEnd; nodesItor++) {
+            if(isHideNodes()) {
+                // #FIXME
+                m_nodeQueue.clear(); //pop/clear
+                break; //continue/break
             }
-        }
-        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
-            m_MVP.resetModelMatrix();
-            pProgram->setUniform(&m_MVP);
-            primitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
-        }
-
-        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
-            Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getBoundingVolume().center);
-            const float radius = pSceneNode->getBoundingVolume().radius;
-            mat = math::scale(mat, Vec3f(radius, radius, radius));
-            m_MVP.calculate(mat);
-            pProgram->setUniform(&m_MVP);
-            primitives::drawVertexData(sphereMesh, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT, PrimitiveMode::LINES);
-        }
+            CSceneNode* pSceneNode = *nodesItor;
+            if(!pSceneNode)
+                continue;
+#if defined(FG_DEBUG)
+            if(g_DebugConfig.isDebugProfiling) {
+                profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
+            }
+#endif       
+            pSceneNode->draw();
+#if defined(FG_DEBUG)
+            if(g_DebugConfig.isDebugProfiling) {
+                profile::g_debugProfiling->end("GFX::Scene::DrawNode");
+            }
 #endif
-        //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
-        if(FG_DEBUG_CFG_OPTION(physicsBBoxShow)) {
-            physics::CCollisionBody* body = pSceneNode->getCollisionBody();
-            if(body) {
-                if(body->getBodyType() == physics::CCollisionBody::BOX) {
-                } else if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
+            pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+#if defined(FG_DEBUG)
+            CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
+            SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;
+            if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
+                CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
+                if(pSceneObj->getModel()) {
+                    // Current aabb - it's in model space (local)
+                    AABB3Df& modelBox = pSceneObj->getModel()->getRefAABB();
+                    // Initial Bounding box
+                    primitives::drawAABBLines(modelBox, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
+                    // Draw transformed bounding box #FIXME - colors FUBAR
                 }
             }
-        }
-    } // for(node queue iteration)
-    
+            if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
+                m_MVP.resetModelMatrix();
+                pProgram->setUniform(&m_MVP);
+                primitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
+            }
+
+            if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
+                Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getBoundingVolume().center);
+                const float radius = pSceneNode->getBoundingVolume().radius;
+                mat = math::scale(mat, Vec3f(radius, radius, radius));
+                m_MVP.calculate(mat);
+                pProgram->setUniform(&m_MVP);
+                primitives::drawVertexData(sphereMesh, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT, PrimitiveMode::LINES);
+            }
+#endif
+            //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
+            if(FG_DEBUG_CFG_OPTION(physicsBBoxShow)) {
+                physics::CCollisionBody* body = pSceneNode->getCollisionBody();
+                if(body) {
+                    if(body->getBodyType() == physics::CCollisionBody::BOX) {
+                    } else if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
+                    }
+                }
+            }
+        } // for(node queue iteration)
+    }
     if(isShowGroundGrid()) {
         pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         m_groundGrid.render(pProgram, &m_MVP);

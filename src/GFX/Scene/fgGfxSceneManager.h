@@ -1207,7 +1207,26 @@ namespace fg {
             inline float getGroundGridCellSize(void) const {
                 return m_groundGrid.cellSize;
             }
-
+            /**
+             *
+             * @param id
+             * @return
+             */
+            Vector3f& getGroundIntersectionPoint(unsigned int id = 0) {
+                if(id > 1)
+                    id = 1;
+                return m_pickSelection.groundIntersectionPoint[id];
+            }
+            /**
+             *
+             * @param id
+             * @return
+             */
+            Vector3f const& getGroundIntersectionPoint(unsigned int id = 0) const {
+                if(id > 1)
+                    id = 1;
+                return m_pickSelection.groundIntersectionPoint[id];
+            }
             //------------------------------------------------------------------
 
         protected:
@@ -1479,7 +1498,7 @@ namespace fg {
                 /// Current direction of the ray
                 Vector3f rayDir;
                 ///
-                Vector3f groundIntersectionPoint;
+                Vector3f groundIntersectionPoint[2];
                 ///
                 float pickBegin;
                 ///
@@ -1508,7 +1527,32 @@ namespace fg {
                 /**
                  * 
                  */
-                ~SPickSelection() { }
+                ~SPickSelection() {
+                    const unsigned int n = h_selectedNodes.size();
+                    for(unsigned int i = 0; i < n; i++) {
+                        h_selectedNodes[i].reset();
+                    }
+                    h_selectedNodes.clear();
+                    pickedNodesInfo.clear();
+                    h_lastSelectedNode.reset();
+                    shouldUnselect = FG_FALSE;
+                    shouldCheck = FG_FALSE;
+                    isToggle = FG_FALSE;
+                    isGroup = FG_FALSE;
+                    checkBox = FG_FALSE;
+
+                    pickBegin = 0.0f;
+                    goodPickResult = Result::NOT_PICKED;
+                    memset(&groundIntersectionPoint[0], 0, sizeof (Vector3f));
+                    memset(&groundIntersectionPoint[1], 0, sizeof (Vector3f));
+                    memset(&rayDir, 0, sizeof (Vector3f));
+                    memset(&rayEye, 0, sizeof (Vector3f));
+                    memset(&pickBox, 0, sizeof (AABB2Di));
+                    memset(&pickPosBegin, 0, sizeof (Vector2i));
+                    memset(&pickPos, 0, sizeof (Vector2i));
+                    memset(&aabbPoints[0], 0, sizeof (aabbPoints));
+                    memset(&aabbTrisIdx[0][0], 0, sizeof (aabbTrisIdx));
+                }
 
                 /**
                  *
