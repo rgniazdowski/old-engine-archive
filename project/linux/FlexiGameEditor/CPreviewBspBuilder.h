@@ -18,6 +18,7 @@
     #define FG_INC_PREVIEW_BSP_BUILDER
     #define FG_INC_PREVIEW_BSP_BUILDER_BLOCK
 
+    #include "fgVector.h"
     #include "Event/fgArgumentList.h"
     #include "Event/fgCallback.h"
 
@@ -53,6 +54,10 @@ namespace fg {
             typedef CPreviewBspBuilder self_type;
             typedef CPreviewBspBuilder type;
             typedef CPreviewModeBase base_type;
+
+            typedef CVector<gfx::SPolygon> PolygonsVec;
+            typedef PolygonsVec::iterator PolygonsVecItor;
+            typedef PolygonsVec::const_iterator PolygonsVecConstItor;
 
         public:
 
@@ -95,6 +100,17 @@ namespace fg {
             static fgBool engineInit(void* systemData, void* userData);
             static fgBool engineDestroy(void* systemData, void* userData);
 
+        public:
+            static void createPolygonQuad(gfx::SPolygon& polygon);
+
+            void createPolygonQuad(const Vec3f& begin,
+                                   const Vec3f& end,
+                                   gfx::SPolygon& polygon);
+
+            void updatePolygonQuad(const Vec3f& begin,
+                                   const Vec3f& end,
+                                   gfx::SPolygon& polygon);
+            
         protected:
 
             static fgBool displayHandler(void* systemData, void* userData);
@@ -115,7 +131,14 @@ namespace fg {
              */
             virtual fgBool unregisterCallbacks(void);
 
+        public:
+            void OnContextItemSelected(wxCommandEvent& event);
+
         private:
+            ///
+            PolygonsVec m_polygons;
+            ///
+            gfx::SPolygon* m_currentPolygon;
             ///
             PreviewSide m_previewSide;
             ///
@@ -128,6 +151,12 @@ namespace fg {
             gfx::CCameraAnimation* m_pCamera;
             ///
             gui::CDrawer* m_pGuiDrawer;
+
+            float m_minCamDistance;
+
+            fgBool m_mousePressed;
+            fgBool m_mouseMotion;
+            fgBool m_mouseReleased;
 
             /// Special callback called once in every display (pre-render) frame.
             /// Here can add additional things to the drawing batch.
@@ -142,6 +171,15 @@ namespace fg {
             /// Handler for any keyboard event - up and down keys.
             /// This is events are thrown only once when key state is changing.
             event::CFunctionCallback* m_keyboardHandlerCB;
+
+        public:
+            static const long idBspPreviewFreeLook;
+            static const long idBspPreviewLeft;
+            static const long idBspPreviewRight;
+            static const long idBspPreviewTop;
+            static const long idBspPreviewBottom;
+            static const long idBspPreviewFront;
+            static const long idBspPreviewBack;
         };
 
     } // namespace editor

@@ -301,7 +301,9 @@ m_engineMain(NULL) {
         m_engineGfxCanvas->registerCallback(CEngineGfxCanvas::ENGINE_DESTROYED,
                                             &fg::editor::CPreviewBspBuilder::engineDestroy,
                                             m_previews[FG_PREVIEW_BSP_BUILDER]);
+        PushEventHandler(m_previews[FG_PREVIEW_BSP_BUILDER]->getContextMenu());
     }
+
 }
 //------------------------------------------------------------------------------
 
@@ -321,6 +323,7 @@ FlexiGameEditorFrame::~FlexiGameEditorFrame() {
 
     for(unsigned int i = 0; i < FG_PREVIEW_NUM_MODES; i++) {
         if(m_previews[i]) {
+            PopEventHandler(false);
             FG_LOG_DEBUG("WX: Main frame: Deleting preview: '%s'", m_previews[i]->getNameStr());
             delete m_previews[i];
             m_previews[i] = NULL;
@@ -389,6 +392,9 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
                 m_previewMode = previewMode;
                 if(m_previews[m_previewMode]) {
                     m_previews[m_previewMode]->activate(FG_TRUE);
+                    wxMenu *contextMenu = m_previews[m_previewMode]->getContextMenu();
+                    //if(contextMenu)
+                    m_gfxHolderPanel->setContextMenu(contextMenu);
                 }
                 return FG_TRUE;
             } else {
@@ -436,6 +442,9 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
         m_previewMode = previewMode;
         if(m_previews[m_previewMode]) {
             m_previews[m_previewMode]->activate(FG_TRUE);
+            wxMenu *contextMenu = m_previews[m_previewMode]->getContextMenu();
+            //if(contextMenu)
+            m_gfxHolderPanel->setContextMenu(contextMenu);
         }
     }
     return activated;
