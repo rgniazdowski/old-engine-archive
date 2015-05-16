@@ -77,7 +77,7 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
-    if(m_pResourceMgr && !background.texture.empty()) {
+    if(!background.texture.empty()) {
         // Get or request ?
         resource::CResource *pResource = static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(background.texture);
         if(pResource) {
@@ -111,6 +111,19 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     }
     drawCall->setColor(background.color);
     drawCall->appendRect2D(pos, size, uv1, uv2, FG_FALSE);
+}
+//------------------------------------------------------------------------------
+
+void gui::CDrawer::appendBackground2D(const gfx::AABB2Df& box, CStyleContent& style) {
+    Vec2f size;
+    size.x = box.max.x - box.min.x;
+    size.y = box.max.y - box.min.y;
+    appendBackground2D(box.min, size, style);
+}
+//------------------------------------------------------------------------------
+
+void gui::CDrawer::appendBackground2D(const gfx::BB2Df& box, CStyleContent& style) {
+    appendBackground2D(box.pos, box.size, style);
 }
 //------------------------------------------------------------------------------
 
