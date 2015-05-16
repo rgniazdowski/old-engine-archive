@@ -161,6 +161,8 @@ namespace fg {
              */
             void render(void);
 
+            fgBool prepareFrame(void);
+
             ////////////////////////////////////////////////////////////////////
 
             /**

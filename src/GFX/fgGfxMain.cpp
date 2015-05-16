@@ -125,16 +125,16 @@ gfx::CGfxMain::~CGfxMain() {
 fgBool gfx::CGfxMain::handleMainWindowBufferSwap(void *pSystemData, void *pUserData) {
     if(!pSystemData || !pUserData)
         return FG_FALSE;
-    
+
     // pSystemData will be the pointer to the main window (or any window to which
     // this callback is assigned)
     // pUserData will be the pointer to the CGfxMain object
-    
+
     gfx::CGfxMain* pGfxMain = static_cast<gfx::CGfxMain*>(pUserData);
     // SWAP_BUFFER event is not thrown and executed in the main EventMgr function
     // it's always called in place by executeEvent(event) function
     static_cast<event::CEventManager*>(pGfxMain->getEventManager())->executeEvent(event::SWAP_BUFFERS, pSystemData);
-    
+
     return FG_TRUE;
 }
 
@@ -524,7 +524,6 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
             }
         }
     }
-
     registerSceneCallbacks();
 
     if(!status)
@@ -565,16 +564,15 @@ void gfx::CGfxMain::display(void) {
 }
 //------------------------------------------------------------------------------
 
-#include "GFX/Scene/fgGfxBspCompiler.h"
-extern fg::gfx::CBspCompiler *bspCompiler;
-
-void gfx::CGfxMain::render(void) {
-    static gfx::CModelResource *cobraBomber = NULL;
-    glm::mat4 Model;
-
+fgBool gfx::CGfxMain::prepareFrame(void) {
     if(!m_mainWindow || !context::isInit()) {
         FG_LOG_ERROR("Main window / context is NULL");
-        return;
+        return FG_FALSE;
+    }
+    if(!m_textureMgr || !m_shaderMgr) {
+        FG_LOG_ERROR("No texture / shader manager");
+        return FG_FALSE;
+
     }
     GLCheckError();
     m_mainWindow->clearColor();
@@ -586,7 +584,13 @@ void gfx::CGfxMain::render(void) {
     context::setBlend(FG_FALSE);
     context::frontFace(FrontFace::FACE_CCW);
     context::setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
+    
+    return FG_TRUE;
+}
 
+void gfx::CGfxMain::render(void) {
+    static gfx::CModelResource *cobraBomber = NULL;
+    glm::mat4 Model;
     resource::CResourceManager *rm = NULL;
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -596,11 +600,6 @@ void gfx::CGfxMain::render(void) {
     ::std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
     ::std::string modelname("CobraBomber");
 
-    if(!m_textureMgr || !m_shaderMgr) {
-        FG_LOG_ERROR("No texture / shader manager");
-        return;
-
-    }
     rm = (resource::CResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
         FG_LOG_ERROR("Cant access resource manager.");
@@ -618,9 +617,6 @@ void gfx::CGfxMain::render(void) {
 #if defined(FG_USING_SDL2)
     if(state[SDL_SCANCODE_W] == SDL_PRESSED) {
         m_3DScene->getCamera()->moveForward();
-        //printf("x:%.2f y:%.2f z:%.2f \n", m_3DScene->getCamera()->getEye().x,
-        //       m_3DScene->getCamera()->getEye().y,
-        //       m_3DScene->getCamera()->getEye().z);
     }
 
     if(state[SDL_SCANCODE_S] == SDL_PRESSED) {
@@ -651,8 +647,7 @@ void gfx::CGfxMain::render(void) {
 #endif
     CSceneNode* pPlayerBullshit = m_3DScene->get("PlayerBullshit");
     if(pPlayerBullshit) {
-        m_3DScene->getCamera()->setType(CCameraAnimation::FPS_STANDARD);
-        //m_3DScene->getCamera()->setCenter(pPlayerBullshit->getPosition3f());
+        m_3DScene->getCamera()->setType(CCameraAnimation::FREE);
     }
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
@@ -694,9 +689,6 @@ void gfx::CGfxMain::render(void) {
     // RENDER THE 3D SCENE
     //    
     m_3DScene->render();
-    if(bspCompiler) {
-        bspCompiler->renderBSP(FG_TRUE, m_3DScene->getCamera()->getEye());
-    }
 
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {

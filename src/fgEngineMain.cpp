@@ -581,7 +581,7 @@ fgBool CEngineMain::loadResources(void) {
             program->link(); // this will also bind attributes and after successful link - bind uniforms
         }
     }
-    m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getLoader()->update(15.0f);
     // DEVICE YIELD
 #if 1
     ////////////////////////////////////////////////////////////////////////////
@@ -596,19 +596,10 @@ fgBool CEngineMain::loadResources(void) {
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
     // DEVICE YIELD
-    m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getLoader()->update(15.0f);
     ////////////////////////////////////////////////////////////////////////////
 #endif
 
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionDebris", "ExplosionDebris", Vector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionFlash", "ExplosionFlash", Vector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionRoundSparks", "ExplosionRoundSparks", Vector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionShockwave", "ExplosionShockwave", Vector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", Vector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", Vector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", Vector3f(0.0f, 0.0f, 0.0f));
-    ////////////////////////////////////////////////////////////////////////////
-    m_gfxMain->getLoader()->update(10.0f);
     m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
     this->update(FG_TRUE);
     m_gfxMain->generateBuiltInData();
@@ -687,7 +678,6 @@ fgBool CEngineMain::render(void) {
     }
     timesys::markTick(timesys::TICK_RENDER);
     m_hardwareState->calculateFPS();
-    executeEvent(event::RENDER_SHOT, (void*)this);
 #if !defined(FG_USING_MARMALADE)
     if(fpsc < 0) {
         usleep(50 * 1000);
@@ -699,12 +689,6 @@ fgBool CEngineMain::render(void) {
         //        FG_LOG_INFO("# FPS: %.2f", m_hardwareState->getFPS());
     }
     if(fpsc > 256) {
-        FG_LOG_DEBUG("# Screen size: %d x %d", m_gfxMain->getMainWindow()->getWidth(),
-                     m_gfxMain->getMainWindow()->getHeight());
-        FG_LOG_DEBUG("# GFX screen size: %d x %d", gfx::context::getScreenSize().x,
-                     gfx::context::getScreenSize().y);
-        FG_LOG_DEBUG("# GUI size: %d x %d", (int)m_guiMain->getScreenSize().x,
-                     (int)m_guiMain->getScreenSize().y);
         fpsc = 0;
     }
 #if defined(FG_DEBUG)
@@ -712,13 +696,22 @@ fgBool CEngineMain::render(void) {
         profile::g_debugProfiling->begin("GFX::render");
     }
 #endif
-    m_gfxMain->render();
+
+    fgBool status = m_gfxMain->prepareFrame();
+    if(status) {
+        executeEvent(event::RENDER_SHOT, (void*)this);
+        m_gfxMain->render();
+    }
+
     // DEVICE YIELD
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::render");
     }
 #endif
+    if(!status) {
+        return FG_FALSE;
+    }
     gfx::context::setBlend(FG_TRUE); // #FIXME
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
@@ -755,7 +748,7 @@ fgBool CEngineMain::update(fgBool force) {
     timesys::markTick(timesys::TICK_UPDATE);
     m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
                              m_gfxMain->getMainWindow()->getHeight());
-    executeEvent(event::UPDATE_SHOT, (void*)this);
+    
     // Update logic manager
     if(m_gameMain)
         m_gameMain->update();
@@ -784,6 +777,9 @@ fgBool CEngineMain::update(fgBool force) {
     // that is no longer needed regardless of the actual overallocation - resources
     // can be tagged for deletion when no longer needed (eg. new map/level is loaded)
     //FG_ResourceManager->checkForOverallocation();
+
+    // special callbacks for update - at the end
+    executeEvent(event::UPDATE_SHOT, (void*)this);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -795,7 +791,7 @@ fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
     if(!pEvent)
         return FG_FALSE;
     event::EventType type = pEvent->code;
-    if(type == event::TOUCH_TAP_FINISHED && this->m_gfxMain) {
+    /*if(type == event::TOUCH_TAP_FINISHED && this->m_gfxMain) {
         event::STouch *touch = (event::STouch *)pEvent;
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionDebris", 20, Vector3f((float)touch->x, (float)touch->y, 0.0f));
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionFlash", 2, Vector3f((float)touch->x, (float)touch->y, 0.0f));
@@ -804,7 +800,7 @@ fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSmoke", 20, Vector3f((float)touch->x, (float)touch->y, 0.0f));
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSmokeTrails", 32, Vector3f((float)touch->x, (float)touch->y, 0.0f));
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSparks", 48, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-    }
+    }*/
     if(this->m_gfxMain) {
         if(type == event::TOUCH_MOTION) {
             event::STouch *touch = (event::STouch *)pEvent;
@@ -856,7 +852,7 @@ fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
         return FG_FALSE;
     if(!fg::g_DebugConfig.gameFreeLook)
         return FG_FALSE;
-    
+
     event::EventType type = pEvent->code;
     static int lastx = 128000;
     static int lasty = 128000;
