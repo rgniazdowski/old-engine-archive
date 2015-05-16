@@ -465,14 +465,18 @@ event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(int keyCode,
 //------------------------------------------------------------------------------
 
 void event::CInputHandler::addKeyPressed(int keyCode) {
+    if(!keyCode)
+        return;
     m_keysDownPool.push_back(keyCode);
-    if(m_keysDownPool.find(keyCode) < 0 && !m_keyRepeats[keyCode])
+    if(m_keysPressedPool.find(keyCode) < 0 && !m_keyRepeats[keyCode])
         m_keysPressedPool.push_back(keyCode);
     m_keyRepeats[keyCode]++;
 }
 //------------------------------------------------------------------------------
 
 void event::CInputHandler::addKeyUp(int keyCode) {
+    if(!keyCode)
+        return;
     if(m_keysUpPool.find(keyCode) < 0)
         m_keysUpPool.push_back(keyCode);
     CVector<int>::iterator itor = m_keysDownPool.findItor(keyCode);
@@ -550,6 +554,7 @@ void event::CInputHandler::processData(void) {
             keyEvent->eventType = event::KEY_UP;
             keyEvent->timeStamp = timesys::ticks();
             keyEvent->pressed = FG_FALSE;
+            keyEvent->repeats = 0;
             keyEvent->keyCode = keyCode;
 
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);

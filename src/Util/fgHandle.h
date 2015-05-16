@@ -75,7 +75,9 @@ namespace fg {
              * Default constructor for Handle object
              */
             CHandle() : m_handle(FG_INVALID_HANDLE) { }
-
+            virtual ~CHandle() {
+                m_handle = FG_INVALID_HANDLE;
+            }
             /**
              * Reset the handle (becomes invalid)
              */
