@@ -12,6 +12,7 @@
 #include "fgLog.h"
 #include "fgErrno.h"
 #include "Util/fgTime.h"
+#include "Util/fgFile.h"
 
 #include <cstdio>
 #include <cstring>
@@ -20,11 +21,13 @@
 //------------------------------------------------------------------------------
 
 #if defined(FG_USING_PLATFORM_ANDROID)
-    #include <android/log.h>
+#include <android/log.h>
 #endif
 
 namespace fg {
     namespace log {
+
+        static fg::util::CRegularFile g_fileOutputLog;
 
         const char *DEFAULT_FOLDER = "log\0";
 
@@ -160,7 +163,12 @@ void log::PrintInfo(const char *fmt, ...) {
 #if defined(FG_USING_PLATFORM_ANDROID)
     __android_log_print(ANDROID_LOG_VERBOSE, FG_PACKAGE_NAME, "%s", buf);
 #else
+    if(!fg::log::g_fileOutputLog.isOpen())
+        fg::log::g_fileOutputLog.open("outputFull.log", fg::util::CFile::Mode::WRITE);
     puts(buf);
+    fg::log::g_fileOutputLog.puts(buf);
+    fg::log::g_fileOutputLog.puts("\n");
+    fg::log::g_fileOutputLog.flush();
 #endif
 }
 //------------------------------------------------------------------------------
@@ -181,11 +189,16 @@ void log::PrintDebug(const char *fmt, ...) {
     va_end(args);
 
     // s3eDebugTracePrintf(buf);
-    #if defined(FG_USING_PLATFORM_ANDROID)
-        __android_log_print(ANDROID_LOG_DEBUG, FG_PACKAGE_NAME, "%s", buf);
-    #else
-        puts(buf);
-    #endif
+#if defined(FG_USING_PLATFORM_ANDROID)
+    __android_log_print(ANDROID_LOG_DEBUG, FG_PACKAGE_NAME, "%s", buf);
+#else
+    if(!fg::log::g_fileOutputLog.isOpen())
+        fg::log::g_fileOutputLog.open("outputFull.log", fg::util::CFile::Mode::WRITE);
+    puts(buf);
+    fg::log::g_fileOutputLog.puts(buf);
+    fg::log::g_fileOutputLog.puts("\n");
+    fg::log::g_fileOutputLog.flush();
+#endif
 #endif
 #endif
 }
@@ -204,7 +217,12 @@ void log::PrintError(const char *fmt, ...) {
 #if defined(FG_USING_PLATFORM_ANDROID)
     __android_log_print(ANDROID_LOG_ERROR, FG_PACKAGE_NAME, "%s", buf);
 #else
+    if(!fg::log::g_fileOutputLog.isOpen())
+        fg::log::g_fileOutputLog.open("outputFull.log", fg::util::CFile::Mode::WRITE);
     puts(buf);
+    fg::log::g_fileOutputLog.puts(buf);
+    fg::log::g_fileOutputLog.puts("\n");
+    fg::log::g_fileOutputLog.flush();
 #endif
 }
 //------------------------------------------------------------------------------
@@ -222,7 +240,12 @@ void log::PrintWarning(const char *fmt, ...) {
 #if defined(FG_USING_PLATFORM_ANDROID)
     __android_log_print(ANDROID_LOG_WARN, FG_PACKAGE_NAME, "%s", buf);
 #else
+    if(!fg::log::g_fileOutputLog.isOpen())
+        fg::log::g_fileOutputLog.open("outputFull.log", fg::util::CFile::Mode::WRITE);
     puts(buf);
+    fg::log::g_fileOutputLog.puts(buf);
+    fg::log::g_fileOutputLog.puts("\n");
+    fg::log::g_fileOutputLog.flush();
 #endif
 }
 //------------------------------------------------------------------------------
@@ -255,7 +278,7 @@ void log::PrintMessage(msg::SMessage *message, long timestamp) {
 #if defined(FG_USING_PLATFORM_ANDROID)
     int priority = 0;
     switch(message->type) {
-        case msg::MSG_DEBUG:            
+        case msg::MSG_DEBUG:
             priority = (int)ANDROID_LOG_DEBUG;
             break;
         case msg::MSG_ERROR:
@@ -268,7 +291,7 @@ void log::PrintMessage(msg::SMessage *message, long timestamp) {
             break;
         default:
             priority = (int)ANDROID_LOG_INFO;
-        break;
+            break;
     };
     __android_log_print(priority, FG_PACKAGE_NAME, "%s", buf);
 #else
@@ -277,8 +300,8 @@ void log::PrintMessage(msg::SMessage *message, long timestamp) {
 }
 //------------------------------------------------------------------------------
 
-void log::PrintMessageToLog(util::base::CFile *file, 
-                            msg::SMessage *message, 
+void log::PrintMessageToLog(util::base::CFile *file,
+                            msg::SMessage *message,
                             long timestamp) {
     if(!message || !file)
         return;

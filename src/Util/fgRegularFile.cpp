@@ -458,7 +458,7 @@ fgBool util::CRegularFile::flush(void) {
 #if !defined(FG_USING_SDL2)
     FG_ERRNO_CLEAR();
     clearerr(m_file);
-    if(fflush(m_file) == 0) {
+    if(fflush(m_file) == FG_EOF) {
         if(ferror(m_file) && FG_ERRNO)
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
