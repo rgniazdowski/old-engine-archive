@@ -1699,7 +1699,7 @@ namespace fg {
         protected:
             ///
             CBasetree *m_basetree;
-        };
+        }; // class CSceneManager
 
         FG_ENUM_FLAGS(CSceneManager::StateFlags);
         /**

@@ -17,14 +17,13 @@
 #include "fgResourceFactory.h"
 #include "fgResourceConfigParser.h"
 
-#include <queue>
-
 #include "Hardware/fgQualityManager.h"
 #include "Event/fgEventManager.h"
 #include "Util/fgStrings.h"
 #include "Util/fgDirent.h"
 #include "Util/fgMemory.h"
 #include "Util/fgPath.h"
+#include "fgQueue.h"
 #include "fgLog.h"
 
 #if defined(FG_USING_PLATFORM_ANDROID)    
@@ -72,11 +71,11 @@ void resource::CResourceManager::clear(void) {
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::destroy(void) {
-    FG_LOG_DEBUG(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
+    FG_LOG_DEBUG("Destroying groups..."); // #TODELETE
     {
-        rmHandleVecItor begin = m_resourceGroupHandles.begin();
-        rmHandleVecItor end = m_resourceGroupHandles.end();
-        for(rmHandleVecItor itor = begin; itor != end; ++itor) {
+        HandleVecItor begin = m_resourceGroupHandles.begin();
+        HandleVecItor end = m_resourceGroupHandles.end();
+        for(HandleVecItor itor = begin; itor != end; ++itor) {
             if((*itor).isNull())
                 continue;
             CResource *pResource = dereference(*itor);
@@ -98,7 +97,7 @@ fgBool resource::CResourceManager::destroy(void) {
         m_resourceGroupHandles.clear_optimised();
     }
 
-    FG_LOG_DEBUG(">>>>> fgResourceManager::destroy(void); RESOURCES"); // #TODELETE
+    FG_LOG_DEBUG("Destroying resources..."); // #TODELETE
     {
         DataVecItor begin = getRefDataVector().begin();
         DataVecItor end = getRefDataVector().end();
@@ -715,7 +714,7 @@ fgBool resource::CResourceManager::checkForOverallocation(void) {
     if(m_nCurrentUsedMemory > m_nMaximumMemory) {
         resetMemory();
         // create a temporary priority queue to store the managed items
-        std::priority_queue<CResource*, std::vector<CResource*>, fgPtrGreater<CResource*> > PriQueue;
+        CPriorityQueue<CResource*, std::vector<CResource*>, fgPtrGreater<CResource*> > priorityResQ;
         DataVecItor begin = getRefDataVector().begin(), end = getRefDataVector().end();
 
         // insert copies of all the resource pointers into the priority queue, but
@@ -725,23 +724,23 @@ fgBool resource::CResourceManager::checkForOverallocation(void) {
                 continue;
             addMemory((*itor).data->getSize());
             if(!(*itor).data->isDisposed() && !(*itor).data->isLocked())
-                PriQueue.push((*itor).data);
+                priorityResQ.push((*itor).data);
         }
         // Attempt to remove iMemToPurge bytes from the managed resource
-        int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;
-        while((!PriQueue.empty()) && (m_nCurrentUsedMemory > m_nMaximumMemory)) {
-            unsigned int nDisposalSize = PriQueue.top()->getSize();
+        const int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;
+        while((!priorityResQ.empty()) && (m_nCurrentUsedMemory > m_nMaximumMemory)) {
+            unsigned int nDisposalSize = priorityResQ.top()->getSize();
             // Dispose of the all loaded data, free all memory, but don't destroy the object
-            PriQueue.top()->dispose();
-            if(PriQueue.top()->isDisposed())
+            priorityResQ.top()->dispose();
+            if(priorityResQ.top()->isDisposed())
                 removeMemory(nDisposalSize);
-            PriQueue.pop();
+            priorityResQ.pop();
         }
 
         // If the resource queue is empty and we still have too much memory allocated,
         // then we return failure.  This could happen if too many resources were locked
         // or if a resource larger than the requested maximum memory was inserted.
-        if(PriQueue.empty() && (m_nCurrentUsedMemory > m_nMaximumMemory)) {
+        if(priorityResQ.empty() && (m_nCurrentUsedMemory > m_nMaximumMemory)) {
             FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_OVERALLOCATION);
             return FG_FALSE;
         }

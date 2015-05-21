@@ -72,9 +72,9 @@ namespace fg {
 
         protected:
             ///
-            typedef fg::CVector<ResourceHandle> rmHandleVec;
+            typedef fg::CVector<ResourceHandle> HandleVec;
             ///
-            typedef rmHandleVec::iterator rmHandleVecItor;
+            typedef HandleVec::iterator HandleVecItor;
 
         public:
             /**
@@ -418,7 +418,7 @@ namespace fg {
             /// Iterator to the current resource (used for browsing through the resources map)
             DataVecItor m_currentResource;
             /// Array holding handles to resource groups
-            rmHandleVec m_resourceGroupHandles;
+            HandleVec m_resourceGroupHandles;
             ///
             CResourceFactory *m_pResourceFactory;
             /// Pointer to the external Quality manager
