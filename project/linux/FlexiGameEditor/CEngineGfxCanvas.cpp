@@ -248,21 +248,25 @@ void CEngineGfxCanvas::OnMouseLeftWindow(wxMouseEvent& event) {
 
 void CEngineGfxCanvas::OnKeyPressed(wxKeyEvent& event) {
     return;
+#if 0
     if(this->m_appInit && this->m_engineMain) {
         int keyCode = event.GetKeyCode();
         this->m_engineMain->getInputHandler()->addKeyPressed(keyCode);
         FG_LOG_DEBUG("WX: GfxCanvas: Key pressed event: id:%d, char[%c]", keyCode, (char)keyCode);
     }
+#endif
 }
 //-----------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnKeyReleased(wxKeyEvent& event) {
     return;
+#if 0
     if(this->m_appInit && this->m_engineMain) {
         int keyCode = event.GetKeyCode();
         this->m_engineMain->getInputHandler()->addKeyUp(keyCode);
         FG_LOG_DEBUG("WX: GfxCanvas: Key released event: id:%d, char[%c]", keyCode, (char)keyCode);
     }
+#endif
 }
 //-----------------------------------------------------------------------------
 

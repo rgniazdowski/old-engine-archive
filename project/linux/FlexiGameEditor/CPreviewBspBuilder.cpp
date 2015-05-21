@@ -57,11 +57,11 @@ m_bspCompiler(NULL),
 m_bspFile(NULL),
 m_p3DScene(NULL),
 m_pCamera(NULL),
+m_pResourceMgr(NULL),
+m_pGuiMain(NULL),
 m_pGuiDrawer(NULL),
+m_stateFlags(NONE),
 m_minCamDistance(200.0f),
-m_mousePressed(FG_FALSE),
-m_mouseMotion(FG_FALSE),
-m_mouseReleased(FG_FALSE),
 m_displayShotCB(NULL),
 m_updateShotCB(NULL),
 m_renderShotCB(NULL),
@@ -196,7 +196,7 @@ fgBool editor::CPreviewBspBuilder::activate(fgBool toggle) {
 
     if(m_isActive) {
         fg::g_DebugConfig.gameFreeLook = false;
-        m_p3DScene->setHideAll(FG_TRUE);
+        //m_p3DScene->setHideAll(FG_TRUE);
         m_p3DScene->setPickSelectionOnClick(FG_TRUE);
         m_p3DScene->setPickSelectionBox(FG_FALSE);
         m_p3DScene->setPickSelectionGroup(FG_FALSE);
@@ -213,10 +213,14 @@ void editor::CPreviewBspBuilder::refreshInternals(void) {
     if(getEngineMain()) {
         m_p3DScene = getEngineMain()->getGfxMain()->get3DScene();
         m_pCamera = getEngineMain()->getGfxMain()->get3DSceneCamera();
+        m_pResourceMgr = getEngineMain()->getResourceManager();
+        m_pGuiMain = getEngineMain()->getGuiMain();
         m_pGuiDrawer = getEngineMain()->getGuiMain()->getDrawer();
     } else {
         m_p3DScene = NULL;
         m_pCamera = NULL;
+        m_pResourceMgr = NULL;
+        m_pGuiMain = NULL;
         m_pGuiDrawer = NULL;
     }
 }
@@ -497,8 +501,8 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
     if(!pSelf->m_p3DScene)
         return FG_FALSE;
 
-    if(pSelf->m_mousePressed) {
-        pSelf->m_mousePressed = FG_FALSE;
+    if(pSelf->isMousePressed()) {
+        pSelf->setMousePressed(FG_FALSE);
         gfx::SPolygon polygon;
         Vec3f begin, end;
         begin = pSelf->m_p3DScene->getGroundIntersectionPoint(0);
@@ -508,13 +512,13 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
         unsigned int n = pSelf->m_polygons.size();
         pSelf->m_currentPolygon = &(pSelf->m_polygons[n - 1]);
     }
-    if(pSelf->m_mouseMotion) {
-        pSelf->m_mouseMotion = FG_FALSE;
+    if(pSelf->isMouseMotion()) {
+        pSelf->setMouseMotion(FG_FALSE);
         if(pSelf->m_currentPolygon) {
             Vec3f begin, end;
             pSelf->m_p3DScene->getGroundGrid().snapTo(pSelf->m_p3DScene->getGroundIntersectionPoint(0),
                                                       begin,
-                                                      0.2f, 
+                                                      0.2f,
                                                       FG_TRUE, FG_FALSE);
             pSelf->m_p3DScene->getGroundGrid().snapTo(pSelf->m_p3DScene->getGroundIntersectionPoint(1),
                                                       end,
@@ -525,8 +529,8 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
             pSelf->updatePolygonQuad(begin, end, polygon);
         }
     }
-    if(pSelf->m_mouseReleased) {
-        pSelf->m_mouseReleased = FG_FALSE;
+    if(pSelf->isMouseReleased()) {
+        pSelf->setMouseReleased(FG_FALSE);
         if(pSelf->m_currentPolygon) {
             pSelf->m_currentPolygon = NULL;
         }
@@ -605,16 +609,16 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
         // this will be executed in the UPDATE
         // set special toggle
         // Update polygons etc... in DISPLAY - after 3dScene sort calls
-        m_mousePressed = FG_TRUE;
+        setMousePressed(FG_TRUE);
     }
 
     if(type == event::MOUSE_MOTION) {
         // mouse moved - update current polygon
-        m_mouseMotion = FG_TRUE;
+        setMouseMotion(FG_TRUE);
     }
 
     if(type == event::MOUSE_RELEASED) {
-        m_mouseReleased = FG_TRUE;
+        setMouseReleased(FG_TRUE);
     }
     return FG_TRUE;
 }
