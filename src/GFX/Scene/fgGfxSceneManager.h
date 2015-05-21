@@ -532,6 +532,15 @@ namespace fg {
             }
             /**
              * 
+             * @param rayEye
+             * @param rayDir
+             */
+            inline void getPickSelectionRayInfo(Vec3f& rayEye, Vec3f& rayDir) {
+                rayDir = m_pickSelection.rayDir;
+                rayEye = m_pickSelection.rayEye;
+            }
+            /**
+             * 
              * @return 
              */
             Vector2i& getPickSelectionPos(void) {
