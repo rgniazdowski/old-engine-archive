@@ -23,48 +23,53 @@
     #if defined(FG_USING_MARMALADE)
 
         #include "s3ePointer.h"
-        #define FG_POINTER_BUTTON_SELECT		((unsigned int)S3E_POINTER_BUTTON_SELECT)
-        #define FG_POINTER_BUTTON_LEFT             ((unsigned int)S3E_POINTER_BUTTON_LEFTMOUSE)
-        #define FG_POINTER_BUTTON_RIGHT		((unsigned int)S3E_POINTER_BUTTON_RIGHTMOUSE)
-        #define FG_POINTER_BUTTON_MIDDLE		((unsigned int)S3E_POINTER_BUTTON_MIDDLEMOUSE)
-        #define FG_POINTER_BUTTON_WHEELUP		((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELUP)
-        #define FG_POINTER_BUTTON_WHEELDOWN	((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
+        #define FG_POINTER_BUTTON_SELECT        ((unsigned int)S3E_POINTER_BUTTON_SELECT)
+        #define FG_POINTER_BUTTON_LEFT          ((unsigned int)S3E_POINTER_BUTTON_LEFTMOUSE)
+        #define FG_POINTER_BUTTON_RIGHT         ((unsigned int)S3E_POINTER_BUTTON_RIGHTMOUSE)
+        #define FG_POINTER_BUTTON_MIDDLE        ((unsigned int)S3E_POINTER_BUTTON_MIDDLEMOUSE)
+        #define FG_POINTER_BUTTON_WHEELUP       ((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELUP)
+        #define FG_POINTER_BUTTON_WHEELDOWN     ((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
 
-        #define FG_POINTER_STATE_UP			((unsigned int)S3E_POINTER_STATE_UP)
-        #define FG_POINTER_STATE_DOWN			((unsigned int)S3E_POINTER_STATE_DOWN)
-        #define FG_POINTER_STATE_PRESSED		((unsigned int)S3E_POINTER_STATE_PRESSED)
-        #define FG_POINTER_STATE_RELEASED		((unsigned int)S3E_POINTER_STATE_RELEASED)
-        #define FG_POINTER_STATE_UNKNOWN		((unsigned int)S3E_POINTER_STATE_UNKNOWN)
+        #define FG_POINTER_STATE_UP             ((unsigned int)S3E_POINTER_STATE_UP)
+        #define FG_POINTER_STATE_DOWN           ((unsigned int)S3E_POINTER_STATE_DOWN)
+        #define FG_POINTER_STATE_PRESSED        ((unsigned int)S3E_POINTER_STATE_PRESSED)
+        #define FG_POINTER_STATE_RELEASED       ((unsigned int)S3E_POINTER_STATE_RELEASED)
+        #define FG_POINTER_STATE_UNKNOWN        ((unsigned int)S3E_POINTER_STATE_UNKNOWN)
 
     #elif defined(FG_USING_SDL2)
         #include "SDL2/SDL_mouse.h"
         #include "SDL2/SDL_events.h"
         #define FG_POINTER_BUTTON_SELECT            SDL_BUTTON_LEFT
         #define FG_POINTER_BUTTON_LEFT              SDL_BUTTON_LEFT
-        #define FG_POINTER_BUTTON_RIGHT             SDL_BUTTON_RIGHT
         #define FG_POINTER_BUTTON_MIDDLE            SDL_BUTTON_MIDDLE
+        #define FG_POINTER_BUTTON_RIGHT             SDL_BUTTON_RIGHT
+        #define FG_POINTER_BUTTON_AUX1              SDL_BUTTON_X1
+        #define FG_POINTER_BUTTON_AUX2              SDL_BUTTON_X2
         #define FG_POINTER_BUTTON_WHEELUP           10	
         #define FG_POINTER_BUTTON_WHEELDOWN         11
 
-        #define FG_POINTER_STATE_UP                 0x4
-        #define FG_POINTER_STATE_DOWN               0x2
         #define FG_POINTER_STATE_PRESSED            SDL_PRESSED     // 1 0x1
         #define FG_POINTER_STATE_RELEASED           SDL_RELEASED    // 0 0x0
+        #define FG_POINTER_STATE_UP                 0x4
+        #define FG_POINTER_STATE_DOWN               0x2        
         #define FG_POINTER_STATE_UNKNOWN            0x7
 
     #else
 
         #define FG_POINTER_BUTTON_SELECT            1
-        #define FG_POINTER_BUTTON_LEFTMOUSE         1
-        #define FG_POINTER_BUTTON_RIGHTMOUSE        3
-        #define FG_POINTER_BUTTON_MIDDLEMOUSE       2
-        #define FG_POINTER_BUTTON_MOUSEWHEELUP      4
-        #define FG_POINTER_BUTTON_MOUSEWHEELDOWN    5
+        #define FG_POINTER_BUTTON_LEFT              1
+        #define FG_POINTER_BUTTON_MIDDLE            2
+        #define FG_POINTER_BUTTON_RIGHT             3
+        #define FG_POINTER_BUTTON_AUX1              4
+        #define FG_POINTER_BUTTON_AUX2              5
+        #define FG_POINTER_BUTTON_WHEELUP           10
+        #define FG_POINTER_BUTTON_WHEELDOWN         11
 
-        #define FG_POINTER_STATE_UP                 0
-        #define FG_POINTER_STATE_DOWN               1
-        #define FG_POINTER_STATE_PRESSED            2
-        #define FG_POINTER_STATE_RELEASED           4
+
+        #define FG_POINTER_STATE_PRESSED            1
+        #define FG_POINTER_STATE_RELEASED           0
+        #define FG_POINTER_STATE_UP                 4
+        #define FG_POINTER_STATE_DOWN               2
         #define FG_POINTER_STATE_UNKNOWN            5
 
     #endif

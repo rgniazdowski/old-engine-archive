@@ -290,6 +290,65 @@ namespace fg {
             ///
             KeyboardMod mod;
             /**
+             * Check whether or not the currently reported key is a mod key
+             * @return
+             */
+            inline fgBool isMod(void) const {
+                if(keyCode == FG_KEY_LSHIFT ||
+                        keyCode == FG_KEY_RSHIFT ||
+                        keyCode == FG_KEY_LCTRL ||
+                        keyCode == FG_KEY_RCTRL ||
+                        keyCode == FG_KEY_LALT ||
+                        keyCode == FG_KEY_RALT ||
+                        keyCode == FG_KEY_LGUI ||
+                        keyCode == FG_KEY_RGUI) {
+                    return FG_TRUE;
+                }
+                return FG_FALSE;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isAlpha(void) const {
+                if(keyCode >= FG_KEY_A && keyCode <= FG_KEY_Z) {
+                    return FG_TRUE;
+                }
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline fgBool isDigit(void) const {
+                if((keyCode >= FG_KEY_0 && keyCode <= FG_KEY_9) ||
+                        (keyCode >= FG_KEY_NUM_0 && keyCode <= FG_KEY_NUM_9)) {
+                    return FG_TRUE;
+                }
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isAlphaNum(void) const {
+                return (fgBool)!!(isAlpha() || isDigit());
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isSpace(void) const {
+                if(keyCode == FG_KEY_FF ||
+                        keyCode == FG_KEY_LINEFEED ||
+                        keyCode == FG_KEY_CR ||
+                        keyCode == FG_KEY_HORIZONTAL_TAB ||
+                        keyCode == FG_KEY_VERTICAL_TAB) {
+                    return FG_TRUE;
+                }
+                return FG_FALSE;
+            }
+            /**
              *
              * @return
              */

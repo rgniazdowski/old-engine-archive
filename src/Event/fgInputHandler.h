@@ -275,22 +275,22 @@ namespace fg {
              *
              * @return
              */
-            fgBool isAltDown(void) const;
+            fgBool isAltDown(fgBool onlyAlt = FG_FALSE) const;
             /**
              *
              * @return
              */
-            fgBool isControlDown(void) const;
+            fgBool isControlDown(fgBool onlyControl = FG_FALSE) const;
             /**
              *
              * @return
              */
-            fgBool isShiftDown(void) const;
+            fgBool isShiftDown(fgBool onlyShift = FG_FALSE) const;
             /**
              * 
              * @return
              */
-            fgBool isGuiDown(void) const;
+            fgBool isGuiDown(fgBool onlyGui = FG_FALSE) const;
 
             /**
              * This function will probably be useful only in debugging

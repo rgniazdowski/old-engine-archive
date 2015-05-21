@@ -571,42 +571,46 @@ fgBool event::CInputHandler::isKeyboardMod(KeyboardMod mod) const {
 }
 //------------------------------------------------------------------------------
 
-fgBool event::CInputHandler::isAltDown(void) const {
-    if(isKeyboardMod(FG_MOD_LALT))
+fgBool event::CInputHandler::isAltDown(fgBool onlyAlt) const {
+    if(onlyAlt && (isShiftDown() || isControlDown() || isGuiDown())) {
+        return FG_FALSE;
+    }
+    if(isKeyboardMod(FG_MOD_LALT) || isKeyboardMod(FG_MOD_RALT)) {
         return FG_TRUE;
-    if(isKeyboardMod(FG_MOD_RALT))
-        return FG_TRUE;
-
+    }
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
 
-fgBool event::CInputHandler::isControlDown(void) const {
-    if(isKeyboardMod(FG_MOD_LCTRL))
+fgBool event::CInputHandler::isControlDown(fgBool onlyControl) const {
+    if(onlyControl && (isShiftDown() || isGuiDown() || isAltDown())) {
+        return FG_FALSE;
+    }
+    if(isKeyboardMod(FG_MOD_LCTRL) || isKeyboardMod(FG_MOD_RCTRL)) {
         return FG_TRUE;
-    if(isKeyboardMod(FG_MOD_RCTRL))
-        return FG_TRUE;
-
+    }
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
 
-fgBool event::CInputHandler::isShiftDown(void) const {
-    if(isKeyboardMod(FG_MOD_LSHIFT))
+fgBool event::CInputHandler::isShiftDown(fgBool onlyShift) const {
+    if(onlyShift && (isGuiDown() || isControlDown() || isAltDown())) {
+        return FG_FALSE;
+    }
+    if(isKeyboardMod(FG_MOD_LSHIFT) || isKeyboardMod(FG_MOD_RSHIFT)) {
         return FG_TRUE;
-    if(isKeyboardMod(FG_MOD_RSHIFT))
-        return FG_TRUE;
-
+    }
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
 
-fgBool event::CInputHandler::isGuiDown(void) const {
-    if(isKeyboardMod(FG_MOD_LGUI))
+fgBool event::CInputHandler::isGuiDown(fgBool onlyGui) const {
+    if(onlyGui && (isShiftDown() || isControlDown() || isAltDown())) {
+        return FG_FALSE;
+    }
+    if(isKeyboardMod(FG_MOD_LGUI) || isKeyboardMod(FG_MOD_RGUI)) {
         return FG_TRUE;
-    if(isKeyboardMod(FG_MOD_RGUI))
-        return FG_TRUE;
-
+    }
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
