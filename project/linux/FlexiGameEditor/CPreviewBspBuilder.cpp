@@ -460,6 +460,7 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
         return;
     Vector3f pos;
     float height = 0.0f;
+    float length = 0.0f;
     const Vec3f& gridNormal = m_p3DScene->getGroundGrid().n;
     const Vec3f gridPoint = m_p3DScene->getGroundGrid().d * gridNormal;
     gfx::CVertexData4v* pVertexData = (gfx::CVertexData4v*)polygon.getVertexData();
@@ -469,22 +470,33 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
     // 1--2
     //
     if(isActionPolygonResize()) {
+        Vec3f newEnd = end;
         // need to calculate current height
         height = m_p3DScene->getGroundGrid().fastDistance(end);
-
+        if(isResizeProportional()) {
+            const Vec3f lenVecDiff = pVertexData->at(2).position - pVertexData->at(3).position;
+            length = math::length(lenVecDiff);
+            const Vec3f lengthDir = math::normalize(lenVecDiff);
+            const float diff = math::abs(length - height);
+            if(length > height) {
+                newEnd = newEnd + gridNormal*diff;
+                height += diff;
+            } else {
+                // length <= height
+                height -= diff;
+                newEnd = newEnd - gridNormal*diff;
+            }
+        }
         // now this is resize so the 1 point is determined by begin
         // 1
         pos = begin;
         pVertexData->at(0).position = pos;
-
         // 2
-        pos = end - gridNormal*height;
+        pos = newEnd - gridNormal*height;
         pVertexData->at(1).position = pos;
-
         // 3 - this is intersection point
-        pos = end;
+        pos = newEnd;
         pVertexData->at(2).position = pos;
-
         // 4
         pos = begin + gridNormal*height;
         pVertexData->at(3).position = pos;
@@ -493,7 +505,7 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
         tmp.n = polygon.n;
         tmp.axis = polygon.axis;
         tmp.d = polygon.d;
-
+        // update normal and BBOX
         polygon.recalculate();
         polygon.n = tmp.n;
         polygon.axis = tmp.axis;
@@ -503,23 +515,19 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
         // 1
         pos = begin;
         pVertexData->at(0).position = pos;
-
         // 2
         pos = end;
         pVertexData->at(1).position = pos;
-
         // 3
         pos = end + gridNormal*height;
         pVertexData->at(2).position = pos;
-
         // 4
         pos = begin + gridNormal*height;
         pVertexData->at(3).position = pos;
-
         // update normal and BBOX
         polygon.recalculate();
     }
-    
+
 }
 //------------------------------------------------------------------------------
 
@@ -555,7 +563,7 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
         if(pSelf->m_currentPolygon && pSelf->isActionPolygonDraw()) {
             const Vec3f& gridNormal = pSelf->m_p3DScene->getGroundGrid().n;
             const float gridHeight = pSelf->m_p3DScene->getGroundGrid().d;
-            const gfx::SPlaneGridf::Axis axis = pSelf->m_p3DScene->getGroundGrid().axis;            
+            const gfx::SPlaneGridf::Axis axis = pSelf->m_p3DScene->getGroundGrid().axis;
             Vec3f begin = pSelf->m_p3DScene->getGroundIntersectionPoint(0),
                     end = pSelf->m_p3DScene->getGroundIntersectionPoint(1);
             if(pSelf->isSnapToGrid()) {
@@ -584,7 +592,7 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
                     Vec3f diff = intersectionPoint - gridNormal*gridHeight;
                     float distance = pSelf->m_p3DScene->getGroundGrid().fastDistance(intersectionPoint);
                     if(distance < 0.0f)
-                                intersectionPoint -= gridNormal*distance;
+                        intersectionPoint -= gridNormal * distance;
 #if 0
                     switch(axis) {
                         case gfx::SPlaneGridf::X:
@@ -601,7 +609,7 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
                             break;
                         default:
                             if(distance < 0.0f)
-                                intersectionPoint -= gridNormal*distance;
+                                intersectionPoint -= gridNormal * distance;
                             break;
                     };
 #endif
@@ -699,6 +707,17 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
         return FG_FALSE;
     }
     event::SMouse* pMouse = reinterpret_cast<event::SMouse*>(pEvent);
+    static int xLast = 128000;
+    static int yLast = 128000;
+    int xRel = 0, yRel = 0;
+    if(xLast > 100000 && yLast > 100000) {
+        xLast = pMouse->x;
+        yLast = pMouse->y;
+    }
+    xRel = -(xLast - pMouse->x);
+    yRel = -(yLast - pMouse->y);
+    xLast = pMouse->x;
+    yLast = pMouse->y;
 
     if(type == event::MOUSE_PRESSED) {
         // mouse clicked - begin new polygon
@@ -706,10 +725,13 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
         // this will be executed in the UPDATE
         // set special toggle
         // Update polygons etc... in DISPLAY - after 3dScene sort calls
-        setMousePressed(FG_TRUE);
+        if(pMouse->buttonID == FG_POINTER_BUTTON_LEFT)
+            setMousePressed(FG_TRUE);
     }
 
-    if(type == event::MOUSE_PRESSED || type == event::MOUSE_MOTION) {
+    if((type == event::MOUSE_PRESSED ||
+        type == event::MOUSE_MOTION) &&
+       pMouse->buttonID == FG_POINTER_BUTTON_LEFT) {
         event::CInputHandler* pInputHandler = getEngineMain()->getInputHandler();
         // is control button down? only control (not alt nor shift)
         const fgBool isOnlyCtrlDown = pInputHandler->isControlDown(FG_TRUE);
@@ -740,10 +762,37 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
     if(type == event::MOUSE_MOTION) {
         // mouse moved - update current polygon
         setMouseMotion(FG_TRUE);
+        if(!isActionPolygonDraw() && m_pCamera &&
+           pMouse->buttonID == FG_POINTER_BUTTON_MIDDLE &&
+           pMouse->pressed) {
+            if(xRel < 0) {
+                for(unsigned int i = 0; i < math::abs(xRel); i++) {
+                    m_pCamera->moveRight();
+                }
+            }
+            if(xRel > 0) {
+                for(unsigned int i = 0; i < math::abs(xRel); i++) {
+                    m_pCamera->moveLeft();
+                }
+            }
+            if(yRel < 0) {
+                for(unsigned int i = 0; i < math::abs(yRel); i++) {
+                    m_pCamera->moveBackward();
+                }
+            }
+            if(yRel > 0) {
+                for(unsigned int i = 0; i < math::abs(yRel); i++) {
+                    m_pCamera->moveForward();
+                }
+            }
+        }
+
     }
 
     if(type == event::MOUSE_RELEASED) {
         setMouseReleased(FG_TRUE);
+        xLast = 128000;
+        yLast = 128000;
         //setActionPolygonDraw(FG_FALSE);
         //setActionPolygonResize(FG_FALSE);
         //setResizeProportional(FG_FALSE);
@@ -764,6 +813,28 @@ fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList* argv) {
     }
     event::SKey* pKey = reinterpret_cast<event::SKey*>(pEvent);
     event::KeyVirtualCode keyCode = pKey->keyCode;
+
+    if(pKey->isMod()) {
+        const fgBool isShiftDown = pKey->isShiftDown();
+        const fgBool isAltDown = pKey->isAltDown();
+        const fgBool isGuiDown = pKey->isGuiDown();
+
+        if(!isGuiDown && isActionPolygonDraw()) {
+            setActionPolygonResize(FG_FALSE);
+            setResizeProportional(FG_FALSE);
+            if(!isAltDown && isShiftDown) {
+                // shift is down
+                setActionPolygonResize(FG_TRUE);
+            } else if(isAltDown && isShiftDown) {
+                // shift + alt
+                setActionPolygonResize(FG_TRUE);
+                setResizeProportional(FG_TRUE);
+            }
+            // when the state of the mod key changes
+            // force motion flag for true so the drawing will be updated
+            setMouseMotion(FG_TRUE);
+        }
+    }
 
     if(!pKey->pressed) {
         return FG_FALSE;

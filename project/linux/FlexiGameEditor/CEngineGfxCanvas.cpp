@@ -44,13 +44,19 @@ void CRenderTimer::start(void) {
 
 BEGIN_EVENT_TABLE(CEngineGfxCanvas, wxGLCanvas)
 EVT_MOTION(CEngineGfxCanvas::OnMouseMoved)
+EVT_MOUSEWHEEL(CEngineGfxCanvas::OnMouseWheelMoved)
 EVT_LEFT_DOWN(CEngineGfxCanvas::OnMouseDown)
 EVT_LEFT_UP(CEngineGfxCanvas::OnMouseReleased)
+#if 0
+EVT_RIGHT_DOWN(CEngineGfxCanvas::OnMouseDown)
+EVT_RIGHT_UP(CEngineGfxCanvas::OnMouseReleased)
+#endif
+EVT_MIDDLE_DOWN(CEngineGfxCanvas::OnMouseDown)
+EVT_MIDDLE_UP(CEngineGfxCanvas::OnMouseReleased)
 EVT_LEAVE_WINDOW(CEngineGfxCanvas::OnMouseLeftWindow)
 EVT_SIZE(CEngineGfxCanvas::OnResized)
 EVT_KEY_DOWN(CEngineGfxCanvas::OnKeyPressed)
 EVT_KEY_UP(CEngineGfxCanvas::OnKeyReleased)
-EVT_MOUSEWHEEL(CEngineGfxCanvas::OnMouseWheelMoved)
 EVT_PAINT(CEngineGfxCanvas::OnPaint)
 EVT_IDLE(CEngineGfxCanvas::OnIdle)
 EVT_CLOSE(CEngineGfxCanvas::OnCloseEvent)
@@ -161,8 +167,9 @@ fgBool CEngineGfxCanvas::isRegistered(CallbackFuncPtr pCallback,
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
+
 fgBool CEngineGfxCanvas::removeCallback(CallbackFuncPtr pCallback,
-                                      InternalCallbackType cbType) {
+                                        InternalCallbackType cbType) {
     if(!pCallback)
         return FG_FALSE;
     const unsigned int nTypes = NUM_ENGINE_CB_TYPES;
@@ -201,9 +208,16 @@ void CEngineGfxCanvas::OnCloseEvent(wxCloseEvent& event) {
 void CEngineGfxCanvas::OnMouseMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_engineMain) {
         int button = event.GetButton();
+
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
-        this->m_engineMain->getInputHandler()->handlePointerMoved(fg::Vector2i(x, y), FG_DEFAULT_POINTER_ID, event.Dragging());
+        if(button < FG_DEFAULT_POINTER_ID)
+            button = FG_DEFAULT_POINTER_ID;
+        if(event.m_middleDown)
+            button = FG_POINTER_BUTTON_MIDDLE;
+        m_engineMain->getInputHandler()->handlePointerMoved(fg::Vector2i(x, y),
+                                                            button,
+                                                            (fgPointerState)event.Dragging());
     }
 }
 //-----------------------------------------------------------------------------
@@ -213,14 +227,19 @@ void CEngineGfxCanvas::OnMouseDown(wxMouseEvent& event) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
-        this->m_engineMain->getInputHandler()->handlePointerPressed(fg::Vector2i(x, y), button);
+        if(button >= 1)
+            m_engineMain->getInputHandler()->handlePointerPressed(fg::Vector2i(x, y),
+                                                                  button);
         FG_LOG_DEBUG("WX: Mouse down event: %dx%d id:%d", x, y, button);
     }
+    event.Skip();
 }
 //-----------------------------------------------------------------------------
 
 void CEngineGfxCanvas::OnMouseWheelMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_engineMain) {
+        //int delta = event.GetWheelDelta();
+        //int rotation = event.GetWheelRotation(); // +/-
     }
 }
 //-----------------------------------------------------------------------------
@@ -230,9 +249,12 @@ void CEngineGfxCanvas::OnMouseReleased(wxMouseEvent& event) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
-        this->m_engineMain->getInputHandler()->handlePointerReleased(fg::Vector2i(x, y), button);
+        if(button >= 1)
+            m_engineMain->getInputHandler()->handlePointerReleased(fg::Vector2i(x, y),
+                                                                   button);
         FG_LOG_DEBUG("WX: Mouse released event: %dx%d id:%d", x, y, button);
     }
+    event.Skip();
 }
 //-----------------------------------------------------------------------------
 
