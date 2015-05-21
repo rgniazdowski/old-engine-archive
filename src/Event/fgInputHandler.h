@@ -88,13 +88,13 @@ namespace fg {
 
         private:
             ///
-            CVector<int> m_keysDownPool;
+            CVector<KeyVirtualCode> m_keysDownPool;
             ///
-            CVector<int> m_keysPressedPool;
+            CVector<KeyVirtualCode> m_keysPressedPool;
             ///
-            CVector<int> m_keysUpPool;
+            CVector<KeyVirtualCode> m_keysUpPool;
             ///
-            int m_keyRepeats[384];
+            unsigned int m_keyRepeats[FG_NUM_VIRTUAL_KEYS];
             /// int - keyCode, value - vector of callbacks to call
             /// Binding for key down events
             CallbackBindingMap m_keyDownBinds;
@@ -107,6 +107,8 @@ namespace fg {
             SPointerRawData m_rawTouches[FG_INPUT_MAX_TOUCH_POINTS + 1];
             ///
             CEventManager *m_eventMgr;
+            ///
+            KeyboardMod m_keyboardMod;
             ///
             fgBool m_init;
             ///
@@ -162,7 +164,7 @@ namespace fg {
              * @param pCallback
              * @return 
              */
-            CFunctionCallback* addKeyDownCallback(int keyCode,
+            CFunctionCallback* addKeyDownCallback(KeyVirtualCode keyCode,
                                                   CFunctionCallback *pCallback);
             /**
              * 
@@ -170,19 +172,19 @@ namespace fg {
              * @param pCallback
              * @return 
              */
-            CFunctionCallback* addKeyUpCallback(int keyCode,
+            CFunctionCallback* addKeyUpCallback(KeyVirtualCode keyCode,
                                                 CFunctionCallback *pCallback);
 
             /**
              * Add key code to the pool of pressed down keys
              * @param keyCode
              */
-            void addKeyPressed(int keyCode);
+            void addKeyPressed(KeyVirtualCode keyCode);
             /**
              * Add key code to the pool of released (up) keys
              * @param keyCode
              */
-            void addKeyUp(int keyCode);
+            void addKeyUp(KeyVirtualCode keyCode);
 
         public:
             /**
@@ -227,11 +229,68 @@ namespace fg {
              * @param keyCode
              * @return
              */
-            int getKeyRepeats(int keyCode) {
-                if(keyCode >= 384)
-                    return 0;
-                return m_keyRepeats[keyCode];
+            unsigned int getKeyRepeats(KeyVirtualCode keyCode) const;
+
+            /**
+             *
+             * @param keyCode
+             * @return
+             */
+            fgBool isKeyUp(KeyVirtualCode keyCode) const;
+            /**
+             *
+             * @param keyCode
+             * @return
+             */
+            fgBool isKeyDown(KeyVirtualCode keyCode) const;
+
+            /**
+             * 
+             * @return
+             */
+            KeyboardMod getKeyboardMod(void) const {
+                return m_keyboardMod;
             }
+
+            /**
+             *
+             * @param mod
+             * @param toggle
+             */
+            void toggleKeyboardMod(KeyboardMod mod, const fgBool toggle = FG_TRUE);
+            /**
+             * 
+             * @param keyCode
+             * @param toggle
+             */
+            void toggleKeyboardMod(KeyVirtualCode keyCode, const fgBool toggle = FG_TRUE);
+            /**
+             *
+             * @param mod
+             * @return
+             */
+            fgBool isKeyboardMod(KeyboardMod mod) const;
+
+            /**
+             *
+             * @return
+             */
+            fgBool isAltDown(void) const;
+            /**
+             *
+             * @return
+             */
+            fgBool isControlDown(void) const;
+            /**
+             *
+             * @return
+             */
+            fgBool isShiftDown(void) const;
+            /**
+             * 
+             * @return
+             */
+            fgBool isGuiDown(void) const;
 
             /**
              * This function will probably be useful only in debugging
@@ -319,10 +378,10 @@ namespace fg {
              */
             static int32_t singleTouchMotionHandler(void* systemData, void* userData);
 
-        };
+        }; // class CInputHandler
 
-    };
-};
+    } // namespace event
+} // namespace fg
 
     #undef FG_INC_INPUT_HANDLER_BLOCK
 #endif /* FG_INC_INPUT_HANDLER */

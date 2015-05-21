@@ -96,6 +96,9 @@ namespace fg {
 
         static int SDLCALL filterSDLEvents(void* userdata, SDL_Event* event);
 
+
+        static event::KeyVirtualCode translateKeyboardCode(const SDL_KeyboardEvent& event);
+
         /**
          * #FIXME - this needs to be maintained differently
          * - maybe add some SDL2 event watches?

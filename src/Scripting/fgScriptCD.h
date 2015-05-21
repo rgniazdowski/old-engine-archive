@@ -923,8 +923,26 @@ namespace LPCD {
     ////////////////////////////////////////////////////////////////////////////
 
     /***************************************************************************
-     * FG GUI ENUMERATION TYPES -> INT
+     * FG EVENT ENUMERATION TYPES -> INT
      **************************************************************************/
+
+    ////////////////////////////////////////////////////////////////////////////
+
+        #define FG_CONV_CD_TYPE fg::event::KeyVirtualCode
+
+    template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
+            return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
+        }
+    };
+
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    };
+
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    };
+
+        #undef FG_CONV_CD_TYPE
 
     ////////////////////////////////////////////////////////////////////////////
 

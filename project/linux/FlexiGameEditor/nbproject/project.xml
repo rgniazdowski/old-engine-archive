@@ -31,9 +31,11 @@
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>callbacks</word>
             <word>cb</word>
+            <word>enum</word>
             <word>gfx</word>
             <word>int</word>
             <word>pos</word>
+            <word>unicode</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

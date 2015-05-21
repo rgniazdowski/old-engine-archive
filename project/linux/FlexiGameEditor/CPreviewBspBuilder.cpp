@@ -631,52 +631,28 @@ fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList* argv) {
         return FG_FALSE;
     }
     event::SKey* pKey = reinterpret_cast<event::SKey*>(pEvent);
+    event::KeyVirtualCode keyCode = pKey->keyCode;
+
     if(!pKey->pressed) {
         return FG_FALSE;
     }
-    int keyCode = pKey->keyCode;
-    fgBool goodKey = FG_FALSE;
-    if((keyCode >= 'a' && keyCode <= 'z') ||
-       (keyCode >= 'A' && keyCode <= 'Z') ||
-       keyCode == ' ') {
-        goodKey = FG_TRUE;
-    }
-    if(!goodKey)
-        return FG_FALSE;
-    keyCode = std::tolower(keyCode);
-
-    if(keyCode == 'w') {
+        
+    if(keyCode == event::FG_KEY_W) {
         m_pCamera->moveForward();
     }
-    if(keyCode == 's') {
-        m_pCamera->moveBackward();
-        /*switch(m_previewSide) {
-            case PreviewSide::FREE_LOOK:
-                break;
-            case PreviewSide::LEFT:
-                break;
-            case PreviewSide::RIGHT:
-                break;
-            case PreviewSide::TOP:
-                break;
-            case PreviewSide::BOTTOM:
-                break;
-            case PreviewSide::FRONT:
-                break;
-            case PreviewSide::BACK:
-                break;
-        }*/
+    if(keyCode == event::FG_KEY_S) {
+        m_pCamera->moveBackward();       
     }
-    if(keyCode == 'a') {
+    if(keyCode == event::FG_KEY_A) {
         m_pCamera->moveLeft();
     }
-    if(keyCode == 'd') {
+    if(keyCode == event::FG_KEY_D) {
         m_pCamera->moveRight();
     }
-    if(keyCode == ' ') {
+    if(keyCode == event::FG_KEY_SPACE) {
         m_pCamera->moveUp();
     }
-    if(keyCode == 'x') {
+    if(keyCode == event::FG_KEY_X) {
         m_pCamera->moveDown();
     }
     return FG_TRUE;

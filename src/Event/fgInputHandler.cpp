@@ -440,52 +440,174 @@ int event::CInputHandler::getPointerY(fgPointerID pointerID) {
 }
 //------------------------------------------------------------------------------
 
-event::CFunctionCallback* event::CInputHandler::addKeyDownCallback(int keyCode,
+event::CFunctionCallback* event::CInputHandler::addKeyDownCallback(KeyVirtualCode keyCode,
                                                                    CFunctionCallback *callback) {
-    if(!callback || keyCode <= 0)
+    if(!callback)
         return NULL;
-    if(m_keyDownBinds[keyCode].find(callback) >= 0) {
+    if(keyCode == FG_KEY_NULL)
+        return NULL;
+    if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
+        return NULL;
+    if(m_keyDownBinds[(int)keyCode].find(callback) >= 0) {
         return NULL;
     }
-    m_keyDownBinds[keyCode].push_back(callback);
+    m_keyDownBinds[(int)keyCode].push_back(callback);
     return callback;
 }
 //------------------------------------------------------------------------------
 
-event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(int keyCode,
+event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(KeyVirtualCode keyCode,
                                                                  CFunctionCallback *callback) {
-    if(!callback || keyCode <= 0)
+    if(!callback)
         return NULL;
-    if(m_keyUpBinds[keyCode].find(callback) >= 0) {
+    if(keyCode == FG_KEY_NULL)
+        return NULL;
+    if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
+        return NULL;
+    if(m_keyUpBinds[(int)keyCode].find(callback) >= 0) {
         return NULL;
     }
-    m_keyUpBinds[keyCode].push_back(callback);
+    m_keyUpBinds[(int)keyCode].push_back(callback);
     return callback;
 }
 //------------------------------------------------------------------------------
 
-void event::CInputHandler::addKeyPressed(int keyCode) {
-    if(!keyCode)
+void event::CInputHandler::addKeyPressed(KeyVirtualCode keyCode) {
+    if(keyCode == FG_KEY_NULL)
+        return;
+    if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
         return;
     m_keysDownPool.push_back(keyCode);
-    if(m_keysPressedPool.find(keyCode) < 0 && !m_keyRepeats[keyCode])
+    if(m_keysPressedPool.find(keyCode) < 0 && !m_keyRepeats[(unsigned int)keyCode])
         m_keysPressedPool.push_back(keyCode);
-    m_keyRepeats[keyCode]++;
+    m_keyRepeats[(unsigned int)keyCode]++;
+    toggleKeyboardMod(keyCode, FG_TRUE);
 }
 //------------------------------------------------------------------------------
 
-void event::CInputHandler::addKeyUp(int keyCode) {
-    if(!keyCode)
+void event::CInputHandler::addKeyUp(KeyVirtualCode keyCode) {
+    if(keyCode == FG_KEY_NULL)
+        return;
+    if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
         return;
     if(m_keysUpPool.find(keyCode) < 0)
         m_keysUpPool.push_back(keyCode);
-    CVector<int>::iterator itor = m_keysDownPool.findItor(keyCode);
+    CVector<KeyVirtualCode>::iterator itor = m_keysDownPool.findItor(keyCode);
     if(itor != m_keysDownPool.end())
         m_keysDownPool.erase(itor);
     itor = m_keysPressedPool.findItor(keyCode);
     if(itor != m_keysPressedPool.end())
         m_keysPressedPool.erase(itor);
-    m_keyRepeats[keyCode] = 0;
+    m_keyRepeats[(unsigned int)keyCode] = 0;
+    toggleKeyboardMod(keyCode, FG_FALSE);
+}
+//------------------------------------------------------------------------------
+
+unsigned int event::CInputHandler::getKeyRepeats(KeyVirtualCode keyCode) const {
+    if(keyCode == FG_KEY_NULL)
+        return 0;
+    if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
+        return 0;
+    return m_keyRepeats[(unsigned int)keyCode];
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isKeyUp(KeyVirtualCode keyCode) const {
+    return (fgBool)!!(getKeyRepeats(keyCode) == 0);
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isKeyDown(KeyVirtualCode keyCode) const {
+    return (fgBool)!!(getKeyRepeats(keyCode) != 0);
+}
+//------------------------------------------------------------------------------
+
+void event::CInputHandler::toggleKeyboardMod(KeyboardMod mod, const fgBool toggle) {
+    if(toggle) {
+        m_keyboardMod |= mod;
+    } else {
+        m_keyboardMod |= mod;
+        m_keyboardMod ^= mod;
+    }
+}
+//------------------------------------------------------------------------------
+
+void event::CInputHandler::toggleKeyboardMod(KeyVirtualCode keyCode, const fgBool toggle) {
+    switch(keyCode) {
+        case FG_KEY_LSHIFT:
+            toggleKeyboardMod(FG_MOD_LSHIFT, toggle);
+            break;
+        case FG_KEY_RSHIFT:
+            toggleKeyboardMod(FG_MOD_RSHIFT, toggle);
+            break;
+        case FG_KEY_LCTRL:
+            toggleKeyboardMod(FG_MOD_LCTRL, toggle);
+            break;
+        case FG_KEY_RCTRL:
+            toggleKeyboardMod(FG_MOD_RCTRL, toggle);
+            break;
+        case FG_KEY_LGUI:
+            toggleKeyboardMod(FG_MOD_LGUI, toggle);
+            break;
+        case FG_KEY_RGUI:
+            toggleKeyboardMod(FG_MOD_RGUI, toggle);
+            break;
+        case FG_KEY_LALT:
+            toggleKeyboardMod(FG_MOD_LALT, toggle);
+            break;
+        case FG_KEY_RALT:
+            toggleKeyboardMod(FG_MOD_RALT, toggle);
+            break;
+        case FG_KEY_CAPSLOCK:
+            break;
+        default:
+            break;
+    };
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isKeyboardMod(KeyboardMod mod) const {
+    return (fgBool)!!(m_keyboardMod & mod);
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isAltDown(void) const {
+    if(isKeyboardMod(FG_MOD_LALT))
+        return FG_TRUE;
+    if(isKeyboardMod(FG_MOD_RALT))
+        return FG_TRUE;
+
+    return FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isControlDown(void) const {
+    if(isKeyboardMod(FG_MOD_LCTRL))
+        return FG_TRUE;
+    if(isKeyboardMod(FG_MOD_RCTRL))
+        return FG_TRUE;
+
+    return FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isShiftDown(void) const {
+    if(isKeyboardMod(FG_MOD_LSHIFT))
+        return FG_TRUE;
+    if(isKeyboardMod(FG_MOD_RSHIFT))
+        return FG_TRUE;
+
+    return FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CInputHandler::isGuiDown(void) const {
+    if(isKeyboardMod(FG_MOD_LGUI))
+        return FG_TRUE;
+    if(isKeyboardMod(FG_MOD_RGUI))
+        return FG_TRUE;
+
+    return FG_FALSE;
 }
 //------------------------------------------------------------------------------
 
@@ -498,8 +620,8 @@ void event::CInputHandler::processData(void) {
 
     // Throw events for keys that just had been pressed down
     // this is called once
-    for(int i = 0; i < (int)m_keysPressedPool.size(); i++) {
-        int keyCode = m_keysPressedPool[i];
+    for(unsigned int i = 0; i < (unsigned int)m_keysPressedPool.size(); i++) {
+        KeyVirtualCode keyCode = m_keysPressedPool[i];
         {
             SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
             CArgumentList* argList = m_eventMgr->requestArgumentList();
@@ -508,45 +630,47 @@ void event::CInputHandler::processData(void) {
             keyEvent->pressed = FG_TRUE;
             keyEvent->repeats = 1;
             keyEvent->keyCode = keyCode;
+            keyEvent->mod = m_keyboardMod;
 
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_PRESSED, argList);
         }
     }
-    m_keysPressedPool.clear();    
+    m_keysPressedPool.clear();
 
     // Keys being still down - continuous callbacks
-    for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
-        int keyCode = m_keysDownPool[i];
+    for(unsigned int i = 0; i < (unsigned int)m_keysDownPool.size(); i++) {
+        KeyVirtualCode keyCode = m_keysDownPool[i];
         {
             SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
             CArgumentList* argList = m_eventMgr->requestArgumentList();
             keyEvent->eventType = event::KEY_DOWN;
             keyEvent->timeStamp = timesys::ticks();
             keyEvent->pressed = FG_TRUE;
-            keyEvent->repeats = m_keyRepeats[keyCode];
+            keyEvent->repeats = m_keyRepeats[(unsigned int)keyCode];
             keyEvent->keyCode = keyCode;
+            keyEvent->mod = m_keyboardMod;
 
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_DOWN, argList);
         }
-        CallbackBindingMap::iterator found = m_keyDownBinds.find(keyCode);
+        CallbackBindingMap::iterator found = m_keyDownBinds.find((int)keyCode);
         if(found == m_keyDownBinds.end())
             continue;
         // This callbacks are for chosen keys
         // They do not need any arguments
         // Those callbacks are designed for continuous calling
         // if the key is pressed
-        for(int j = 0; j < (int)m_keyDownBinds[keyCode].size(); j++) {
+        for(unsigned int j = 0; j < (unsigned int)m_keyDownBinds[(int)keyCode].size(); j++) {
             // There's no need for argument list
-            m_keyDownBinds[keyCode][j]->Call();
+            m_keyDownBinds[(int)keyCode][j]->Call();
         }
     }
     m_keysDownPool.clear();
 
     // Keys that just had been released
     for(int i = 0; i < (int)m_keysUpPool.size(); i++) {
-        int keyCode = m_keysUpPool[i];
+        KeyVirtualCode keyCode = m_keysUpPool[i];
         // Throw proper key release event
         {
             SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
@@ -556,16 +680,17 @@ void event::CInputHandler::processData(void) {
             keyEvent->pressed = FG_FALSE;
             keyEvent->repeats = 0;
             keyEvent->keyCode = keyCode;
+            keyEvent->mod = m_keyboardMod;
 
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_UP, argList);
         }
-        CallbackBindingMap::iterator found = m_keyUpBinds.find(keyCode);
+        CallbackBindingMap::iterator found = m_keyUpBinds.find((int)keyCode);
         if(found == m_keyUpBinds.end())
             continue;
-        for(int j = 0; j < (int)m_keyUpBinds[keyCode].size(); j++) {
+        for(unsigned int j = 0; j < (unsigned int)m_keyUpBinds[(int)keyCode].size(); j++) {
             // There's no need for argument list
-            m_keyUpBinds[keyCode][j]->Call();
+            m_keyUpBinds[(int)keyCode][j]->Call();
         }
     }
     m_keysUpPool.clear();

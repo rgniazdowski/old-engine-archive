@@ -44,6 +44,7 @@
         <itemPath>../../../src/Event/fgInputHandler.h</itemPath>
         <itemPath>../../../src/Event/fgJoypadController.cpp</itemPath>
         <itemPath>../../../src/Event/fgJoypadController.h</itemPath>
+        <itemPath>../../../src/Event/fgKeyboard.h</itemPath>
         <itemPath>../../../src/Event/fgPointerData.h</itemPath>
         <itemPath>../../../src/Event/fgPointerRawData.h</itemPath>
         <itemPath>../../../src/Event/fgThrownEvent.h</itemPath>
@@ -751,6 +752,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgKeyboard.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2416,6 +2419,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Event/fgKeyboard.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgPointerRawData.h"
@@ -4043,6 +4048,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Event/fgKeyboard.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgPointerRawData.h"
@@ -5647,6 +5654,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgKeyboard.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -7284,6 +7293,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Event/fgKeyboard.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgPointerRawData.h"
@@ -8911,6 +8922,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgKeyboard.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
       </item>

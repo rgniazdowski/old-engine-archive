@@ -13,6 +13,8 @@
     #define FG_INC_EVENT_DEFINITIONS_BLOCK
 
     #include "fgBool.h"
+    #include "fgKeyboard.h"
+
 //
 // This file will contain all basic events occurring in the game engine
 // also defines standard event structures holding info about the event
@@ -278,11 +280,59 @@ namespace fg {
         struct SKey : SEventBase {
 
             union {
-                int keyCode;
-                int which;
+                KeyVirtualCode keyCode;
+                KeyVirtualCode which;
             };
+            ///
             fgBool pressed;
+            ///
             int repeats;
+            ///
+            KeyboardMod mod;
+            /**
+             *
+             * @return
+             */
+            inline fgBool isShiftDown(void) const {
+                if((fgBool)!!(mod & FG_MOD_LSHIFT))
+                    return FG_TRUE;
+                if((fgBool)!!(mod & FG_MOD_RSHIFT))
+                    return FG_TRUE;
+                return FG_FALSE;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isControlDown(void) const {
+                if((fgBool)!!(mod & FG_MOD_LCTRL))
+                    return FG_TRUE;
+                if((fgBool)!!(mod & FG_MOD_RCTRL))
+                    return FG_TRUE;
+                return FG_FALSE;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isAltDown(void) const {
+                if((fgBool)!!(mod & FG_MOD_LALT))
+                    return FG_TRUE;
+                if((fgBool)!!(mod & FG_MOD_RALT))
+                    return FG_TRUE;
+                return FG_FALSE;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isGuiDown(void) const {
+                if((fgBool)!!(mod & FG_MOD_LGUI))
+                    return FG_TRUE;
+                if((fgBool)!!(mod & FG_MOD_RGUI))
+                    return FG_TRUE;
+                return FG_FALSE;
+            }
         };
 
         /**
