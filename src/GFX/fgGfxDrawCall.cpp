@@ -37,49 +37,17 @@ m_scissorBox(0, 0, 0, 0),
 m_fastCmp(4, fg::util::CFastCmp::CMP_DATA_32),
 m_zIndex(Z_INDEX_DEFAULT),
 m_isManaged(0) {
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].type = FG_GFX_POSITION;
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].dataType = FG_GFX_FLOAT;
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].stride = sizeof (Vertex3v);
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_TRUE;
+    resetAttributeData();
 
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].index = FG_GFX_ATTRIB_NORM_LOCATION;
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].size = 3;
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].type = FG_GFX_NORMAL;
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].dataType = FG_GFX_FLOAT;
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].stride = sizeof (Vertex3v);
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].isEnabled = FG_GFX_FALSE;
+    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+        m_vecData2v = new CVertexData2v();
+        m_vecData3v = new CVertexData3v();
+        m_vecData4v = new CVertexData4v();
 
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].index = FG_GFX_ATTRIB_UVS_LOCATION;
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].size = 2;
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].type = FG_GFX_TEXTURE_COORD;
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].dataType = FG_GFX_FLOAT;
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].stride = sizeof (Vertex3v);
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].isEnabled = FG_GFX_TRUE;
-
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].index = FG_GFX_ATTRIB_COLOR_LOCATION;
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].size = 4;
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].type = FG_GFX_COLOR;
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].dataType = FG_GFX_FLOAT;
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].stride = sizeof (Vertex4v);
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].isEnabled = FG_GFX_FALSE;
-
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].index = FG_GFX_ATTRIB_TANGENT_LOCATION;
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].size = 3;
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].type = FG_GFX_TANGENT;
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].dataType = FG_GFX_FLOAT;
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
-
-    // #FIXME #LOL
-    m_vecData2v = new CVertexData2v();
-    m_vecData3v = new CVertexData3v();
-    m_vecData4v = new CVertexData4v();
-
-    m_vecData2v->reserve(2);
-    m_vecData3v->reserve(2);
-    m_vecData4v->reserve(2);
+        m_vecData2v->reserve(4);
+        m_vecData3v->reserve(4);
+        m_vecData4v->reserve(4);
+    }
 
     setZIndex(m_zIndex);
     setupVertexData(m_attribMask);
@@ -109,6 +77,47 @@ gfx::CDrawCall::~CDrawCall() {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CDrawCall::resetAttributeData(void) {
+
+    memset(m_attrData, 0, sizeof(m_attrData));
+
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].type = FG_GFX_POSITION;
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].stride = sizeof (Vertex3v);
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].index = FG_GFX_ATTRIB_NORM_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].size = 3;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].type = FG_GFX_NORMAL;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].stride = sizeof (Vertex3v);
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].index = FG_GFX_ATTRIB_UVS_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].size = 2;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].type = FG_GFX_TEXTURE_COORD;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].stride = sizeof (Vertex3v);
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].index = FG_GFX_ATTRIB_COLOR_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].size = 4;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].type = FG_GFX_COLOR;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].stride = sizeof (Vertex4v);
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].index = FG_GFX_ATTRIB_TANGENT_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].size = 3;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].type = FG_GFX_TANGENT;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
+}
+//------------------------------------------------------------------------------
+
 void gfx::CDrawCall::setManaged(const fgBool toggle) {
     m_isManaged = toggle;
 }
@@ -125,9 +134,6 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     if(m_vecDataBase) {
         if(attribMask != m_vecDataBase->attribMask()) {
             m_vecDataBase->clear();
-            //delete m_vecDataBase;
-            //printf("delete m_vecDataBase;\n");
-            //m_vecDataBase = NULL;
         } else {
             return;
         }
@@ -140,10 +146,7 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     } else {
         m_vecDataBase = m_vecData2v; //new fgVertexData2v();
     }
-    if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
-        //if(m_vecDataBase->reserve(1))
-        //m_vecDataBase->
-        //m_vecDataBase->reserve(2);
+    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY && m_vecDataBase) {
         m_vecDataBase->setupAttributes(m_attrData);
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
@@ -152,25 +155,43 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CDrawCall::setupFromVertexData(const CVertexData* pVertexData) {
+    if(!pVertexData)
+        return;
+    pVertexData->setupAttributes(m_attrData);
+    setDrawCallType(FG_GFX_DRAW_CALL_EXTERNAL_ARRAY);
+    m_attribMask = pVertexData->attribMask();
+    m_fastCmp.setPart(0, (util::CFastCmp::data_type_32)m_attribMask);
+    refreshDrawingInfo(pVertexData);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CDrawCall::refreshDrawingInfo(const CVertexData* pVertexData) {
+    if(!pVertexData)
+        return;
+    m_drawingInfo.count = pVertexData->getNumVertices();
+    if(pVertexData->hasIndices()) {
+        m_drawingInfo.buffer = pVertexData->getIndicesVBO();
+        m_drawingInfo.indices.pointer = pVertexData->getIndicesPointer();
+        if(!m_drawingInfo.buffer && !m_drawingInfo.indices.pointer)
+            m_drawingInfo.count = pVertexData->getNumVertices();
+        else
+            m_drawingInfo.count = pVertexData->getNumIndices();
+        // If both pointer/offset and buffer are zero
+        // then it means that there is no indices array
+    }
+}
+//------------------------------------------------------------------------------
+
 void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     if(!pMesh)
         return;
     pMesh->setupAttributes(m_attrData);
-    m_drawCallType = FG_GFX_DRAW_CALL_MESH;
+    setDrawCallType(FG_GFX_DRAW_CALL_MESH);
     m_primMode = pMesh->primMode;
     m_attribMask = pMesh->attribMask();
     m_fastCmp.setPart(0, (util::CFastCmp::data_type_32)m_attribMask);
-    m_drawingInfo.count = pMesh->getNumVertices();
-    if(pMesh->hasIndices()) {
-        m_drawingInfo.buffer = pMesh->getIndicesVBO();
-        m_drawingInfo.indices.pointer = pMesh->getIndicesPointer();
-        if(!m_drawingInfo.buffer && !m_drawingInfo.indices.pointer)
-            m_drawingInfo.count = pMesh->getNumVertices();
-        else
-            m_drawingInfo.count = pMesh->getNumIndices();
-        // If both pointer/offset and buffer are zero
-        // then it means that there is no indices array
-    }
+    refreshDrawingInfo(pMesh);
 }
 //------------------------------------------------------------------------------
 
@@ -323,6 +344,41 @@ void gfx::CDrawCall::downZIndex(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
+    if(m_drawCallType != type && type == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+
+        if(!m_vecData2v) {
+            m_vecData2v = new CVertexData2v();
+            m_vecData2v->reserve(4);
+        }
+        if(!m_vecData3v) {
+            m_vecData3v = new CVertexData3v();
+            m_vecData3v->reserve(4);
+        }
+        if(!m_vecData4v) {
+            m_vecData4v = new CVertexData4v();
+            m_vecData4v->reserve(4);
+        }
+        m_vecData2v->clear();
+        m_vecData3v->clear();
+        m_vecData4v->clear();
+        setupVertexData(m_attribMask);
+    } else if(m_drawCallType != type && m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+        if(m_vecData2v) {
+            delete m_vecData2v;
+            m_vecData2v = NULL;
+        }
+        if(m_vecData3v) {
+            delete m_vecData3v;
+            m_vecData3v = NULL;
+        }
+        if(m_vecData4v) {
+            delete m_vecData4v;
+            m_vecData4v = NULL;
+        }
+        m_vecDataBase = NULL;
+        resetAttributeData();
+        m_fastCmp.setPart(0, (fg::util::CFastCmp::data_type_32)m_attribMask);
+    }
     m_drawCallType = type;
 }
 //------------------------------------------------------------------------------
@@ -382,11 +438,11 @@ gfx::CMVPMatrix *gfx::CDrawCall::getMVP(void) const {
 
 void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
     m_program = pProgram;
-    if(m_program)
+    if(m_program) {
         m_fastCmp.setPart(2, (fg::util::CFastCmp::data_type_32)m_program->getHandle().getIndex());
-    else
+    } else {
         m_fastCmp.setPart(2, (fg::util::CFastCmp::data_type_32)0);
-
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -445,7 +501,8 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
 
 fgBool gfx::CDrawCall::applyAttributeData(void) {
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
-       m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
+       m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY ||
+       m_drawCallType == FG_GFX_DRAW_CALL_EXTERNAL_ARRAY) {
         context::diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
             context::bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
@@ -478,7 +535,9 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::draw(void) {
-    if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) // ? ?
+    // Internal array uses vertex data objects allocated inside of this draw call
+    // If it's not set - nothing to draw
+    if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY)
         return;
     fgBool scissorSet = FG_FALSE;
     if(m_scissorBox.z != 0 && m_scissorBox.w != 0) {
@@ -502,7 +561,7 @@ void gfx::CDrawCall::draw(void) {
     }
     // #FIXME - need to use attribute data array
     //fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
-    if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
+    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
         m_vecDataBase->refreshAttributes(m_attrData);
         m_drawingInfo.count = m_vecDataBase->size();
     }

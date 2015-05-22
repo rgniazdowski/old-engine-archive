@@ -100,7 +100,7 @@ namespace fg {
              * @param attribMask
              */
             CDrawingBatch(const unsigned int reservedSize = FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE,
-                          const fgGfxDrawCallType drawCallType = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                          const fgGfxDrawCallType drawCallType = FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
                           const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
             /**
              * 
@@ -126,7 +126,7 @@ namespace fg {
              * @return 
              */
             CDrawCall* requestDrawCall(int &index,
-                                       const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                                       const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
                                        const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
                                        fg::gfx::CShaderProgram* pProgram = NULL);
             /**

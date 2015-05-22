@@ -18,8 +18,9 @@
 
     #define FG_GFX_DRAW_CALL_INVALID        0
     #define FG_GFX_DRAW_CALL_VERTEX_BUFFER  1
-    #define FG_GFX_DRAW_CALL_CUSTOM_ARRAY   2
-    #define FG_GFX_DRAW_CALL_MESH           3
+    #define FG_GFX_DRAW_CALL_INTERNAL_ARRAY   2
+    #define FG_GFX_DRAW_CALL_EXTERNAL_ARRAY 3
+    #define FG_GFX_DRAW_CALL_MESH           4
 
     #ifndef FG_INC_GFX_SHADER_DEFS
         #include "GFX/Shaders/fgGFXShaderDefs.h"
@@ -159,8 +160,15 @@ namespace fg {
             fgBool applyAttributeData(void);
 
         protected:
-            // Toggle the managed flag
+            /**
+             *
+             * @param toggle
+             */
             void setManaged(const fgBool toggle = FG_TRUE);
+            /**
+             * 
+             */
+            void resetAttributeData(void);
 
         public:
             /**
@@ -168,12 +176,24 @@ namespace fg {
              * @param type
              * @param attribMask
              */
-            CDrawCall(const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+            CDrawCall(const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
                       const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
             /**
              * Default destructor for the draw call object
              */
             virtual ~CDrawCall();
+
+            /**
+             *
+             * @param pVertexData
+             */
+            void setupFromVertexData(const CVertexData* pVertexData);
+
+            /**
+             * 
+             * @param pVertexData
+             */
+            void refreshDrawingInfo(const CVertexData* pVertexData);
 
             /**
              * 

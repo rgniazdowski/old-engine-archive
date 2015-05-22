@@ -148,7 +148,7 @@ void fg::gui::CFontDrawer::setColor(void) {
 gfx::CDrawCall *gui::CFontDrawer::setupDrawCall(gfx::CTexture *texture) {
     int index;
     gfx::CDrawCall *drawCall = gfx::CDrawingBatch::requestDrawCall(index,
-                                                                   FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                                                                   FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
                                                                    FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
     drawCall->setTexture(texture->getRefGfxID());

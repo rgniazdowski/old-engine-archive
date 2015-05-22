@@ -38,12 +38,21 @@ namespace fg {
              *
              */
             enum StateFlags {
+                /// 0
                 NONE = 0x0000,
+                /// 1
                 FRONT_FACE_CCW = 0x0001,
+                /// 2
                 FRONT_FACE_CW = 0x0002,
+                /// 4
                 CULL_FACE = 0x0004,
+                /// 8
                 DEPTH_TEST = 0x0008,
-                DEPTH_WRITE_MASK = 0x0010
+                /// 16
+                DEPTH_WRITE_MASK = 0x0010,
+                /// 32
+                TEXTURE_REPEAT = 0x0020
+                /// 64
             };
 
         public:
@@ -238,6 +247,13 @@ namespace fg {
                 return (fgBool)!!(stateFlags & DEPTH_WRITE_MASK);
             }
             /**
+             *
+             * @return
+             */
+            inline fgBool isTextureRepeat(void) const {
+                return (fgBool)!!(stateFlags & TEXTURE_REPEAT);
+            }
+            /**
              * 
              * @param flags
              * @param toggle
@@ -263,6 +279,13 @@ namespace fg {
              */
             inline void setDepthWriteMask(const fgBool toggle = FG_TRUE) {
                 setFlag(DEPTH_WRITE_MASK, toggle);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setTextureRepeat(const fgBool toggle = FG_TRUE) {
+                setFlag(TEXTURE_REPEAT, toggle);
             }
             /**
              * 
