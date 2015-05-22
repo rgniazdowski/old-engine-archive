@@ -55,10 +55,63 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
+editor::CPreviewBspBuilder::SPolygonHolder::SPolygonHolder() :
+polygon(),
+drawCall(NULL),
+isSelected(FG_FALSE) { }
+//------------------------------------------------------------------------------
+
+editor::CPreviewBspBuilder::SPolygonHolder::~SPolygonHolder() {
+    if(drawCall)
+        delete drawCall;
+    drawCall = NULL;
+    polygon.clear();
+    isSelected = FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::SPolygonHolder::render(const fgBool drawBox) {
+    if(drawCall) drawCall->draw();
+    if(drawBox) {
+        if(drawCall)
+            if(drawCall->getShaderProgram())
+                drawCall->getShaderProgram()->setUniform(gfx::FG_GFX_USE_TEXTURE, 0.0f);
+        gfx::primitives::drawAABBLines(polygon.bbox, colors::getColor("red"));
+    }
+}
+//------------------------------------------------------------------------------
+
+fgBool editor::CPreviewBspBuilder::SPolygonHolder::rayIntersect(const Vec3f& rayEye,
+                                                                const Vec3f& rayDir,
+                                                                Vec3f& intersectionPoint,
+                                                                const fgBool bothSides) {
+    return polygon.rayIntersect(rayEye, rayDir, intersectionPoint, bothSides);
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::SPolygonHolder::refreshDrawCall(void) {
+    if(!drawCall) {
+        drawCall = new gfx::CDrawCall(FG_GFX_DRAW_CALL_EXTERNAL_ARRAY,
+                                      polygon.getVertexData()->attribMask());
+    }
+    drawCall->setupFromVertexData(polygon.getVertexData());
+    drawCall->setPrimitiveMode(gfx::PrimitiveMode::TRIANGLE_FAN);
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::SPolygonHolder::setMaterial(const gfx::SMaterial* pMaterial) {
+    if(!pMaterial || !drawCall)
+        return;
+    drawCall->setupMaterial(pMaterial);
+}
+//------------------------------------------------------------------------------
+
 editor::CPreviewBspBuilder::CPreviewBspBuilder(fg::CEngineMain** pEngineMainOrig) :
 base_type(pEngineMainOrig),
 m_polygons(),
 m_currentPolygon(NULL),
+m_currentMaterial(NULL),
+m_internalMaterial(NULL),
 m_previewSide(FREE_LOOK),
 m_bspCompiler(NULL),
 m_bspFile(NULL),
@@ -91,6 +144,14 @@ m_keyboardHandlerCB(NULL) {
         m_keyboardHandlerCB = new CMethodCallback<self_type>(this,
                                                              &CPreviewBspBuilder::keyboardHandler);
     }
+
+    m_internalMaterial = new gfx::SMaterial();
+    m_internalMaterial->name.clear();
+    m_internalMaterial->name.append("InternalMaterial");
+    m_internalMaterial->shaderName = "sPlainEasy";
+    m_internalMaterial->ambientTexName = "brick_13.jpg";
+    m_internalMaterial->setTextureRepeat(FG_TRUE);
+
     m_previewSide = FREE_LOOK;
     m_bspCompiler = new gfx::CBspCompiler();
     m_bspFile = new gfx::CBspFile();
@@ -197,6 +258,12 @@ editor::CPreviewBspBuilder::~CPreviewBspBuilder() {
         delete m_keyboardHandlerCB;
         m_keyboardHandlerCB = NULL;
     }
+    m_currentPolygon = NULL;
+    m_currentMaterial = NULL;
+    if(m_internalMaterial) {
+        delete m_internalMaterial;
+        m_internalMaterial = NULL;
+    }
     m_isActive = FG_FALSE;
     m_previewID = 0;
     m_name.clear();
@@ -248,12 +315,55 @@ void editor::CPreviewBspBuilder::refreshInternals(void) {
         m_pResourceMgr = getEngineMain()->getResourceManager();
         m_pGuiMain = getEngineMain()->getGuiMain();
         m_pGuiDrawer = getEngineMain()->getGuiMain()->getDrawer();
+
+        refreshMaterial(m_internalMaterial);
     } else {
         m_p3DScene = NULL;
         m_pCamera = NULL;
         m_pResourceMgr = NULL;
         m_pGuiMain = NULL;
         m_pGuiDrawer = NULL;
+    }
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::refreshMaterial(gfx::SMaterial* pMaterial) {
+    if(!pMaterial || !m_pResourceMgr || !getEngineMain())
+        return;
+
+    if(!pMaterial->shaderProgram && pMaterial->shaderName.length()) {
+        pMaterial->shaderProgram =
+                getEngineMain()->getGfxMain()->getShaderManager()->get(pMaterial->shaderName);
+    }
+
+    resource::CResource* pResource = NULL;
+    // Ambient texture handle lookup
+    pResource = m_pResourceMgr->request(pMaterial->ambientTexName);
+    if(pResource) {
+        if(pResource->getResourceType() == resource::TEXTURE) {
+            pMaterial->ambientTex = static_cast<gfx::CTextureResource *>(pResource);
+        }
+    }
+    // Diffuse texture handle lookup
+    pResource = m_pResourceMgr->request(pMaterial->diffuseTexName);
+    if(pResource) {
+        if(pResource->getResourceType() == resource::TEXTURE) {
+            pMaterial->diffuseTex = static_cast<gfx::CTextureResource *>(pResource);
+        }
+    }
+    // Specular texture handle lookup
+    pResource = m_pResourceMgr->request(pMaterial->specularTexName);
+    if(pResource) {
+        if(pResource->getResourceType() == resource::TEXTURE) {
+            pMaterial->specularTex = static_cast<gfx::CTextureResource *>(pResource);
+        }
+    }
+    // Normal texture handle lookup
+    pResource = m_pResourceMgr->request(pMaterial->normalTexName);
+    if(pResource) {
+        if(pResource->getResourceType() == resource::TEXTURE) {
+            pMaterial->normalTex = static_cast<gfx::CTextureResource *>(pResource);
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -436,45 +546,60 @@ fgBool editor::CPreviewBspBuilder::engineDestroy(void* systemData, void* userDat
 }
 //------------------------------------------------------------------------------
 
-void editor::CPreviewBspBuilder::createPolygonQuad(gfx::SPolygon& polygon) { }
-//------------------------------------------------------------------------------
-
 void editor::CPreviewBspBuilder::createPolygonQuad(const Vec3f& begin,
                                                    const Vec3f& end,
-                                                   gfx::SPolygon& polygon) {
+                                                   gfx::SPolygon & polygon,
+                                                   const fgBool uvTiled) {
     if(!m_p3DScene)
         return;
     // Quad top is the same direction as the current grid normal
-    const Vec2f uv1(0, 0); // lower left corner
-    const Vec2f uv2(1, 0); // lower right corner
-    const Vec2f uv3(1, 1); // upper right corner
-    const Vec2f uv4(0, 1); // upper left corner
+    Vec2f uv1(0, 0); // lower left corner
+    Vec2f uv2(1, 0); // lower right corner
+    Vec2f uv3(1, 1); // upper right corner
+    Vec2f uv4(0, 1); // upper left corner
     Vector3f pos, normal;
-    float height = m_p3DScene->getGroundGridCellSize() / 2.0f;
+    Vec2f ratio(1.0f, 1.0f);
+    float height = m_p3DScene->getGroundGridCellSize();
+    float length = math::abs(math::length(end - begin));
+    const float uvStep = m_p3DScene->getGroundGridCellSize();
     const Vec3f& gridNormal = m_p3DScene->getGroundGrid().n;
     Color4f color(1.0f, 1.0f, 1.0f, 1.0f);
     polygon.clear();
     gfx::CVertexData* pVertexData = polygon.getVertexData();
     //
-    // 4--3
-    // |  |
-    // 1--2
+    // 4--3     (0,1)--(1,1)
+    // |  |       |      |
+    // 1--2     (0,0)--(1,0)
     //
 
     // 1
     pos = begin;
+    if(uvTiled) {
+        ratio.x = length / uvStep;
+        ratio.y = height / uvStep;
+    }
     pVertexData->append(pos, normal, uv1, color);
 
     // 2
     pos = end;
+    if(uvTiled) {
+        uv2.x = ratio.x;
+    }
     pVertexData->append(pos, normal, uv2, color);
 
     // 3
     pos = end + gridNormal*height;
+    if(uvTiled) {
+        uv3.x = ratio.x;
+        uv3.y = ratio.y;
+    }
     pVertexData->append(pos, normal, uv3, color);
 
     // 4
     pos = begin + gridNormal*height;
+    if(uvTiled) {
+        uv4.y = ratio.y;
+    }
     pVertexData->append(pos, normal, uv4, color);
 
     polygon.recalculate();
@@ -483,13 +608,16 @@ void editor::CPreviewBspBuilder::createPolygonQuad(const Vec3f& begin,
 
 void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
                                                    const Vec3f& end,
-                                                   gfx::SPolygon& polygon) {
+                                                   gfx::SPolygon & polygon,
+                                                   const fgBool uvTiled) {
     if(!m_p3DScene)
         return;
     //if(polygon.getVertexData()->empty())
     //    return;
     if(polygon.getVertexData()->size() != 4)
         return;
+    Vec2f ratio(1.0f, 1.0f);
+    const float uvStep = m_p3DScene->getGroundGridCellSize();
     Vector3f pos;
     float height = 0.0f;
     float length = 0.0f;
@@ -497,17 +625,17 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
     const Vec3f gridPoint = m_p3DScene->getGroundGrid().d * gridNormal;
     gfx::CVertexData4v* pVertexData = (gfx::CVertexData4v*)polygon.getVertexData();
     //
-    // 4--3
-    // |  |
-    // 1--2
+    // 4--3     (0,1)--(1,1)
+    // |  |       |      |
+    // 1--2     (0,0)--(1,0)
     //
     if(isActionPolygonResize()) {
         Vec3f newEnd = end;
         // need to calculate current height
         height = m_p3DScene->getGroundGrid().fastDistance(end);
+        const Vec3f lenVecDiff = pVertexData->at(2).position - pVertexData->at(3).position;
+        length = math::length(lenVecDiff);
         if(isResizeProportional()) {
-            const Vec3f lenVecDiff = pVertexData->at(2).position - pVertexData->at(3).position;
-            length = math::length(lenVecDiff);
             const Vec3f lengthDir = math::normalize(lenVecDiff);
             const float diff = math::abs(length - height);
             if(length > height) {
@@ -543,7 +671,10 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
         polygon.axis = tmp.axis;
         polygon.d = tmp.d;
     } else {
-        height = m_p3DScene->getGroundGridCellSize() / 2.0f;
+        height = m_p3DScene->getGroundGridCellSize();
+        if(uvTiled) {
+            length = math::abs(math::length(end - begin));
+        }
         // 1
         pos = begin;
         pVertexData->at(0).position = pos;
@@ -559,7 +690,17 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
         // update normal and BBOX
         polygon.recalculate();
     }
-
+    if(uvTiled) {
+        ratio.x = length / uvStep;
+        ratio.y = height / uvStep;
+        // 2
+        pVertexData->at(1).uv.x = ratio.x;
+        // 3
+        pVertexData->at(2).uv.x = ratio.x;
+        pVertexData->at(2).uv.y = ratio.y;
+        // 4
+        pVertexData->at(3).uv.y = ratio.y;
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -570,6 +711,7 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
     // system data should be the pointer to the CEngineMain object
     CPreviewBspBuilder *pSelf = static_cast<CPreviewBspBuilder*>(userData);
     fg::CEngineMain* pEngineMain = static_cast<fg::CEngineMain*>(systemData);
+    fgBool uvTiled = FG_TRUE;
     if(!pSelf->isActive())
         return FG_FALSE;
     if(!pSelf->m_p3DScene)
@@ -579,14 +721,20 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
     if(pSelf->isMousePressed()) {
         pSelf->setMousePressed(FG_FALSE);
         if(pSelf->isActionPolygonDraw()) {
-            gfx::SPolygon polygon;
+            pSelf->m_polygons.push_back(new SPolygonHolder());
+            unsigned int n = pSelf->m_polygons.size();
+            SPolygonHolder& polygonHolder = *(pSelf->m_polygons[n - 1]);
+            polygonHolder.refreshDrawCall();
+            polygonHolder.drawCall->setMVP(pSelf->m_p3DScene->getMVP());
+            polygonHolder.setMaterial(pSelf->m_internalMaterial);
+            pSelf->m_currentPolygon = &polygonHolder.polygon;
+            gfx::SPolygon& polygon = *(pSelf->m_currentPolygon);
             Vec3f begin, end;
             begin = pSelf->m_p3DScene->getGroundIntersectionPoint(0);
             end = pSelf->m_p3DScene->getGroundIntersectionPoint(1);
-            pSelf->createPolygonQuad(begin, end, polygon);
-            pSelf->m_polygons.push_back(polygon);
-            unsigned int n = pSelf->m_polygons.size();
-            pSelf->m_currentPolygon = &(pSelf->m_polygons[n - 1]);
+            pSelf->createPolygonQuad(begin, end, polygon, uvTiled);
+
+            polygonHolder.drawCall->refreshDrawingInfo(polygonHolder.getVertexData());
         }
     }
     //--------------------------------------------------------------------------
@@ -608,9 +756,9 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
                                                           0.2f,
                                                           FG_TRUE, FG_FALSE);
             }
-            gfx::SPolygon& polygon = *pSelf->m_currentPolygon;
+            gfx::SPolygon& polygon = *(pSelf->m_currentPolygon);
             if(!pSelf->isActionPolygonResize()) {
-                pSelf->updatePolygonQuad(begin, end, polygon);
+                pSelf->updatePolygonQuad(begin, end, polygon, uvTiled);
             } else {
                 // Polygon needs to be resized - need to get intersection point
                 // for the current ray and current polygon plane
@@ -625,26 +773,7 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
                     float distance = pSelf->m_p3DScene->getGroundGrid().fastDistance(intersectionPoint);
                     if(distance < 0.0f)
                         intersectionPoint -= gridNormal * distance;
-#if 0
-                    switch(axis) {
-                        case gfx::SPlaneGridf::X:
-                            if(distance < 0.0f)
-                                intersectionPoint.x -= distance;
-                            break;
-                        case gfx::SPlaneGridf::Y:
-                            if(distance < 0.0f)
-                                intersectionPoint.y -= distance;
-                            break;
-                        case gfx::SPlaneGridf::Z:
-                            if(distance < 0.0f)
-                                intersectionPoint.z -= distance;
-                            break;
-                        default:
-                            if(distance < 0.0f)
-                                intersectionPoint -= gridNormal * distance;
-                            break;
-                    };
-#endif
+
                     // ray intersects, now have a point -> need to resize
                     // meaning that lower two points stay on the same line
                     // in other words - the polygons plane does not change
@@ -655,7 +784,7 @@ fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userDa
                                                                   FG_TRUE, FG_FALSE);
                     }
                     // This will work - > the polygon resize flag is active
-                    pSelf->updatePolygonQuad(begin, intersectionPoint, polygon);
+                    pSelf->updatePolygonQuad(begin, intersectionPoint, polygon, uvTiled);
                 }
             }
         }
@@ -715,18 +844,19 @@ fgBool editor::CPreviewBspBuilder::renderHandler(void* systemData, void* userDat
     PolygonsVec& polygons = pSelf->m_polygons;
     const unsigned int n = polygons.size();
     for(unsigned int i = 0; i < n; i++) {
-        gfx::SPolygon& polygon = polygons[i];
-        gfx::primitives::drawVertexData(polygon.getVertexData(),
-                                        FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT,
-                                        gfx::PrimitiveMode::TRIANGLE_FAN);
-        gfx::primitives::drawAABBLines(polygon.bbox, fg::colors::getColor("red"));
+        SPolygonHolder& polygonHolder = *polygons[i];
+        if(polygonHolder.drawCall) {
+            if(polygonHolder.drawCall->getShaderProgram() == NULL)
+                polygonHolder.drawCall->setShaderProgram(pProgram);
+            polygonHolder.render(FG_TRUE);
+        }
     }
 
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
+fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
     if(!argv || !m_isActive || getEngineMain() == NULL)
         return FG_FALSE;
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
@@ -760,18 +890,18 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
         if(pMouse->buttonID == FG_POINTER_BUTTON_LEFT)
             setMousePressed(FG_TRUE);
     }
+    event::CInputHandler* pInputHandler = getEngineMain()->getInputHandler();
+    // is control button down? only control (not alt nor shift)
+    const fgBool isOnlyCtrlDown = pInputHandler->isControlDown(FG_TRUE);
+    const fgBool isCtrlDown = pInputHandler->isControlDown(FG_FALSE);
+    const fgBool isShiftDown = pInputHandler->isShiftDown(FG_FALSE);
+    const fgBool isAltDown = pInputHandler->isAltDown(FG_FALSE);
+    const fgBool isGuiDown = pInputHandler->isGuiDown(FG_FALSE);
+    const fgBool isModDown = (fgBool)!!(isCtrlDown || isShiftDown || isAltDown || isGuiDown);
 
     if((type == event::MOUSE_PRESSED ||
         type == event::MOUSE_MOTION) &&
        pMouse->buttonID == FG_POINTER_BUTTON_LEFT) {
-        event::CInputHandler* pInputHandler = getEngineMain()->getInputHandler();
-        // is control button down? only control (not alt nor shift)
-        const fgBool isOnlyCtrlDown = pInputHandler->isControlDown(FG_TRUE);
-        const fgBool isCtrlDown = pInputHandler->isControlDown(FG_FALSE);
-        const fgBool isShiftDown = pInputHandler->isShiftDown(FG_FALSE);
-        const fgBool isAltDown = pInputHandler->isAltDown(FG_FALSE);
-        const fgBool isGuiDown = pInputHandler->isGuiDown(FG_FALSE);
-
         if(isOnlyCtrlDown && type == event::MOUSE_PRESSED) {
             // activate drawing polygon action only on mouse press event
             // and ctrl button down - then the CTRL button can be released
@@ -797,29 +927,51 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
         if(!isActionPolygonDraw() && m_pCamera &&
            pMouse->buttonID == FG_POINTER_BUTTON_MIDDLE &&
            pMouse->pressed) {
-            if(xRel < 0) {
-                for(unsigned int i = 0; i < math::abs(xRel); i++) {
-                    m_pCamera->moveRight();
-                }
-            }
-            if(xRel > 0) {
-                for(unsigned int i = 0; i < math::abs(xRel); i++) {
-                    m_pCamera->moveLeft();
-                }
-            }
-            if(yRel < 0) {
-                for(unsigned int i = 0; i < math::abs(yRel); i++) {
-                    m_pCamera->moveBackward();
-                }
-            }
-            if(yRel > 0) {
-                for(unsigned int i = 0; i < math::abs(yRel); i++) {
-                    m_pCamera->moveForward();
-                }
-            }
-        }
 
-    }
+            if(!isModDown) {
+                // pan move
+                if(xRel < 0) {
+                    for(unsigned int i = 0; i < math::abs(xRel); i++) {
+                        m_pCamera->moveRight();
+                    }
+                } else {
+                    for(unsigned int i = 0; i < math::abs(xRel); i++) {
+                        m_pCamera->moveLeft();
+                    }
+                }
+                if(yRel < 0) {
+                    for(unsigned int i = 0; i < math::abs(yRel); i++) {
+                        m_pCamera->moveBackward();
+                    }
+                } else {
+                    for(unsigned int i = 0; i < math::abs(yRel); i++) {
+                        m_pCamera->moveForward();
+                    }
+                }
+            } else if(isOnlyCtrlDown && yRel != 0) {
+                // only control pressed, middle button and motion
+                // change grid offset proportionally
+                m_p3DScene->getGroundGrid().d += (float)yRel * 2.0f;
+                float gLevel = m_p3DScene->getGroundGrid().d;
+                const float cell = m_p3DScene->getGroundGrid().cellSize / 2.0f;
+                const int steps = (int)gLevel / cell;
+                const float stepsMin = (float)steps * cell;
+                const float threshold = 0.2f;
+                float diffRatio = (gLevel - stepsMin) / cell;
+                float sign = 1.0f;
+                if(diffRatio < 0.0f) {
+                    diffRatio *= -1.0f;
+                    sign = -1.0f;
+                }
+                if(diffRatio < threshold)
+                    gLevel = stepsMin;
+                if(diffRatio > 1.0f - threshold)
+                    gLevel = stepsMin + cell * sign;
+                m_p3DScene->getGroundGrid().d = gLevel;
+            }
+
+        }
+    } // if event mouse motion
 
     if(type == event::MOUSE_RELEASED) {
         setMouseReleased(FG_TRUE);
@@ -833,7 +985,7 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList* argv) {
 }
 //------------------------------------------------------------------------------
 
-fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList* argv) {
+fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList * argv) {
     if(!argv || !m_isActive || !m_pCamera)
         return FG_FALSE;
     event::SEvent* pEvent = (event::SEvent *)argv->getValueByID(0);
@@ -894,7 +1046,7 @@ fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList* argv) {
 }
 //------------------------------------------------------------------------------
 
-void editor::CPreviewBspBuilder::OnContextItemSelected(wxCommandEvent& event) {
+void editor::CPreviewBspBuilder::OnContextItemSelected(wxCommandEvent & event) {
     const long id = (long)event.GetId();
 
     if(id == idMenuFreeLook) {

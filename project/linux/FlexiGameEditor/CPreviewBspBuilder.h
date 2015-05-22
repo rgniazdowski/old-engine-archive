@@ -38,7 +38,11 @@ namespace fg {
         class CSceneManager;
         class CScene3D;
 
+        class CDrawCall;
         class CDrawingBatch;
+
+        class CVertexData;
+        class SMaterial;
     }
     namespace resource {
         class CResourceManager;
@@ -49,6 +53,7 @@ namespace fg {
         class CDrawer;
     }
     namespace editor {
+
         /**
          *
          */
@@ -58,7 +63,70 @@ namespace fg {
             typedef CPreviewBspBuilder type;
             typedef CPreviewModeBase base_type;
 
-            typedef CVector<gfx::SPolygon> PolygonsVec;
+        public:
+
+            /**
+             *
+             */
+            struct SPolygonHolder {
+                ///
+                gfx::SPolygon polygon;
+                ///
+                gfx::CDrawCall *drawCall;
+                ///
+                fgBool isSelected;
+
+                /**
+                 *
+                 */
+                SPolygonHolder();
+                /**
+                 *
+                 */
+                ~SPolygonHolder();
+                /**
+                 *
+                 */
+                void render(const fgBool drawBox = FG_FALSE);
+
+                /**
+                 *
+                 * @param rayEye
+                 * @param rayDir
+                 * @param intersectionPoint
+                 * @param bothSides
+                 * @return
+                 */
+                fgBool rayIntersect(const Vec3f& rayEye,
+                                    const Vec3f& rayDir,
+                                    Vec3f& intersectionPoint,
+                                    const fgBool bothSides = FG_FALSE);
+                /**
+                 *
+                 * @return
+                 */
+                inline unsigned int size(void) const {
+                    polygon.size();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline gfx::CVertexData* getVertexData(void) {
+                    return polygon.getVertexData();
+                }
+                /**
+                 *
+                 */
+                void refreshDrawCall(void);
+                /**
+                 *
+                 * @param pMaterial
+                 */
+                void setMaterial(const gfx::SMaterial* pMaterial);
+            }; // struct SPolygonHolder
+
+            typedef CVector<SPolygonHolder*> PolygonsVec;
             typedef PolygonsVec::iterator PolygonsVecItor;
             typedef PolygonsVec::const_iterator PolygonsVecConstItor;
 
@@ -100,7 +168,7 @@ namespace fg {
                 ///
                 MOUSE_MOTION = 0x0400,
                 ///
-                MOUSE_RELEASED = 0x0800,                
+                MOUSE_RELEASED = 0x0800,
             };
 
             enum PreviewSide {
@@ -136,6 +204,12 @@ namespace fg {
              *
              */
             virtual void refreshInternals(void);
+
+            /**
+             * 
+             * @param pMaterial
+             */
+            void refreshMaterial(gfx::SMaterial* pMaterial);
 
             //------------------------------------------------------------------
 
@@ -349,18 +423,14 @@ namespace fg {
         public:
             /**
              *
-             * @param polygon
-             */
-            static void createPolygonQuad(gfx::SPolygon& polygon);
-            /**
-             *
              * @param begin
              * @param end
              * @param polygon
              */
             void createPolygonQuad(const Vec3f& begin,
                                    const Vec3f& end,
-                                   gfx::SPolygon& polygon);
+                                   gfx::SPolygon& polygon,
+                                   const fgBool uvTiled = FG_FALSE);
             /**
              *
              * @param begin
@@ -369,7 +439,8 @@ namespace fg {
              */
             void updatePolygonQuad(const Vec3f& begin,
                                    const Vec3f& end,
-                                   gfx::SPolygon& polygon);
+                                   gfx::SPolygon& polygon,
+                                   const fgBool uvTiled = FG_FALSE);
             /**
              *
              * @param event
@@ -431,6 +502,10 @@ namespace fg {
             PolygonsVec m_polygons;
             ///
             gfx::SPolygon* m_currentPolygon;
+            ///
+            gfx::SMaterial* m_currentMaterial;
+            ///
+            gfx::SMaterial* m_internalMaterial;
             ///
             PreviewSide m_previewSide;
             ///
