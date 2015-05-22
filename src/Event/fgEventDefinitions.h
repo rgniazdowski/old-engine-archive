@@ -392,7 +392,7 @@ namespace fg {
                     return FG_TRUE;
                 return FG_FALSE;
             }
-        };
+        }; // struct SKey
 
         /**
          *
@@ -531,9 +531,9 @@ namespace fg {
 
                 SReserved reserved;
             };
-        };
-    };
-};
+        }; // struct SEvent
+    } // namespace event
+} // namespace fg
 
     #undef FG_INC_EVENT_DEFINITIONS_BLOCK
 #endif /* FG_INC_EVENT_DEFINITIONS */

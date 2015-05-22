@@ -463,6 +463,34 @@ pickedNodesInfo() {
 }
 //------------------------------------------------------------------------------
 
+gfx::CSceneManager::SPickSelection::~SPickSelection() {
+    const unsigned int n = h_selectedNodes.capacity();
+    for(unsigned int i = 0; i < n; i++) {
+        h_selectedNodes[i].reset();
+    }
+    h_selectedNodes.clear();
+    pickedNodesInfo.clear();
+    h_lastSelectedNode.reset();
+    shouldUnselect = FG_FALSE;
+    shouldCheck = FG_FALSE;
+    isToggle = FG_FALSE;
+    isGroup = FG_FALSE;
+    checkBox = FG_FALSE;
+
+    pickBegin = 0.0f;
+    goodPickResult = Result::NOT_PICKED;
+    memset(&groundIntersectionPoint[0], 0, sizeof (Vector3f));
+    memset(&groundIntersectionPoint[1], 0, sizeof (Vector3f));
+    memset(&rayDir, 0, sizeof (Vector3f));
+    memset(&rayEye, 0, sizeof (Vector3f));
+    memset(&pickBox, 0, sizeof (AABB2Di));
+    memset(&pickPosBegin, 0, sizeof (Vector2i));
+    memset(&pickPos, 0, sizeof (Vector2i));
+    memset(&aabbPoints[0], 0, sizeof (aabbPoints));
+    memset(&aabbTrisIdx[0][0], 0, sizeof (aabbTrisIdx));
+}
+//------------------------------------------------------------------------------
+
 void gfx::CSceneManager::SPickSelection::init(const CMVPMatrix& mvp,
                                               const CCamera& camera,
                                               StateFlags stateFlags) {
