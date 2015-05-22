@@ -7,20 +7,10 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/***************************************************************
- * Name:      FlexiGameEditorApp.cpp
- * Purpose:   Code for Application Class
- * Author:    Radoslaw Gniazdowski (contact@flexigame.com)
- * Created:   2015-04-21
- * Copyright: Radoslaw Gniazdowski (http://flexigame.com)
- * License:
- **************************************************************/
 
 #include "fgLog.h"
 
 #include "FlexiGameEditorApp.h"
-
-#include <pthread.h>
 
 //-----------------------------------------------------------------------------
 

@@ -151,9 +151,6 @@ CGfxHolderPanel::~CGfxHolderPanel() {
 //-----------------------------------------------------------------------------
 
 void CGfxHolderPanel::OnKeyPressed(wxKeyEvent& event) {
-#if 0
-
-#endif
     if(this->m_gfxCanvas) {
         if(this->m_gfxCanvas->isSuspend())
             return;
@@ -189,8 +186,8 @@ void CGfxHolderPanel::OnKeyPressed(wxKeyEvent& event) {
             if(keyCode == fg::event::FG_KEY_LGUI)
                 pEngineMain->getInputHandler()->toggleKeyboardMod(fg::event::FG_MOD_RGUI, FG_TRUE);
         }
-        FG_LOG_DEBUG("WX: GfxHolderPanel: Key pressed event: id:%d, char[%c]",
-                     keyCode, (char)keyCode);
+        //FG_LOG_DEBUG("WX: GfxHolderPanel: Key pressed event: id:%d, char[%c]",
+        //             keyCode, (char)keyCode);
     }
 }
 //-----------------------------------------------------------------------------

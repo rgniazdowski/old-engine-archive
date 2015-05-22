@@ -469,13 +469,20 @@ namespace fg {
             event::CFunctionCallback* m_keyboardHandlerCB;
 
         public:
-            static const long idBspPreviewFreeLook;
-            static const long idBspPreviewLeft;
-            static const long idBspPreviewRight;
-            static const long idBspPreviewTop;
-            static const long idBspPreviewBottom;
-            static const long idBspPreviewFront;
-            static const long idBspPreviewBack;
+            static const long idMenuFreeLook;
+            static const long idMenuLeft;
+            static const long idMenuRight;
+            static const long idMenuTop;
+            static const long idMenuBottom;
+            static const long idMenuFront;
+            static const long idMenuBack;
+            static const long idMenuGridProperties;
+            static const long idMenuMaterials;
+            static const long idMenuCheckSnapToGrid;
+            static const long idMenuCheckSnapToPolygon;
+
+            static const long idMenuFirst;
+            static const long idMenuLast;
         }; // class CPreviewBspBuilder
 
         FG_ENUM_FLAGS(CPreviewBspBuilder::StateFlags);

@@ -36,13 +36,20 @@
 #include "CPreviewBspBuilder.h"
 #include "CEngineGfxCanvas.h"
 
-const long fg::editor::CPreviewBspBuilder::idBspPreviewFreeLook = ::wxNewId();
-const long fg::editor::CPreviewBspBuilder::idBspPreviewLeft = ::wxNewId();
-const long fg::editor::CPreviewBspBuilder::idBspPreviewRight = ::wxNewId();
-const long fg::editor::CPreviewBspBuilder::idBspPreviewTop = ::wxNewId();
-const long fg::editor::CPreviewBspBuilder::idBspPreviewBottom = ::wxNewId();
-const long fg::editor::CPreviewBspBuilder::idBspPreviewFront = ::wxNewId();
-const long fg::editor::CPreviewBspBuilder::idBspPreviewBack = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuFreeLook = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuLeft = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuRight = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuTop = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuBottom = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuFront = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuBack = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuGridProperties = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuMaterials = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuCheckSnapToGrid = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuCheckSnapToPolygon = ::wxNewId();
+
+const long fg::editor::CPreviewBspBuilder::idMenuFirst = fg::editor::CPreviewBspBuilder::idMenuFreeLook;
+const long fg::editor::CPreviewBspBuilder::idMenuLast = fg::editor::CPreviewBspBuilder::idMenuCheckSnapToPolygon;
 
 using namespace fg;
 
@@ -90,31 +97,31 @@ m_keyboardHandlerCB(NULL) {
     refreshInternals();
 
     wxMenu *previewsSubMenu = new wxMenu();
-    previewsSubMenu->Append(idBspPreviewFreeLook,
+    previewsSubMenu->Append(idMenuFreeLook,
                             _("Free look"),
                             _("Switch camera to free look"),
                             wxITEM_NORMAL);
-    previewsSubMenu->Append(idBspPreviewLeft,
+    previewsSubMenu->Append(idMenuLeft,
                             _("Left"),
                             _("Switch camera to look at left side"),
                             wxITEM_NORMAL);
-    previewsSubMenu->Append(idBspPreviewRight,
+    previewsSubMenu->Append(idMenuRight,
                             _("Right"),
                             _("Switch camera to look at right side"),
                             wxITEM_NORMAL);
-    previewsSubMenu->Append(idBspPreviewTop,
+    previewsSubMenu->Append(idMenuTop,
                             _("Top"),
                             _("Switch camera to look at top"),
                             wxITEM_NORMAL);
-    previewsSubMenu->Append(idBspPreviewBottom,
+    previewsSubMenu->Append(idMenuBottom,
                             _("Bottom"),
                             _("Switch camera to look from bottom"),
                             wxITEM_NORMAL);
-    previewsSubMenu->Append(idBspPreviewFront,
+    previewsSubMenu->Append(idMenuFront,
                             _("Front"),
                             _("Switch camera to look at front"),
                             wxITEM_NORMAL);
-    previewsSubMenu->Append(idBspPreviewBack,
+    previewsSubMenu->Append(idMenuBack,
                             _("Back"),
                             _("Switch camera to look from back"),
                             wxITEM_NORMAL);
@@ -122,22 +129,47 @@ m_keyboardHandlerCB(NULL) {
                                 _("Change camera"),
                                 wxEmptyString);
 
-    /*m_contextMenu.Connect(idBspPreviewFreeLook, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Append(idMenuGridProperties,
+                         _("Grid properties"),
+                         wxEmptyString,
+                         wxITEM_NORMAL);
+
+    m_contextMenu.Append(idMenuMaterials,
+                         _("Materials"),
+                         wxEmptyString,
+                         wxITEM_NORMAL);
+
+    m_contextMenu.Append(idMenuCheckSnapToGrid,
+                         _("Snap to grid"),
+                         _("Snap click and motion events to ground grid"),
+                         wxITEM_CHECK);
+
+    m_contextMenu.Append(idMenuCheckSnapToPolygon,
+                         _("Snap to polygon"),
+                         _("Snap click and motion events to the closest polygon edge"),
+                         wxITEM_CHECK);
+
+    m_contextMenu.Check(idMenuCheckSnapToGrid, true);
+    m_contextMenu.Check(idMenuCheckSnapToPolygon, false);
+    setSnapToGrid(FG_TRUE);
+    setSnapToPolygon(FG_FALSE);
+
+    /*m_contextMenu.Connect(idMenuFreeLook, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idBspPreviewLeft, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Connect(idMenuLeft, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idBspPreviewRight, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Connect(idMenuRight, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idBspPreviewTop, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Connect(idMenuTop, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idBspPreviewBottom, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Connect(idMenuBottom, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idBspPreviewFront, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Connect(idMenuFront, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idBspPreviewBack, wxEVT_COMMAND_MENU_SELECTED,
+    m_contextMenu.Connect(idMenuBack, wxEVT_COMMAND_MENU_SELECTED,
                           (wxObjectEventFunction) & self_type::OnContextItemSelected);*/
     m_contextMenu.Bind(wxEVT_COMMAND_MENU_SELECTED, &self_type::OnContextItemSelected, this,
-                       idBspPreviewFreeLook, idBspPreviewBack);
+                       idMenuFirst, idMenuLast);
 }
 //------------------------------------------------------------------------------
 
@@ -865,19 +897,26 @@ fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList* argv) {
 void editor::CPreviewBspBuilder::OnContextItemSelected(wxCommandEvent& event) {
     const long id = (long)event.GetId();
 
-    if(id == idBspPreviewFreeLook)
+    if(id == idMenuFreeLook) {
         this->activatePreviewSide(FREE_LOOK);
-    else if(id == idBspPreviewLeft)
+    } else if(id == idMenuLeft) {
         this->activatePreviewSide(LEFT);
-    else if(id == idBspPreviewRight)
+    } else if(id == idMenuRight) {
         this->activatePreviewSide(RIGHT);
-    else if(id == idBspPreviewTop)
+    } else if(id == idMenuTop) {
         this->activatePreviewSide(TOP);
-    else if(id == idBspPreviewBottom)
+    } else if(id == idMenuBottom) {
         this->activatePreviewSide(BOTTOM);
-    else if(id == idBspPreviewFront)
+    } else if(id == idMenuFront) {
         this->activatePreviewSide(FRONT);
-    else if(id == idBspPreviewBack)
+    } else if(id == idMenuBack) {
         this->activatePreviewSide(BACK);
+    } else if(id == idMenuGridProperties) {
+    } else if(id == idMenuMaterials) {
+    } else if(id == idMenuCheckSnapToGrid) {
+        this->setSnapToGrid((fgBool)this->m_contextMenu.IsChecked(id));
+    } else if(id == idMenuCheckSnapToPolygon) {
+        this->setSnapToPolygon((fgBool)this->m_contextMenu.IsChecked(id));
+    }
 }
 //------------------------------------------------------------------------------
