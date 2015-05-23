@@ -106,7 +106,7 @@ void editor::CPreviewBspBuilder::SPolygonHolder::setMaterial(const gfx::SMateria
 }
 //------------------------------------------------------------------------------
 
-editor::CPreviewBspBuilder::CPreviewBspBuilder(fg::CEngineMain** pEngineMainOrig) :
+editor::CPreviewBspBuilder::CPreviewBspBuilder(wxWindow* pParent, fg::CEngineMain** pEngineMainOrig) :
 base_type(pEngineMainOrig),
 m_polygons(),
 m_currentPolygon(NULL),
@@ -126,7 +126,9 @@ m_displayShotCB(NULL),
 m_updateShotCB(NULL),
 m_renderShotCB(NULL),
 m_mouseHandlerCB(NULL),
-m_keyboardHandlerCB(NULL) {
+m_keyboardHandlerCB(NULL),
+m_pMainFrame(pParent),
+m_materialsEditDialog(NULL) {
     {
         using namespace fg::event;
         m_displayShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::displayHandler,
@@ -149,14 +151,15 @@ m_keyboardHandlerCB(NULL) {
     m_internalMaterial->name.clear();
     m_internalMaterial->name.append("InternalMaterial");
     m_internalMaterial->shaderName = "sPlainEasy";
-    m_internalMaterial->ambientTexName = "brick_13.jpg";
+    m_internalMaterial->ambientTexName = "brick_14.jpg";
     m_internalMaterial->setTextureRepeat(FG_TRUE);
 
     m_previewSide = FREE_LOOK;
     m_bspCompiler = new gfx::CBspCompiler();
     m_bspFile = new gfx::CBspFile();
-    refreshInternals();
-
+    // #FIXME
+    m_bspCompiler->getBspTreePtr()->getMaterials().push_back(*m_internalMaterial);
+    
     wxMenu *previewsSubMenu = new wxMenu();
     previewsSubMenu->Append(idMenuFreeLook,
                             _("Free look"),
@@ -215,22 +218,12 @@ m_keyboardHandlerCB(NULL) {
     setSnapToGrid(FG_TRUE);
     setSnapToPolygon(FG_FALSE);
 
-    /*m_contextMenu.Connect(idMenuFreeLook, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idMenuLeft, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idMenuRight, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idMenuTop, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idMenuBottom, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idMenuFront, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);
-    m_contextMenu.Connect(idMenuBack, wxEVT_COMMAND_MENU_SELECTED,
-                          (wxObjectEventFunction) & self_type::OnContextItemSelected);*/
     m_contextMenu.Bind(wxEVT_COMMAND_MENU_SELECTED, &self_type::OnContextItemSelected, this,
                        idMenuFirst, idMenuLast);
+
+    m_materialsEditDialog = new CBspMaterialsEditDialog(m_pMainFrame);
+    
+    refreshInternals();
 }
 //------------------------------------------------------------------------------
 
@@ -317,12 +310,20 @@ void editor::CPreviewBspBuilder::refreshInternals(void) {
         m_pGuiDrawer = getEngineMain()->getGuiMain()->getDrawer();
 
         refreshMaterial(m_internalMaterial);
+
+        m_materialsEditDialog->setResourceManager(m_pResourceMgr);
+        m_materialsEditDialog->setShaderManager(getEngineMain()->getGfxMain()->getShaderManager());
+        m_materialsEditDialog->setMaterialsVector(&(m_bspCompiler->getBspTreePtr()->getMaterials()));
+        m_materialsEditDialog->refreshInternals();
     } else {
         m_p3DScene = NULL;
         m_pCamera = NULL;
         m_pResourceMgr = NULL;
         m_pGuiMain = NULL;
         m_pGuiDrawer = NULL;
+        m_materialsEditDialog->setResourceManager(NULL);
+        m_materialsEditDialog->setShaderManager(NULL);
+        //m_materialsEditDialog->setMaterialsVector(NULL);
     }
 }
 //------------------------------------------------------------------------------
@@ -1065,6 +1066,7 @@ void editor::CPreviewBspBuilder::OnContextItemSelected(wxCommandEvent & event) {
         this->activatePreviewSide(BACK);
     } else if(id == idMenuGridProperties) {
     } else if(id == idMenuMaterials) {
+        m_materialsEditDialog->Show(true);
     } else if(id == idMenuCheckSnapToGrid) {
         this->setSnapToGrid((fgBool)this->m_contextMenu.IsChecked(id));
     } else if(id == idMenuCheckSnapToPolygon) {

@@ -36,6 +36,7 @@
             <word>gfx</word>
             <word>int</word>
             <word>pos</word>
+            <word>shaders</word>
             <word>struct</word>
             <word>unicode</word>
         </spellchecker-wordlist>

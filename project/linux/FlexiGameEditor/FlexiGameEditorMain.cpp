@@ -259,7 +259,7 @@ m_engineMain(NULL) {
     m_previews[FG_PREVIEW_GAME] = NULL;
     m_previews[FG_PREVIEW_SCENE_MANAGER] = NULL;
     m_previews[FG_PREVIEW_SHADER_MANAGER] = NULL;
-    m_previews[FG_PREVIEW_BSP_BUILDER] = new fg::editor::CPreviewBspBuilder(&m_engineMain);
+    m_previews[FG_PREVIEW_BSP_BUILDER] = new fg::editor::CPreviewBspBuilder(this, &m_engineMain);
     m_previews[FG_PREVIEW_BSP_BUILDER]->setName(m_previewTabNames[FG_PREVIEW_BSP_BUILDER]);
     m_previews[FG_PREVIEW_PARTICLE_EDITOR] = NULL;
     m_previews[FG_PREVIEW_GUI_EDITOR] = NULL;

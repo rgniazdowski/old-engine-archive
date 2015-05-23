@@ -25,6 +25,12 @@
     #include "GFX/fgGfxPolygon.h"
 
     #include "CPreviewModeBase.h"
+    #include "CBspMaterialsEditDialog.h"
+
+class wxWindow;
+class wxFrame;
+
+class CBspMaterialsEditDialog;
 
 namespace fg {
     namespace gfx {
@@ -42,7 +48,7 @@ namespace fg {
         class CDrawingBatch;
 
         class CVertexData;
-        class SMaterial;
+        struct SMaterial;
     }
     namespace resource {
         class CResourceManager;
@@ -187,7 +193,7 @@ namespace fg {
              *
              * @param pEngineMainOrig
              */
-            CPreviewBspBuilder(fg::CEngineMain** pEngineMainOrig);
+            CPreviewBspBuilder(wxWindow* pParent, fg::CEngineMain** pEngineMainOrig);
 
             /**
              *
@@ -542,6 +548,12 @@ namespace fg {
             /// Handler for any keyboard event - up and down keys.
             /// This is events are thrown only once when key state is changing.
             event::CFunctionCallback* m_keyboardHandlerCB;
+
+            /// Pointer to the main frame - parent window
+            wxWindow* m_pMainFrame;
+
+            /// Special internal dialog for showing material options
+            CBspMaterialsEditDialog* m_materialsEditDialog;
 
         public:
             static const long idMenuFreeLook;

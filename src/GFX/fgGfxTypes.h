@@ -183,9 +183,9 @@ namespace fg {
     namespace gfx {
 
         enum BlendMode {
-            BLEND_OFF,
-            BLEND_TRANSPARENCY,
-            BLEND_ADDITIVE
+            BLEND_OFF = 0,
+            BLEND_ADDITIVE = 1,
+            BLEND_TRANSPARENCY = 2
         };
 
     #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)

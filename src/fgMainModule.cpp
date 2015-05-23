@@ -885,14 +885,13 @@ fgBool CMainModule::mainLoopStep(void) {
     m_engineMain->render();
 #if defined(FG_DEBUG)
     static int loopCount = 0;
-    g_DebugConfig.isDebugProfiling = true;
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::render");
         profile::g_debugProfiling->end("Program::loopStep");
         profile::g_debugProfiling->updateHistory();
 
         loopCount++;
-        if(loopCount > 20) {
+        if(loopCount > 150) {
             loopCount = 0;
             profile::g_debugProfiling->dumpToDefaultFile();
         }
