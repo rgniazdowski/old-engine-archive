@@ -1,31 +1,13 @@
 # depslib dependency file v1.0
-1429743052 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorApp.cpp
+1430049585 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorApp.cpp
 	"FlexiGameEditorApp.h"
-	"fgBuildConfig.h"
-	"fgCommon.h"
-	"fgGameMain.h"
-	<cstdlib>
-	<cstdio>
-	<cmath>
-	<map>
 	<pthread.h>
-	"Event/fgEventManager.h"
-	"Event/fgInputHandler.h"
-	"Hardware/fgHardwareState.h"
-	"Util/fgProfiling.h"
-	"Util/fgStrings.h"
-	"fgDebugConfig.h"
-	"fgLog.h"
 	"FlexiGameEditorMain.h"
 	<wx/image.h>
-	"GFX/Scene/fgGfxBspCompiler.h"
 
-1429739296 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorApp.h
-	"GFX/fgGfxGL.h"
-	"fgGameMain.h"
+1429938987 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorApp.h
+	"fgBool.h"
 	<wx/app.h>
-	"wx/wx.h"
-	"wx/glcanvas.h"
 
 1412797288 /usr/include/wx-3.0/wx/app.h
 	"wx/event.h"
@@ -1671,18 +1653,23 @@
 1412797289 /usr/include/wx-3.0/wx/unix/glx11.h
 	<GL/glx.h>
 
-1429732176 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorMain.h
+1430061035 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorMain.h
+	<wx/sizer.h>
+	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/statusbr.h>
 	<wx/frame.h>
+	"CEngineGfxCanvas.h"
+	"CGfxHolderPanel.h"
 
-1429715686 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorMain.cpp
+1430062052 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorMain.cpp
 	"FlexiGameEditorMain.h"
+	"CEditorResMgrPanel.h"
 	<wx/msgdlg.h>
-	<wx/textctrl.h>
-	<wx/richtext/richtextctrl.h>
+	<wx/settings.h>
 	<wx/string.h>
 	<wx/intl.h>
+	<wx/font.h>
 
 1429547812 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxAABoundingBox.h
 	"GFX/fgGfxBoundingBox.h"
@@ -2466,7 +2453,7 @@
 
 1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgSingleton.h
 
-1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResource.h
+1430043530 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResource.h
 	"Hardware/fgQualityTypes.h"
 	<string>
 	<ctime>
@@ -2805,7 +2792,7 @@
 	"fgGfxSceneNodeObject.h"
 	"fgGfxSceneSkyBox.h"
 
-1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxDrawingBatch.h
+1429806269 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxDrawingBatch.h
 	"fgGfxDrawCall.h"
 	"fgGfxLayer.h"
 	<queue>
@@ -3344,4 +3331,265 @@
 
 1412797289 /usr/include/wx-3.0/wx/gtk/dnd.h
 	"wx/icon.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/aui.h
+	"wx/aui/framemanager.h"
+	"wx/aui/dockart.h"
+	"wx/aui/floatpane.h"
+	"wx/aui/auibar.h"
+	"wx/aui/auibook.h"
+	"wx/aui/tabmdi.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/framemanager.h
+	"wx/defs.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/window.h"
+	"wx/timer.h"
+	"wx/sizer.h"
+	"wx/bitmap.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/dockart.h
+	"wx/defs.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/bitmap.h"
+	"wx/colour.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/floatpane.h
+	"wx/defs.h"
+	"wx/weakref.h"
+	"wx/minifram.h"
+	"wx/frame.h"
+
+1412797289 /usr/include/wx-3.0/wx/minifram.h
+	"wx/defs.h"
+	"wx/msw/minifram.h"
+	"wx/motif/minifram.h"
+	"wx/gtk/minifram.h"
+	"wx/gtk1/minifram.h"
+	"wx/x11/minifram.h"
+	"wx/osx/minifram.h"
+	"wx/os2/minifram.h"
+	"wx/frame.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/minifram.h
+	"wx/bitmap.h"
+	"wx/frame.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/auibar.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/sizer.h"
+	"wx/pen.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/auibook.h
+	"wx/defs.h"
+	"wx/aui/tabart.h"
+	"wx/aui/framemanager.h"
+	"wx/bookctrl.h"
+	"wx/containr.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/tabart.h
+	"wx/defs.h"
+	"wx/colour.h"
+	"wx/gdicmn.h"
+	"wx/font.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/bitmap.h"
+	"wx/aui/tabartgtk.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/tabartgtk.h
+	"wx/defs.h"
+	"wx/aui/tabart.h"
+	"wx/gdicmn.h"
+
+1412797289 /usr/include/wx-3.0/wx/bookctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/withimages.h"
+	"wx/notebook.h"
+	"wx/choicebk.h"
+
+1412797289 /usr/include/wx-3.0/wx/withimages.h
+	"wx/defs.h"
+	"wx/icon.h"
+	"wx/imaglist.h"
+
+1412797289 /usr/include/wx-3.0/wx/imaglist.h
+	"wx/defs.h"
+	"wx/generic/imaglist.h"
+	"wx/msw/imaglist.h"
+	"wx/osx/imaglist.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/imaglist.h
+	"wx/list.h"
+
+1412797289 /usr/include/wx-3.0/wx/notebook.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/univ/notebook.h"
+	"wx/msw/notebook.h"
+	"wx/generic/notebook.h"
+	"wx/gtk/notebook.h"
+	"wx/gtk1/notebook.h"
+	"wx/osx/notebook.h"
+	"wx/cocoa/notebook.h"
+	"wx/os2/notebook.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/notebook.h
+	"wx/event.h"
+	"wx/control.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/notebook.h
+	"wx/list.h"
+
+1412797289 /usr/include/wx-3.0/wx/choicebk.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/choice.h"
+	"wx/containr.h"
+
+1412797289 /usr/include/wx-3.0/wx/aui/tabmdi.h
+	"wx/frame.h"
+	"wx/panel.h"
+	"wx/notebook.h"
+	"wx/icon.h"
+	"wx/aui/auibook.h"
+
+1429834143 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEngineGFXPanel.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"GFX/fgGfxGL.h"
+	"fgGameMain.h"
+	"wx/wx.h"
+	"wx/glcanvas.h"
+
+1429834538 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEngineGFXPanel.cpp
+	"CEngineGFXPanel.h"
+	<cstdlib>
+	<cstdio>
+	<cmath>
+	<map>
+	"Event/fgEventManager.h"
+	"Event/fgInputHandler.h"
+	"Hardware/fgHardwareState.h"
+	"Util/fgProfiling.h"
+	"Util/fgStrings.h"
+	"fgDebugConfig.h"
+	"fgLog.h"
+	"GFX/Scene/fgGfxBspCompiler.h"
+
+1429890128 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEngineGfxPanel.cpp
+	"CEngineGfxPanel.h"
+	<cstdlib>
+	<cstdio>
+	<cmath>
+	<map>
+	"Event/fgEventManager.h"
+	"Event/fgInputHandler.h"
+	"Hardware/fgHardwareState.h"
+	"Util/fgProfiling.h"
+	"Util/fgStrings.h"
+	"fgDebugConfig.h"
+	"fgLog.h"
+	"GFX/Scene/fgGfxBspCompiler.h"
+
+1429939482 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEngineGfxPanel.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"GFX/fgGfxGL.h"
+	"fgGameMain.h"
+	"wx/wx.h"
+	"wx/glcanvas.h"
+
+1429949281 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CGfxHolderPanel.h
+	"fgBool.h"
+	"wx/panel.h"
+	"wx/sizer.h"
+	"wx/menu.h"
+
+1429949343 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CGfxHolderPanel.cpp
+	"CGfxHolderPanel.h"
+	"CEngineGfxCanvas.h"
+
+1429947459 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorConfigPanel.cpp
+	"CEditorConfigPanel.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1429947458 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorConfigPanel.h
+	<wx/panel.h>
+
+1429947693 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorDrawingBatchFrame.cpp
+	"CEditorDrawingBatchFrame.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1429947652 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorDrawingBatchFrame.h
+	<wx/frame.h>
+
+1429947579 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorEventMgrPanel.cpp
+	"CEditorEventMgrPanel.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1429947578 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorEventMgrPanel.h
+	<wx/panel.h>
+
+1430062510 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorResMgrPanel.cpp
+	"CEditorResMgrPanel.h"
+	"fgGameMain.h"
+	"Resource/fgResourceManager.h"
+	"wx/stattext.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1430054294 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorResMgrPanel.h
+	"fgBool.h"
+	<wx/sizer.h>
+	<wx/listctrl.h>
+	<wx/notebook.h>
+	<wx/button.h>
+	<wx/panel.h>
+	<wx/gbsizer.h>
+
+1429947549 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorScriptMgrPanel.cpp
+	"CEditorScriptMgrPanel.h"
+	<wx/string.h>
+	<wx/intl.h>
+
+1429947548 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEditorScriptMgrPanel.h
+	<wx/panel.h>
+
+1429954959 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEngineGfxCanvas.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"GFX/fgGfxGL.h"
+	"Event/fgEventDefinitions.h"
+	"Scripting/fgScriptSubsystem.h"
+	"GameLogic/fgGameLogic.h"
+	"wx/wx.h"
+	"wx/glcanvas.h"
+
+1429954776 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/CEngineGfxCanvas.cpp
+	"CEngineGfxCanvas.h"
+	"fgGameMain.h"
+	"Event/fgEventManager.h"
+	"Event/fgInputHandler.h"
+	"Hardware/fgHardwareState.h"
+	"Util/fgProfiling.h"
+	"Util/fgStrings.h"
+	"fgDebugConfig.h"
+	"fgLog.h"
+	<cstdlib>
+	<cstdio>
+	<cmath>
+	<map>
+	"GFX/Scene/fgGfxBspCompiler.h"
+
+1412797288 /usr/include/wx-3.0/wx/gbsizer.h
+	"wx/sizer.h"
 

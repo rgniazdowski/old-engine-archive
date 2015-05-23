@@ -13,7 +13,7 @@
     #define FG_INC_EDITOR_CONFIG_PANEL_BLOCK
 
 //(*Headers(CEditorConfigPanel)
-    #include <wx/panel.h>
+#include <wx/panel.h>
 //*)
 
 /**

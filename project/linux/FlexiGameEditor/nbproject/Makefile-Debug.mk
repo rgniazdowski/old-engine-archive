@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/CBspMaterialsEditDialog.o \
 	${OBJECTDIR}/CEditorConfigPanel.o \
 	${OBJECTDIR}/CEditorDrawingBatchFrame.o \
 	${OBJECTDIR}/CEditorEventMgrPanel.o \
@@ -76,6 +77,11 @@ bin/${CND_CONF}/FlexiGameEditor: ../MiniZipMaster_NB/dist/Debug/GNU-Linux-x86/li
 bin/${CND_CONF}/FlexiGameEditor: ${OBJECTFILES}
 	${MKDIR} -p bin/${CND_CONF}
 	${LINK.cc} -o bin/${CND_CONF}/FlexiGameEditor ${OBJECTFILES} ${LDLIBSOPTIONS} `wx-config --libs` `wx-config --gl-libs`
+
+${OBJECTDIR}/CBspMaterialsEditDialog.o: CBspMaterialsEditDialog.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -DWXUSINGDLL -D_FILE_OFFSET_BITS=64 -D__WXGTK__ -I/usr/lib/wx/include/gtk2-unicode-3.0 -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CBspMaterialsEditDialog.o CBspMaterialsEditDialog.cpp
 
 ${OBJECTDIR}/CEditorConfigPanel.o: CEditorConfigPanel.cpp 
 	${MKDIR} -p ${OBJECTDIR}

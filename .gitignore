@@ -6,6 +6,9 @@ build_infinium_scons_x86
 build_infinium_scons_aarch64
 deployments
 Infinium.mkb.bak
+data/outputFull.log
+data/outputDebug.log
+data/outputDebugFull.log
 data/libChainReaction.so
 data/ChainReaction/libChainReaction.so
 data/EndlessFlying/libEndlessFlying.so

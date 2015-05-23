@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>CBspMaterialsEditDialog.h</itemPath>
       <itemPath>CEditorConfigPanel.h</itemPath>
       <itemPath>CEditorDrawingBatchFrame.h</itemPath>
       <itemPath>CEditorEventMgrPanel.h</itemPath>
@@ -23,6 +24,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>CBspMaterialsEditDialog.cpp</itemPath>
       <itemPath>CEditorConfigPanel.cpp</itemPath>
       <itemPath>CEditorDrawingBatchFrame.cpp</itemPath>
       <itemPath>CEditorEventMgrPanel.cpp</itemPath>
@@ -161,6 +163,10 @@
           <commandLine>`wx-config --libs` `wx-config --gl-libs`</commandLine>
         </linkerTool>
       </compileType>
+      <item path="CBspMaterialsEditDialog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CBspMaterialsEditDialog.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CEditorConfigPanel.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CEditorConfigPanel.h" ex="false" tool="3" flavor2="0">
@@ -328,6 +334,10 @@
           <commandLine>`wx-config --libs` `wx-config --gl-libs`</commandLine>
         </linkerTool>
       </compileType>
+      <item path="CBspMaterialsEditDialog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CBspMaterialsEditDialog.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CEditorConfigPanel.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CEditorConfigPanel.h" ex="false" tool="3" flavor2="0">
