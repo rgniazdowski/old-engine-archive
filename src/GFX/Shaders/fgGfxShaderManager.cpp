@@ -463,6 +463,24 @@ fgBool gfx::CShaderManager::linkShaders(void) {
 }
 //------------------------------------------------------------------------------
 
+fgBool gfx::CShaderManager::getShaderNames(CStringVector& strVec) {
+    strVec.clear();
+    unsigned int nFound = 0;
+    ProgramVecItor end, itor;
+    end = getRefDataVector().end();
+    itor = getRefDataVector().begin();
+    for(; itor != end; itor++) {
+        CShaderProgram *pProgram = (*itor).data;
+        if(!pProgram)
+            continue;
+        strVec.push_back(pProgram->getName());
+        nFound++;
+    }
+    
+    return (fgBool)!!(nFound > 0);
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::CShaderManager::allReleaseGFX(void) {
     if(!m_init) {
         return FG_FALSE; // ERROR ?

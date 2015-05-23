@@ -117,6 +117,13 @@ namespace fg {
             fgBool linkShaders(void);
 
             /**
+             * 
+             * @param strVec
+             * @return
+             */
+            fgBool getShaderNames(CStringVector& strVec);
+
+            /**
              * This will make all gfx IDs invalid (free gfx side data)
              * @return 
              */

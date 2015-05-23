@@ -227,6 +227,9 @@ fgBool resource::CResourceManager::reserveMemory(size_t nMem) {
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::goToNext(ResourceType resType) {
+    if(resType == resource::INVALID)
+        return goToNext();
+    
     while(FG_TRUE) {
         m_currentResource++;
         if(!isValid()) {
@@ -284,6 +287,56 @@ fgBool resource::CResourceManager::goToNext(ResourceType resType, Quality qualit
     }
 
     return isValid();
+}
+//------------------------------------------------------------------------------
+
+fgBool resource::CResourceManager::getResourceNames(CStringVector& strVec,
+                                                    ResourceType resType) {
+    strVec.clear();
+    unsigned int nFound = 0;
+
+    goToBegin();
+
+    do {
+        CResource* pResource = getCurrentResource();
+        if(!pResource)
+            break;
+        if(pResource->getResourceType() == resType || resType == resource::INVALID) {
+            strVec.push_back(pResource->getName());
+            nFound++;
+        }
+    } while(goToNext(resType));
+
+    return (fgBool)!!(nFound > 0);
+}
+//------------------------------------------------------------------------------
+
+fgBool resource::CResourceManager::getResourceNames(CStringVector& strVec,
+                                                    const ResourceType* resTypes,
+                                                    unsigned int n) {
+    if(!resTypes || !n)
+        return FG_FALSE;
+    strVec.clear();
+    unsigned int nFound = 0;
+    goToBegin();
+    if(isValid()) {
+        CResource* pResource = getCurrentResource();
+        for(unsigned int i = 0; i < n; i++) {
+            if(pResource->getResourceType() == resTypes[i]) {
+                strVec.push_back(pResource->getName());
+                nFound++;
+                break;
+            }
+        }
+    }
+    while(goToNext(resTypes, n)) {
+        CResource* pResource = getCurrentResource();
+        if(!pResource)
+            break;
+        strVec.push_back(pResource->getName());
+        nFound++;
+    }
+    return (fgBool)!!(nFound > 0);
 }
 //------------------------------------------------------------------------------
 

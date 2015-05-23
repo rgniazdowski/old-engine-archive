@@ -185,7 +185,7 @@ namespace fg {
              * Go to the next resource (iterate to next)
              * @return 
              */
-            fgBool goToNext() {
+            fgBool goToNext(void) {
                 //while((*m_currentResource) != NULL) {
                 m_currentResource++;
                 //	if(!isValid())
@@ -205,7 +205,7 @@ namespace fg {
              * @param n
              * @return 
              */
-            fgBool goToNext(const ResourceType* resType, int n);
+            fgBool goToNext(const ResourceType* resTypes, int n);
             /**
              * Find next resource with given criteria (currently resource type and quality)
              * @param resType
@@ -214,8 +214,27 @@ namespace fg {
              */
             fgBool goToNext(ResourceType resType, Quality quality);
 
-            // -----------------------------------------------------------------------
-            // General resource access
+            /**
+             *
+             * @param strVec
+             * @param resType
+             * @return
+             */
+            fgBool getResourceNames(CStringVector& strVec,
+                                    ResourceType resType = resource::INVALID);
+
+            /**
+             * 
+             * @param strVec
+             * @param resTypes
+             * @param n
+             * @return
+             */
+            fgBool getResourceNames(CStringVector& strVec,
+                                    const ResourceType* resTypes, unsigned int n);
+
+            //------------------------------------------------------------------
+            
 
             // Allows the resource manager to pre-reserve an amount of memory so
             // an inserted resource does not exceed the maximum allowed memory
