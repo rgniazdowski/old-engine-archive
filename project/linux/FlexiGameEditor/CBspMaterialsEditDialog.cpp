@@ -355,7 +355,7 @@ int CBspMaterialsEditDialog::getMaterialListIndex(const wxString& materialName) 
     const unsigned int n = MaterialsListBox->GetCount();
     for(unsigned int i = 0; i < n; i++) {
         wxString itemStr = MaterialsListBox->GetString(i);
-        if(itemStr.compare(materialName)) {
+        if(itemStr.compare(materialName) == 0) {
             listIndex = i;
             break;
         }
@@ -371,7 +371,7 @@ int CBspMaterialsEditDialog::getMaterialListIndex(const std::string& materialNam
     const unsigned int n = MaterialsListBox->GetCount();
     for(unsigned int i = 0; i < n; i++) {
         wxString itemStr = MaterialsListBox->GetString(i);
-        if(itemStr.compare(materialName.c_str())) {
+        if(itemStr.compare(materialName.c_str()) == 0) {
             listIndex = i;
             break;
         }
@@ -381,7 +381,7 @@ int CBspMaterialsEditDialog::getMaterialListIndex(const std::string& materialNam
 //------------------------------------------------------------------------------
 
 int CBspMaterialsEditDialog::getMaterialListIndex(const char* materialName) {
-    if(!materialName || !MaterialsListBox ||MaterialsListBox->IsEmpty())
+    if(!materialName || !MaterialsListBox || MaterialsListBox->IsEmpty())
         return -1;
     if(!materialName[0])
         return -1;
@@ -389,7 +389,7 @@ int CBspMaterialsEditDialog::getMaterialListIndex(const char* materialName) {
     const unsigned int n = MaterialsListBox->GetCount();
     for(unsigned int i = 0; i < n; i++) {
         wxString itemStr = MaterialsListBox->GetString(i);
-        if(itemStr.compare(materialName)) {
+        if(itemStr.compare(materialName) == 0) {
             listIndex = i;
             break;
         }
@@ -407,7 +407,7 @@ int CBspMaterialsEditDialog::getMaterialListIndex(fg::gfx::SMaterial* pMaterial)
         void *userData = MaterialsListBox->GetClientData(i);
         fg::gfx::SMaterial* pClientDataMaterial = (fg::gfx::SMaterial *)userData;
         wxString itemStr = MaterialsListBox->GetString(i);
-        if(itemStr.compare(pMaterial->name.c_str()) && pMaterial == pClientDataMaterial) {
+        if(itemStr.compare(pMaterial->name.c_str()) == 0 && pMaterial == pClientDataMaterial) {
             listIndex = i;
             break;
         }
@@ -473,8 +473,20 @@ int CBspMaterialsEditDialog::getMaterialVecIndex(int selectionIndex) {
     if(selectionIndex < 0 || !MaterialsListBox )
         return -1;
     int vecIndex = -1;
-    wxString materialName = MaterialsListBox->GetStringSelection();
-    vecIndex = getMaterialVecIndex(materialName);
+    void *userData = MaterialsListBox->GetClientData(selectionIndex);
+    if(!userData) {
+        return -1;
+    }
+    fg::gfx::SMaterial* pClientDataMaterial = (fg::gfx::SMaterial *)userData;
+    MaterialsVec& materials = *m_pMaterials;
+    const unsigned int n = materials.size();
+    for(unsigned int i = 0; i < n; i ++) {
+        fg::gfx::SMaterial& material = materials[i];
+        if(&material == pClientDataMaterial) {
+            vecIndex = i;
+            break;
+        }
+    }
     return vecIndex;
 }
 //------------------------------------------------------------------------------
@@ -541,32 +553,67 @@ fg::gfx::SMaterial* CBspMaterialsEditDialog::getMaterial(int selectionIndex) {
 //------------------------------------------------------------------------------
 
 fgBool CBspMaterialsEditDialog::duplicateMaterial(fg::gfx::SMaterial* pMaterial) {
-    if(!pMaterial)
+    if(!pMaterial || !m_pMaterials)
         return FG_FALSE;
+    MaterialsVec& materials = *m_pMaterials;
+    unsigned int n = materials.size();
+    materials.push_back(*pMaterial);
+    materials[n].name.append(" Duplicate");
+    refreshMaterialsList();
+    MaterialsListBox->DeselectAll();
+    MaterialsListBox->SetSelection(n, true);
+    m_currentSelection = n;
+    refreshOptions();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 fgBool CBspMaterialsEditDialog::deleteMaterial(fg::gfx::SMaterial* pMaterial) {
-    if(!pMaterial)
+    if(!pMaterial || !m_pMaterials)
         return FG_FALSE;
     if(pMaterial->name.empty())
         return FG_FALSE;
-
-    return FG_TRUE;
+    int listIndex = getMaterialListIndex(pMaterial);
+    if(listIndex < 0) {
+        return FG_FALSE;
+    }
+    return deleteMaterial(listIndex);
 }
 //------------------------------------------------------------------------------
 
 fgBool CBspMaterialsEditDialog::duplicateMaterial(int selectionIndex) {
     if(selectionIndex < 0)
         return FG_FALSE;
-    return FG_TRUE;
+    fg::gfx::SMaterial* pMaterial = getMaterial(selectionIndex);
+    if(!pMaterial || !m_pMaterials)
+        return FG_FALSE;    
+    return duplicateMaterial(pMaterial);
 }
 //------------------------------------------------------------------------------
 
 fgBool CBspMaterialsEditDialog::deleteMaterial(int selectionIndex) {
     if(selectionIndex < 0)
         return FG_FALSE;
+    int vecIndex = getMaterialVecIndex(selectionIndex);
+    if(vecIndex < 0) {
+        return FG_FALSE;
+    }
+    MaterialsVec& materials = *m_pMaterials;
+    unsigned int n = materials.size();
+    if(!n) {
+        return FG_FALSE;
+    }
+    materials[vecIndex] = materials[n-1];
+    materials[n-1].clear();
+    materials.resize(n-1);
+    vecIndex = vecIndex -1;
+    if(vecIndex < 0)
+        vecIndex = 0;
+    refreshMaterialsList();
+    MaterialsListBox->DeselectAll();
+    m_currentSelection = getMaterialListIndex(&materials[vecIndex]);
+    MaterialsListBox->SetSelection(m_currentSelection, true);
+    refreshOptions();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -1079,9 +1126,28 @@ void CBspMaterialsEditDialog::OnButtonStdClick(wxCommandEvent& event) {
             refreshOptions();
         }
     } else if(id == idButtonDelete) {
-            
+        fgBool canDelete = FG_TRUE;
+        int code = wxMessageBox("Do you really want to delete this material?",
+                                "Confirm material deletion",
+                                wxCENTRE | wxYES | wxNO);
+        if(code == wxNO)
+            canDelete = FG_FALSE;
+        if(canDelete) {
+            deleteMaterial(m_currentSelection);
+        }            
     } else if(id == idButtonDuplicate) {
-            
+        fgBool canDuplicate = FG_TRUE;
+        if(didOptionsChange()) {
+            int code = showMessageOptionsChanged();
+            if(code == wxYES) {
+                saveOptions(m_currentSelection);
+            } else if(code == wxCANCEL) {
+                canDuplicate = FG_FALSE;
+            }
+        }
+        if(canDuplicate) {
+            duplicateMaterial(m_currentSelection);
+        }
     } else if(id == idButtonSave) {
         if(validateOptions()) {
             saveOptions();
