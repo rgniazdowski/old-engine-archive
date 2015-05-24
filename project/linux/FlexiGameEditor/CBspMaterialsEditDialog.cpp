@@ -20,6 +20,8 @@
 #include <wx/string.h>
 #include <wx/intl.h>
 //*)
+#include <wx/msgdlg.h>
+#include <wx/listbase.h>
 
 //------------------------------------------------------------------------------
 //(*IdInit(CBspMaterialsEditDialog)
@@ -286,6 +288,7 @@ CBspMaterialsEditDialog::CBspMaterialsEditDialog(wxWindow* parent,wxWindowID id,
         GridBagSizerGeneral->AddGrowableCol(1);
         GridBagSizerTextures->AddGrowableCol(1);
         GridBagSizerOptionsAll->AddGrowableCol(2);
+        m_currentSelection = 0;
         this->SetAutoLayout(true);
         
         m_pShaderMgr = NULL;
@@ -324,7 +327,7 @@ bool CBspMaterialsEditDialog::Show(bool show) {
     if(show) {
         refreshMaterialsList();        
         MaterialsListBox->SetSelection(0, true); // this does not throw any event
-        
+        m_currentSelection = 0;
     }
     bool returnValue =  base_type::Show(show);
     if(show) {
@@ -598,8 +601,140 @@ void CBspMaterialsEditDialog::resolveDuplicates(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CBspMaterialsEditDialog::didOptionsChange(void) {
+fgBool CBspMaterialsEditDialog::didOptionsChange(int checkSelection) {
+    if(!IsVisible() || !IsShown() || !IsShownOnScreen()) {
+        return FG_FALSE;
+    }
+    int selection = checkSelection;
+    if(checkSelection < 0)
+        selection = MaterialsListBox->GetSelection();
+    if(selection < 0)
+        return FG_FALSE;
 
+    fg::gfx::SMaterial* pMaterial = getMaterial(selection);
+    if(!pMaterial)
+        return FG_FALSE;
+
+    if(pMaterial->name.compare(MaterialNameTextCtrl->GetValue().c_str().AsChar()) != 0) {
+        return FG_TRUE;
+    }
+
+    float diff = fg::math::abs(pMaterial->shininess - (float)ShininessSpinCtrl->GetValue());
+    if(diff > 0.001f) {
+        return FG_TRUE;
+    }
+
+    diff = fg::math::abs(pMaterial->dissolve - (float)(DissolveSpinCtrl->GetValue()/100.0f));
+    if(diff > 0.001f) {
+        return FG_TRUE;
+    }
+
+    diff = fg::math::abs(pMaterial->burn - (float)(BurnSpinCtrl->GetValue()/100.0f));
+    if(diff > 0.001f) {
+        return FG_TRUE;
+    }
+    fg::Color4f fgColor = convertFromWxColour(ColourPickerAmbient->GetColour());
+    if(pMaterial->ambient != fgColor) {
+        return FG_TRUE;
+    }
+    fgColor = convertFromWxColour(ColourPickerDiffuse->GetColour());
+    if(pMaterial->diffuse != fgColor) {
+        return FG_TRUE;
+    }
+    fgColor = convertFromWxColour(ColourPickerSpecular->GetColour());
+    if(pMaterial->specular != fgColor) {
+        return FG_TRUE;
+    }
+    fgColor = convertFromWxColour(ColourPickerTransmittance->GetColour());
+    if(pMaterial->transmittance != fgColor) {
+        return FG_TRUE;
+    }
+    fgColor = convertFromWxColour(ColourPickerEmission->GetColour());
+    if(pMaterial->emission != fgColor) {
+        return FG_TRUE;
+    }
+    const char *cmpStr;
+    wxString comboValue;
+    // Ambient Texture
+    if(pMaterial->ambientTexName.empty()) {
+        cmpStr = NO_TEXTURE_TEXT;
+    } else {
+        cmpStr = pMaterial->ambientTexName.c_str();
+    }
+    comboValue = ComboBoxAmbient->GetValue();
+    if(comboValue.compare(cmpStr) != 0) {
+        return FG_TRUE;
+    }
+    // Diffuse texture
+    if(pMaterial->diffuseTexName.empty()) {
+        cmpStr = NO_TEXTURE_TEXT;
+    } else {
+        cmpStr = pMaterial->diffuseTexName.c_str();
+    }
+    comboValue = ComboBoxDiffuse->GetValue();
+    if(comboValue.compare(cmpStr) != 0) {
+        return FG_TRUE;
+    }
+    // Specular texture
+    if(pMaterial->specularTexName.empty()) {
+        cmpStr = NO_TEXTURE_TEXT;
+    } else {
+        cmpStr = pMaterial->specularTexName.c_str();
+    }
+    comboValue = ComboBoxSpecular->GetValue();
+    if(comboValue.compare(cmpStr) != 0) {
+        return FG_TRUE;
+    }
+    // Normal texture
+    if(pMaterial->normalTexName.empty()) {
+        cmpStr = NO_TEXTURE_TEXT;
+    } else {
+        cmpStr = pMaterial->normalTexName.c_str();
+    }
+    comboValue = ComboBoxNormal->GetValue();
+    if(comboValue.compare(cmpStr) != 0) {
+        return FG_TRUE;
+    }
+    // Shader name
+    if(pMaterial->shaderName.empty()) {
+        cmpStr = DEFAULT_SHADER_TEXT;
+    } else {
+        cmpStr = pMaterial->shaderName.c_str();
+    }
+    comboValue = ComboBoxShader->GetValue();
+    if(comboValue.compare(cmpStr) != 0) {
+        return FG_TRUE;
+    }
+
+    if(CheckBoxCullFace->GetValue() != (bool)pMaterial->isCullFace()) {
+        return FG_TRUE;
+    }
+    if(CheckBoxDepthTest->GetValue() != (bool)pMaterial->isDepthTest()) {
+        return FG_TRUE;
+    }
+    if(CheckBoxDepthWriteMask->GetValue() != (bool)pMaterial->isDepthWriteMask()) {
+        return FG_TRUE;
+    }
+    if(CheckBoxTextureRepeat->GetValue() != (bool)pMaterial->isTextureRepeat()) {
+        return FG_TRUE;
+    }
+
+    fg::gfx::BlendMode blendMode = pMaterial->blendMode;
+    int radioSelection = RadioBoxBlend->GetSelection();
+    if(blendMode == fg::gfx::BLEND_OFF && radioSelection != 0) {
+        return FG_TRUE;
+    } else if(blendMode == fg::gfx::BLEND_ADDITIVE && radioSelection != 1) {
+        return FG_TRUE;
+    } else if(blendMode == fg::gfx::BLEND_TRANSPARENCY && radioSelection != 2) {
+        return FG_TRUE;
+    }
+    
+    radioSelection = RadioBoxFrontFace->GetSelection();
+    if(pMaterial->isFrontFaceCCW() && radioSelection != 0) {
+        return FG_TRUE;
+    } else if(pMaterial->isFrontFaceCW() && radioSelection != 1) {
+        return FG_TRUE;
+    }
     // options did not change - can refresh - no data lost
     return FG_FALSE;
 }
@@ -631,36 +766,19 @@ fgBool CBspMaterialsEditDialog::refreshOptions(void) {
     DissolveSpinCtrl->SetValue((int)(100.0f * pMaterial->dissolve));
     BurnSpinCtrl->SetValue((int)(100.0f * pMaterial->burn));
     wxColour colour;
-    unsigned char r,g,b,a;
-    r = (unsigned char)(255.0f * pMaterial->ambient.r);
-    g = (unsigned char)(255.0f * pMaterial->ambient.g);
-    b = (unsigned char)(255.0f * pMaterial->ambient.b);
-    a = (unsigned char)(255.0f * pMaterial->ambient.a);
-    colour.Set(r,g,b,a);
+    colour = convertToWxColour(pMaterial->ambient);
     ColourPickerAmbient->SetColour(colour);
-    r = (unsigned char)(255.0f * pMaterial->diffuse.r);
-    g = (unsigned char)(255.0f * pMaterial->diffuse.g);
-    b = (unsigned char)(255.0f * pMaterial->diffuse.b);
-    a = (unsigned char)(255.0f * pMaterial->diffuse.a);
-    colour.Set(r,g,b,a);
+
+    colour = convertToWxColour(pMaterial->diffuse);
     ColourPickerDiffuse->SetColour(colour);
-    r = (unsigned char)(255.0f * pMaterial->specular.r);
-    g = (unsigned char)(255.0f * pMaterial->specular.g);
-    b = (unsigned char)(255.0f * pMaterial->specular.b);
-    a = (unsigned char)(255.0f * pMaterial->specular.a);
-    colour.Set(r,g,b,a);
+
+    colour = convertToWxColour(pMaterial->specular);
     ColourPickerSpecular->SetColour(colour);
-    r = (unsigned char)(255.0f * pMaterial->transmittance.r);
-    g = (unsigned char)(255.0f * pMaterial->transmittance.g);
-    b = (unsigned char)(255.0f * pMaterial->transmittance.b);
-    a = (unsigned char)(255.0f * pMaterial->transmittance.a);
-    colour.Set(r,g,b,a);
+
+    colour = convertToWxColour(pMaterial->transmittance);
     ColourPickerTransmittance->SetColour(colour);
-    r = (unsigned char)(255.0f * pMaterial->emission.r);
-    g = (unsigned char)(255.0f * pMaterial->emission.g);
-    b = (unsigned char)(255.0f * pMaterial->emission.b);
-    a = (unsigned char)(255.0f * pMaterial->emission.a);
-    colour.Set(r,g,b,a);
+
+    colour = convertToWxColour(pMaterial->emission);
     ColourPickerEmission->SetColour(colour);
 
     if(pMaterial->ambientTexName.empty()) {
@@ -713,15 +831,17 @@ fgBool CBspMaterialsEditDialog::refreshOptions(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CBspMaterialsEditDialog::saveOptions(void) {
+fgBool CBspMaterialsEditDialog::saveOptions(int checkSelection) {
      if(!IsVisible() || !IsShown() || !IsShownOnScreen()) {
         return FG_FALSE;
     }
-    int selection = MaterialsListBox->GetSelection();
+    int selection = checkSelection;
+    if(checkSelection < 0)
+        selection = MaterialsListBox->GetSelection();
     if(selection < 0)
         return FG_FALSE;
-
     fg::gfx::SMaterial* pMaterial = getMaterial(selection);
+
     if(!pMaterial)
         return FG_FALSE;
 
@@ -768,39 +888,19 @@ fgBool CBspMaterialsEditDialog::saveOptions(void) {
         pMaterial->normalTexName.append(textureName.c_str().AsChar());
 
     wxColour colour = ColourPickerAmbient->GetColour();
-    fg::Color4f *fgColor = &(pMaterial->ambient);
-    fgColor->r = ((float)colour.Red())/255.0f;
-    fgColor->g = ((float)colour.Green())/255.0f;
-    fgColor->b = ((float)colour.Blue())/255.0f;
-    fgColor->a = ((float)colour.Alpha())/255.0f;
+    pMaterial->ambient = convertFromWxColour(colour);
 
     colour = ColourPickerDiffuse->GetColour();
-    fgColor = &(pMaterial->diffuse);
-    fgColor->r = ((float)colour.Red())/255.0f;
-    fgColor->g = ((float)colour.Green())/255.0f;
-    fgColor->b = ((float)colour.Blue())/255.0f;
-    fgColor->a = ((float)colour.Alpha())/255.0f;
+    pMaterial->diffuse = convertFromWxColour(colour);
 
     colour = ColourPickerSpecular->GetColour();
-    fgColor = &(pMaterial->specular);
-    fgColor->r = ((float)colour.Red())/255.0f;
-    fgColor->g = ((float)colour.Green())/255.0f;
-    fgColor->b = ((float)colour.Blue())/255.0f;
-    fgColor->a = ((float)colour.Alpha())/255.0f;
+    pMaterial->specular = convertFromWxColour(colour);
 
     colour = ColourPickerTransmittance->GetColour();
-    fgColor = &(pMaterial->transmittance);
-    fgColor->r = ((float)colour.Red())/255.0f;
-    fgColor->g = ((float)colour.Green())/255.0f;
-    fgColor->b = ((float)colour.Blue())/255.0f;
-    fgColor->a = ((float)colour.Alpha())/255.0f;
+    pMaterial->transmittance = convertFromWxColour(colour);
 
     colour = ColourPickerEmission->GetColour();
-    fgColor = &(pMaterial->emission);
-    fgColor->r = ((float)colour.Red())/255.0f;
-    fgColor->g = ((float)colour.Green())/255.0f;
-    fgColor->b = ((float)colour.Blue())/255.0f;
-    fgColor->a = ((float)colour.Alpha())/255.0f;
+    pMaterial->emission = convertFromWxColour(colour);
     
     //MaterialNameTextCtrl->ChangeValue(_(pMaterial->name.c_str()));
     //IORTextCtrl->ChangeValue(wxEmptyString);
@@ -827,7 +927,7 @@ fgBool CBspMaterialsEditDialog::saveOptions(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CBspMaterialsEditDialog::validateOptions(void) {
+fgBool CBspMaterialsEditDialog::validateOptions(int checkSelection) {
     if(!IsVisible() || !IsShown() || !IsShownOnScreen()) {
         return FG_FALSE;
     }
@@ -873,6 +973,36 @@ fgBool CBspMaterialsEditDialog::populateShaderComboBox(wxComboBox* pComboBox) {
 }
 //------------------------------------------------------------------------------
 
+wxColour CBspMaterialsEditDialog::convertToWxColour(const fg::Color4f& from) {
+    unsigned char r,g,b,a;
+    wxColour retValue;
+    r = (unsigned char)(255.0f * from.r);
+    g = (unsigned char)(255.0f * from.g);
+    b = (unsigned char)(255.0f * from.b);
+    a = (unsigned char)(255.0f * from.a);
+    retValue.Set(r,g,b,a);
+    return retValue;
+}
+//------------------------------------------------------------------------------
+
+fg::Color4f CBspMaterialsEditDialog::convertFromWxColour(const wxColour& from) {
+    fg::Color4f retValue;
+    retValue.r = ((float)from.Red())/255.0f;
+    retValue.g = ((float)from.Green())/255.0f;
+    retValue.b = ((float)from.Blue())/255.0f;
+    retValue.a = ((float)from.Alpha())/255.0f;
+    return retValue;
+}
+//------------------------------------------------------------------------------
+
+int CBspMaterialsEditDialog::showMessageOptionsChanged(long flags) {
+    int code = wxMessageBox("Options were changed. Do you want to save current material?",
+                 "Material options were changed",
+                 flags | wxCENTRE, this);
+    return code;
+}
+//------------------------------------------------------------------------------
+
 void CBspMaterialsEditDialog::OnRadioBoxBlendSelect(wxCommandEvent& event) {
 }
 //------------------------------------------------------------------------------
@@ -894,12 +1024,27 @@ void CBspMaterialsEditDialog::OnMaterialsListBoxSelect(wxCommandEvent& event) {
         event.Skip();
         return;
     }
-    if(didOptionsChange()) {
+    int code = wxYES;
+    if(didOptionsChange(m_currentSelection)) {
         // The options did change so need to veto; ask to save changes, message box...
+        code = showMessageOptionsChanged();
+        if(code == wxYES) {
+            // yes - so we save current material and change to the next one
+            saveOptions(m_currentSelection);
+        } else if(code == wxNO) {
+            // no - do not save, actually do nothing - just refresh the panel
+        } else if(code == wxCANCEL) {
+            // Cancel - means that the Selection gets veto-ed
+            // do not save, do not change tab, stay on current material - no refresh
+            MaterialsListBox->SetSelection(m_currentSelection);
+        }
     }
     // refresh the options widgets so they will reflect the values of the newly
     // selected material
-    refreshOptions();
+    if(code != wxCANCEL) {
+        refreshOptions();
+        m_currentSelection = event.GetSelection();
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -910,17 +1055,29 @@ void CBspMaterialsEditDialog::OnButtonStdClick(wxCommandEvent& event) {
     MaterialsVec& materials = *m_pMaterials;
     unsigned int n = materials.size();
     if(id == idButtonNew) {
-        fgBool canChange = FG_TRUE; // fix me
+        fgBool canCreate = FG_TRUE;
         if(didOptionsChange()) {
-
+            int code = showMessageOptionsChanged();
+            if(code == wxYES) {
+                // save current selection
+                saveOptions(m_currentSelection);
+            } else if(code == wxNO) {
+                // do not save - create the new material
+            } else if(code == wxCANCEL) {
+                // cancel the creation of new material (and switch)
+                canCreate = FG_FALSE;
+            }
         }
-        // Create new material
-        materials.push_back(fg::gfx::SMaterial());
-        materials[n].name = "New material";
-        refreshMaterialsList();
-        MaterialsListBox->DeselectAll();
-        MaterialsListBox->SetSelection(n, true);
-        refreshOptions();
+        if(canCreate) {
+            // Create new material
+            materials.push_back(fg::gfx::SMaterial());
+            materials[n].name = "New material";
+            refreshMaterialsList();
+            MaterialsListBox->DeselectAll();
+            MaterialsListBox->SetSelection(n, true);
+            m_currentSelection = n;
+            refreshOptions();
+        }
     } else if(id == idButtonDelete) {
             
     } else if(id == idButtonDuplicate) {
@@ -929,14 +1086,29 @@ void CBspMaterialsEditDialog::OnButtonStdClick(wxCommandEvent& event) {
         if(validateOptions()) {
             saveOptions();
         }
+        // Save and close (hide) the dialog
         this->Show(false);
     } else if(id == idButtonApply) {
         if(validateOptions()) {
             saveOptions();
         }
     } else if(id == idButtonCancel) {
-        // question?
-        this->Show(false);
+        int code = wxYES;
+        if(didOptionsChange()) {
+            code = showMessageOptionsChanged();
+            if(code == wxYES) {
+                // yes - so we save current material and close the dialog
+                saveOptions(m_currentSelection);
+            } else if(code == wxNO) {
+                // no - do not save, actually do nothing - just close                
+            } else if(code == wxCANCEL) {
+                // Cancel - means that the cancel button gets ignored
+                // do nothing - box stayed showed
+            }
+        }
+        if(code != wxCANCEL) {
+            this->Show(false);
+        }
     }
             
 }

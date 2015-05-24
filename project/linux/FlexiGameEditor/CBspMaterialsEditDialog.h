@@ -234,7 +234,7 @@ public:
      * Checks whether or not the options were changed and not saved
      * @return
      */
-    fgBool didOptionsChange(void);
+    fgBool didOptionsChange(int checkSelection = -1);
     /**
      * Refreshes all widgets to current values (based on the list selection)
      * @return
@@ -245,7 +245,7 @@ public:
      *
      * @return
      */
-    fgBool saveOptions(void);
+    fgBool saveOptions(int checkSelection = -1);
 
     //--------------------------------------------------------------------------
 
@@ -253,7 +253,7 @@ public:
      * Validates the all the options (textures, shaders, etc)
      * @return
      */
-    fgBool validateOptions(void);
+    fgBool validateOptions(int checkSelection = -1);
 
     /**
      * Validates whether or not the current combo box value is valid
@@ -309,6 +309,36 @@ public:
     }
 
     //--------------------------------------------------------------------------
+    /**
+     *
+     * @param from
+     * @param to
+     */
+    static void convertToWxColour(const fg::Color4f& from, wxColour& to) {
+        to = convertToWxColour(from);
+    }
+    /**
+     *
+     * @param from
+     * @param to
+     */
+    static void convertFromWxColour(const wxColour& from, fg::Color4f& to) {
+        to = convertFromWxColour(from);
+    }
+    /**
+     *
+     * @param from
+     * @return
+     */
+    static wxColour convertToWxColour(const fg::Color4f& from);
+    /**
+     *
+     * @param from
+     * @return
+     */
+    static fg::Color4f convertFromWxColour(const wxColour& from);
+
+    //--------------------------------------------------------------------------
 private:
     ///
     fg::gfx::CShaderManager* m_pShaderMgr;
@@ -322,6 +352,9 @@ private:
     /// Pointer to the external material list - in most cases: the internal list
     /// of gfx::CBspTree
     MaterialsVec *m_pMaterials;
+
+    ///
+    int m_currentSelection;
 
     //--------------------------------------------------------------------------
 
@@ -395,6 +428,8 @@ private:
 
     //--------------------------------------------------------------------------
 private:
+
+    int showMessageOptionsChanged(long flags = wxCENTRE | wxYES | wxNO | wxCANCEL | wxICON_QUESTION);
 
     //(*Handlers(CBspMaterialsEditDialog)
     void OnRadioBoxBlendSelect(wxCommandEvent& event);
