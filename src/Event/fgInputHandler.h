@@ -87,6 +87,14 @@ namespace fg {
             static const unsigned int MAX_TOUCH_POINTS;
 
         private:
+
+            /**
+             * 
+             */
+            struct InternalMousePosition {
+                int x;
+                int y;
+            } m_lastMouse[FG_INPUT_MAX_TOUCH_POINTS + 1];
             ///
             CVector<KeyVirtualCode> m_keysDownPool;
             ///
@@ -243,7 +251,6 @@ namespace fg {
              * @return
              */
             fgBool isKeyDown(KeyVirtualCode keyCode) const;
-
             /**
              * 
              * @return

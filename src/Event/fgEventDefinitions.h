@@ -196,6 +196,8 @@ namespace fg {
         struct STouch : SEventBase {
             int x;
             int y;
+            int relX;
+            int relY;
 
             union {
                 unsigned int touchID;
@@ -211,6 +213,8 @@ namespace fg {
         struct SMouse : SEventBase {
             int x;
             int y;
+            int relX;
+            int relY;
 
             union {
                 unsigned int touchID;
@@ -218,7 +222,6 @@ namespace fg {
                 unsigned int pointerID;
             };
             fgBool pressed;
-
         };
 
         /**

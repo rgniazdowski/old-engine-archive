@@ -71,6 +71,11 @@ m_pointerAvailable(FG_FALSE) {
     memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
     memset((void *)m_keyRepeats, 0, sizeof (m_keyRepeats));
+    //memset((void *)m_lastMouse, 0, sizeof(m_lastMouse));
+    for(unsigned int i = 0; i < FG_INPUT_MAX_TOUCH_POINTS + 1; i++) {
+        m_lastMouse[i].x = 128000;
+        m_lastMouse[i].y = 128000;
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -215,8 +220,12 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
     } else if(touchID == 0) {
         memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     }
+    if(m_lastMouse[touchID].x > 100000 || m_lastMouse[touchID].y > 100000) {
+        m_lastMouse[touchID].x = point.x;
+        m_lastMouse[touchID].y = point.y;
+    }
 
-    SPointerRawData & touchData = m_rawTouches[ touchID ];
+    SPointerRawData& touchData = m_rawTouches[touchID];
     touchData.m_touchID = touchID;
 
     // Time stamp of contact with the screen
@@ -232,6 +241,12 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
 
     touchData.m_moveX = point.x;
     touchData.m_moveY = point.y;
+
+    touchData.m_relX = -(m_lastMouse[touchID].x - point.x);
+    touchData.m_relY = -(m_lastMouse[touchID].y - point.y);
+
+    m_lastMouse[touchID].x = point.x;
+    m_lastMouse[touchID].y = point.y;
 
     //
     // Start & end points = (point.x, point.y)
@@ -289,15 +304,25 @@ void event::CInputHandler::handlePointerMoved(Vector2i point,
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
-    m_rawTouches[touchID].m_touchID = touchID;
-    m_rawTouches[touchID].m_pressed = (state ? FG_TRUE : FG_FALSE);
-    m_rawTouches[touchID].m_state = state;
-    // Essential swipe data
-    m_rawTouches[touchID].m_pointerXEnd = point.x;
-    m_rawTouches[touchID].m_pointerYEnd = point.y;
-    m_rawTouches[touchID].m_moveX = point.x;
-    m_rawTouches[touchID].m_moveY = point.y;
+    if(m_lastMouse[touchID].x > 100000 || m_lastMouse[touchID].y > 100000) {
+        m_lastMouse[touchID].x = point.x;
+        m_lastMouse[touchID].y = point.y;
+    }
+    SPointerRawData& touchData = m_rawTouches[touchID];
 
+    touchData.m_touchID = touchID;
+    touchData.m_pressed = (state ? FG_TRUE : FG_FALSE);
+    touchData.m_state = state;
+    // Essential swipe data
+    touchData.m_pointerXEnd = point.x;
+    touchData.m_pointerYEnd = point.y;
+    touchData.m_moveX = point.x;
+    touchData.m_moveY = point.y;
+    touchData.m_relX = -(m_lastMouse[touchID].x - point.x);
+    touchData.m_relY = -(m_lastMouse[touchID].y - point.y);
+    m_lastMouse[touchID].x = point.x;
+    m_lastMouse[touchID].y = point.y;
+    
     //
     // Throwing the proper event
     //
@@ -307,10 +332,12 @@ void event::CInputHandler::handlePointerMoved(Vector2i point,
         CArgumentList *argList = m_eventMgr->requestArgumentList();
         touchEvent->eventType = event::TOUCH_MOTION;
         touchEvent->timeStamp = timesys::ticks();
-        touchEvent->pressed = m_rawTouches[touchID].m_pressed;
+        touchEvent->pressed = touchData.m_pressed;
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
         touchEvent->y = point.y;
+        touchEvent->relX = touchData.m_relX;
+        touchEvent->relY = touchData.m_relY;
 
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_MOTION, argList);
@@ -319,10 +346,12 @@ void event::CInputHandler::handlePointerMoved(Vector2i point,
         CArgumentList *argList = m_eventMgr->requestArgumentList();
         mouseEvent->eventType = event::MOUSE_MOTION;
         mouseEvent->timeStamp = timesys::ticks();
-        mouseEvent->pressed = m_rawTouches[touchID].m_pressed;
+        mouseEvent->pressed = touchData.m_pressed;
         mouseEvent->buttonID = touchID;
         mouseEvent->x = point.x;
         mouseEvent->y = point.y;
+        mouseEvent->relX = touchData.m_relX;
+        mouseEvent->relY = touchData.m_relY;
 
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)mouseEvent);
         m_eventMgr->throwEvent(event::MOUSE_MOTION, argList);
@@ -340,7 +369,10 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
-    SPointerRawData & touchData = m_rawTouches[ touchID ];
+    m_lastMouse[touchID].x = 128000;
+    m_lastMouse[touchID].y = 128000;
+
+    SPointerRawData& touchData = m_rawTouches[ touchID ];
     touchData.m_state = FG_POINTER_STATE_RELEASED;
     touchData.m_pressed = FG_FALSE;
     touchData.m_touchID = touchID;
@@ -359,8 +391,10 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
 
     touchData.m_moveX = point.x;
     touchData.m_moveY = point.y;
+    touchData.m_relX = 0;
+    touchData.m_relY = 0;
 
-    // Full press occured: touch + release
+    // Full press occurred: touch + release
     touchData.m_pressOccured = FG_TRUE;
 
     //
@@ -376,6 +410,8 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
         touchEvent->y = point.y;
+        touchEvent->relX = touchData.m_relX;
+        touchEvent->relY = touchData.m_relY;
 
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_RELEASED, argList);
@@ -388,6 +424,8 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
         mouseEvent->buttonID = touchID;
         mouseEvent->x = point.x;
         mouseEvent->y = point.y;
+        mouseEvent->relX = touchData.m_relX;
+        mouseEvent->relY = touchData.m_relY;
 
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)mouseEvent);
         m_eventMgr->throwEvent(event::MOUSE_RELEASED, argList);

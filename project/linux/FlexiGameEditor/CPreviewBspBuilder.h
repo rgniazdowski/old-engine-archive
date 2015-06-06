@@ -463,7 +463,7 @@ namespace fg {
              * @param userData
              * @return
              */
-            static fgBool displayHandler(void* systemData, void* userData);
+            static fgBool preRenderHandler(void* systemData, void* userData);
             /**
              *
              * @param systemData
@@ -537,7 +537,7 @@ namespace fg {
 
             /// Special callback called once in every display (pre-render) frame.
             /// Here can add additional things to the drawing batch.
-            event::CFunctionCallback* m_displayShotCB;
+            event::CFunctionCallback* m_preRenderShotCB;
             /// Special callback called once in every update frame.
             event::CFunctionCallback* m_updateShotCB;
             /// Special callback called once in every render frame.

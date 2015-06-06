@@ -122,7 +122,7 @@ m_pGuiMain(NULL),
 m_pGuiDrawer(NULL),
 m_stateFlags(NONE),
 m_minCamDistance(200.0f),
-m_displayShotCB(NULL),
+m_preRenderShotCB(NULL),
 m_updateShotCB(NULL),
 m_renderShotCB(NULL),
 m_mouseHandlerCB(NULL),
@@ -131,8 +131,8 @@ m_pMainFrame(pParent),
 m_materialsEditDialog(NULL) {
     {
         using namespace fg::event;
-        m_displayShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::displayHandler,
-                                                     this);
+        m_preRenderShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::preRenderHandler,
+                                                       this);
 
         m_updateShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::updateHandler,
                                                     this);
@@ -231,9 +231,9 @@ editor::CPreviewBspBuilder::~CPreviewBspBuilder() {
     FG_LOG_DEBUG("WX: BSP Editor Preview mode: Destroying internal data...");
     refreshInternals();
     unregisterCallbacks();
-    if(m_displayShotCB) {
-        delete m_displayShotCB;
-        m_displayShotCB = NULL;
+    if(m_preRenderShotCB) {
+        delete m_preRenderShotCB;
+        m_preRenderShotCB = NULL;
     }
     if(m_updateShotCB) {
         delete m_updateShotCB;
@@ -460,8 +460,8 @@ fgBool editor::CPreviewBspBuilder::registerCallbacks(void) {
         return FG_FALSE;
     FG_LOG_DEBUG("WX: BSP Editor: registering callbacks...");
     fg::CEngineMain* pEngineMain = getEngineMain();
-    if(!pEngineMain->isRegistered(fg::event::DISPLAY_SHOT, m_displayShotCB)) {
-        pEngineMain->addCallback(fg::event::DISPLAY_SHOT, m_displayShotCB);
+    if(!pEngineMain->isRegistered(fg::event::PRERENDER_SHOT, m_preRenderShotCB)) {
+        pEngineMain->addCallback(fg::event::PRERENDER_SHOT, m_preRenderShotCB);
     }
     if(!pEngineMain->isRegistered(fg::event::UPDATE_SHOT, m_updateShotCB)) {
         pEngineMain->addCallback(fg::event::UPDATE_SHOT, m_updateShotCB);
@@ -501,7 +501,7 @@ fgBool editor::CPreviewBspBuilder::unregisterCallbacks(void) {
         return FG_FALSE;
     FG_LOG_DEBUG("WX: BSP Editor: removing callbacks...");
     fg::CEngineMain* pEngineMain = getEngineMain();
-    pEngineMain->removeCallback(fg::event::DISPLAY_SHOT, m_displayShotCB);
+    pEngineMain->removeCallback(fg::event::PRERENDER_SHOT, m_preRenderShotCB);
     pEngineMain->removeCallback(fg::event::UPDATE_SHOT, m_updateShotCB);
     pEngineMain->removeCallback(fg::event::RENDER_SHOT, m_renderShotCB);
 
@@ -705,7 +705,7 @@ void editor::CPreviewBspBuilder::updatePolygonQuad(const Vec3f& begin,
 }
 //------------------------------------------------------------------------------
 
-fgBool editor::CPreviewBspBuilder::displayHandler(void* systemData, void* userData) {
+fgBool editor::CPreviewBspBuilder::preRenderHandler(void* systemData, void* userData) {
     if(!userData)
         return FG_FALSE;
     // user data is the pointer to the CPreviewBspBuilder object
@@ -870,17 +870,8 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
         return FG_FALSE;
     }
     event::SMouse* pMouse = reinterpret_cast<event::SMouse*>(pEvent);
-    static int xLast = 128000;
-    static int yLast = 128000;
-    int xRel = 0, yRel = 0;
-    if(xLast > 100000 && yLast > 100000) {
-        xLast = pMouse->x;
-        yLast = pMouse->y;
-    }
-    xRel = -(xLast - pMouse->x);
-    yRel = -(yLast - pMouse->y);
-    xLast = pMouse->x;
-    yLast = pMouse->y;
+    const int xRel = pMouse->relX;
+    const int yRel = pMouse->relY;
 
     if(type == event::MOUSE_PRESSED) {
         // mouse clicked - begin new polygon
@@ -888,8 +879,10 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
         // this will be executed in the UPDATE
         // set special toggle
         // Update polygons etc... in DISPLAY - after 3dScene sort calls
-        if(pMouse->buttonID == FG_POINTER_BUTTON_LEFT)
+        if(pMouse->buttonID == FG_POINTER_BUTTON_LEFT) {
             setMousePressed(FG_TRUE);
+            setMouseDown(FG_TRUE);
+        }
     }
     event::CInputHandler* pInputHandler = getEngineMain()->getInputHandler();
     // is control button down? only control (not alt nor shift)
@@ -976,8 +969,7 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
 
     if(type == event::MOUSE_RELEASED) {
         setMouseReleased(FG_TRUE);
-        xLast = 128000;
-        yLast = 128000;
+        setMouseDown(FG_FALSE);
         //setActionPolygonDraw(FG_FALSE);
         //setActionPolygonResize(FG_FALSE);
         //setResizeProportional(FG_FALSE);

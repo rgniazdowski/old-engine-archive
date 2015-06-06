@@ -119,6 +119,9 @@ namespace fg {
                 int m_y;
             };
 
+            int m_relX;
+            int m_relY;
+
             /**
              */
             union {
@@ -134,6 +137,7 @@ namespace fg {
             m_touchID(0),
             m_state(FG_POINTER_STATE_UP),
             m_x(0), m_y(0),
+            m_relX(0), m_relY(0),
             m_active(FG_FALSE),
             m_pointerTap(FG_FALSE) { }
         };
