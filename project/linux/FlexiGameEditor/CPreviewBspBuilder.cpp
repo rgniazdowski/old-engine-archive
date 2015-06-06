@@ -45,6 +45,7 @@ const long fg::editor::CPreviewBspBuilder::idMenuFront = ::wxNewId();
 const long fg::editor::CPreviewBspBuilder::idMenuBack = ::wxNewId();
 const long fg::editor::CPreviewBspBuilder::idMenuGridProperties = ::wxNewId();
 const long fg::editor::CPreviewBspBuilder::idMenuMaterials = ::wxNewId();
+const long fg::editor::CPreviewBspBuilder::idMenuCheckModePolySelection = ::wxNewId();
 const long fg::editor::CPreviewBspBuilder::idMenuCheckSnapToGrid = ::wxNewId();
 const long fg::editor::CPreviewBspBuilder::idMenuCheckSnapToPolygon = ::wxNewId();
 
@@ -106,12 +107,14 @@ void editor::CPreviewBspBuilder::SPolygonHolder::setMaterial(const gfx::SMateria
 }
 //------------------------------------------------------------------------------
 
-editor::CPreviewBspBuilder::CPreviewBspBuilder(wxWindow* pParent, fg::CEngineMain** pEngineMainOrig) :
+editor::CPreviewBspBuilder::CPreviewBspBuilder(wxWindow* pParent,
+                                               fg::CEngineMain** pEngineMainOrig) :
 base_type(pEngineMainOrig),
 m_polygons(),
 m_currentPolygon(NULL),
 m_currentMaterial(NULL),
 m_internalMaterial(NULL),
+m_selectionMaterial(NULL),
 m_previewSide(FREE_LOOK),
 m_bspCompiler(NULL),
 m_bspFile(NULL),
@@ -152,14 +155,22 @@ m_materialsEditDialog(NULL) {
     m_internalMaterial->name.append("InternalMaterial");
     m_internalMaterial->shaderName = "sPlainEasy";
     m_internalMaterial->ambientTexName = "brick_14.jpg";
+    m_internalMaterial->setCullFace(FG_TRUE);
     m_internalMaterial->setTextureRepeat(FG_TRUE);
+
+    m_selectionMaterial = new gfx::SMaterial();
+    m_selectionMaterial->name.clear();
+    m_selectionMaterial->name.append("SelectionMaterial");
+    m_selectionMaterial->shaderName = "sOrthoEasy";
+    m_selectionMaterial->setCullFace(FG_FALSE);
+    m_selectionMaterial->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
 
     m_previewSide = FREE_LOOK;
     m_bspCompiler = new gfx::CBspCompiler();
     m_bspFile = new gfx::CBspFile();
     // #FIXME
     m_bspCompiler->getBspTreePtr()->getMaterials().push_back(*m_internalMaterial);
-    
+
     wxMenu *previewsSubMenu = new wxMenu();
     previewsSubMenu->Append(idMenuFreeLook,
                             _("Free look"),
@@ -203,6 +214,13 @@ m_materialsEditDialog(NULL) {
                          wxEmptyString,
                          wxITEM_NORMAL);
 
+    m_contextMenu.AppendSeparator();
+
+    m_contextMenu.Append(idMenuCheckModePolySelection,
+                         _("Polygon selection mode"),
+                         _("Activate polygon selection mode"),
+                         wxITEM_CHECK);
+
     m_contextMenu.Append(idMenuCheckSnapToGrid,
                          _("Snap to grid"),
                          _("Snap click and motion events to ground grid"),
@@ -213,6 +231,7 @@ m_materialsEditDialog(NULL) {
                          _("Snap click and motion events to the closest polygon edge"),
                          wxITEM_CHECK);
 
+    m_contextMenu.Check(idMenuCheckModePolySelection, false);
     m_contextMenu.Check(idMenuCheckSnapToGrid, true);
     m_contextMenu.Check(idMenuCheckSnapToPolygon, false);
     setSnapToGrid(FG_TRUE);
@@ -222,7 +241,7 @@ m_materialsEditDialog(NULL) {
                        idMenuFirst, idMenuLast);
 
     m_materialsEditDialog = new CBspMaterialsEditDialog(m_pMainFrame);
-    
+
     refreshInternals();
 }
 //------------------------------------------------------------------------------
@@ -256,6 +275,10 @@ editor::CPreviewBspBuilder::~CPreviewBspBuilder() {
     if(m_internalMaterial) {
         delete m_internalMaterial;
         m_internalMaterial = NULL;
+    }
+    if(m_selectionMaterial) {
+        delete m_selectionMaterial;
+        m_selectionMaterial = NULL;
     }
     m_isActive = FG_FALSE;
     m_previewID = 0;
@@ -293,6 +316,10 @@ fgBool editor::CPreviewBspBuilder::activate(fgBool toggle) {
         m_p3DScene->setPickSelectionBox(FG_FALSE);
         m_p3DScene->setPickSelectionGroup(FG_FALSE);
         m_p3DScene->setShowGroundGrid(FG_TRUE);
+
+        setModePolygonAdd(FG_TRUE);
+        setModePolygonSelect(FG_FALSE);
+
         activatePreviewSide(m_previewSide);
     } else {
         m_p3DScene->setHideAll(FG_FALSE);
@@ -308,8 +335,9 @@ void editor::CPreviewBspBuilder::refreshInternals(void) {
         m_pResourceMgr = getEngineMain()->getResourceManager();
         m_pGuiMain = getEngineMain()->getGuiMain();
         m_pGuiDrawer = getEngineMain()->getGuiMain()->getDrawer();
-
+        m_polygonSelection.pMVP = getEngineMain()->getGfxMain()->get3DScene()->getMVP();
         refreshMaterial(m_internalMaterial);
+        refreshMaterial(m_selectionMaterial);
 
         m_materialsEditDialog->setResourceManager(m_pResourceMgr);
         m_materialsEditDialog->setShaderManager(getEngineMain()->getGfxMain()->getShaderManager());
@@ -321,6 +349,7 @@ void editor::CPreviewBspBuilder::refreshInternals(void) {
         m_pResourceMgr = NULL;
         m_pGuiMain = NULL;
         m_pGuiDrawer = NULL;
+        m_polygonSelection.pMVP = NULL;
         m_materialsEditDialog->setResourceManager(NULL);
         m_materialsEditDialog->setShaderManager(NULL);
         //m_materialsEditDialog->setMaterialsVector(NULL);
@@ -719,6 +748,8 @@ fgBool editor::CPreviewBspBuilder::preRenderHandler(void* systemData, void* user
         return FG_FALSE;
 
     //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
     if(pSelf->isMousePressed()) {
         pSelf->setMousePressed(FG_FALSE);
         if(pSelf->isActionPolygonDraw()) {
@@ -802,6 +833,21 @@ fgBool editor::CPreviewBspBuilder::preRenderHandler(void* systemData, void* user
             pSelf->m_currentPolygon = NULL;
         }
     }
+
+    //--------------------------------------------------------------------------
+
+    if(pSelf->isModePolygonSelect() && pSelf->isPickSelectionBox() && pSelf->isMouseDown()) {
+        Vec2f pos;
+        Vec2f size;
+        gfx::AABB2Df pickBox = pSelf->m_polygonSelection.pickBox;
+        gui::CStyleContent style;
+        style.setBackground(NULL).setBackground(gui::SBackground::NONE).setBackground(Color4f(1.0f, 1.0f, 1.0f, 0.5f));
+        style.setBorder(gui::SBorder::Which::ALL, 2.0f).setBorder(gui::SBorder::Which::ALL, Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+        style.setBorder(gui::SBorder::Which::ALL, gui::SBorder::Style::SOLID);
+        pSelf->m_pGuiDrawer->appendBackground2D(pickBox, style);
+        pSelf->m_pGuiDrawer->appendBorder2D(pickBox, style);
+    }
+
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -815,6 +861,29 @@ fgBool editor::CPreviewBspBuilder::updateHandler(void* systemData, void* userDat
     fg::CEngineMain* pEngineMain = static_cast<fg::CEngineMain*>(systemData);
     if(!pSelf->isActive())
         return FG_FALSE;
+
+    if(pSelf->isModePolygonSelect()) {
+        // Select polygons - check which polygon is selected
+        pSelf->m_polygonSelection.init(*(pSelf->m_pCamera), pSelf->m_stateFlags);
+
+        PolygonsVec& polygons = pSelf->m_polygons;
+        PolygonsVecItor end = polygons.end();
+        PolygonsVecItor it = polygons.begin();
+        unsigned int polygonIndex = 0;
+        for(; it != end; it++) {
+            SPolygonHolder& polygon = *(*it);
+            if(!pSelf->m_polygonSelection.shouldCheck)
+                break;
+
+            fgBool pickResult = pSelf->m_polygonSelection.fullCheck(pSelf,
+                                                                    &polygon,
+                                                                    polygonIndex);
+
+            polygonIndex++;
+        }
+
+        pSelf->m_polygonSelection.end(pSelf->m_stateFlags);
+    }
 
     return FG_TRUE;
 }
@@ -850,9 +919,30 @@ fgBool editor::CPreviewBspBuilder::renderHandler(void* systemData, void* userDat
             if(polygonHolder.drawCall->getShaderProgram() == NULL)
                 polygonHolder.drawCall->setShaderProgram(pProgram);
             polygonHolder.render(FG_TRUE);
+            if(polygonHolder.isSelected) {
+                gfx::SMaterial* pTmpMaterial = polygonHolder.drawCall->getMaterial();
+                //polygonHolder.drawCall->setTexture(0);
+                polygonHolder.drawCall->getTexture().reset();
+                polygonHolder.setMaterial(pSelf->m_selectionMaterial);
+                // half transparent red color
+                polygonHolder.drawCall->getShaderProgram()->use(); // force use so can update uniforms
+                polygonHolder.drawCall->getShaderProgram()->setUniform(gfx::FG_GFX_CUSTOM_COLOR,
+                                                                       1.0f,
+                                                                       0.0f,
+                                                                       0.0f,
+                                                                       0.5f);
+                polygonHolder.render(FG_FALSE);
+
+                polygonHolder.drawCall->getShaderProgram()->setUniform(gfx::FG_GFX_CUSTOM_COLOR,
+                                                                       1.0f,
+                                                                       1.0f,
+                                                                       1.0f,
+                                                                       1.0f);
+                polygonHolder.drawCall->getShaderProgram()->setUniform(gfx::FG_GFX_USE_TEXTURE, 1.0f);
+                polygonHolder.setMaterial(pTmpMaterial);
+            }
         }
     }
-
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -882,6 +972,11 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
         if(pMouse->buttonID == FG_POINTER_BUTTON_LEFT) {
             setMousePressed(FG_TRUE);
             setMouseDown(FG_TRUE);
+            m_polygonSelection.init(*(m_pCamera), m_stateFlags);
+            m_polygonSelection.pickPos.x = pMouse->x;
+            m_polygonSelection.pickPos.y = pMouse->y;
+            m_polygonSelection.pickPosBegin = m_polygonSelection.pickPos;
+            m_polygonSelection.pickBegin = timesys::exact();
         }
     }
     event::CInputHandler* pInputHandler = getEngineMain()->getInputHandler();
@@ -893,24 +988,26 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
     const fgBool isGuiDown = pInputHandler->isGuiDown(FG_FALSE);
     const fgBool isModDown = (fgBool)!!(isCtrlDown || isShiftDown || isAltDown || isGuiDown);
 
-    if((type == event::MOUSE_PRESSED ||
-        type == event::MOUSE_MOTION) &&
-       pMouse->buttonID == FG_POINTER_BUTTON_LEFT) {
-        if(isOnlyCtrlDown && type == event::MOUSE_PRESSED) {
-            // activate drawing polygon action only on mouse press event
-            // and ctrl button down - then the CTRL button can be released
-            // as long the mouse button is being held down
-            setActionPolygonDraw(FG_TRUE);
-        } else if(!isGuiDown && type == event::MOUSE_MOTION && isActionPolygonDraw()) {
-            setActionPolygonResize(FG_FALSE);
-            setResizeProportional(FG_FALSE);
-            if(!isAltDown && isShiftDown) {
-                // shift is down - mouse motion
-                setActionPolygonResize(FG_TRUE);
-            } else if(isAltDown && isShiftDown) {
-                // shift + alt - mouse motion
-                setActionPolygonResize(FG_TRUE);
-                setResizeProportional(FG_TRUE);
+    if(!isModePolygonSelect()) {
+        if((type == event::MOUSE_PRESSED ||
+            type == event::MOUSE_MOTION) &&
+           pMouse->buttonID == FG_POINTER_BUTTON_LEFT) {
+            if(isOnlyCtrlDown && type == event::MOUSE_PRESSED) {
+                // activate drawing polygon action only on mouse press event
+                // and ctrl button down - then the CTRL button can be released
+                // as long the mouse button is being held down
+                setActionPolygonDraw(FG_TRUE);
+            } else if(!isGuiDown && type == event::MOUSE_MOTION && isActionPolygonDraw()) {
+                setActionPolygonResize(FG_FALSE);
+                setResizeProportional(FG_FALSE);
+                if(!isAltDown && isShiftDown) {
+                    // shift is down - mouse motion
+                    setActionPolygonResize(FG_TRUE);
+                } else if(isAltDown && isShiftDown) {
+                    // shift + alt - mouse motion
+                    setActionPolygonResize(FG_TRUE);
+                    setResizeProportional(FG_TRUE);
+                }
             }
         }
     }
@@ -918,6 +1015,8 @@ fgBool editor::CPreviewBspBuilder::mouseHandler(event::CArgumentList * argv) {
     if(type == event::MOUSE_MOTION) {
         // mouse moved - update current polygon
         setMouseMotion(FG_TRUE);
+        m_polygonSelection.pickPos.x = pMouse->x;
+        m_polygonSelection.pickPos.y = pMouse->y;
         if(!isActionPolygonDraw() && m_pCamera &&
            pMouse->buttonID == FG_POINTER_BUTTON_MIDDLE &&
            pMouse->pressed) {
@@ -991,7 +1090,7 @@ fgBool editor::CPreviewBspBuilder::keyboardHandler(event::CArgumentList * argv) 
     event::SKey* pKey = reinterpret_cast<event::SKey*>(pEvent);
     event::KeyVirtualCode keyCode = pKey->keyCode;
 
-    if(pKey->isMod()) {
+    if(pKey->isMod() && !isModePolygonSelect()) {
         const fgBool isShiftDown = pKey->isShiftDown();
         const fgBool isAltDown = pKey->isAltDown();
         const fgBool isGuiDown = pKey->isGuiDown();
@@ -1059,10 +1158,281 @@ void editor::CPreviewBspBuilder::OnContextItemSelected(wxCommandEvent & event) {
     } else if(id == idMenuGridProperties) {
     } else if(id == idMenuMaterials) {
         m_materialsEditDialog->Show(true);
+    } else if(id == idMenuCheckModePolySelection) {
+        if(this->m_contextMenu.IsChecked(id)) {
+            setPickSelectionBox(FG_TRUE);
+            setPickSelectionGroup(FG_TRUE);
+            setPickSelectionToggle(FG_TRUE);
+            setModePolygonSelect(FG_TRUE);
+            setModePolygonAdd(FG_FALSE);
+        } else {
+            setPickSelectionBox(FG_FALSE);
+            setPickSelectionGroup(FG_FALSE);
+            setPickSelectionToggle(FG_FALSE);
+            setModePolygonSelect(FG_FALSE);
+            setModePolygonAdd(FG_TRUE); // FIXME
+        }
     } else if(id == idMenuCheckSnapToGrid) {
         this->setSnapToGrid((fgBool)this->m_contextMenu.IsChecked(id));
     } else if(id == idMenuCheckSnapToPolygon) {
         this->setSnapToPolygon((fgBool)this->m_contextMenu.IsChecked(id));
     }
+}
+//------------------------------------------------------------------------------
+
+editor::CPreviewBspBuilder::SPolygonSelection::SPolygonSelection() :
+pickPos(0, 0),
+pickPosBegin(0, 0),
+pickBox(),
+rayEye(),
+rayDir(),
+pickBegin(-1.0f),
+shouldUnselect(FG_FALSE),
+shouldCheck(FG_FALSE),
+isToggle(FG_FALSE),
+isGroup(FG_FALSE),
+checkBox(FG_FALSE),
+lastSelectedPolygon(NULL),
+selectedPolygons(),
+projectedPoints(),
+pickedPolygonsInfo(),
+pMVP(NULL) {
+    selectedPolygons.reserve(32);
+    projectedPoints.reserve(16);
+    for(unsigned int i = 0; i < 32; i++) {
+        selectedPolygons[i] = NULL;
+    }
+    pickBegin = timesys::exact();
+
+}
+//------------------------------------------------------------------------------
+
+editor::CPreviewBspBuilder::SPolygonSelection::~SPolygonSelection() {
+    const unsigned int n = selectedPolygons.capacity();
+    for(unsigned int i = 0; i < n; i++) {
+        selectedPolygons[i] = NULL;
+    }
+    selectedPolygons.clear();
+    projectedPoints.clear();
+    pickedPolygonsInfo.clear();
+    lastSelectedPolygon = NULL;
+    shouldUnselect = FG_FALSE;
+    shouldCheck = FG_FALSE;
+    isToggle = FG_FALSE;
+    isGroup = FG_FALSE;
+    checkBox = FG_FALSE;
+    pMVP = NULL;
+
+    pickBegin = 0.0f;
+    memset(&groundIntersectionPoint[0], 0, sizeof (Vector3f));
+    memset(&groundIntersectionPoint[1], 0, sizeof (Vector3f));
+    memset(&rayDir, 0, sizeof (Vector3f));
+    memset(&rayEye, 0, sizeof (Vector3f));
+    memset(&pickBox, 0, sizeof (gfx::AABB2Di));
+    memset(&pickPosBegin, 0, sizeof (Vector2i));
+    memset(&pickPos, 0, sizeof (Vector2i));
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::SPolygonSelection::init(const gfx::CCamera& camera,
+                                                         StateFlags stateFlags) {
+    //
+    // Polygon pick selection init
+    //
+    shouldCheck = FG_FALSE;
+    shouldUnselect = FG_FALSE;
+    isToggle = FG_FALSE;
+    isGroup = FG_FALSE;
+
+    Vector2i size;
+    Vector2i pos = pickPosBegin;
+    size.x = pickPos.x - pickPosBegin.x;
+    size.y = pickPos.y - pickPosBegin.y;
+
+    if(size.x < 0) {
+        pos.x = pos.x + size.x;
+        size.x = -1 * size.x;
+    }
+    if(size.y < 0) {
+        pos.y = pos.y + size.y;
+        size.y = -1 * size.y;
+    }
+    pickBox.min = pos;
+    pickBox.setWidth(size.x);
+    pickBox.setHeight(size.y);
+    if((fgBool)!!(stateFlags & MODE_POLYGON_SELECT)) {
+        shouldCheck = (fgBool)!!(stateFlags & MOUSE_DOWN) || lastSelectedPolygon;
+        isToggle = (fgBool)!!(stateFlags & PICK_SELECTION_TOGGLE) && shouldCheck;
+        isGroup = (fgBool)!!(stateFlags & PICK_SELECTION_GROUP);
+        checkBox = (fgBool)!!(stateFlags & PICK_SELECTION_BOX);
+    }
+    if(shouldCheck) {
+        updateRay(camera);
+    }
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::SPolygonSelection::end(StateFlags stateFlags) {
+    if((fgBool)!!(stateFlags & MOUSE_DOWN) == 0) {
+        lastSelectedPolygon = NULL;
+        pickBegin = -1.0f;
+        pickBox.invalidate();
+        //printf("%.3f: Removing last selected node\n", timesys::exact());
+    }
+
+}
+//------------------------------------------------------------------------------
+
+void editor::CPreviewBspBuilder::SPolygonSelection::updateRay(const gfx::CCamera& camera) {
+    if(!pMVP)
+        return;
+    const Vector2i& screenSize = gfx::context::getScreenSize();
+    //if(screenCoord.x >= 0 && screenCoord.y >= 0) {
+    //    pickPosition = screenCoord;
+    //}
+    // Step1: 3d normalised device coords
+    float x = (2.0f * pickPos.x) / (float)screenSize.x - 1.0f;
+    float y = 1.0f - (2.0f * pickPos.y) / (float)screenSize.y;
+    //float z = -1.0f; // -1.0f?
+
+    rayEye = camera.getEye();
+    // Step 2: 4d Homogeneous Clip Coordinates
+    Vector4f rayClip = Vector4f(x, y, -1.0f, 1.0f);
+    // Step 3: 4d Eye (Camera) Coordinates
+    Vector4f ray4dEye = math::inverse(pMVP->getRefProjMatrix()) * rayClip;
+    ray4dEye.z = -1.0f;
+    ray4dEye.w = 0.0f;
+    // Step 4: 4d World Coordinates
+    Vector4f ray4d = (math::inverse(pMVP->getViewMatrix()) * ray4dEye);
+    // don't forget to normalize the vector at some point
+    rayDir = math::normalize(Vector3f(ray4d.x, ray4d.y, ray4d.z));
+}
+//------------------------------------------------------------------------------
+
+fgBool editor::CPreviewBspBuilder::SPolygonSelection::isPicked(SPolygonHolder* pPolygon,
+                                                               SPickedPolygonInfo& pickInfo) {
+    if(!pPolygon)
+        return FG_FALSE;
+
+    pickInfo.result = pPolygon->polygon.rayIntersect(rayEye, rayDir,
+                                                     pickInfo.intersectionPosition,
+                                                     FG_TRUE);
+    if(!pickInfo.result)
+        return FG_FALSE;
+
+    pickInfo.result = pPolygon->polygon.rayIntersectTriangles(rayEye, rayDir,
+                                                              pickInfo.baryPosition,
+                                                              FG_TRUE);
+    const Vector4i& viewport = gfx::context::getViewport();
+    const Vector2i& screensize = gfx::context::getScreenSize();
+
+    if(checkBox) {
+        gfx::AABB3Df aabb;
+        aabb.invalidate();
+        // need to check box - that means that polygon points need to be projected
+        // onto the screen and check all of them
+        unsigned int n = pPolygon->size();
+        projectedPoints.resize(n);
+        gfx::CVertexData4v* pVertexData = (gfx::CVertexData4v*)pPolygon->getVertexData();
+        if(!pVertexData || !pMVP)
+            return pickInfo.result;
+        for(unsigned int i = 0; i < n; i++) {
+
+            projectedPoints[i] = math::project(pVertexData->at(i).position,
+                                               pMVP->getRefViewProjMatrix(),
+                                               viewport);
+            aabb.merge(projectedPoints[i]);
+            fgBool pointStatus = pickBox.test(projectedPoints[i].x, screensize.y - projectedPoints[i].y);
+            if(pointStatus)
+                pickInfo.result = FG_TRUE;
+        }
+
+        Vector2i pos, size;
+        pos.x = aabb.min.x;
+        pos.y = screensize.y - aabb.max.y;
+        size.x = aabb.max.x - aabb.min.x;
+        size.y = aabb.max.y - aabb.min.y;
+        if(size.x < 0) {
+            pos.x = pos.x + size.x;
+            size.x = -1 * size.x;
+        }
+        if(size.y < 0) {
+            pos.y = pos.y + size.y;
+            size.y = -1 * size.y;
+        }
+        pickInfo.onScreen.box.min = pos;
+        pickInfo.onScreen.box.setWidth(size.x);
+        pickInfo.onScreen.box.setHeight(size.y);
+    }
+
+    return pickInfo.result;
+}
+//------------------------------------------------------------------------------
+
+fgBool editor::CPreviewBspBuilder::SPolygonSelection::fullCheck(CPreviewBspBuilder* pBspPreview,
+                                                                SPolygonHolder* pPolygon,
+                                                                unsigned int polygonIndex) {
+    if(!pBspPreview || !pPolygon)
+        return FG_FALSE;
+
+    pickedPolygonsInfo[polygonIndex].pPolygon = pPolygon;
+    fgBool pickResult = isPicked(pPolygon, pickedPolygonsInfo[polygonIndex]);
+    fgBool shouldRemove = FG_FALSE;
+    const float exact = timesys::exact();
+    int idx = -1;
+
+    if(pickResult) {
+        idx = selectedPolygons.find(pPolygon);
+        const float ts = pickedPolygonsInfo[polygonIndex].timeStamp;
+        if(isToggle && ts < pickBegin) {
+            pPolygon->isSelected = !pPolygon->isSelected;
+            if(!pPolygon->isSelected) {
+                shouldRemove = FG_TRUE; // remove from the list
+            }
+        } else if(pPolygon->isSelected) {
+            // no toggle mode - already selected, no event?
+
+        } else if(!isToggle) {
+            pPolygon->isSelected = FG_TRUE;
+        }
+        if(lastSelectedPolygon && lastSelectedPolygon != pPolygon && !isGroup) {
+            // if the last node is not as the current one
+            // group selection is off so...
+            lastSelectedPolygon->isSelected = FG_FALSE;
+            // no need to check for more // unless multi select?
+            shouldCheck = FG_FALSE;
+        }
+        if(!isGroup && !shouldRemove) {
+            selectedPolygons.clear_optimised();
+            selectedPolygons.resize(1);
+            selectedPolygons[0] = pPolygon;
+        }
+        if(isGroup && !shouldRemove && pPolygon->isSelected) {
+            if(-1 == selectedPolygons.find(pPolygon)) {
+                selectedPolygons.push_back(pPolygon);
+                pickedPolygonsInfo[polygonIndex].timeStamp = exact;
+            }
+        }
+        if(shouldRemove && selectedPolygons.size()) {
+            unsigned int size = selectedPolygons.size();
+            selectedPolygons[idx] = selectedPolygons[size - 1];
+            selectedPolygons[size - 1] = NULL;
+            selectedPolygons.resize(size - 1);
+            pickedPolygonsInfo[polygonIndex].timeStamp = exact;
+        }
+        if(pPolygon->isSelected)
+            lastSelectedPolygon = pPolygon;
+    }
+
+    if(!pickResult) {
+        if(shouldUnselect) {
+            unsigned int size = selectedPolygons.size();
+            selectedPolygons[idx] = selectedPolygons[size - 1];
+            selectedPolygons[size - 1] = NULL;
+            selectedPolygons.resize(size - 1);
+            pickedPolygonsInfo[polygonIndex].timeStamp = exact;
+        }
+    }
+    return pickResult;
 }
 //------------------------------------------------------------------------------

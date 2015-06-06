@@ -21,11 +21,13 @@
     #include "fgVector.h"
     #include "Event/fgArgumentList.h"
     #include "Event/fgCallback.h"
+    #include "Util/fgBTreeMap.h"
 
     #include "GFX/fgGfxPolygon.h"
 
     #include "CPreviewModeBase.h"
     #include "CBspMaterialsEditDialog.h"
+
 
 class wxWindow;
 class wxFrame;
@@ -118,7 +120,7 @@ namespace fg {
                  *
                  * @return
                  */
-                inline gfx::CVertexData* getVertexData(void) {
+                inline gfx::CVertexData* getVertexData(void) const {
                     return polygon.getVertexData();
                 }
                 /**
@@ -153,28 +155,35 @@ namespace fg {
                 /// Edition of points
                 MODE_POINT_EDIT = 0x0004,
 
+                /// Multiple selection of polygons
+                PICK_SELECTION_GROUP = 0x0008,
+                /// Toggle mode for polygon selection
+                PICK_SELECTION_TOGGLE = 0x0010,
+                /// Whether or not the group selection uses selection box
+                PICK_SELECTION_BOX = 0x0020,
+
                 /// Mouse position (based on pick selection and ray intersection)
                 /// will be snapped to grid
-                SNAP_TO_GRID = 0x0008,
+                SNAP_TO_GRID = 0x0040,
                 /// When drawing polygons they will be snapped to closest
                 /// available polygon/edge (size will be also adjusted)
-                SNAP_TO_POLYGON = 0x0010,
+                SNAP_TO_POLYGON = 0x0080,
 
                 /// Set to true when the polygon is currently being drawn
-                ACTION_POLYGON_DRAW = 0x0020,
+                ACTION_POLYGON_DRAW = 0x0100,
                 /// Set when the polygon is being resized (while adding)
-                ACTION_POLYGON_RESIZE = 0x0040,
+                ACTION_POLYGON_RESIZE = 0x0200,
                 /// Polygon resizing is proportional (1:1 default)
-                RESIZE_PROPORTIONAL = 0x0080,
+                RESIZE_PROPORTIONAL = 0x0400,
 
                 /// Mouse was pressed (should be set in only one frame)
-                MOUSE_PRESSED = 0x0100,
+                MOUSE_PRESSED = 0x1000,
                 /// Mouse is currently down (still pressed)
-                MOUSE_DOWN = 0x0200,
-                ///
-                MOUSE_MOTION = 0x0400,
-                ///
-                MOUSE_RELEASED = 0x0800,
+                MOUSE_DOWN = 0x2000,
+                /// Mouse is currently moving
+                MOUSE_MOTION = 0x4000,
+                /// Mouse is currently released
+                MOUSE_RELEASED = 0x8000,
             };
 
             enum PreviewSide {
@@ -239,6 +248,10 @@ namespace fg {
              */
             inline void setModePolygonAdd(const fgBool toggle = FG_TRUE) {
                 setFlag(MODE_POLYGON_ADD, toggle);
+                if(toggle) {
+                    setFlag(MODE_POLYGON_SELECT, FG_FALSE);
+                    setFlag(MODE_POINT_EDIT, FG_FALSE);
+                }
             }
             /**
              *
@@ -252,7 +265,11 @@ namespace fg {
              * @param toggle
              */
             inline void setModePolygonSelect(const fgBool toggle = FG_TRUE) {
-                setFlag(MODE_POLYGON_ADD, toggle);
+                setFlag(MODE_POLYGON_SELECT, toggle);
+                if(toggle) {
+                    setFlag(MODE_POLYGON_ADD, FG_FALSE);
+                    setFlag(MODE_POINT_EDIT, FG_FALSE);
+                }
             }
             /**
              *
@@ -267,6 +284,10 @@ namespace fg {
              */
             inline void setModePointEdit(const fgBool toggle = FG_TRUE) {
                 setFlag(MODE_POINT_EDIT, toggle);
+                if(toggle) {
+                    setFlag(MODE_POLYGON_SELECT, FG_FALSE);
+                    setFlag(MODE_POLYGON_ADD, FG_FALSE);
+                }
             }
             /**
              *
@@ -274,6 +295,48 @@ namespace fg {
              */
             inline fgBool isModePointEdit(void) const {
                 return (fgBool)!!(m_stateFlags & MODE_POINT_EDIT);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionGroup(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_GROUP, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPickSelectionGroup(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_GROUP);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionToggle(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_TOGGLE, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPickSelectionToggle(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_TOGGLE);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionBox(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_BOX, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPickSelectionBox(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_BOX);
             }
             /**
              *
@@ -458,6 +521,159 @@ namespace fg {
         protected:
 
             /**
+             *
+             */
+            struct SPickedPolygonInfo {
+
+                union {
+                    fgBool picked;
+                    fgBool result;
+                };
+                ///
+                float timeStamp;
+                ///
+                SPolygonHolder* pPolygon;
+                ///
+                Vector3f baryPosition;
+                ///
+                Vector3f intersectionPosition;
+
+                /**
+                 *
+                 */
+                struct SOnScreen {
+                    ///
+                    gfx::AABB2Di box;
+                    ///
+                    Vector2i center;
+                    ///
+                    int radius;
+                    /**
+                     *
+                     */
+                    SOnScreen() : box(), center(), radius() {
+                        box.invalidate();
+                    }
+                } onScreen;
+                /**
+                 *
+                 */
+                SPickedPolygonInfo() : result(FG_FALSE),
+                timeStamp(-1.0f),
+                pPolygon(NULL),
+                baryPosition(),
+                intersectionPosition(),
+                onScreen() {
+                    onScreen.box.invalidate();
+                }
+                /**
+                 *
+                 */
+                void clear(void) {
+                    timeStamp = -1.0f;
+                    pPolygon = NULL;
+                    onScreen.box.invalidate();
+                    onScreen.radius = 0;
+                    onScreen.center.x = 0;
+                    onScreen.center.y = 0;
+                    baryPosition = Vec3f();
+                    intersectionPosition = Vec3f();
+                }
+            };
+
+            typedef util::btree_map<unsigned long int, SPickedPolygonInfo> PickedPolygonsInfoMap;
+            typedef PickedPolygonsInfoMap::iterator PickedPolygonsInfoMapItor;
+
+            /**
+             *
+             */
+            struct SPolygonSelection {
+                ///
+                Vector2i pickPos;
+                ///
+                Vector2i pickPosBegin;
+                ///
+                gfx::AABB2Di pickBox;
+                ///
+                Vector3f rayEye;
+                ///
+                Vector3f rayDir;
+                ///
+                Vector3f groundIntersectionPoint[2];
+                ///
+                float pickBegin;
+                ///
+                fgBool shouldUnselect;
+                ///
+                fgBool shouldCheck;
+                ///
+                fgBool isToggle;
+                ///
+                fgBool isGroup;
+                ///
+                fgBool checkBox;
+                ///
+                SPolygonHolder* lastSelectedPolygon;
+                ///
+                CVector<SPolygonHolder*> selectedPolygons;
+                ///
+                CVector<Vector3f> projectedPoints;
+                ///
+                PickedPolygonsInfoMap pickedPolygonsInfo;
+                ///
+                gfx::CMVPMatrix* pMVP;
+                /**
+                 *
+                 */
+                SPolygonSelection();
+                /**
+                 *
+                 */
+                ~SPolygonSelection();
+                /**
+                 * 
+                 * @param mvp
+                 * @param camera
+                 * @param stateFlags
+                 */
+                void init(const gfx::CCamera& camera,
+                          StateFlags stateFlags);
+                /**
+                 *
+                 * @param stateFlags
+                 */
+                void end(StateFlags stateFlags);
+                /**
+                 *
+                 * @param mvp
+                 * @param camera
+                 */
+                void updateRay(const gfx::CCamera& camera);
+                /**
+                 *
+                 * @param pPolygon
+                 * @param pickInfo
+                 * @param mvp
+                 * @return
+                 */
+                fgBool isPicked(SPolygonHolder* pPolygon,
+                                SPickedPolygonInfo& pickInfo);
+
+                /**
+                 *
+                 * @param pBspPreview
+                 * @param pPolygon
+                 * @return
+                 */
+                fgBool fullCheck(CPreviewBspBuilder* pBspPreview,
+                                 SPolygonHolder* pPolygon,
+                                 unsigned int polygonIndex);
+
+            } m_polygonSelection;
+
+        protected:
+
+            /**
              * 
              * @param systemData
              * @param userData
@@ -513,6 +729,8 @@ namespace fg {
             ///
             gfx::SMaterial* m_internalMaterial;
             ///
+            gfx::SMaterial* m_selectionMaterial;
+            ///
             PreviewSide m_previewSide;
             ///
             gfx::CBspCompiler* m_bspCompiler;
@@ -565,6 +783,8 @@ namespace fg {
             static const long idMenuBack;
             static const long idMenuGridProperties;
             static const long idMenuMaterials;
+
+            static const long idMenuCheckModePolySelection;
             static const long idMenuCheckSnapToGrid;
             static const long idMenuCheckSnapToPolygon;
 
