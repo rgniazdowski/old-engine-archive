@@ -26,6 +26,7 @@ planeIdx(-1),
 materialIdx(-1),
 bbox(),
 flags(0),
+primMode(PrimitiveMode::TRIANGLE_FAN),
 vertexData(NULL) {
     if(reserve < 3)
         reserve = 4;
@@ -64,6 +65,50 @@ fgBool gfx::SPolygon::operator ==(const SPolygon& p) {
 }
 //------------------------------------------------------------------------------
 
+fgBool gfx::SPolygon::rayIntersectTriangles(const Vector3f& rayOrigin,
+                                            const Vector3f& rayDir,
+                                            Vector3f& baryPosition,
+                                            const fgBool bothSides) {
+    unsigned int n = this->vertexData->size();
+    if(n-3 < 0)
+        return FG_FALSE;
+    Vertex4v *pData = (Vertex4v *)this->vertexData->front();
+    fgBool status = FG_FALSE;
+    unsigned int iStep = 1;
+    unsigned int firstTriStep = 0;
+    unsigned int first = 0;
+    unsigned int limit = n-3;
+    if(primMode == PrimitiveMode::TRIANGLES) {
+        iStep = 3; // jump every three
+        firstTriStep = 3; // for the first id (beginning vertex) jump by three
+        limit = n-2;
+    } else if(primMode == PrimitiveMode::TRIANGLE_FAN) {
+        iStep = 1; // jump by one
+        first = 0; // always 0
+        limit = n - 2; // limit
+        firstTriStep = 0; // The first ID is always 0
+    } else if(primMode == PrimitiveMode::TRIANGLE_STRIP) {
+
+    } else {
+        return FG_FALSE;
+    }
+    for(unsigned int i = 0; i < limit; i+=iStep) {
+        Vector3f& pos1 = pData[first].position;
+        Vector3f& pos2 = pData[i+1].position;
+        Vector3f& pos3 = pData[i+2].position;
+        status = math::intersectRayTriangle(rayOrigin, rayDir,
+                                            pos1,
+                                            pos2,
+                                            pos3,
+                                            baryPosition);
+        if(status)
+            break;
+        first+=firstTriStep;
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
 void gfx::SPolygon::create(int points, Vertex4v* pPoints) {
     vertexData->clear();
     if(points < 3)
@@ -71,9 +116,9 @@ void gfx::SPolygon::create(int points, Vertex4v* pPoints) {
     bbox.invalidate();
     for(int i = 0; i < points; i++) {
         vertexData->append(pPoints[i].position,
-                             pPoints[i].normal,
-                             pPoints[i].uv,
-                             pPoints[i].color);
+                           pPoints[i].normal,
+                           pPoints[i].uv,
+                           pPoints[i].color);
         bbox.merge(pPoints[i].position);
     }
     calcNormal();

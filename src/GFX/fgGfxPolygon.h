@@ -23,6 +23,7 @@
     #endif
     #include "GFX/fgGfxVertexData.h"
     #include "GFX/fgGfxPlane.h"
+    #include "fgGfxPrimitives.h"
 
     #define SPLITTER_POLY	0x2
 
@@ -55,6 +56,8 @@ namespace fg {
             AABoundingBox3Df bbox;
             ///
             unsigned int flags;
+            ///
+            PrimitiveMode primMode;
 
         private:
             ///
@@ -174,6 +177,34 @@ namespace fg {
              * @return
              */
             fgBool operator ==(const SPolygon& p);
+
+            /**
+             * 
+             * @param rayOrigin
+             * @param rayDir
+             * @param baryPosition
+             * @param bothSides
+             * @return
+             */
+            fgBool rayIntersectTriangles(const Vector3f& rayOrigin,
+                                         const Vector3f& rayDir,
+                                         Vector3f& baryPosition,
+                                         const fgBool bothSides = FG_FALSE);
+
+            /**
+             *
+             * @param rayOrigin
+             * @param rayDir
+             * @param distance
+             * @param bothSides
+             * @return
+             */
+            inline fgBool rayIntersectPlane(const Vector3f& rayOrigin,
+                                            const Vector3f& rayDir,
+                                            float& distance,
+                                            const fgBool bothSides = FG_FALSE) {
+                return base_type::rayIntersect(rayOrigin, rayDir, distance, bothSides);
+            }
 
         public:
             /**
