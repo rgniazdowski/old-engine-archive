@@ -619,7 +619,7 @@ fgBool CEngineMain::loadResources(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CEngineMain::display(void) {
+fgBool CEngineMain::preRender(void) {
     static float t1 = -1.0f;
     float t2 = fg::timesys::ms();
     float dt = 0.0f;
@@ -635,25 +635,25 @@ fgBool CEngineMain::display(void) {
     }
     // This should be synchronized to 60FPS, meaning that should be called in display / render
     // maybe should give some categories ?
-    timesys::markTick(timesys::TICK_DISPLAY);
+    timesys::markTick(timesys::TICK_PRERENDER);
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling)
-        profile::g_debugProfiling->begin("GFX::display");
+        profile::g_debugProfiling->begin("GFX::preRender");
 #endif
-    m_gfxMain->display();
+    m_gfxMain->preRender();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->end("GFX::display");
-        profile::g_debugProfiling->begin("GUI::display");
+        profile::g_debugProfiling->end("GFX::preRender");
+        profile::g_debugProfiling->begin("GUI::preRender");
     }
 #endif
-    m_guiMain->display();
+    m_guiMain->preRender();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->end("GUI::display");
+        profile::g_debugProfiling->end("GUI::preRender");
     }
 #endif
-    executeEvent(event::DISPLAY_SHOT, (void*)this);
+    executeEvent(event::PRERENDER_SHOT, (void*)this);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

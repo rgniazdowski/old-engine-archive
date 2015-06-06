@@ -141,7 +141,7 @@ namespace fg {
          *          if otherwise -- meaning that not enough time has elapsed for
          *          the next execution (fixed FPS)
          */
-        fgBool display(void);
+        fgBool preRender(void);
 
         /**
          * Begins the proper render of the created buffers

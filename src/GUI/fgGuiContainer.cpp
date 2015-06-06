@@ -94,12 +94,12 @@ void gui::CContainer::setFlags(const std::string& flags) {
 
 //fgGuiDrawer *yolo = NULL;
 
-void gui::CContainer::display(CDrawer *guiLayer) {
+void gui::CContainer::preRender(CDrawer *guiLayer) {
     if(!guiLayer)
         return;
     if(m_drawChildren)
         guiLayer->downZIndex();
-    base_type::display(guiLayer);
+    base_type::preRender(guiLayer);
     if(!m_drawChildren)
         return;
     for(int i = 0; i < (int)m_children.size(); i++) {
@@ -108,7 +108,7 @@ void gui::CContainer::display(CDrawer *guiLayer) {
             continue;
         guiLayer->downZIndex();
         if(child->isVisible()) {
-            child->display(guiLayer);
+            child->preRender(guiLayer);
         }
         guiLayer->upZIndex();
     }

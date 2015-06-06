@@ -38,7 +38,7 @@ fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
         return FG_FALSE;
     }
     dispCallbackPtr = new fg::event::CPlainFunctionCallback(&displayCallback, (void*)info);
-    info->pEngineMain->addCallback(fg::event::DISPLAY_SHOT, dispCallbackPtr);
+    info->pEngineMain->addCallback(fg::event::PRERENDER_SHOT, dispCallbackPtr);
     if(!dispCallbackPtr) {
     }
     return FG_TRUE;
@@ -52,7 +52,7 @@ fgBool fgExitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
         return FG_FALSE;
     }
     if(dispCallbackPtr) {
-        info->pEngineMain->removeCallback(fg::event::DISPLAY_SHOT, dispCallbackPtr);
+        info->pEngineMain->removeCallback(fg::event::PRERENDER_SHOT, dispCallbackPtr);
         delete dispCallbackPtr;
         dispCallbackPtr = NULL;
     }

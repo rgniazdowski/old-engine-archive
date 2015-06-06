@@ -82,7 +82,7 @@ namespace fg {
              * 
              * @param guiLayer
              */
-            virtual void display(CDrawer *guiLayer);
+            virtual void preRender(CDrawer *guiLayer);
 
             /**
              * 

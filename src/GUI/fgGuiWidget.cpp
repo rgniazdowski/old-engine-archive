@@ -71,7 +71,7 @@ void gui::CWidget::setSize(const Vector3f& size, Unit unit) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CWidget::display(CDrawer* guiLayer) {
+void gui::CWidget::preRender(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!isVisible())

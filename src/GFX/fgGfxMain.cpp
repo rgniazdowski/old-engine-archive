@@ -534,7 +534,7 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CGfxMain::display(void) {
+void gfx::CGfxMain::preRender(void) {
     if(!context::isInit())
         return;
     if(m_particleSystem) {
@@ -705,6 +705,7 @@ void gfx::CGfxMain::render(void) {
         return;
     }
     m_shaderMgr->useProgram(sOrthoEasyProgram);
+    sOrthoEasyProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     context::setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     m_2DScene->render();

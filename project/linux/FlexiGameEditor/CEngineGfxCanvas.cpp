@@ -527,7 +527,7 @@ fgBool CEngineGfxCanvas::displayAndRender(void) {
     if(!m_isFrameFreeze) {
         // well for now drawing and all update functions will be called in one place (one thread)
         // however it needs changing
-        this->m_engineMain->display();
+        this->m_engineMain->preRender();
     }
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {

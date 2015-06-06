@@ -77,7 +77,7 @@ void gui::CScrollArea::setFlags(const std::string& flags) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CScrollArea::display(CDrawer* guiLayer) {
+void gui::CScrollArea::preRender(CDrawer* guiLayer) {
     // Now before drawing the guiLayer needs to set the relative move
     // relative move is based on inner container size and current state of the
     // sliders - later on the sliders will be fixed to have adaptive size (toggle? anyone?)
@@ -92,7 +92,7 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
     // Draw current widget without the children and relative move
     fgBool drawChildren = isDrawChildren();
     setDrawChildren(FG_FALSE);
-    base_type::display(guiLayer);
+    base_type::preRender(guiLayer);
     setDrawChildren(drawChildren);
 
     // Get the current screen size
@@ -113,18 +113,18 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
 
     fgBool isVisibleV = isVisible(); // remember current visibility switch
     setVisible(FG_FALSE);
-    base_type::display(guiLayer);
+    base_type::preRender(guiLayer);
     setVisible(isVisibleV);
     guiLayer->setScissorBox(0, 0, 0, 0); // No scissor box option... need to reset it however
     guiLayer->setRelMove(oldRelMove);
 
     guiLayer->downZIndex();
     if(m_hSlider && (m_sliderSwitch & SLIDER_HORIZONTAL)) {
-        m_hSlider->display(guiLayer);
+        m_hSlider->preRender(guiLayer);
     }
     guiLayer->upZIndex();
     if(m_vSlider && (m_sliderSwitch & SLIDER_VERTICAL)) {
-        m_vSlider->display(guiLayer);
+        m_vSlider->preRender(guiLayer);
     }
 }
 //------------------------------------------------------------------------------

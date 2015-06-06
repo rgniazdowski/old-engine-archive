@@ -390,7 +390,7 @@ void gui::CGuiMain::updateState(void) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CGuiMain::display(void) {
+void gui::CGuiMain::preRender(void) {
     if(!m_widgetMgr || !m_pResourceMgr)
         return;
     if(!m_currentMenu)
@@ -408,7 +408,7 @@ void gui::CGuiMain::display(void) {
 
     // Maybe update bounds should be in update part? not display...
     m_currentMenu->updateBounds(m_screenBox);
-    m_currentMenu->display(m_guiDrawer);
+    m_currentMenu->preRender(m_guiDrawer);
 
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -435,7 +435,7 @@ void gui::CGuiMain::display(void) {
         }
         if(m_console->isVisible()) {
             m_console->updateBounds(m_screenBox);
-            m_console->display(m_guiDrawer);
+            m_console->preRender(m_guiDrawer);
         }
     }
 }

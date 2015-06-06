@@ -333,7 +333,7 @@ namespace fg {
             /**
              * This generates the buffers to draw
              */
-            virtual void display(void);
+            virtual void preRender(void);
 
             /**
              * This calls proper drawing functions. The screen will be updated

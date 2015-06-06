@@ -873,7 +873,7 @@ fgBool CMainModule::mainLoopStep(void) {
     if(!m_isFrameFreeze) {
         // well for now drawing and all update functions will be called in one place (one thread)
         // however it needs changing
-        m_engineMain->display();
+        m_engineMain->preRender();
     }
 
 #if defined(FG_DEBUG)

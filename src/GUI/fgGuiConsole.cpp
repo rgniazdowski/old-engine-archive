@@ -43,8 +43,8 @@ void gui::CConsole::refresh(void) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CConsole::display(CDrawer* guiLayer) {
-    base_type::display(guiLayer);
+void gui::CConsole::preRender(CDrawer* guiLayer) {
+    base_type::preRender(guiLayer);
 }
 //------------------------------------------------------------------------------
 

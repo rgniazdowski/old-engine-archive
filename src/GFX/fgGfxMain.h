@@ -154,7 +154,7 @@ namespace fg {
              * render function (which in the future should be in separate thread)
              * This will generate the list of visible objects, do frustum culling
              */
-            void display(void);
+            void preRender(void);
 
             /**
              * Begins the proper render of the created buffers

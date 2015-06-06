@@ -23,7 +23,7 @@ namespace fg {
          */
         enum TickCategory {
             TICK_UPDATE = 0,
-            TICK_DISPLAY = 1,
+            TICK_PRERENDER = 1,
             TICK_RENDER = 2,
             NUM_TICK_CATEGORIES = 3
         };
@@ -33,7 +33,7 @@ namespace fg {
         ///
         const long int MINIMUM_CLOCKS_PER_SEC = CLOCKS_PER_SEC;
         ///
-        const TickCategory DEFAULT_TICK_CATEGORY = TICK_DISPLAY;
+        const TickCategory DEFAULT_TICK_CATEGORY = TICK_PRERENDER;
         
         /**
          * First initial time stamp

@@ -53,13 +53,13 @@ void gui::CTextArea::refresh(void) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CTextArea::display(CDrawer* guiLayer) {
+void gui::CTextArea::preRender(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!isVisible())
         return;
 
-    base_type::display(guiLayer);
+    base_type::preRender(guiLayer);
 
     CDrawer *guiDrawer = (CDrawer *)guiLayer;
     Vec2f blockPos, blockSize, textSize;

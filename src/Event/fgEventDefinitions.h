@@ -115,7 +115,7 @@ namespace fg {
         ///
         const EventType IDLE = UPDATE_SHOT;
         ///
-        const EventType DISPLAY_SHOT = 55;
+        const EventType PRERENDER_SHOT = 55;
         ///
         const EventType RENDER_SHOT = 56;
 

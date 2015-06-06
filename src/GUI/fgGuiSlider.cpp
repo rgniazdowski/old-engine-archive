@@ -42,7 +42,7 @@ void gui::CSlider::setDefaults(void) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CSlider::display(CDrawer* guiLayer) {
+void gui::CSlider::preRender(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!isVisible())
@@ -61,7 +61,7 @@ void gui::CSlider::display(CDrawer* guiLayer) {
     paddingXY.y = padding.top + padding.bottom;
     paddingXY.x = padding.left + padding.right;
 
-    base_type::display(guiLayer);
+    base_type::preRender(guiLayer);
 
     Vec2f blockSize;
     Vec2f blockPos;
