@@ -25,7 +25,6 @@ uniform float u_useTexture;
 void main()
 {
 	vec4 texel;
-	float asd;
 	
 	if(u_useTexture > 0.5) {
 		texel = texture2D(s_texture, v_texCoord);
