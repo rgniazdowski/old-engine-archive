@@ -505,6 +505,8 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -535,6 +537,7 @@
         </cTool>
         <ccTool>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
