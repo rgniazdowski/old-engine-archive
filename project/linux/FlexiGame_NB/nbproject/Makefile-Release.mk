@@ -14,9 +14,9 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=/usr/lib/distcc/bin/gcc
+CCC=/usr/lib/distcc/bin/g++
+CXX=/usr/lib/distcc/bin/g++
 FC=gfortran
 AS=as
 

@@ -205,11 +205,11 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-m64
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-m64
+CXXFLAGS=-m64
 
 # Fortran Compiler Flags
 FFLAGS=

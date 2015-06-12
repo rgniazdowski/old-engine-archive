@@ -506,6 +506,8 @@
       <compileType>
         <cTool>
           <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>10</standard>
           <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
@@ -536,6 +538,7 @@
           </preprocessorList>
         </cTool>
         <ccTool>
+          <architecture>2</architecture>
           <standard>8</standard>
           <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
@@ -2183,6 +2186,7 @@
         <cTool>
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -2212,6 +2216,7 @@
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -3847,6 +3852,7 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -3864,6 +3870,7 @@
         </cTool>
         <ccTool>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -5477,10 +5484,12 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -7083,6 +7092,7 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -7113,6 +7123,7 @@
         </cTool>
         <ccTool>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -8723,6 +8734,7 @@
         <cTool>
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -8752,6 +8764,7 @@
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>

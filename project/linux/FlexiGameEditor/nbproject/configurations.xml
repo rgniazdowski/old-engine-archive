@@ -60,6 +60,7 @@
         <cTool>
           <architecture>2</architecture>
           <standard>10</standard>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
           </incDir>
@@ -83,6 +84,7 @@
         <ccTool>
           <architecture>2</architecture>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
             <pElem>../../../src</pElem>
@@ -222,6 +224,7 @@
           <stripSymbols>true</stripSymbols>
           <architecture>2</architecture>
           <standard>10</standard>
+          <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
           </incDir>
@@ -247,6 +250,7 @@
           <stripSymbols>true</stripSymbols>
           <architecture>2</architecture>
           <standard>8</standard>
+          <commandlineTool>/usr/lib/distcc/bin/g++</commandlineTool>
           <incDir>
             <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
             <pElem>../../../src</pElem>
