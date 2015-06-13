@@ -549,6 +549,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
@@ -2224,8 +2225,9 @@
             <pElem>../../../modules/tinyxml/upstream</pElem>
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
-            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
@@ -3879,6 +3881,9 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
@@ -5498,6 +5503,9 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
@@ -7132,6 +7140,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
@@ -8772,8 +8781,9 @@
             <pElem>../../../modules/tinyxml/upstream</pElem>
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
-            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>

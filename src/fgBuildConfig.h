@@ -364,6 +364,9 @@
         #if !defined(LUA_OPNAMES)
             #define LUA_OPNAMES 1
         #endif
+        #if !defined(LUA_COMPAT_APIINTCASTS)
+            #define LUA_COMPAT_APIINTCASTS 1
+        #endif
         #if !defined(LUA_USE_MKSTEMP) && defined(FG_USING_PLATFORM_LINUX)
             #define LUA_USE_MKSTEMP 1
         #endif

@@ -126,10 +126,14 @@
       <compileType>
         <cTool>
           <standard>10</standard>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_COMPAT_APIINTCASTS</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>_DEBUG</Elem>
@@ -138,10 +142,15 @@
         </cTool>
         <ccTool>
           <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_COMPAT_APIINTCASTS</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>_DEBUG</Elem>
@@ -578,10 +587,14 @@
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <standard>10</standard>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
             <Elem>FG_RELEASE</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_COMPAT_APIINTCASTS</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>RELEASE</Elem>
@@ -592,10 +605,15 @@
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
             <Elem>FG_RELEASE</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_COMPAT_APIINTCASTS</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>RELEASE</Elem>
@@ -1035,6 +1053,9 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
@@ -1047,6 +1068,10 @@
         </cTool>
         <ccTool>
           <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
@@ -1485,6 +1510,9 @@
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <standard>10</standard>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
             <Elem>FG_RELEASE</Elem>
@@ -1499,6 +1527,10 @@
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+          </incDir>
           <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
             <Elem>FG_RELEASE</Elem>
