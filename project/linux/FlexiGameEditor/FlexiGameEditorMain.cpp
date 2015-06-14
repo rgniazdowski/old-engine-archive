@@ -12,7 +12,8 @@
 #include "FlexiGameEditorMain.h"
 #include "CEditorResMgrPanel.h"
 
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(FlexiGameEditorFrame)
@@ -21,6 +22,8 @@
 #include <wx/intl.h>
 #include <wx/font.h>
 //*)
+
+#pragma GCC diagnostic pop
 
 //------------------------------------------------------------------------------
 

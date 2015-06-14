@@ -19,8 +19,11 @@
     #include "Event/fgEventDefinitions.h"
     #include "Scripting/fgScriptSubsystem.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #include "wx/wx.h"
     #include "wx/glcanvas.h"
+#pragma GCC diagnostic pop
 
 namespace fg {
     class CEngineMain;

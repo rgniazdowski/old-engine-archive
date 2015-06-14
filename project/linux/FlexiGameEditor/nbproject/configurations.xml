@@ -63,6 +63,7 @@
           <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
           </incDir>
           <commandLine>`wx-config --cflags`</commandLine>
           <preprocessorList>
@@ -94,11 +95,12 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
-          <commandLine>`wx-config --cxxflags`</commandLine>
+          <commandLine>`wx-config --cxxflags` -Wno-deprecated-declarations</commandLine>
           <preprocessorList>
             <Elem>FG_DEBUG</Elem>
             <Elem>FG_NO_UNDEF</Elem>
@@ -227,6 +229,7 @@
           <commandlineTool>/usr/lib/distcc/bin/gcc</commandlineTool>
           <incDir>
             <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
           </incDir>
           <commandLine>`wx-config --cflags`</commandLine>
           <preprocessorList>
@@ -260,11 +263,12 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
-          <commandLine>`wx-config --cxxflags`</commandLine>
+          <commandLine>`wx-config --cxxflags` -Wno-deprecated-declarations</commandLine>
           <preprocessorList>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_RELEASE</Elem>

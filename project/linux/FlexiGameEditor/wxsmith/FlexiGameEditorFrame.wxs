@@ -78,7 +78,7 @@
 				</object>
 				<object class="separator" />
 				<object class="wxMenuItem" name="idMenuEngineFreezeFrame" variable="MenuItem10" member="no">
-					<label>Freeze frame</label>
+					<label>&amp;Freeze frame</label>
 					<accel>Alt-P</accel>
 					<help>Pause/freeze current frame</help>
 					<handler function="OnMenuEngineFreezeFrame" entry="EVT_MENU" />

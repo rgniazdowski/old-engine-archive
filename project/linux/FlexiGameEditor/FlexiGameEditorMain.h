@@ -20,6 +20,8 @@
     #define FG_INC_FLEXI_GAME_EDITOR_MAIN
     #define FG_INC_FLEXI_GAME_EDITOR_MAIN_BLOCK
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 //(*Headers(FlexiGameEditorFrame)
 #include <wx/sizer.h>
 #include <wx/notebook.h>
@@ -27,6 +29,7 @@
 #include <wx/statusbr.h>
 #include <wx/frame.h>
 //*)
+#pragma GCC diagnostic pop
 
     #include "CEngineGfxCanvas.h"
     #include "CGfxHolderPanel.h"

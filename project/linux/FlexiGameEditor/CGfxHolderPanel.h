@@ -13,9 +13,13 @@
     #define FG_INC_GFX_HOLDER_PANEL_BLOCK
 
     #include "fgBool.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #include "wx/panel.h"
     #include "wx/sizer.h"
     #include "wx/menu.h"
+#pragma GCC diagnostic pop
 
 class CEngineGfxCanvas;
 
