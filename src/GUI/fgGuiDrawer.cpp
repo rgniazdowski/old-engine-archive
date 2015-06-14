@@ -30,6 +30,32 @@ void gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
 }
 //------------------------------------------------------------------------------
 
+fgBool gui::CDrawer::setFont(const char* name) {
+    if(!m_pResourceMgr)
+        return FG_FALSE;
+    resource::CResource *pResource = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(name);
+    if(!pResource)
+        return FG_FALSE;
+    if(pResource->getResourceType() != resource::FONT)
+        return FG_FALSE;
+    CFontResource *pFontResource = static_cast<CFontResource*>(pResource);
+    return setFont(pFontResource);
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CDrawer::setFont(const std::string& name) {
+    if(!m_pResourceMgr)
+        return FG_FALSE;
+    resource::CResource *pResource = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(name);
+    if(!pResource)
+        return FG_FALSE;
+    if(pResource->getResourceType() != resource::FONT)
+        return FG_FALSE;
+    CFontResource *pFontResource = static_cast<CFontResource*>(pResource);
+    return setFont(pFontResource);
+}
+//------------------------------------------------------------------------------
+
 void gui::CDrawer::appendText2D(Vec2f& outTextSize,
                                 const Vec2f &blockPos,
                                 const Vec2f &blockSize,

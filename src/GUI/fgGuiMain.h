@@ -181,9 +181,52 @@ namespace fg {
              */
             virtual fgBool initialize(void);
 
-            ////////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
         public:
+
+            /**
+             *
+             * @param name
+             * @param size
+             * @return
+             */
+            fgBool createBuiltInFont(const char* name, unsigned int size = 32);
+            /**
+             *
+             * @param name
+             * @param size
+             * @return
+             */
+            fgBool createBuiltInFont(const std::string& name, unsigned int size = 32);
+
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool disposeBuiltInFont(const char* name);
+            /**
+             * 
+             * @param name
+             * @return
+             */
+            fgBool disposeBuiltInFont(const std::string& name);
+
+
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool destroyBuiltInFont(const char* name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool destroyBuiltInFont(const std::string& name);
+
             /**
              * 
              * @param pWidget
@@ -361,9 +404,9 @@ namespace fg {
              * @return 
              */
             fgBool guiLinkHandler(CGuiMain* pGuiMain, fg::gui::CWidget* pWidget);
-        };
-    };
-};
+        }; // class CGuiMain
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_MAIN_BLOCK
 #endif /* FG_INC_GUI_MAIN */

@@ -77,6 +77,21 @@ namespace fg {
              */
             virtual void setResourceManager(fg::base::CManager *pResourceMgr);
 
+            using CFontDrawer::setFont;
+
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool setFont(const char* name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool setFont(const std::string& name);
+
             /**
              * 
              * @param outTextSize

@@ -33,16 +33,19 @@
 #include "fgGuiLoader.h"
 #include "fgGuiSlider.h"
 
+#include "GUI/Font/fgFontStbConsolas.h"
 #include "GUI/Font/fgFontStbConsolasBold.h"
 #include "GUI/Font/fgFontStbCourier.h"
 #include "GUI/Font/fgFontStbCourierBold.h"
 #include "GUI/Font/fgFontStbTimes.h"
+#include "GUI/Font/fgFontStbTimesBold.h"
 #include "GUI/Font/fgFontStbArial.h"
 #include "GUI/Font/fgFontStbArialBold.h"
 #include "GUI/Font/fgFontBuiltIn.h"
 
 #include "fgColors.h"
 #include "fgLog.h"
+#include "Font/fgFontStbTimesBold.h"
 
 #if defined(FG_USING_MARMALADE)
 #include "s3eKeyboard.h"
@@ -196,16 +199,28 @@ fgBool gui::CGuiMain::initialize(void) {
     m_widgetFactory->registerWidget(SLIDER, &CSlider::createWidget);
 
     FG_LOG_DEBUG("GUI: Initializing builtin fonts...");
-    CFontBuiltInResource *consolasBold = new CFontBuiltInResource(font::StbConsolasBold::getRawData(32));
-    consolasBold->setName("StbConsolasBold");
-    m_pResourceMgr->insertResource(consolasBold);
-    // This will automatically create the resource and also throw event for GFX upload
-    m_pResourceMgr->get(consolasBold->getRefHandle());
-
-    CFontBuiltInResource *courier = new CFontBuiltInResource(font::StbCourier::getRawData(50));
-    courier->setName("StbCourier");
-    m_pResourceMgr->insertResource(courier);
-    m_pResourceMgr->get(courier->getRefHandle());
+    /* List of builtin fonts:
+     * * StbArial
+     * * StbArialBold
+     * * StbConsolas
+     * * StbConsolasBold
+     * * StbCourier
+     * * StbCourierBold
+     * * StbTimes
+     * * StbTimesBold
+     */
+    // getRawData gets internal char size as parameter - valid values are:
+    // 8, 16, 32, >32 (max 50) - four levels
+    if(!createBuiltInFont("StbConsolasBold", 32)) {
+        FG_LOG_ERROR("GUI: Failed to create built-in font (StbConsolasBold)");
+    }
+    unsigned int courierSize = 50;
+    if(!createBuiltInFont("StbCourier", courierSize)) {
+        FG_LOG_ERROR("GUI: Failed to create built-in font (StbCourier)");
+    }
+    if(!createBuiltInFont("StbCourierBold", courierSize)) {
+        FG_LOG_ERROR("GUI: Failed to create built-in font (StbCourierBold)");
+    }
 
     // Initializing style manager
     if(!m_styleMgr->initialize()) {
@@ -238,6 +253,131 @@ fgBool gui::CGuiMain::initialize(void) {
     m_managerType = FG_MANAGER_GUI_MAIN;
     updateState();
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::createBuiltInFont(const char* name, unsigned int size) {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    return createBuiltInFont(std::string(name), size);
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::createBuiltInFont(const std::string& name, unsigned int size) {
+    if(name.empty() || !size || !m_pResourceMgr)
+        return FG_FALSE;
+    resource::CResource* pResource = m_pResourceMgr->get(name);
+    gui::CFontResource* pFontBase = NULL;
+    CFontBuiltInResource* pFontBuiltIn = NULL;
+    SFontBuiltInRawData* pFontRawData = NULL;
+    fgBool status = FG_FALSE;
+    fgBool shouldInsert = FG_FALSE;
+    if(!pResource) {
+        pFontBuiltIn = new gui::CFontBuiltInResource();
+        shouldInsert = FG_TRUE;
+    } else if(pResource->getResourceType() == resource::FONT) {
+        pFontBase = static_cast<gui::CFontResource*>(pResource);
+        if(pFontBase->getFontType() == FONT_STB_BUILTIN) {
+            // the font is already registered - need to update size, recreate
+            m_pResourceMgr->dispose(pResource);
+            pFontBuiltIn = static_cast<gui::CFontBuiltInResource*>(pFontBase);
+        }
+    }
+    if(pFontBuiltIn) {
+        if(name.compare("StbArial") == 0) {
+            pFontRawData = font::StbArial::getRawData(size);
+        } else if(name.compare("StbArialBold") == 0) {
+            pFontRawData = font::StbArialBold::getRawData(size);
+        } else if(name.compare("StbConsolas") == 0) {
+            pFontRawData = font::StbConsolas::getRawData(size);
+        } else if(name.compare("StbConsolasBold") == 0) {
+            pFontRawData = font::StbConsolasBold::getRawData(size);
+        } else if(name.compare("StbCourier") == 0) {
+            pFontRawData = font::StbCourier::getRawData(size);
+        } else if(name.compare("StbCourierBold") == 0) {
+            pFontRawData = font::StbCourierBold::getRawData(size);
+        } else if(name.compare("StbTimes") == 0) {
+            pFontRawData = font::StbTimes::getRawData(size);
+        } else if(name.compare("StbTimesBold") == 0) {
+            pFontRawData = font::StbTimesBold::getRawData(size);
+        }
+        if(pFontRawData) {
+            pFontBuiltIn->setBuiltInRawFontData(pFontRawData);
+            if(shouldInsert) {
+                pFontBuiltIn->setName(name);
+                m_pResourceMgr->insert(pFontBuiltIn);
+            }
+            // This will automatically create the resource and also throw event for GFX upload
+            if(m_pResourceMgr->get(pFontBuiltIn->getRefHandle()) != NULL) {
+                status = FG_TRUE;
+            }
+        }
+    }
+    if(pFontBuiltIn && shouldInsert && !pFontRawData) {
+        delete pFontBuiltIn;
+        pFontBuiltIn = NULL;
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::disposeBuiltInFont(const char* name) {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    return disposeBuiltInFont(std::string(name));
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::disposeBuiltInFont(const std::string& name) {
+    if(name.empty() || !m_pResourceMgr)
+        return FG_FALSE;
+    resource::CResource* pResource = m_pResourceMgr->get(name);
+    gui::CFontResource* pFontBase = NULL;
+    fgBool status = FG_FALSE;
+    if(!pResource)
+        return status;
+    if(pResource->getResourceType() == resource::FONT) {
+        pFontBase = static_cast<gui::CFontResource*>(pResource);
+        if(pFontBase->getFontType() == FONT_STB_BUILTIN) {
+            m_pResourceMgr->dispose(pResource);
+            status = FG_TRUE;
+        }
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::destroyBuiltInFont(const char* name) {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    return destroyBuiltInFont(std::string(name));
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::destroyBuiltInFont(const std::string& name) {
+    if(name.empty() || !m_pResourceMgr)
+        return FG_FALSE;
+    resource::CResource* pResource = m_pResourceMgr->get(name);
+    gui::CFontResource* pFontBase = NULL;
+    fgBool status = FG_FALSE;
+    if(!pResource)
+        return status;
+    if(pResource->getResourceType() == resource::FONT) {
+        pFontBase = static_cast<gui::CFontResource*>(pResource);
+        if(pFontBase->getFontType() == FONT_STB_BUILTIN) {
+            m_pResourceMgr->dispose(pResource);
+            m_pResourceMgr->remove(pResource);
+            delete pResource;
+            status = FG_TRUE;
+        }
+    }
+    return status;
 }
 //------------------------------------------------------------------------------
 

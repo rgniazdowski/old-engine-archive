@@ -17,7 +17,7 @@ using namespace fg;
 gui::CFontBuiltInResource::CFontBuiltInResource() :
 base_type(),
 m_rawFontData(NULL) {
-    m_fontType = FG_FONT_TYPE_STB_BUILTIN;
+    m_fontType = FONT_STB_BUILTIN;
     this->m_resType = resource::FONT;
 }
 //------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ m_rawFontData(NULL) {
 gui::CFontBuiltInResource::CFontBuiltInResource(SFontBuiltInRawData *rawFontData) :
 base_type(),
 m_rawFontData(rawFontData) {
-    m_fontType = FG_FONT_TYPE_STB_BUILTIN;
+    m_fontType = FONT_STB_BUILTIN;
     this->m_resType = resource::FONT;
 }
 //------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ m_rawFontData(rawFontData) {
 void gui::CFontBuiltInResource::clear(void) {
     base_type::clear();
     m_rawData = NULL;
-    m_fontType = FG_FONT_TYPE_STB_BUILTIN;
+    m_fontType = FONT_STB_BUILTIN;
 }
 //------------------------------------------------------------------------------
 
@@ -144,7 +144,7 @@ fgBool gui::CFontBuiltInResource::create(void) {
             m_info.charInfo[i].stepf = m_rawFontData->aPtr[i] / 16.0f;
         }
     }
-    m_fontType = FG_FONT_TYPE_STB_BUILTIN;
+    m_fontType = FONT_STB_BUILTIN;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

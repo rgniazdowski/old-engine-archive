@@ -18,6 +18,8 @@
 namespace fg {
     namespace gui {
 
+        const FontType FONT_STB_BUILTIN = 0x0004;
+
         /**
          *
          */
@@ -76,12 +78,11 @@ namespace fg {
         private:
             /// 
             SFontBuiltInRawData *m_rawFontData;
-        };
+        }; // class CFontBuiltInResource
         ///
         typedef CFontBuiltInResource CFontBuiltIn;
-    };
-};
-    #define FG_FONT_TYPE_STB_BUILTIN	0x0040
-
+    } // namespace gui
+} // namespace fg
+    
     #undef FG_INC_FONT_BUILT_IN_BLOCK
 #endif /* FG_INC_FONT_BUILT_IN */
