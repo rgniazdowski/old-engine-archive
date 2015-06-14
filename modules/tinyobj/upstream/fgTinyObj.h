@@ -11,6 +11,7 @@
     #include <map>
 
     #include "GFX/fgGfxModelTypes.h"
+    #include "Util/fgFile.h"
 
 namespace fgTinyObj {
 
@@ -81,7 +82,7 @@ namespace fgTinyObj {
     /// std::istream for materials.
     /// Returns empty string when loading .obj success.
     std::string LoadObj(fg::CVector<fg::gfx::SShape *>& shapes, // [output]
-                        std::istream& inStream,
+                        fg::util::CFile& inputFile,
                         MaterialReader& readMatFn,
                         fgBool forceAoS = FG_TRUE);
 

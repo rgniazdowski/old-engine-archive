@@ -57,6 +57,7 @@ public class SDLActivity extends Activity {
     // libmain.so  libmikmod.so  libng_luaplus.so  libSDL2_image.so
     // libSDL2_mixer.so  libSDL2.so  libsmpeg2.so  libzlib_128.so
      static {
+        System.loadLibrary("gnustl_shared");
         System.loadLibrary("SDL2");
         System.loadLibrary("smpeg2");
         System.loadLibrary("mikmod");

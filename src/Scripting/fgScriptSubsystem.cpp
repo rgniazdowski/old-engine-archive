@@ -1640,7 +1640,7 @@ int script::CScriptSubsystem::addSceneEventCallbackWrapper(lua_State *L) {
         return 0;
     }
     uintptr_t offset = (uintptr_t)(void*)pSceneMgr;
-    if(!m_userDataObjectMap[offset].isBound || !pSceneMgr->getManagerType() == FG_MANAGER_SCENE) {
+    if(!m_userDataObjectMap[offset].isBound || !(pSceneMgr->getManagerType() == FG_MANAGER_SCENE)) {
         ///
         return 0;
     }
@@ -1732,7 +1732,7 @@ int script::CScriptSubsystem::addSceneTriggerCallbackWrapper(lua_State *L) {
         return 0;
     }
     uintptr_t offset = (uintptr_t)(void*)pSceneMgr;
-    if(!m_userDataObjectMap[offset].isBound || !pSceneMgr->getManagerType() == FG_MANAGER_SCENE) {
+    if(!m_userDataObjectMap[offset].isBound || !(pSceneMgr->getManagerType() == FG_MANAGER_SCENE)) {
         ///
         return 0;
     }

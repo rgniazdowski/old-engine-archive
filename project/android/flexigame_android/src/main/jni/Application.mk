@@ -1,11 +1,15 @@
 #
 # Uncomment this if you're using STL in your project
 # See CPLUSPLUS-SUPPORT.html in the NDK documentation for more information
-APP_STL := gnustl_static
+APP_STL := gnustl_shared
 APP_PLATFORM := android-16
-APP_ABI := armeabi armeabi-v7a
-APP_OPTIM := release
-NDK_DEBUG := false
+#armeabi armeabi-v7a arm64-v8a
+APP_ABI := armeabi-v7a 
+APP_OPTIM := debug
+NDK_DEBUG := true
+
+# Support RTTI
+APP_CPPFLAGS += -frtti
 
 # For SDL_mixer
 #
@@ -27,4 +31,5 @@ SUPPORT_WEBP := false
 #
 
 LIBCXX_FORCE_REBUILD := false
+
 

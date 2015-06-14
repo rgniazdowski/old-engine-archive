@@ -21,7 +21,7 @@ namespace fg {
      */
     enum class Quality : char {
         ///
-        UNIVERSAL = -1,
+        UNIVERSAL = (char)-1,
         ///
         LOW = 0,
         ///

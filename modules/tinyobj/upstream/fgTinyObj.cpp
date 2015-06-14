@@ -799,8 +799,8 @@ namespace fgTinyObj {
         shapes.clear();
         std::stringstream err;
 
-        std::ifstream ifs(filename);
-        if(!ifs) {
+        fg::util::CFile inputFile(filename);
+        if(!inputFile.open()) {
             err << "Cannot open file [" << filename << "]" << std::endl;
             return err.str();
         }
@@ -811,7 +811,10 @@ namespace fgTinyObj {
         }
         MaterialFileReader matFileReader(basePath);
 
-        return LoadObj(shapes, ifs, matFileReader, forceAoS);
+        std::string errLoad = LoadObj(shapes, inputFile, matFileReader, forceAoS);
+
+        inputFile.close();
+        return errLoad;
     }
 
     /**
@@ -823,7 +826,7 @@ namespace fgTinyObj {
      * @return 
      */
     std::string LoadObj(fg::CVector<fg::gfx::SShape *>& shapes,
-                        std::istream& inStream,
+                        fg::util::CFile& inputFile,
                         MaterialReader& readMatFn,
                         fgBool forceAoS) {
         std::stringstream err;
@@ -844,8 +847,10 @@ namespace fgTinyObj {
         fg::CVector<char> buf; // Alloc enough size.
         buf.resize(maxchars);
         float l1 = fg::timesys::ms();
-        while(inStream.peek() != -1) {
-            inStream.getline(&buf[0], maxchars);
+        while(!inputFile.isEOF()) {
+            if(!inputFile.readString(&buf[0], maxchars)) {
+                break;
+            }
 
             std::string linebuf(&buf[0]);
 

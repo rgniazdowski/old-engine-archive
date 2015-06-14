@@ -39,7 +39,7 @@ namespace fg {
 }
     #endif /* FG_USING_GLM */
 
-    #include <string>
+    #include <cstdlib>
 
 namespace fg {
 
@@ -317,7 +317,7 @@ namespace fg {
                 // BBOX FIX #
                 if(n == 4 && retVector.length() == 6 && i == 2)
                     j++;
-                retVector[j] = (typename VectorType::value_type) atof(parts[i].c_str());
+                retVector[j] = (typename VectorType::value_type) std::atof(parts[i].c_str());
             }
         }
 
