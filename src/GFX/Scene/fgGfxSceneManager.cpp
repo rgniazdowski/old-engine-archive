@@ -688,13 +688,16 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
     }
     SceneNodeHandle nodeHandle = pNode->getHandle();
     pickedNodesInfo[nodeHandle].handle = nodeHandle;
-    Result pickResult = isPicked(pNode, pickedNodesInfo[nodeHandle], (*pSceneMgr->getMVP()), checkAABBTriangles);
+    Result pickResult = isPicked(pNode,
+                                 pickedNodesInfo[nodeHandle],
+                                 (*pSceneMgr->getMVP()),
+                                 checkAABBTriangles);
     fgBool shouldThrow = FG_TRUE;
     fgBool shouldRemove = FG_FALSE;
     const float exact = timesys::exact();
     int idx = -1;
     if(pickResult == goodPickResult) {
-        CSceneNode*pLastNode = pSceneMgr->getLastPickedNode();
+        CSceneNode* pLastNode = pSceneMgr->getLastPickedNode();
         idx = h_selectedNodes.find(nodeHandle);
         const float ts = pickedNodesInfo[nodeHandle].timeStamp;
         if(isToggle && ts < pickBegin) {
@@ -1038,60 +1041,30 @@ void gfx::CSceneManager::render(void) {
         CVertexData4v gridLines;
         Vector3f pos;
         Color3f color;
+        gridLines.clear_optimised();
+        m_MVP.calculate(Matrix4f());
+        pProgram->setUniform(&m_MVP);
+        color = Color3f(1.0f, 0.0f, 0.0f);
+
+        pos = m_pickSelection.rayEye;
+        gridLines.append(pos, Vec3f(), Vec2f(), color);
+        pos = m_pickSelection.groundIntersectionPoint[1];
+        gridLines.append(pos, Vec3f(), Vec2f(), color);
+        primitives::drawVertexData(&gridLines,
+                                   FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT,
+                                   PrimitiveMode::LINES);
+        {
+            m_groundGrid.snapTo(m_pickSelection.groundIntersectionPoint[1], pos,
+                                0.2f, FG_TRUE, FG_FALSE);
         }
 
+        Matrix4f modelMat = math::translate(Matrix4f(), pos);
+        m_MVP.calculate(modelMat);
+        pProgram->setUniform(&m_MVP);
+        primitives::drawAABBLines(AABB3Df(Vec3f(-1, -1, -1), Vec3f(1, 1, 1)), Color4f(1.0f, 1.0f, 0.0f, 1.0f));
     }
 }
 //------------------------------------------------------------------------------
-
-#if 0
-
-int gfx::CSceneManager::appendObject(CSceneNode *pObj, fgBool manage) {
-    if(!pObj)
-        return -1;
-    if(m_objects.find(pObj) != -1)
-        return -1;
-    if(!pObj->getModel())
-        return -1;
-
-    CDrawCall *call = new CDrawCall(FG_GFX_DRAW_CALL_MODEL);
-    call->setupFromModel(pObj->getModel());
-    if(getShaderManager())
-        call->setShaderProgram(((CShaderManager *)getShaderManager())->getCurrentProgram());
-    if(m_resourceMgr) {
-        SMaterial *pMainMaterial = pObj->getModel()->getMainMaterial();
-        if(pMainMaterial) {
-            CTextureResource *pTexRes = (CTextureResource *)((CResourceManager *)m_resourceMgr)->get(pMainMaterial->ambientTexHandle);
-            if(pTexRes)
-                call->setTexture(pTexRes->getRefGfxID());
-        }
-    }
-    call->setMVP(&m_MVP);
-    call->setModelMatrix(pObj->getRefModelMatrix());
-    pObj->setManaged(manage);
-    m_objects.push_back(pObj);
-    m_objDrawCalls.push_back(call);
-    // 2nd argument tells that this draw call should not be managed
-    // meaning: destructor wont be called on flush()
-    CDrawingBatch::appendDrawCall(call, FG_FALSE);
-
-    return ((int)m_objects.size() - 1);
-}
-
-CSceneNode* gfx::CSceneManager::appendModel(int& index,
-                                            CModelResource* pModelRes,
-                                            fgBool manage) {
-    if(!pModelRes) {
-        index = -1;
-        return NULL;
-    }
-    CSceneNode *pObj = new CSceneNode();
-    //pObj->setName();
-    pObj->setModel(pModelRes);
-    index = appendObject(pObj, manage);
-    return pObj;
-}
-#endif
 
 gfx::CSceneCallback* gfx::CSceneManager::addCallback(event::EventType eventCode,
                                                      CSceneCallback* pCallback) {
