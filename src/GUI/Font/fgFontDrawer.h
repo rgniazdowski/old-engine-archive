@@ -116,15 +116,6 @@ namespace fg {
 
             /**
              * 
-             */
-            virtual void flush(void);
-            /**
-             * 
-             */
-            virtual void render(void);
-
-            /**
-             * 
              * @param charSize
              * @param fmt
              * @return 

@@ -164,9 +164,9 @@ namespace fg {
                                               float radius,
                                               CStyleContent& style);
 
-        };
-    };
-};
+        }; // class CDrawer
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_DRAWER_BLOCK
 #endif /* FG_INC_GUI_DRAWER */

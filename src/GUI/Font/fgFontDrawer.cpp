@@ -107,17 +107,6 @@ int gui::CFontDrawer::print(float x0, float y0, const char *string, float charSi
 }
 //------------------------------------------------------------------------------
 
-void gui::CFontDrawer::flush(void) {
-    fg::gfx::CDrawingBatch::flush();
-    m_relMove = Vector3f(0.0f, 0.0f, 0.0f);
-}
-//------------------------------------------------------------------------------
-
-void gui::CFontDrawer::render(void) {
-    gfx::CDrawingBatch::render();
-}
-//------------------------------------------------------------------------------
-
 void gui::CFontDrawer::setColor(const Color4f &color) {
     m_color = color;
     gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
