@@ -583,22 +583,12 @@ fgBool CEngineMain::loadResources(void) {
     }
     m_gfxMain->getLoader()->update(15.0f);
     // DEVICE YIELD
-#if 1
     ////////////////////////////////////////////////////////////////////////////
     // Can also create special event for GFX - upload static vertex data
     // Create vertex buffers on event - not explicitly 
-    {
-        float t1 = timesys::ms();
-        FG_LOG_DEBUG("Init: Will now try load object CobraBomber.obj");
-        std::string modelname("CobraBomber");
-        gfx::CModelResource *model = (gfx::CModelResource *)m_resourceMgr->get(modelname);
-        float t2 = timesys::ms();
-        FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
-    }
     // DEVICE YIELD
     m_gfxMain->getLoader()->update(15.0f);
     ////////////////////////////////////////////////////////////////////////////
-#endif
 
     m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
     this->update(FG_TRUE);

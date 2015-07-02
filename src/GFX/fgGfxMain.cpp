@@ -295,8 +295,6 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     } else {
         // Should not call create manually on the 3D Model
         // This wont call the function for VBO upload
-        //cubeModel->create();
-        //builtin_cube_mesh->genBuffers();
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinCube1x1");
     }
 
@@ -318,7 +316,6 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(sphereModel);
         delete sphereModel;
     } else {
-        //builtin_sphere_mesh->genBuffers();
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
     }
 }
@@ -513,16 +510,8 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
             status = FG_FALSE;
     }
     // REGENERATE VBOS #TODO
-    // #FIXME lol
     {
-        gfx::CModelResource *model = NULL;
-        std::string modelname("CobraBomber");
-        model = (gfx::CModelResource *)((resource::CResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
-        if(model) {
-            if(model->getRefShapes().size()) {
-                model->getRefShapes()[0]->mesh->genBuffers();
-            }
-        }
+        generateBuiltInData();
     }
     registerSceneCallbacks();
 
@@ -589,7 +578,6 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
 }
 
 void gfx::CGfxMain::render(void) {
-    static gfx::CModelResource *cobraBomber = NULL;
     glm::mat4 Model;
     resource::CResourceManager *rm = NULL;
 #if defined(FG_USING_SDL2)
@@ -598,19 +586,10 @@ void gfx::CGfxMain::render(void) {
     ::std::string sPlainEasyShaderName("sPlainEasy");
     ::std::string sOrthoEasyShaderName("sOrthoEasy");
     ::std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
-    ::std::string modelname("CobraBomber");
 
     rm = (resource::CResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
         FG_LOG_ERROR("Cant access resource manager.");
-        return;
-    }
-
-    if(!cobraBomber) {
-        cobraBomber = (gfx::CModelResource *)rm->get(modelname);
-    }
-    if(!cobraBomber) {
-        //printf("NO MODEL\n");
         return;
     }
 
@@ -645,10 +624,6 @@ void gfx::CGfxMain::render(void) {
         m_3DScene->getCamera()->moveRight();
 
 #endif
-    CSceneNode* pPlayerBullshit = m_3DScene->get("PlayerBullshit");
-    if(pPlayerBullshit) {
-        m_3DScene->getCamera()->setType(CCameraAnimation::FREE);
-    }
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
