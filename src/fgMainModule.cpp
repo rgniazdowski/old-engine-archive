@@ -982,6 +982,7 @@ void CMainModule::keyStateChangedEvent(s3eKeyboardEvent* event) {
 }
 #endif /* FG_USING_MARMALADE */
 
+////////////////////////////////////////////////////////////////////////////////
 /**
  * Main function that is called when the program starts.
  */
@@ -1016,7 +1017,7 @@ extern "C" int main(int argc, char *argv[]) {
             FG_LOG_DEBUG("%s: ARGV[%d] = '%s'", FG_PACKAGE_NAME, i, argv[i]);
         }
     }
-    
+
 #endif
     CMainModule *mainModule = new CMainModule(argc, argv);
     if(!mainModule->initProgram()) {

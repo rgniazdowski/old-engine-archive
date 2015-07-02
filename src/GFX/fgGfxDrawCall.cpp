@@ -169,8 +169,10 @@ void gfx::CDrawCall::setupFromVertexData(const CVertexData* pVertexData) {
 void gfx::CDrawCall::refreshDrawingInfo(const CVertexData* pVertexData) {
     if(!pVertexData)
         return;
+    m_drawingInfo.buffer = 0;
+    m_drawingInfo.indices.pointer = NULL;
     m_drawingInfo.count = pVertexData->getNumVertices();
-    if(pVertexData->hasIndices()) {
+    if(pVertexData->hasIndices() && pVertexData->getNumIndices()) {
         m_drawingInfo.buffer = pVertexData->getIndicesVBO();
         m_drawingInfo.indices.pointer = pVertexData->getIndicesPointer();
         if(!m_drawingInfo.buffer && !m_drawingInfo.indices.pointer)

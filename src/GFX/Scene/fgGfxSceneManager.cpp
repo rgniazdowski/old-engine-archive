@@ -990,6 +990,7 @@ void gfx::CSceneManager::render(void) {
             }
 #endif       
             pSceneNode->draw();
+            pProgram = pShaderMgr->getCurrentProgram();
 #if defined(FG_DEBUG)
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->end("GFX::Scene::DrawNode");
@@ -1547,6 +1548,56 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const char* sourceNodeNameTag,
     if(!pSourceNode)
         return NULL;
     return addDuplicate(pSourceNode, std::string(newNodeNameTag));
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode *gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
+                                                  const std::string& nameTag) {
+    if(!pModelRes) {
+        return NULL;
+    }
+    CSceneNode *pNode = new CSceneNodeObject(pModelRes, NULL);
+    pNode->setName(nameTag);
+    if(!addNode(pNode->getRefHandle(), pNode)) {
+        delete pNode;
+        pNode = NULL;
+    }
+    FG_LOG_DEBUG("GFX: SceneManager: Inserted object: '%s'", nameTag.c_str());
+    return pNode;
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode *gfx::CSceneManager::addFromModel(const std::string& modelNameTag,
+                                                  const std::string& nameTag) {
+    if(modelNameTag.empty() || nameTag.empty()) {
+        return NULL;
+    }
+    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager *>(getResourceManager());
+    if(!pResourceManager) {
+        return NULL;
+    }
+    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
+    if(!pModelRes) {
+        return NULL;
+    }
+    return addFromModel(pModelRes, nameTag);
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode *gfx::CSceneManager::addFromModel(const char *modelNameTag,
+                                                  const char *nameTag) {
+    if(!modelNameTag || !nameTag) {
+        return NULL;
+    }
+    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager *>(getResourceManager());
+    if(!pResourceManager) {
+        return NULL;
+    }
+    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
+    if(!pModelRes) {
+        return NULL;
+    }
+    return addFromModel(pModelRes, std::string(nameTag));
 }
 //------------------------------------------------------------------------------
 

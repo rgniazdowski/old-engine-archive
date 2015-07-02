@@ -73,8 +73,14 @@ namespace fg {
              * @param mesh
              * @param scale
              */
-            void createCubeMesh(SMeshBase *mesh,
-                                float scale = 1.0f);
+            void createCubeMesh(SMeshBase *mesh, float scale = 1.0f);
+            
+            /**
+             * 
+             * @param mesh
+             * @param scale
+             */
+            void createQuadMesh(SMeshBase *mesh, float scale = 1.0f);
 
             /*void drawVertexDataIndexed(const CVertexData *inputData,
                                        const CVector<fgGFXushort>& indices,

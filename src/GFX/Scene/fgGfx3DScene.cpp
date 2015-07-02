@@ -225,58 +225,6 @@ void gfx::CScene3D::render(void) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode *gfx::CScene3D::addFromModel(CModelResource* pModelRes,
-                                             const std::string& nameTag) {
-    if(!pModelRes) {
-        return NULL;
-    }
-    CSceneNode *pNode = new CSceneNodeObject(pModelRes, NULL);
-    //fgGfxSceneNodeObject *pNodeObject = static_cast<fgGfxSceneNodeObject *>(pNode);
-    pNode->setName(nameTag);
-    if(!addNode(pNode->getRefHandle(), pNode)) {
-        delete pNode;
-        pNode = NULL;
-    }
-    FG_LOG_DEBUG("GFX: Scene3D: Inserted object: '%s'", nameTag.c_str());
-    return pNode;
-}
-//------------------------------------------------------------------------------
-
-gfx::CSceneNode *gfx::CScene3D::addFromModel(const std::string& modelNameTag,
-                                             const std::string& nameTag) {
-    if(modelNameTag.empty() || nameTag.empty()) {
-        return NULL;
-    }
-    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager *>(getResourceManager());
-    if(!pResourceManager) {
-        return NULL;
-    }
-    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
-    if(!pModelRes) {
-        return NULL;
-    }
-    return addFromModel(pModelRes, nameTag);
-}
-//------------------------------------------------------------------------------
-
-gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
-                                             const char *nameTag) {
-    if(!modelNameTag || !nameTag) {
-        return NULL;
-    }
-    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager *>(getResourceManager());
-    if(!pResourceManager) {
-        return NULL;
-    }
-    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
-    if(!pModelRes) {
-        return NULL;
-    }
-    // #FIXME char * / std::string !
-    return addFromModel(pModelRes, std::string(nameTag));
-}
-//------------------------------------------------------------------------------
-
 void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
     if(!sceneNode)
         return;

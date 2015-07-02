@@ -104,7 +104,7 @@ const gfx::Vertex3v c_stripCube1x1[] = {
                                         // Vertex data for face 0 // Front?
     {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 1.0f)}, //  v0
     {Vector3f(0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f)}, //  v1
-    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0, 0.0f)}, //  v2
+    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 0.0f)}, //  v2
     {Vector3f(0.5f, 0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 0.0f)}, //  v3
 
                                         // Vertex data for face 1 // Right?
@@ -198,10 +198,15 @@ static const GLfloat c_trisCube1x1[] = {
  * triangle strip format, no index, CCW
  */
 const gfx::Vertex3v c_stripSquare1x1[] = {
-    {Vector3f(0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 0.f)},
-    {Vector3f(-0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(0.f, 0.f)},
-    {Vector3f(0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 1.f)},
-    {Vector3f(-0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(0.f, 1.f)}
+    {Vector3f(0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, -1.f), Vector2f(1.f, 0.f)},
+    {Vector3f(-0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, -1.f), Vector2f(0.f, 0.f)},
+    {Vector3f(0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, -1.f), Vector2f(1.f, 1.f)},
+    {Vector3f(-0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, -1.f), Vector2f(0.f, 1.f)},
+
+    //{Vector3f(-0.5f, -0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 1.0f)}, //  v0
+    //{Vector3f(-0.5f, 0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 0.0f)}, //  v2
+    //{Vector3f(0.5f, -0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f)}, //  v1
+    //{Vector3f(0.5f, 0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 0.0f)} //  v3
 };
 
 /*
@@ -330,6 +335,34 @@ void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
     }
     mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
 }
+//------------------------------------------------------------------------------
+
+void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* mesh,
+                    float scale) {
+    if(!mesh) {
+        return;
+    }
+    if(scale < 0.0f) {
+        scale = math::abs(scale);
+    }
+    if(scale <= FG_EPSILON) {
+        scale = 1.0f;
+    }
+    mesh->clear();
+    int n = sizeof(c_stripSquare1x1) / sizeof(c_stripSquare1x1[0]);
+    mesh->reserve(n);
+    for(int i = 0; i < n; i++) {
+        mesh->append(c_stripSquare1x1[i].position*scale,
+                     c_stripSquare1x1[i].normal,
+                     c_stripSquare1x1[i].uv);
+    }
+    //mesh->appendIndice(0);
+    //mesh->appendIndice(1);
+    //mesh->appendIndice(2);
+    //mesh->appendIndice(3);
+    mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+}
+
 //------------------------------------------------------------------------------
 
 /* 

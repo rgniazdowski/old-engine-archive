@@ -38,18 +38,21 @@ void gfx::SMeshSoA::fixCenter(void) {
     }
     this->aabb.setBoundsFromData(data, sizeof (Vector3f), n);
 }
+//------------------------------------------------------------------------------
 
 fgGFXuint gfx::SMeshSoA::getIndicesVBO(void) const {
     if(!hasVBO())
         return 0;
     return getPtrVBO()[INDICES_VBO_ARRAY_IDX].id;
 }
+//------------------------------------------------------------------------------
 
 fgGFXvoid *gfx::SMeshSoA::getIndicesPointer(void) const {
     if(!hasVBO())
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -113,6 +116,7 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const 
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -200,6 +204,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
     if(!gfx::CPlatform::isInit())
@@ -249,6 +254,7 @@ fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
     return FG_GFX_TRUE;
 
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshSoA::deleteBuffers(void) {
     if(!getPtrVBO())
@@ -258,6 +264,7 @@ fgGFXboolean gfx::SMeshSoA::deleteBuffers(void) {
     return FG_GFX_TRUE;
 
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshSoA::destroyBuffers(void) {
     if(!getPtrVBO())
@@ -268,6 +275,7 @@ fgGFXboolean gfx::SMeshSoA::destroyBuffers(void) {
     refBuf = NULL;
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 /******************************************************************************
  * MESH AOS FUNCTION - ARRAY OF STRUCTURES
@@ -280,6 +288,8 @@ const unsigned short gfx::SMeshAoS::TEX_COORDS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::UVS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
 
+//------------------------------------------------------------------------------
+
 void gfx::SMeshAoS::fixCenter(void) {
     const unsigned int n = this->vertices.size();
     if(!n)
@@ -291,24 +301,29 @@ void gfx::SMeshAoS::fixCenter(void) {
     }
     this->aabb.setBoundsFromData(data, vertices.stride(), n);
 }
+//------------------------------------------------------------------------------
 
 fgGFXuint gfx::SMeshAoS::getIndicesVBO(void) const {
     if(!hasVBO())
         return 0;
     return getPtrVBO()[INDICES_VBO_ARRAY_IDX].id;
 }
+//------------------------------------------------------------------------------
 
 fgGFXvoid *gfx::SMeshAoS::getIndicesPointer(void) const {
     if(!hasVBO())
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
     if(!gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 2;
+    if(getNumIndices() < 1)
+        count = 1;
     FG_LOG_DEBUG("GFX: MESH AoS: generating %d buffers - static draw", count);
     context::genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     context::bindBuffer(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
@@ -317,27 +332,28 @@ fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
     context::bufferData(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
                         this->stride() * this->size(),
                         SMeshAoS::front());
+    if(count == 2) {
+        context::bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                            GL_ELEMENT_ARRAY_BUFFER);
 
-    context::bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                        GL_ELEMENT_ARRAY_BUFFER);
-
-    context::bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                        sizeof (fgGFXushort) * indices.size(),
-                        (fgGFXvoid *)(&indices.front()));
-
+        context::bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                            sizeof (fgGFXushort) * indices.size(),
+                            (fgGFXvoid *)(&indices.front()));
+    }
     //FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id);
     FG_LOG_DEBUG("GFX: MESH AoS: buffer id[vertices][%d], data[%p], stride[%d], size[%d]",
                  (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id, front(), stride(), size());
     //FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
+    if(count == 2) {
     FG_LOG_DEBUG("GFX: MESH AoS: buffer id[indices][%d], data[%p], size(B)[%d], size[%d]",
                  (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
                  (fgGFXvoid *)(&indices.front()),
                  sizeof (fgGFXushort) * indices.size(),
                  indices.size());
-
+    }
     return FG_GFX_TRUE;
-
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshAoS::deleteBuffers(void) {
     if(!getPtrVBO())
@@ -345,8 +361,8 @@ fgGFXboolean gfx::SMeshAoS::deleteBuffers(void) {
     FG_LOG_DEBUG("GFX: MESH AoS: removing %d buffers [%p]", getVBOCount(), getPtrVBO());
     context::deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
-
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshAoS::destroyBuffers(void) {
     if(!getPtrVBO())
@@ -357,3 +373,4 @@ fgGFXboolean gfx::SMeshAoS::destroyBuffers(void) {
     refBuf = NULL;
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------

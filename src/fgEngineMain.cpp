@@ -534,7 +534,9 @@ fgBool CEngineMain::loadResources(void) {
     float t1 = timesys::ms();
     FG_LOG_DEBUG("Loading resources...");
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
-    m_gfxMain->preLoadShaders();
+    m_gfxMain->preLoadShaders();    
+    m_gfxMain->generateBuiltInData();
+    
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     std::string mainScriptPath, modScriptPath;
@@ -592,7 +594,6 @@ fgBool CEngineMain::loadResources(void) {
 
     m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
     this->update(FG_TRUE);
-    m_gfxMain->generateBuiltInData();
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
 

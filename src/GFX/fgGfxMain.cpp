@@ -318,6 +318,27 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     } else {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
     }
+
+    SMeshAoS *builtin_quad_mesh = new SMeshAoS();
+    SShape *builtin_quad_shape = new SShape();
+    primitives::createQuadMesh(builtin_quad_mesh);
+    CModel *quadModel = new CModelResource();
+    quadModel->setModelType(ModelType::MODEL_BUILTIN);
+    quadModel->setName("builtinQuad1x1");
+    builtin_quad_shape->name = "builtinQuad1x1";
+    builtin_quad_shape->mesh = builtin_quad_mesh;
+    builtin_quad_shape->material = new SMaterial();
+    builtin_quad_shape->material->diffuseTexName = "crate.jpg";
+    builtin_quad_shape->material->ambientTexName = "crate.jpg";
+    builtin_quad_shape->material->shaderName = "sPlainEasy";
+    quadModel->addShape(builtin_quad_shape);
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("crate.jpg");
+    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(quadModel)) {
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(quadModel);
+        delete quadModel;
+    } else {
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -678,8 +699,8 @@ void gfx::CGfxMain::render(void) {
     if(!sOrthoEasyProgram) {
         FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
         return;
-    }
-    m_shaderMgr->useProgram(sOrthoEasyProgram);
+    }    
+    m_shaderMgr->useProgram(sOrthoEasyProgram);    
     sOrthoEasyProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     context::setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
@@ -688,6 +709,7 @@ void gfx::CGfxMain::render(void) {
     context::setBlend(FG_FALSE);
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
+    m_shaderMgr->useProgram(sOrthoEasyProgram);
     Model = math::translate(Model, Vec3f(0.0f, 0.0f, 0.0f));
     CMVPMatrix mvp_lol;
     CMVPMatrix *MVP = &mvp_lol;

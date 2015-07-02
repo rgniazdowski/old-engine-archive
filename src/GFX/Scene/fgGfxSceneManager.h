@@ -901,6 +901,33 @@ namespace fg {
             //------------------------------------------------------------------
 
             /**
+             *
+             * @param pModelRes
+             * @param nameTag
+             * @return
+             */
+            CSceneNode *addFromModel(CModelResource *pModelRes,
+                                     const std::string& nameTag);
+            /**
+             *
+             * @param modelNameTag
+             * @param nameTag
+             * @return
+             */
+            CSceneNode *addFromModel(const std::string& modelNameTag,
+                                     const std::string& nameTag);
+            /**
+             *
+             * @param modelNameTag
+             * @param nameTag
+             * @return
+             */
+            CSceneNode *addFromModel(const char *modelNameTag,
+                                     const char *nameTag);
+
+            //------------------------------------------------------------------
+
+            /**
              * 
              * @param pNode
              * @return 
