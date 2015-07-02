@@ -103,14 +103,8 @@ namespace fg {
              * 
              * @return 
              */
-            SEventBase* requestEventStruct(void);
-
-            /**
-             * 
-             * @param eventStructSize
-             * @return 
-             */
-            SEventBase* requestEventStruct(const unsigned int eventStructSize);
+            SEventBase* requestEventStruct(EventType eventType = event::INVALID,
+                                           unsigned int eventStructSize = 0);
 
             /**
              * 

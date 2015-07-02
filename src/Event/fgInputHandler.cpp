@@ -264,27 +264,21 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
     //
     if(m_eventMgr) { // #FIXME
 #if defined(FG_USING_PLATFORM_MOBILE)
-        STouch *touchEvent = (STouch *)m_eventMgr->requestEventStruct();
+        STouch *touchEvent = (STouch *)m_eventMgr->requestEventStruct(event::TOUCH_PRESSED);
         CArgumentList *argList = m_eventMgr->requestArgumentList();
-        touchEvent->eventType = event::TOUCH_PRESSED;
-        touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_TRUE;
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
         touchEvent->y = point.y;
-
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_PRESSED, argList);
 #else
-        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct(event::MOUSE_PRESSED);
         CArgumentList* argList = m_eventMgr->requestArgumentList();
-        mouseEvent->eventType = event::MOUSE_PRESSED;
-        mouseEvent->timeStamp = timesys::ticks();
         mouseEvent->pressed = FG_TRUE;
         mouseEvent->buttonID = touchID;
         mouseEvent->x = point.x;
         mouseEvent->y = point.y;
-
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)mouseEvent);
         m_eventMgr->throwEvent(event::MOUSE_PRESSED, argList);
 #endif
@@ -322,16 +316,14 @@ void event::CInputHandler::handlePointerMoved(Vector2i point,
     touchData.m_relY = -(m_lastMouse[touchID].y - point.y);
     m_lastMouse[touchID].x = point.x;
     m_lastMouse[touchID].y = point.y;
-    
+
     //
     // Throwing the proper event
     //
     if(m_eventMgr) {
 #if defined(FG_USING_PLATFORM_MOBILE)
-        STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
+        STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct(event::TOUCH_MOTION);
         CArgumentList *argList = m_eventMgr->requestArgumentList();
-        touchEvent->eventType = event::TOUCH_MOTION;
-        touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = touchData.m_pressed;
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
@@ -342,10 +334,8 @@ void event::CInputHandler::handlePointerMoved(Vector2i point,
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_MOTION, argList);
 #else
-        SMouse *mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+        SMouse *mouseEvent = (SMouse*)m_eventMgr->requestEventStruct(event::MOUSE_MOTION);
         CArgumentList *argList = m_eventMgr->requestArgumentList();
-        mouseEvent->eventType = event::MOUSE_MOTION;
-        mouseEvent->timeStamp = timesys::ticks();
         mouseEvent->pressed = touchData.m_pressed;
         mouseEvent->buttonID = touchID;
         mouseEvent->x = point.x;
@@ -402,31 +392,25 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
     //
     if(m_eventMgr) {
 #if defined(FG_USING_PLATFORM_MOBILE)
-        STouch* touchEvent = (STouch*)m_eventMgr->requestEventStruct();
+        STouch* touchEvent = (STouch*)m_eventMgr->requestEventStruct(event::TOUCH_RELEASED);
         CArgumentList* argList = m_eventMgr->requestArgumentList();
-        touchEvent->eventType = event::TOUCH_RELEASED;
-        touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_FALSE; // Touch is released
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
         touchEvent->y = point.y;
         touchEvent->relX = touchData.m_relX;
         touchEvent->relY = touchData.m_relY;
-
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_RELEASED, argList);
 #else
-        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct(event::MOUSE_RELEASED);
         CArgumentList* argList = m_eventMgr->requestArgumentList();
-        mouseEvent->eventType = event::MOUSE_RELEASED;
-        mouseEvent->timeStamp = timesys::ticks();
         mouseEvent->pressed = FG_FALSE; // Touch is released
         mouseEvent->buttonID = touchID;
         mouseEvent->x = point.x;
         mouseEvent->y = point.y;
         mouseEvent->relX = touchData.m_relX;
         mouseEvent->relY = touchData.m_relY;
-
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)mouseEvent);
         m_eventMgr->throwEvent(event::MOUSE_RELEASED, argList);
 #endif
@@ -665,15 +649,12 @@ void event::CInputHandler::processData(void) {
     for(unsigned int i = 0; i < (unsigned int)m_keysPressedPool.size(); i++) {
         KeyVirtualCode keyCode = m_keysPressedPool[i];
         {
-            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
+            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct(event::KEY_PRESSED);
             CArgumentList* argList = m_eventMgr->requestArgumentList();
-            keyEvent->eventType = event::KEY_PRESSED;
-            keyEvent->timeStamp = timesys::ticks();
             keyEvent->pressed = FG_TRUE;
             keyEvent->repeats = 1;
             keyEvent->keyCode = keyCode;
             keyEvent->mod = m_keyboardMod;
-
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_PRESSED, argList);
         }
@@ -684,15 +665,12 @@ void event::CInputHandler::processData(void) {
     for(unsigned int i = 0; i < (unsigned int)m_keysDownPool.size(); i++) {
         KeyVirtualCode keyCode = m_keysDownPool[i];
         {
-            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
+            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct(event::KEY_DOWN);
             CArgumentList* argList = m_eventMgr->requestArgumentList();
-            keyEvent->eventType = event::KEY_DOWN;
-            keyEvent->timeStamp = timesys::ticks();
             keyEvent->pressed = FG_TRUE;
             keyEvent->repeats = m_keyRepeats[(unsigned int)keyCode];
             keyEvent->keyCode = keyCode;
             keyEvent->mod = m_keyboardMod;
-
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_DOWN, argList);
         }
@@ -715,15 +693,12 @@ void event::CInputHandler::processData(void) {
         KeyVirtualCode keyCode = m_keysUpPool[i];
         // Throw proper key release event
         {
-            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct();
+            SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct(event::KEY_UP);
             CArgumentList* argList = m_eventMgr->requestArgumentList();
-            keyEvent->eventType = event::KEY_UP;
-            keyEvent->timeStamp = timesys::ticks();
             keyEvent->pressed = FG_FALSE;
             keyEvent->repeats = 0;
             keyEvent->keyCode = keyCode;
             keyEvent->mod = m_keyboardMod;
-
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_UP, argList);
         }
@@ -770,10 +745,8 @@ void event::CInputHandler::processData(void) {
                     //
                     if(m_eventMgr) {
 #if defined(FG_USING_PLATFORM_MOBILE)
-                        STouch* touchEvent = (STouch*)m_eventMgr->requestEventStruct();
+                        STouch* touchEvent = (STouch*)m_eventMgr->requestEventStruct(event::TOUCH_TAP_FINISHED);
                         CArgumentList* argList = m_eventMgr->requestArgumentList();
-                        touchEvent->eventType = event::TOUCH_TAP_FINISHED;
-                        touchEvent->timeStamp = timesys::ticks();
                         touchEvent->pressed = FG_FALSE;
                         touchEvent->touchID = touchPtr.m_touchID;
                         touchEvent->x = touchPtr.m_tapX;
@@ -782,10 +755,8 @@ void event::CInputHandler::processData(void) {
                         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
                         m_eventMgr->throwEvent(event::TOUCH_TAP_FINISHED, argList);
 #else
-                        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct();
+                        SMouse* mouseEvent = (SMouse*)m_eventMgr->requestEventStruct(event::MOUSE_TAP_FINISHED);
                         CArgumentList* argList = m_eventMgr->requestArgumentList();
-                        mouseEvent->eventType = event::MOUSE_TAP_FINISHED;
-                        mouseEvent->timeStamp = timesys::ticks();
                         mouseEvent->pressed = FG_FALSE;
                         mouseEvent->buttonID = touchPtr.m_touchID;
                         mouseEvent->x = touchPtr.m_tapX;
@@ -847,20 +818,20 @@ void event::CInputHandler::processData(void) {
                             &touchPtr.m_swipeUp, &touchPtr.m_swipeDown, &touchPtr.m_swipeYSize); // OUT
 
             touchPtr.m_xSwipeSteps = touchPtr.m_swipeXSize / PIXELS_PER_STEP_X;
-            touchPtr.m_ySwipeSteps = touchPtr.m_swipeYSize / PIXELS_PER_STEP_Y;
+            touchPtr.m_ySwipeSteps = touchPtr.m_swipeYSize / PIXELS_PER_STEP_Y;            
             touchPtr.m_swipeXSize %= PIXELS_PER_STEP_X;
             touchPtr.m_swipeYSize %= PIXELS_PER_STEP_Y;
 
             //
             // Throwing the proper event
             //
-            if(touchPtr.m_swipeLeft || touchPtr.m_swipeRight || touchPtr.m_swipeUp || touchPtr.m_swipeDown) {
+            if(touchPtr.m_swipeLeft ||
+               touchPtr.m_swipeRight ||
+               touchPtr.m_swipeUp ||
+               touchPtr.m_swipeDown) {
                 if(m_eventMgr) {
-                    //SSwipe *swipeEvent = fgMalloc<SSwipe>();
                     SSwipe *swipeEvent = (SSwipe*)m_eventMgr->requestEventStruct();
                     CArgumentList *argList = m_eventMgr->requestArgumentList();
-
-                    swipeEvent->timeStamp = timesys::ticks();
                     fgBool X = FG_FALSE, Y = FG_FALSE;
                     if(touchPtr.m_swipeDown) {
                         swipeEvent->swipeDirection = SSwipe::DOWN;
@@ -888,11 +859,11 @@ void event::CInputHandler::processData(void) {
                     swipeEvent->xEnd = touchPtr.m_pointerXEnd;
                     swipeEvent->yEnd = touchPtr.m_pointerYEnd;
 
-                    //CArgumentList *argList = new CArgumentList();
                     argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)swipeEvent);
 
                     if(X && Y) {
                         swipeEvent->eventType = event::SWIPE_XY;
+                        swipeEvent->swipeDirection = SSwipe::ANGLE;
                         m_eventMgr->throwEvent(event::SWIPE_XY, argList);
                     } else if(X) {
                         swipeEvent->eventType = event::SWIPE_X;
@@ -901,28 +872,10 @@ void event::CInputHandler::processData(void) {
                         swipeEvent->eventType = event::SWIPE_Y;
                         m_eventMgr->throwEvent(event::SWIPE_Y, argList);
                     }
-                }
-            }
 
-            // If swipe in Y is much larger than
-            // swipe in X, then discard swipe in X // FIXME
-            /*if( fabsf(touchPtr.m_swipeYSize) >= fabsf(touchPtr.m_swipeXSize * 1.3f) )
-            {
-                    touchPtr.m_swipeXSize = 0;
-                    touchPtr.m_swipeLeft = false;
-                    touchPtr.m_swipeRight = false;
-            }
-            else
-            {
-                    // The same for X!
-                    if( fabsf(touchPtr.m_swipeXSize) >= fabsf(touchPtr.m_swipeYSize * 1.3f) )
-                    {
-                            touchPtr.m_swipeYSize = 0;
-                            touchPtr.m_swipeUp = false;
-                            touchPtr.m_swipeDown = false;
-                    }
-            }*/ // FIXME
-        }
+                } // if(event manager)
+            } // if(any swipe)
+        } // if(!pointerTap)
 
         // COPIES DATA
         m_rawTouchesProcessed[touchID] = touchPtr;
@@ -936,7 +889,10 @@ void event::CInputHandler::processData(void) {
         touchPtr.m_pointerYStart = touchPtr.m_pointerYEnd;
 
         // Reset the swipe-initial position, so that swipe detection will be harder again
-        if(touchPtr.m_swipeLeft || touchPtr.m_swipeRight || touchPtr.m_swipeUp || touchPtr.m_swipeDown) {
+        if(touchPtr.m_swipeLeft ||
+           touchPtr.m_swipeRight ||
+           touchPtr.m_swipeUp ||
+           touchPtr.m_swipeDown) {
             //
             // Reset X and Y – whichever of them won - it took all!
             // (For example, if X swipe occured, it will reset
@@ -957,7 +913,7 @@ void event::CInputHandler::interpretSwipes(int min_offset_for_swipe,
                                            fgBool* plusSwipe,
                                            int* swipeSize) // OUT
 {
-    // This is physical swipe lenght - not necesarily
+    // This is physical swipe length - not necessarily
     // software swipe (it will become software swipe
     // if min_offset_for_swipe threshold will be fulfilled).
     int offset = endPointer - initialSwipePointer;

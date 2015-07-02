@@ -173,34 +173,30 @@ fgBool event::CEventManager::initialize(void) {
 }
 //------------------------------------------------------------------------------
 
-event::SEventBase* event::CEventManager::requestEventStruct(void) {
-    SEventBase* ptr = NULL;
-    if(m_eventStructsFreeSlots.empty()) {
-        ptr = (SEventBase *)fgMalloc<void>(m_eventStructSize, FG_TRUE);
-        m_eventStructs.push_back((void *)ptr);
-        ptr->timeStamp = timesys::ticks();
-    } else {
-        ptr = (SEventBase *)m_eventStructsFreeSlots.back();
-        memset(ptr, 0, m_eventStructSize);
-        ptr->timeStamp = timesys::ticks();
-        m_eventStructsFreeSlots.pop_back();
-    }
-    return ptr;
-}
-//------------------------------------------------------------------------------
-
-event::SEventBase* event::CEventManager::requestEventStruct(const unsigned int eventStructSize) {
+event::SEventBase* event::CEventManager::requestEventStruct(EventType eventType, 
+                                                            unsigned int eventStructSize) {
     if(!eventStructSize) {
-        return requestEventStruct();
+        eventStructSize = m_eventStructSize;
     }
+    if(!eventStructSize) {
+        m_eventStructSize = sizeof(event::SEvent);
+        eventStructSize = m_eventStructSize;
+    }
+
     SEventBase* ptr = NULL;
     if(m_eventStructsFreeSlots.empty()) {
         ptr = (SEventBase *)fgMalloc<void>(eventStructSize, FG_TRUE);
         m_eventStructs.push_back((void *)ptr);
+        ptr->eventType = eventType;
         ptr->timeStamp = timesys::ticks();
     } else {
         ptr = (SEventBase *)m_eventStructsFreeSlots.back();
-        ptr = (SEventBase *)fgRealloc<void>(ptr, eventStructSize, FG_TRUE);
+        if(eventStructSize != m_eventStructSize) {
+            // requesting different size for this event structure
+            ptr = (SEventBase *)fgRealloc<void>(ptr, eventStructSize);
+        }
+        memset(ptr, 0, eventStructSize);
+        ptr->eventType = eventType;
         ptr->timeStamp = timesys::ticks();
         m_eventStructsFreeSlots.pop_back();
     }

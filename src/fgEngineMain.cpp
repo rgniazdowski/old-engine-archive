@@ -748,7 +748,7 @@ fgBool CEngineMain::update(fgBool force) {
     timesys::markTick(timesys::TICK_UPDATE);
     m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
                              m_gfxMain->getMainWindow()->getHeight());
-    
+
     // Update logic manager
     if(m_gameMain)
         m_gameMain->update();
@@ -791,16 +791,6 @@ fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
     if(!pEvent)
         return FG_FALSE;
     event::EventType type = pEvent->code;
-    /*if(type == event::TOUCH_TAP_FINISHED && this->m_gfxMain) {
-        event::STouch *touch = (event::STouch *)pEvent;
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionDebris", 20, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionFlash", 2, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionRoundSparks", 6, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionShockwave", 1, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSmoke", 20, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSmokeTrails", 32, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-        this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSparks", 48, Vector3f((float)touch->x, (float)touch->y, 0.0f));
-    }*/
     if(this->m_gfxMain) {
         if(type == event::TOUCH_MOTION) {
             event::STouch *touch = (event::STouch *)pEvent;
