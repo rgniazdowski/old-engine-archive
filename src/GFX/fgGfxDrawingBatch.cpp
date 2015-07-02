@@ -238,7 +238,7 @@ fgBool gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
         return FG_FALSE;
     }
     // Need to remember the 'isManaged' flag before removal
-    // - when draw call is removed the flag is automaticall set to false
+    // - when draw call is removed the flag is automatically set to false
     fgBool isManaged = drawCall->isManaged();
     if(!gfx::CDrawingBatch::removeDrawCall(drawCall)) {
         return FG_FALSE;
@@ -342,11 +342,18 @@ void gfx::CDrawingBatch::flush(void) {
         m_priorityBatch.pop();
 
     // With preallocation just remove not managed drawcalls
-
+    //printf("-- DC: FLUSH: self.this=[%p] --------\n", this);
     int nDuplicates = m_duplicates.size();
     for(int i = 0; i < nDuplicates; i++) {
         CDrawCall *drawCall = m_duplicates[i];
         if(drawCall) {
+            //printf("DC: DUP: [%p] - idx[%d], type[%d], mask[%d], managed[%d], data[%p], dsize[%d]\n",
+            //       drawCall, i,
+            //       (int)drawCall->getDrawCallType(),
+            //       (int)drawCall->getAttribMask(),
+            //       (int)drawCall->isManaged(),
+            //       drawCall->getVertexData(),
+            //       (int)drawCall->getVertexData()->size());
             if(drawCall->isManaged() == FG_FALSE)
                 removeDrawCall(drawCall);
             m_duplicates[i] = NULL;
@@ -354,14 +361,23 @@ void gfx::CDrawingBatch::flush(void) {
     }
 
     for(unsigned int i = 0; i < m_numDrawCalls; i++) {
-        if(m_drawCalls[i] == NULL)
+        CDrawCall *drawCall = m_drawCalls[i];
+        if(drawCall == NULL)
             continue;
-        if(m_drawCalls[i]->isManaged() == FG_FALSE) {
-            removeDrawCall(m_drawCalls[i]);
+        //printf("DC: ALL: [%p] - idx[%d], type[%d], mask[%d], managed[%d], data[%p], dsize[%d]\n",
+        //       drawCall, i,
+        //       (int)drawCall->getDrawCallType(),
+        //       (int)drawCall->getAttribMask(),
+        //       (int)drawCall->isManaged(),
+        //       drawCall->getVertexData(),
+        //       (int)drawCall->getVertexData()->size());
+        if(drawCall->isManaged() == FG_FALSE) {
+            removeDrawCall(drawCall);
         } else {
-            m_drawCalls[i]->flush();
+            drawCall->flush();
         }
     }
+    //printf("--------------------------------------------\n");
     m_numDrawCalls = 0;
     m_zIndex = 0;
     m_relMove = Vector3f();
