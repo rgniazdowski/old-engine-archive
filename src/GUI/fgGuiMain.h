@@ -347,17 +347,17 @@ namespace fg {
              * 
              * @param menuName
              */
-            void setCurrentMenu(const char *menuName);
+            void setCurrentMenu(const char *menuName, fgBool shouldUpdateState = FG_TRUE);
             /**
              * 
              * @param menuName
              */
-            void setCurrentMenu(const std::string& menuName);
+            void setCurrentMenu(const std::string& menuName, fgBool shouldUpdateState = FG_TRUE);
             /**
              * 
              * @param pMenu
              */
-            void setCurrentMenu(CWidget* pMenu);
+            void setCurrentMenu(CWidget* pMenu, fgBool shouldUpdateState = FG_TRUE);
             /**
              *
              * @return

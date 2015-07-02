@@ -498,7 +498,9 @@ void gui::CGuiMain::updateState(void) {
         return;
     if(m_isMenuChanging) {
         if(m_changeToMenu) {
-            m_currentMenu = static_cast<CMenu *>(m_changeToMenu);
+            // This will throw proper event (that the changing did finish)
+            // second parameter is set to false to avoid recursion
+            setCurrentMenu(m_changeToMenu, FG_FALSE);
         }
         m_isMenuChanging = FG_FALSE;
         //return;
@@ -735,6 +737,21 @@ void gui::CGuiMain::changeMenu(CWidget *pMenu) {
         return;
     }
     if(pMenu->getTypeTraits() & MENU) {
+        event::SMenuChanged* menuEvent = (event::SMenuChanged*)m_pEventMgr->requestEventStruct();
+        event::CArgumentList* argList = m_pEventMgr->requestArgumentList();
+        // menu will change later, animation is starting (if any)
+        menuEvent->didChange = FG_FALSE;
+        menuEvent->prevMenu = m_currentMenu;
+        menuEvent->nextMenu = pMenu;
+        if(m_currentMenu) {
+            menuEvent->prevMenuName = m_currentMenu->getNameStr();
+        } else {
+            menuEvent->prevMenuName = "\0";
+        }
+        menuEvent->nextMenuName = pMenu->getNameStr();
+        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)menuEvent);
+        m_pEventMgr->throwEvent(event::MENU_CHANGED, argList);
+
         m_changeToMenu = static_cast<CMenu *>(pMenu);
         FG_LOG_DEBUG("GUI: Changing menu to: '%s'", m_changeToMenu->getNameStr());
         this->updateState();
@@ -743,7 +760,7 @@ void gui::CGuiMain::changeMenu(CWidget *pMenu) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CGuiMain::setCurrentMenu(const char *menuName) {
+void gui::CGuiMain::setCurrentMenu(const char *menuName, fgBool shouldUpdateState) {
     if(!menuName) {
         return;
     }
@@ -751,11 +768,11 @@ void gui::CGuiMain::setCurrentMenu(const char *menuName) {
         return;
     }
     CWidget *pWidget = m_widgetMgr->get(menuName);
-    setCurrentMenu(pWidget);
+    setCurrentMenu(pWidget, shouldUpdateState);
 }
 //------------------------------------------------------------------------------
 
-void gui::CGuiMain::setCurrentMenu(const std::string& menuName) {
+void gui::CGuiMain::setCurrentMenu(const std::string& menuName, fgBool shouldUpdateState) {
     if(menuName.empty()) {
         return;
     }
@@ -763,21 +780,37 @@ void gui::CGuiMain::setCurrentMenu(const std::string& menuName) {
         return;
     }
     CWidget *pWidget = m_widgetMgr->get(menuName);
-    setCurrentMenu(pWidget);
+    setCurrentMenu(pWidget, shouldUpdateState);
 }
 //------------------------------------------------------------------------------
 
-void gui::CGuiMain::setCurrentMenu(CWidget *pMenu) {
+void gui::CGuiMain::setCurrentMenu(CWidget *pMenu, fgBool shouldUpdateState) {
     if(!pMenu)
         return;
     if(m_widgetMgr && !m_widgetMgr->isManaged(pMenu)) {
         return;
     }
     if(pMenu->getTypeTraits() & MENU) {
+        event::SMenuChanged* menuEvent = (event::SMenuChanged*)m_pEventMgr->requestEventStruct();
+        event::CArgumentList* argList = m_pEventMgr->requestArgumentList();
+        menuEvent->didChange = FG_TRUE; // menu did change, animation ended
+        menuEvent->prevMenu = m_currentMenu;
+        menuEvent->nextMenu = pMenu;
+        if(m_currentMenu) {
+            menuEvent->prevMenuName = m_currentMenu->getNameStr();
+        } else {
+            menuEvent->prevMenuName = "\0"; // empty name
+        }
+        menuEvent->nextMenuName = pMenu->getNameStr();
+        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)menuEvent);
+        m_pEventMgr->throwEvent(event::MENU_CHANGED, argList);
+
         m_currentMenu = static_cast<CMenu *>(pMenu);
         FG_LOG_DEBUG("GUI: Setting current menu to: '%s'", m_currentMenu->getNameStr());
-        this->updateState();
         m_isMenuChanging = FG_FALSE;
+        if(shouldUpdateState) {
+            this->updateState();
+        }
     }
 }
 //------------------------------------------------------------------------------

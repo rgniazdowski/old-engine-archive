@@ -26,6 +26,11 @@ namespace fg {
         class CResource;
     }
 
+    namespace gui {
+        class CMenu;
+        class CWidget;
+    }
+
     namespace event {
 
     #ifndef FG_EVENT_TYPE_DEFINED
@@ -463,11 +468,20 @@ namespace fg {
         };
 
         /**
-         *
+         * Event structure for changing GUI menu events
          */
         struct SMenuChanged : SEventBase {
-            //GUIHANDLE 
-            //
+            /// Pointer to previous menu (can be NULL)
+            fg::gui::CWidget* prevMenu;
+            /// Pointer to the next menu (current)
+            fg::gui::CWidget* nextMenu;
+            /// Previous menu name
+            const char* prevMenuName;
+            /// Next menu name
+            const char* nextMenuName;
+            /// Set to TRUE if the changing did finished or to FALSE if the
+            // changing is already in motion (animated)
+            fgBool didChange;
         };
 
         /**

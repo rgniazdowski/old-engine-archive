@@ -1204,6 +1204,9 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     // Menu Changed Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_MENU_CHANGED_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
+            .Property("prevMenuName", &event::SMenuChanged::prevMenuName)
+            .Property("nextMenuName", &event::SMenuChanged::nextMenuName)
+            .Property("didChange", &event::SMenuChanged::didChange)
             ;
     // __gc ? nope
 
@@ -2379,6 +2382,7 @@ fgBool script::CScriptSubsystem::registerGuiMain(void) {
         return FG_FALSE;
 
     typedef void(gui::CGuiMain::*GM_void_C_STR_IN)(const char*);
+    typedef void(gui::CGuiMain::*GM_void_C_STR_Bool_IN)(const char*, fgBool);
 
     // Gui main/manager metatable
     m_mgrMetatables[GUI_MAIN] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::GUI_MAIN_MT_ID));
@@ -2388,7 +2392,7 @@ fgBool script::CScriptSubsystem::registerGuiMain(void) {
                                                    static_cast<GM_void_C_STR_IN>(&gui::CGuiMain::changeMenu));
     m_mgrMetatables[GUI_MAIN].RegisterObjectDirect("setCurrentMenu",
                                                    (gui::CGuiMain *)0,
-                                                   static_cast<GM_void_C_STR_IN>(&gui::CGuiMain::setCurrentMenu));
+                                                   static_cast<GM_void_C_STR_Bool_IN>(&gui::CGuiMain::setCurrentMenu));
     m_mgrMetatables[GUI_MAIN].Register("addWidgetCallback", &script::CScriptSubsystem::addWidgetCallbackWrapper);
 
     uintptr_t offset = (uintptr_t)m_pGuiMain;
