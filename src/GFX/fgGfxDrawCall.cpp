@@ -151,7 +151,7 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
     m_attribMask = attribMask;
-    m_fastCmp.setPart(0, (fg::util::CFastCmp::data_type_32)m_attribMask);
+    m_fastCmp.setPart(CMP_SLOT_ATTRIB_MASK, (fg::util::CFastCmp::data_type_32)m_attribMask);
 }
 //------------------------------------------------------------------------------
 
@@ -161,7 +161,7 @@ void gfx::CDrawCall::setupFromVertexData(const CVertexData* pVertexData) {
     pVertexData->setupAttributes(m_attrData);
     setDrawCallType(FG_GFX_DRAW_CALL_EXTERNAL_ARRAY);
     m_attribMask = pVertexData->attribMask();
-    m_fastCmp.setPart(0, (util::CFastCmp::data_type_32)m_attribMask);
+    m_fastCmp.setPart(CMP_SLOT_ATTRIB_MASK, (util::CFastCmp::data_type_32)m_attribMask);
     refreshDrawingInfo(pVertexData);
 }
 //------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     setDrawCallType(FG_GFX_DRAW_CALL_MESH);
     m_primMode = pMesh->primMode;
     m_attribMask = pMesh->attribMask();
-    m_fastCmp.setPart(0, (util::CFastCmp::data_type_32)m_attribMask);
+    m_fastCmp.setPart(CMP_SLOT_ATTRIB_MASK, (util::CFastCmp::data_type_32)m_attribMask);
     refreshDrawingInfo(pMesh);
 }
 //------------------------------------------------------------------------------
@@ -220,20 +220,17 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
         //m_program = pMaterial->shaderProgram;
         setShaderProgram(pMaterial->shaderProgram);
     }
-    if(pMaterial->ambientTex) {
-        setTexture(pMaterial->ambientTex->getRefGfxID());
-    } else if(pMaterial->diffuseTex) {
+    if(pMaterial->diffuseTex) {
         setTexture(pMaterial->diffuseTex->getRefGfxID());
+    } else if(pMaterial->ambientTex) {
+        //setTexture(pMaterial->ambientTex->getRefGfxID());
     } else if(pMaterial->specularTex) {
 
     } else if(pMaterial->normalTex) {
 
-    }
-    // textures?
-    // #FIXME
-    //m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
+    }    
     // This replaces value in sorting slot
-    m_fastCmp.setPart(1, (fg::util::CFastCmp::data_type_32)sortingValue);
+    m_fastCmp.setPart(CMP_SLOT_TEXTURE, (fg::util::CFastCmp::data_type_32)sortingValue);
 }
 //------------------------------------------------------------------------------
 
@@ -329,19 +326,19 @@ void gfx::CDrawCall::setZIndex(const int zIndex) {
     } else {
         m_zIndex = zIndex;
     }
-    m_fastCmp.setPart(3, (fg::util::CFastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(CMP_SLOT_Z_INDEX, (fg::util::CFastCmp::data_type_32)m_zIndex);
 }
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::upZIndex(void) {
     m_zIndex++;
-    m_fastCmp.setPart(3, (fg::util::CFastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(CMP_SLOT_Z_INDEX, (fg::util::CFastCmp::data_type_32)m_zIndex);
 }
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::downZIndex(void) {
     m_zIndex--;
-    m_fastCmp.setPart(3, (fg::util::CFastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(CMP_SLOT_Z_INDEX, (fg::util::CFastCmp::data_type_32)m_zIndex);
 }
 //------------------------------------------------------------------------------
 
@@ -379,7 +376,7 @@ void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
         }
         m_vecDataBase = NULL;
         resetAttributeData();
-        m_fastCmp.setPart(0, (fg::util::CFastCmp::data_type_32)m_attribMask);
+        m_fastCmp.setPart(CMP_SLOT_ATTRIB_MASK, (fg::util::CFastCmp::data_type_32)m_attribMask);
     }
     m_drawCallType = type;
 }
@@ -441,9 +438,9 @@ gfx::CMVPMatrix *gfx::CDrawCall::getMVP(void) const {
 void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
     m_program = pProgram;
     if(m_program) {
-        m_fastCmp.setPart(2, (fg::util::CFastCmp::data_type_32)m_program->getHandle().getIndex());
+        m_fastCmp.setPart(CMP_SLOT_SHADER_PROGRAM, (fg::util::CFastCmp::data_type_32)m_program->getHandle().getIndex());
     } else {
-        m_fastCmp.setPart(2, (fg::util::CFastCmp::data_type_32)0);
+        m_fastCmp.setPart(CMP_SLOT_SHADER_PROGRAM, (fg::util::CFastCmp::data_type_32)0);
     }
 }
 //------------------------------------------------------------------------------
@@ -455,7 +452,7 @@ gfx::CShaderProgram* gfx::CDrawCall::getShaderProgram(void) const {
 
 void gfx::CDrawCall::setTexture(const STextureID& textureID) {
     m_textureID = textureID;
-    m_fastCmp.setPart(1, (fg::util::CFastCmp::data_type_32)m_textureID.id);
+    m_fastCmp.setPart(CMP_SLOT_TEXTURE, (fg::util::CFastCmp::data_type_32)m_textureID.id);
 }
 //------------------------------------------------------------------------------
 

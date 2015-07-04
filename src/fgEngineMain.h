@@ -364,8 +364,8 @@ namespace fg {
         /// Special callback for game free look (controlling camera via touch/click)
         event::CFunctionCallback *m_gameFreeLookCallback;
 
-    };
-};
+    }; // class CEngineMain
+} // namespace fg
 
     #undef FG_INC_ENGINE_MAIN_BLOCK
 #endif /* FG_INC_GAME_MAIN */

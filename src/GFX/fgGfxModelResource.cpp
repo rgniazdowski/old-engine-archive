@@ -102,39 +102,6 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
         FG_LOG_DEBUG("GFX.Model: shape '%s': vec[%d], norm[%d], uvs[%d]", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
         if(shape->material) {
             m_numMaterials++;
-#if 0
-            if(base_type::m_pManager) {
-                CResource *tex = NULL;
-                // Ambient texture handle lookup
-                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->ambientTexName);
-                if(tex) {
-                    if(tex->getResourceType() == resource::TEXTURE) {
-                        shape->material->ambientTex = static_cast<CTextureResource *>(tex);
-                    }
-                }
-                // Diffuse texture handle lookup
-                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->diffuseTexName);
-                if(tex) {
-                    if(tex->getResourceType() == resource::TEXTURE) {
-                        shape->material->diffuseTex = static_cast<CTextureResource *>(tex);
-                    }
-                }
-                // Specular texture handle lookup
-                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->specularTexName);
-                if(tex) {
-                    if(tex->getResourceType() == resource::TEXTURE) {
-                        shape->material->specularTex = static_cast<CTextureResource *>(tex);
-                    }
-                }
-                // Normal texture handle lookup
-                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->normalTexName);
-                if(tex) {
-                    if(tex->getResourceType() == resource::TEXTURE) {
-                        shape->material->normalTex = static_cast<CTextureResource *>(tex);
-                    }
-                }
-            }
-#endif
         }
 
         if(shape->mesh) {

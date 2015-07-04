@@ -85,6 +85,13 @@ namespace fg {
             ///
             typedef CDrawCall type;
 
+        public:
+            ///
+            static const unsigned char CMP_SLOT_ATTRIB_MASK = 0;
+            static const unsigned char CMP_SLOT_TEXTURE = 1;
+            static const unsigned char CMP_SLOT_SHADER_PROGRAM = 2;
+            static const unsigned char CMP_SLOT_Z_INDEX = 3;
+
         private:
             /// Attribute binding data
             SAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];

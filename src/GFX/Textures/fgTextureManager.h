@@ -121,8 +121,8 @@ namespace fg {
 
             // #FIXME #TODO #P2
     #if defined(FG_USING_OPENGL_ES) || defined(FG_USING_OPENGL)
-            static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
-            static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
+            static GLint translatePixelFormat(texture::PixelFormat pixelFormat);
+            static GLint translateInternalPixelFormat(texture::InternalPixelFormat internalPixelFormat);
     #endif
 
             /**

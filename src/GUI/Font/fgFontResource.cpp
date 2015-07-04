@@ -54,7 +54,7 @@ void gui::CFontResource::clear(void) {
 //------------------------------------------------------------------------------
 
 fgBool gui::CFontResource::create(void) {
-    m_textureType = FG_TEXTURE_FONT;
+    m_textureType = gfx::texture::FONT;
     if(!base_type::create()) {
         // #TODO error handling / reporting
         log::PrintError("%s(%d): texture create function has failed - in function %s.", fg::path::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);

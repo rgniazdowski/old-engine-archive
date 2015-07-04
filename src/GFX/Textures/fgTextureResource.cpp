@@ -22,9 +22,9 @@ using namespace fg;
 
 gfx::CTextureResource::CTextureResource() :
 base_type(),
-m_fileType(FG_TEXTURE_FILE_INVALID),
-m_textureType(FG_TEXTURE_PLAIN),
-m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
+m_fileType(texture::FILE_INVALID),
+m_textureType(texture::PLAIN),
+m_pixelFormat(texture::PIXEL_INVALID),
 m_rawData(NULL),
 m_width(0),
 m_height(0),
@@ -38,9 +38,9 @@ m_isInVRAM(FG_FALSE) {
 
 gfx::CTextureResource::CTextureResource(const char *path) :
 base_type(path),
-m_fileType(FG_TEXTURE_FILE_INVALID),
-m_textureType(FG_TEXTURE_PLAIN),
-m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
+m_fileType(texture::FILE_INVALID),
+m_textureType(texture::PLAIN),
+m_pixelFormat(texture::PIXEL_INVALID),
 m_rawData(NULL),
 m_width(0),
 m_height(0),
@@ -54,9 +54,9 @@ m_isInVRAM(FG_FALSE) {
 
 gfx::CTextureResource::CTextureResource(std::string& path) :
 base_type(path),
-m_fileType(FG_TEXTURE_FILE_INVALID),
-m_textureType(FG_TEXTURE_PLAIN),
-m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
+m_fileType(texture::FILE_INVALID),
+m_textureType(texture::PLAIN),
+m_pixelFormat(texture::PIXEL_INVALID),
 m_rawData(NULL),
 m_width(0),
 m_height(0),
@@ -70,9 +70,9 @@ m_isInVRAM(FG_FALSE) {
 
 void gfx::CTextureResource::clear(void) {
     base_type::clear();
-    m_fileType = FG_TEXTURE_FILE_INVALID;
-    m_textureType = FG_TEXTURE_PLAIN;
-    m_pixelFormat = FG_TEXTURE_PIXEL_INVALID;
+    m_fileType = texture::FILE_INVALID;
+    m_textureType = texture::PLAIN;
+    m_pixelFormat = texture::PIXEL_INVALID;
     m_rawData = NULL; // #FIXME
     m_cubeData[0] = NULL;
     m_width = 0;
@@ -86,24 +86,24 @@ void gfx::CTextureResource::clear(void) {
 //------------------------------------------------------------------------------
 
 fgBool gfx::CTextureResource::create(void) {
-    if(m_rawData && m_isReady) {
+    if(m_rawData && base_type::m_isReady) {
         return FG_TRUE;
     }
-    if(m_rawData && !m_isReady) {
+    if(m_rawData && !base_type::m_isReady) {
         releaseNonGFX();
     }
     FG_LOG_DEBUG("GFX: Creating texture [%s]", m_nameTag.c_str());
-    if(getFilePath(m_quality).empty()) {
+    if(getFilePath(base_type::m_quality).empty()) {
         FG_LOG_ERROR("GFX: texture file path is empty on create");
         // #TODO error handling / reporting
         return FG_FALSE;
     }
-    const char *filePathStr = getFilePathStr(m_quality);
+    const char *filePathStr = getFilePathStr(base_type::m_quality);
     char filePathBuf[FG_FILE_PATH_MAX];
     memset(filePathBuf, 0, FG_FILE_PATH_MAX);
     const char *filePathPtr = filePathStr;
     setFileTypeFromFilePath();
-    if(m_fileType == FG_TEXTURE_FILE_INVALID) {
+    if(m_fileType == texture::FILE_INVALID) {
         FG_LOG_ERROR("GFX: texture file type is invalid - on create for '%s'", filePathPtr);
         // #TODO error handling / reporting
         return FG_FALSE;
@@ -112,12 +112,12 @@ fgBool gfx::CTextureResource::create(void) {
     int maxRawDataID = 0, i = 0;
 
     // 2D texture - single file, (x,y) coords
-    if(m_textureType == FG_TEXTURE_PLAIN || m_textureType == FG_TEXTURE_FONT) {
+    if(m_textureType == texture::PLAIN || m_textureType == texture::FONT) {
         maxRawDataID = 1;
         targetRawData = &m_rawData;
         filePathPtr = filePathStr;
-    } else if(m_textureType == FG_TEXTURE_CUBE) {
-        maxRawDataID = FG_NUM_TEXTURE_CUBE_MAPS;
+    } else if(m_textureType == texture::CUBE) {
+        maxRawDataID = texture::NUM_CUBE_MAPS;
         targetRawData = m_cubeData; // ? the fuck is that?
         filePathPtr = filePathBuf;
     } else {
@@ -130,27 +130,27 @@ fgBool gfx::CTextureResource::create(void) {
     this->m_size = 0;
     const char *cubeSuffix[6] = {"px", "nx", "py", "ny", "pz", "nz"};
     for(i = 0; i < maxRawDataID; i++) {
-        if(m_textureType == FG_TEXTURE_CUBE) {
+        if(m_textureType == texture::CUBE) {
             targetRawData = &m_cubeData[i];
             snprintf(filePathBuf, FG_FILE_PATH_MAX - 1, filePathStr, cubeSuffix[i]);
         }
         switch(m_fileType) {
-            case FG_TEXTURE_FILE_BMP:
+            case texture::FILE_BMP:
                 FG_LOG_ERROR("GFX: texture file type (BMP) is not yet supported!");
                 break;
-            case FG_TEXTURE_FILE_RAW:
+            case texture::FILE_RAW:
                 FG_LOG_ERROR("GFX: texture file type (RAW) is not yet supported!");
                 break;
-            case FG_TEXTURE_FILE_JPEG:
+            case texture::FILE_JPEG:
                 *targetRawData = fgTextureLoader::loadJPEG(filePathPtr, m_width, m_height);
                 break;
-            case FG_TEXTURE_FILE_PNG:
+            case texture::FILE_PNG:
                 *targetRawData = fgTextureLoader::loadPNG(filePathPtr, m_width, m_height);
                 break;
-            case FG_TEXTURE_FILE_TGA:
+            case texture::FILE_TGA:
                 *targetRawData = fgTextureLoader::loadTGA(filePathPtr, m_width, m_height);
                 break;
-            case FG_TEXTURE_FILE_OTHER:
+            case texture::FILE_OTHER:
                 FG_LOG_ERROR("GFX: texture file type (OTHER) is not yet supported!");
                 return FG_FALSE;
                 break;
@@ -216,17 +216,17 @@ fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     // #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
     const char *ext = fg::path::fileExt(path.c_str(), FG_TRUE);
     if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
-        this->m_fileType = FG_TEXTURE_FILE_BMP;
+        this->m_fileType = texture::FILE_BMP;
     } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
-        this->m_fileType = FG_TEXTURE_FILE_RAW;
+        this->m_fileType = texture::FILE_RAW;
     } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
-        this->m_fileType = FG_TEXTURE_FILE_JPEG;
+        this->m_fileType = texture::FILE_JPEG;
     } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
-        this->m_fileType = FG_TEXTURE_FILE_PNG;
+        this->m_fileType = texture::FILE_PNG;
     } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
-        this->m_fileType = FG_TEXTURE_FILE_TGA;
+        this->m_fileType = texture::FILE_TGA;
     } else {
-        this->m_fileType = FG_TEXTURE_FILE_OTHER;
+        this->m_fileType = texture::FILE_OTHER;
     }
     return FG_TRUE;
 }
@@ -236,7 +236,7 @@ void gfx::CTextureResource::releaseNonGFX(void) {
     if(m_rawData) {
         FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
     }
-    for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
+    for(int i = 0; i < texture::NUM_CUBE_MAPS; i++) {
         if(m_cubeData[i]) {
             delete [] m_cubeData[i];
         }
@@ -269,15 +269,15 @@ void gfx::CTextureResource::setFlags(const std::string& flags) {
     unsigned int n = (unsigned int)flagsVec.size();
     for(unsigned int i = 0; i < n; i++) {
         if(strings::isEqual(flagsVec[i].c_str(), "cube", FG_FALSE)) {
-            m_textureType = FG_TEXTURE_CUBE;
+            m_textureType = texture::CUBE;
         } else if(strings::isEqual(flagsVec[i].c_str(), "2D", FG_FALSE)) {
-            m_textureType = FG_TEXTURE_PLAIN;
+            m_textureType = texture::PLAIN;
         } else if(strings::isEqual(flagsVec[i].c_str(), "3D", FG_FALSE)) {
-            m_textureType = FG_TEXTURE_3D;
+            m_textureType = texture::T_3D;
         } else if(strings::isEqual(flagsVec[i].c_str(), "bump", FG_FALSE)) {
-            m_textureType = FG_TEXTURE_BUMP;
+            m_textureType = texture::BUMP;
         } else if(strings::isEqual(flagsVec[i].c_str(), "normal", FG_FALSE)) {
-            m_textureType = FG_TEXTURE_NORMAL;
+            m_textureType = texture::NORMAL;
         }
     }
 }

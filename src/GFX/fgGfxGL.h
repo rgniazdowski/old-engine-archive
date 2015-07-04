@@ -130,7 +130,7 @@ namespace fg {
     #endif
 namespace fg {
     namespace gfx {
-/**
+        /**
          *
          * @param afterFunc
          * @param params
@@ -141,13 +141,13 @@ namespace fg {
             static GLenum lastCode = GL_NO_ERROR;
             GLenum retCode = GL_NO_ERROR;
             GLenum code = GL_NO_ERROR;
-            
+
             const char * const invalidEnum = "An unacceptable value is specified for an enumerated argument.";
             const char * const invalidValue = "A numeric argument is out of range.";
             const char * const invalidOperation = "The specified operation is not allowed in the current state.";
             const char * const outOfMemory = "There is not enough memory left to execute the command. The state of the GL is undefined";
             const char * const invalidFBOp = "The command is trying to render to or read from the framebuffer while the currently bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus is not GL_FRAMEBUFFER_COMPLETE).";
-            
+
             if(afterFunc == NULL)
                 afterFunc = "gl*";
             if(params == NULL)

@@ -284,11 +284,10 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_cube_shape->name = "builtinCube1x1";
     builtin_cube_shape->mesh = builtin_cube_mesh;
     builtin_cube_shape->material = new SMaterial();
-    builtin_cube_shape->material->diffuseTexName = "crate.jpg";
-    builtin_cube_shape->material->ambientTexName = "crate.jpg";
+    builtin_cube_shape->material->diffuseTexName = "empty.tga";
     builtin_cube_shape->material->shaderName = "sPlainEasy";
     cubeModel->addShape(builtin_cube_shape);
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("crate.jpg");
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(cubeModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(cubeModel);
         delete cubeModel;
@@ -306,12 +305,11 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     sphereModel->setName("builtinSphere");
     builtin_sphere_shape->name = "builtinSphere";
     builtin_sphere_shape->mesh = builtin_sphere_mesh;
-    builtin_sphere_shape->material = new SMaterial();
-    builtin_sphere_shape->material->ambientTexName = "mars_1k_color.jpg";
-    builtin_sphere_shape->material->diffuseTexName = "mars_1k_color.jpg";
+    builtin_sphere_shape->material = new SMaterial();    
+    builtin_sphere_shape->material->diffuseTexName = "empty.tga";
     builtin_sphere_shape->material->shaderName = "sPlainEasy";
     sphereModel->addShape(builtin_sphere_shape);
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("mars_1k_color.jpg");
+    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(sphereModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(sphereModel);
         delete sphereModel;
@@ -328,11 +326,10 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_quad_shape->name = "builtinQuad1x1";
     builtin_quad_shape->mesh = builtin_quad_mesh;
     builtin_quad_shape->material = new SMaterial();
-    builtin_quad_shape->material->diffuseTexName = "crate.jpg";
-    builtin_quad_shape->material->ambientTexName = "crate.jpg";
+    builtin_quad_shape->material->diffuseTexName = "empty.tga";
     builtin_quad_shape->material->shaderName = "sPlainEasy";
     quadModel->addShape(builtin_quad_shape);
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("crate.jpg");
+    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(quadModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(quadModel);
         delete quadModel;

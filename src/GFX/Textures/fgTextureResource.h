@@ -27,12 +27,12 @@ namespace fg {
         /*
          *
          */
-        class CTextureResource : public ::fg::resource::CResource {
+        class CTextureResource : public fg::resource::CResource {
             friend class ::fg::gfx::CTextureManager;
 
         public:
             ///
-            typedef ::fg::resource::CResource base_type;
+            typedef fg::resource::CResource base_type;
             ///
             typedef CTextureResource type;
             ///
@@ -108,9 +108,9 @@ namespace fg {
              * @return 
              */
             fgBool setFileTypeFromFilePath(void) {
-                if(getFilePath(m_quality).empty())
+                if(getFilePath(base_type::m_quality).empty())
                     return FG_FALSE;
-                return setFileTypeFromFilePath(getFilePath(m_quality));
+                return setFileTypeFromFilePath(getFilePath(base_type::m_quality));
             }
 
         public:
@@ -187,8 +187,8 @@ namespace fg {
              * @param id
              * @return 
              */
-            unsigned char *getCubeData(const fgTextureCubeMapID id) const {
-                if((int)id >= FG_NUM_TEXTURE_CUBE_MAPS || (int)id < 0)
+            unsigned char *getCubeData(const texture::CubeMapID id) const {
+                if((int)id >= texture::NUM_CUBE_MAPS || (int)id < 0)
                     return NULL;
                 return m_cubeData[id];
             }
@@ -196,35 +196,35 @@ namespace fg {
              * Get texture file type (determined from extension)
              * @return 
              */
-            fgTextureFileType getFileType(void) const {
+            texture::FileType getFileType(void) const {
                 return m_fileType;
             }
             /**
              * Get texture type
              * @return 
              */
-            fgTextureType getTextureType(void) const {
+            texture::Type getTextureType(void) const {
                 return m_textureType;
             }
             /**
              * Get texture pixel format
              * @return 
              */
-            fgTexturePixelFormat getPixelFormat(void) const {
+            texture::PixelFormat getPixelFormat(void) const {
                 return m_pixelFormat;
             }
             /**
              * Set the texture type (usage)
              * @param textureType
              */
-            void setTextureType(fgTextureType textureType) {
+            void setTextureType(texture::Type textureType) {
                 m_textureType = textureType;
             }
             /**
              * Set the final texture pixel format
              * @param pixelFormat
              */
-            void setPixelFormat(fgTexturePixelFormat pixelFormat) {
+            void setPixelFormat(texture::PixelFormat pixelFormat) {
                 m_pixelFormat = pixelFormat;
             }
             /**
@@ -246,11 +246,11 @@ namespace fg {
 
         protected:
             /// Texture file type (by extension)
-            fgTextureFileType m_fileType;
+            texture::FileType m_fileType;
             /// Texture type and possible usage
-            fgTextureType m_textureType;
+            texture::Type m_textureType;
             /// Final texture pixel format (data pixel format)
-            fgTexturePixelFormat m_pixelFormat;
+            texture::PixelFormat m_pixelFormat;
 
             union {
 
@@ -274,7 +274,7 @@ namespace fg {
                 /// Storage for raw pixel data
                 unsigned char* m_rawData;
                 ///
-                unsigned char* m_cubeData[FG_NUM_TEXTURE_CUBE_MAPS];
+                unsigned char* m_cubeData[texture::NUM_CUBE_MAPS];
                 ///
                 unsigned char* m_texelsVec[8]; // #FIXME
             };

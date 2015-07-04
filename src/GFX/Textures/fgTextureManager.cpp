@@ -401,14 +401,14 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     fgGFXuint cubeTargets[] = {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
-    fgTextureType textureType = pTexture->getTextureType();
-    if(textureType == FG_TEXTURE_PLAIN || textureType == FG_TEXTURE_FONT) {
+    texture::Type textureType = pTexture->getTextureType();
+    if(textureType == texture::PLAIN || textureType == texture::FONT) {
         target = GL_TEXTURE_2D;
         glTexParameteri(target, GL_TEXTURE_MIN_FILTER, (fgGFXint)GL_LINEAR);
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, (fgGFXint)GL_LINEAR);
         glTexParameteri(target, GL_TEXTURE_WRAP_S, (fgGFXint)GL_MIRRORED_REPEAT);
         glTexParameteri(target, GL_TEXTURE_WRAP_T, (fgGFXint)GL_MIRRORED_REPEAT);
-    } else if(textureType == FG_TEXTURE_CUBE) {
+    } else if(textureType == texture::CUBE) {
         target = GL_TEXTURE_CUBE_MAP;
         glTexParameteri(target, GL_TEXTURE_MIN_FILTER, (fgGFXint)GL_LINEAR);
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, (fgGFXint)GL_LINEAR);
@@ -436,11 +436,11 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         dataformat = (fgGFXint)GL_ALPHA;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     }
-    if(textureType == FG_TEXTURE_PLAIN || textureType == FG_TEXTURE_FONT) {
+    if(textureType == texture::PLAIN || textureType == texture::FONT) {
         glTexImage2D(target, 0, (fgGFXint)internalformat, pTexture->getWidth(), pTexture->getHeight(), 0, (fgGFXenum)dataformat, GL_UNSIGNED_BYTE, pTexture->getRawData());
-    } else if(textureType == FG_TEXTURE_CUBE) {
+    } else if(textureType == texture::CUBE) {
         target = GL_TEXTURE_CUBE_MAP;
-        for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
+        for(int i = 0; i < texture::NUM_CUBE_MAPS; i++) {
             glTexImage2D(cubeTargets[i], 0,
                          (fgGFXint)internalformat,
                          pTexture->getWidth(),
@@ -448,7 +448,7 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
                          0,
                          (fgGFXenum)dataformat,
                          GL_UNSIGNED_BYTE,
-                         pTexture->getCubeData((fgTextureCubeMapID)i));
+                         pTexture->getCubeData((texture::CubeMapID)i));
         }
     }
     if(GLCheckError("glTexImage2D")) {

@@ -30,104 +30,115 @@
 // Extension (held as string) for TGA file format
     #define FG_TEXTURE_FILE_EXTENSION_TGA	"tga"
 
-enum fgTextureCubeMapID {
-    FG_TEXTURE_CUBE_MAP_POSITIVE_X_ID = 0,
-    FG_TEXTURE_CUBE_MAP_NEGATIVE_X_ID = 1,
-    FG_TEXTURE_CUBE_MAP_POSITIVE_Y_ID = 2,
-    FG_TEXTURE_CUBE_MAP_NEGATIVE_Y_ID = 3,
-    FG_TEXTURE_CUBE_MAP_POSITIVE_Z_ID = 4,
-    FG_TEXTURE_CUBE_MAP_NEGATIVE_Z_ID = 5,
-    FG_NUM_TEXTURE_CUBE_MAPS = 6
-};
+namespace fg {
+    namespace gfx {
+        namespace texture {
 
-// Texture file type enumeration. Supported file formats (current & future):
-// bmp, raw, jpg, png, tga
+            enum CubeMapID {
+                CUBE_MAP_POSITIVE_X_ID = 0,
+                CUBE_MAP_NEGATIVE_X_ID = 1,
+                CUBE_MAP_POSITIVE_Y_ID = 2,
+                CUBE_MAP_NEGATIVE_Y_ID = 3,
+                CUBE_MAP_POSITIVE_Z_ID = 4,
+                CUBE_MAP_NEGATIVE_Z_ID = 5,
+                NUM_CUBE_MAPS = 6
+            };
 
-enum fgTextureFileType {
-    FG_TEXTURE_FILE_INVALID = 0,
+            // Texture file type enumeration. Supported file formats (current & future):
+            // bmp, raw, jpg, png, tga
 
-    FG_TEXTURE_FILE_BMP,
-    FG_TEXTURE_FILE_RAW,
-    FG_TEXTURE_FILE_JPEG,
-    FG_TEXTURE_FILE_PNG,
-    FG_TEXTURE_FILE_TGA,
-    FG_TEXTURE_FILE_DDS,
-    FG_TEXTURE_FILE_OTHER,
+            enum FileType {
+                FILE_INVALID = 0,
 
-    FG_NUM_TEXTURE_FILE_TYPES
-};
+                FILE_BMP,
+                FILE_RAW,
+                FILE_JPEG,
+                FILE_PNG,
+                FILE_TGA,
+                FILE_DDS,
+                FILE_OTHER,
 
-// Texture type enumeration, defines the type of the texture and
-// possible usage because of this
+                FG_NUM_TEXTURE_FILE_TYPES
+            };
 
-enum fgTextureType {
-    FG_TEXTURE_INVALID = 0,
-    FG_TEXTURE_PLAIN = 1,
-    FG_TEXTURE_2D = FG_TEXTURE_PLAIN,
-    FG_TEXTURE_BUMP = 2,
-    FG_TEXTURE_NORMAL = 3,
-    FG_TEXTURE_RAW = 4,
-    FG_TEXTURE_FONT = 5,
-    FG_TEXTURE_CUBE = 6,
-    FG_TEXTURE_3D = 7,
+            /**
+             * Texture type enumeration, defines the type of the texture and
+             * possible usage because of this
+             */
+            enum Type {
+                INVALID = 0,
+                PLAIN = 1,
+                T_2D = PLAIN,
+                DIFFUSE = PLAIN,
+                BUMP = 2,
+                NORMAL = 3,
+                RAW = 4,
+                FONT = 5,
+                CUBE = 6,
+                T_3D = 7,
 
-    FG_NUM_TEXTURE_TYPES = 8
-};
+                NUM_TEXTURE_TYPES = 8
+            };
 
-// Texture internal pixel format
-
-enum fgTextureInternalPixelFormat {
-    FG_TEXTURE_INTERNAL_PIXEL_INVALID = 0,
-
-    #if defined(FG_USING_OPENGL_ES)
-    FG_TEXTURE_INTERNAL_PIXEL_ALPHA,
-    FG_TEXTURE_INTERNAL_PIXEL_RGB,
-    FG_TEXTURE_INTERNAL_PIXEL_RGBA,
-    FG_TEXTURE_INTERNAL_PIXEL_LUMINANCE,
-    FG_TEXTURE_INTERNAL_PIXEL_LUMINANCE_ALPHA,
-    #elif defined(FG_USING_OPENGL)
-    FG_TEXTURE_INTERNAL_PIXEL_DEPTH_COMPONENT,
-    FG_TEXTURE_INTERNAL_PIXEL_DEPTH_STENCIL,
-    FG_TEXTURE_INTERNAL_PIXEL_RED,
-    FG_TEXTURE_INTERNAL_PIXEL_RG,
-    FG_TEXTURE_INTERNAL_PIXEL_RGB,
-    FG_TEXTURE_INTERNAL_PIXEL_RGBA,
-    #endif
-
-    FG_NUM_TEXTURE_INTERNAL_PIXEL_FORMATS
-};
-
-// Texture pixel format (data storage)
-
-enum fgTexturePixelFormat {
-    FG_TEXTURE_PIXEL_INVALID = 0,
+            /**
+             * Texture internal pixel format
+             */
+            enum InternalPixelFormat {
+                INTERNAL_PIXEL_INVALID = 0,
 
     #if defined(FG_USING_OPENGL_ES)
-    FG_TEXTURE_PIXEL_ALPHA,
-    FG_TEXTURE_PIXEL_RGB,
-    FG_TEXTURE_PIXEL_RGBA,
-    FG_TEXTURE_PIXEL_LUMINANCE,
-    FG_TEXTURE_PIXEL_LUMINANCE_ALPHA,
+                INTERNAL_PIXEL_ALPHA,
+                INTERNAL_PIXEL_RGB,
+                INTERNAL_PIXEL_RGBA,
+                INTERNAL_PIXEL_LUMINANCE,
+                INTERNAL_PIXEL_LUMINANCE_ALPHA,
     #elif defined(FG_USING_OPENGL)
-    FG_TEXTURE_PIXEL_DEPTH_COMPONENT,
-    FG_TEXTURE_PIXEL_DEPTH_STENCIL,
-    FG_TEXTURE_PIXEL_RED,
-    FG_TEXTURE_PIXEL_RG,
-    FG_TEXTURE_PIXEL_RGB,
-    FG_TEXTURE_PIXEL_RGBA,
-    FG_TEXTURE_PIXEL_BGR,
-    FG_TEXTURE_PIXEL_BGRA,
-    FG_TEXTURE_PIXEL_RED_INTEGER,
-    FG_TEXTURE_PIXEL_RG_INTEGER,
-    FG_TEXTURE_PIXEL_RGB_INTEGER,
-    FG_TEXTURE_PIXEL_BGR_INTEGER,
-    FG_TEXTURE_PIXEL_RGBA_INTEGER,
-    FG_TEXTURE_PIXEL_BGRA_INTEGER,
-    FG_TEXTURE_PIXEL_STENCIL_INDEX,
+                INTERNAL_PIXEL_DEPTH_COMPONENT,
+                INTERNAL_PIXEL_DEPTH_STENCIL,
+                INTERNAL_PIXEL_RED,
+                INTERNAL_PIXEL_RG,
+                INTERNAL_PIXEL_RGB,
+                INTERNAL_PIXEL_RGBA,
     #endif
 
-    FG_NUM_TEXTURE_PIXEL_FORMATS
-};
+                FG_NUM_TEXTURE_INTERNAL_PIXEL_FORMATS
+            };
+
+            // Texture pixel format (data storage)
+
+            enum PixelFormat {
+                PIXEL_INVALID = 0,
+
+    #if defined(FG_USING_OPENGL_ES)
+                PIXEL_ALPHA,
+                PIXEL_RGB,
+                PIXEL_RGBA,
+                PIXEL_LUMINANCE,
+                PIXEL_LUMINANCE_ALPHA,
+    #elif defined(FG_USING_OPENGL)
+                PIXEL_DEPTH_COMPONENT,
+                PIXEL_DEPTH_STENCIL,
+                PIXEL_RED,
+                PIXEL_RG,
+                PIXEL_RGB,
+                PIXEL_RGBA,
+                PIXEL_BGR,
+                PIXEL_BGRA,
+                PIXEL_RED_INTEGER,
+                PIXEL_RG_INTEGER,
+                PIXEL_RGB_INTEGER,
+                PIXEL_BGR_INTEGER,
+                PIXEL_RGBA_INTEGER,
+                PIXEL_BGRA_INTEGER,
+                PIXEL_STENCIL_INDEX,
+    #endif
+
+                NUM_PIXEL_FORMATS
+            };
+
+        } // namespace texture
+    } // namespace gfx
+} // namespace fg
 
 // ///////////////////////////////////////////////////////////////////////
 // OPENGL 4.X - PIXEL DATA FORMATS:
@@ -199,6 +210,6 @@ enum fgTexturePixelFormat {
     #define FG_TEXTURE_COMP_RGB         3
     #define FG_TEXTURE_COMP_RGBA        4
 
-    #define FG_TEXTURE_DEFAULT_PIXEL_FORMAT FG_TEXTURE_PIXEL_RGBA
+//#define FG_TEXTURE_DEFAULT_PIXEL_FORMAT FG_TEXTURE_PIXEL_RGBA
 
 #endif /* FG_INC_TEXTURE_TYPES_HEADER */

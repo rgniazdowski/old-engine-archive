@@ -372,9 +372,9 @@ namespace fg {
             fg::event::CFunctionCallback *m_sceneNodeInsertedCallback;
             /// Is GFX init properly?
             fgBool m_init;
-        };
-    };
-};
+        }; // class CGfxMain
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_MAIN_BLOCK
 #endif /* FG_INC_GFX_MAIN */

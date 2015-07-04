@@ -220,11 +220,10 @@ namespace fg {
         /// changing name to fgApplication - or extending fgApplication class
         /// #TODO - support threads
         fg::CEngineMain *m_engineMain;
-    };
-};
+    }; // class CMainModule
+} // namespace fg
 
     #endif /* !defined FG_STATIC_LIBRARY */
 
     #undef FG_INC_MAIN_MODULE_BLOCK
 #endif	/* FG_INC_MAIN_MODULE */
-
