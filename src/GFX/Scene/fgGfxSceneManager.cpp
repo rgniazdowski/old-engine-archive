@@ -37,7 +37,6 @@ m_traverse(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
 m_groundGrid(),
 m_worldSize(),
-m_MVP(),
 m_camera(CCameraAnimation::FREE),
 m_skybox(),
 m_rootNodes(),
@@ -50,7 +49,7 @@ m_basetree(NULL) {
     m_groundGrid.cellSize = 50.0f;
     m_managerType = FG_MANAGER_SCENE;
     m_skybox.setScale(FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f); // #FIXME #SKYBOX scale
-    m_skybox.setMVP(&m_MVP);
+    m_skybox.setMVP(getMVP());
     m_sceneEventMgr = new event::CEventManager(sizeof (event::SSceneEvent));
     m_triggers.reserve(4);
     m_traverse.rewind();

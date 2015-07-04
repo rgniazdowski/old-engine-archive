@@ -32,7 +32,7 @@ namespace fg {
 
         protected:
             ///
-            typedef CPriorityQueue<CDrawCall*, std::deque<CDrawCall* >, fgPtrLessEq<CDrawCall* > > BatchPriorityQueue;
+            typedef CPriorityQueue<CDrawCall*, std::deque<CDrawCall*>, fgPtrLessEq<CDrawCall*> > BatchPriorityQueue;
             ///
             typedef CVector<CDrawCall*> DrawCallVec;
             ///
@@ -67,8 +67,12 @@ namespace fg {
         protected:
             /// Relative move
             Vector3f m_relMove;
+            /// Internal MVP matrix to use
+            CMVPMatrix m_MVP;
             /// Pointer to external Shader Manager
-            fg::base::CManager *m_pShaderMgr;
+            fg::base::CManager* m_pShaderMgr;
+            ///
+            CShaderProgram* m_pDefaultShader;
 
         protected:
             /**
@@ -107,28 +111,58 @@ namespace fg {
              */
             virtual ~CDrawingBatch();
             /**
+             *
+             * @return
+             */
+            inline CMVPMatrix* getMVP(void) {
+                return &m_MVP;
+            }
+            /**
              * 
              * @return 
              */
-            inline fg::base::CManager *getShaderManager(void) const {
+            inline fg::base::CManager* getShaderManager(void) const {
                 return m_pShaderMgr;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fg::gfx::base::CShader* getDefaultShader(void) const {
+                return m_pDefaultShader;
             }
 
             /**
              * 
              * @param pShaderMgr
              */
-            virtual void setShaderManager(fg::base::CManager *pShaderMgr);
+            virtual void setShaderManager(fg::base::CManager* pShaderMgr);
+
+            /**
+             *
+             * @param pDefaultShader
+             */
+            void setDefaultShader(CShaderProgram* pDefaultShader);
+            /**
+             *
+             * @param nameTag
+             */
+            void setDefaultShader(const char* nameTag);
+            /**
+             * 
+             * @param nameTag
+             */
+            void setDefaultShader(const std::string& nameTag);
 
             /**
              * 
              * @param index
              * @return 
              */
-            CDrawCall* requestDrawCall(int &index,
+            CDrawCall* requestDrawCall(int& index,
                                        const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
                                        const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                       fg::gfx::CShaderProgram* pProgram = NULL);
+                                       CShaderProgram* pProgram = NULL);
             /**
              * 
              * @param index
@@ -142,7 +176,9 @@ namespace fg {
             CDrawCall* getLastDrawCall(void);
             // Appends the specified draw call to the drawing batch
             // The check flag is used for duplicates
-            int appendDrawCall(CDrawCall* drawCall, fgBool manage = FG_TRUE, fgBool check = FG_TRUE);
+            int appendDrawCall(CDrawCall* drawCall,
+                               fgBool manage = FG_TRUE,
+                               fgBool check = FG_TRUE);
             /**
              * Removes the given draw call from the drawing batch
              * @param index Specifies the index of a draw call to remove
@@ -304,9 +340,9 @@ namespace fg {
                 m_scissorBox = dimensions;
             }
 
-        };
-    };
-};
+        }; // class CDrawingBatch
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_DRAWING_BATCH_BLOCK
 #endif /* FG_INC_GFX_DRAWING_BATCH */

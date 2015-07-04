@@ -1096,6 +1096,8 @@ namespace fg {
              * @return 
              */
             inline CMVPMatrix *getMVP(void) {
+                // this function is repeated here because CDrawingBatch
+                // is protected
                 return &m_MVP;
             }
             /**
@@ -1686,9 +1688,7 @@ namespace fg {
             ///
             SPlaneGridf m_groundGrid;
             ///
-            Vector3f m_worldSize;
-            /// Internal MVP matrix to use, this will set the perspective view
-            CMVPMatrix m_MVP;
+            Vector3f m_worldSize;            
             /// Internal camera
             CCameraAnimation m_camera;
             /// Internal skybox

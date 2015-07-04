@@ -65,14 +65,14 @@ namespace fg {
 
             protected:
                 ///
-                typedef std::map<fgGFXenum, fgGFXint> objParamMap;
+                typedef std::map<fgGFXenum, fgGFXint> ObjParamMap;
                 ///
-                typedef objParamMap::iterator objParamMapItor;
+                typedef ObjParamMap::iterator ObjParamMapItor;
 
                 /**
                  *
                  */
-                enum shaderBaseType {
+                enum ShaderBaseType {
                     FG_GFX_BASE_TYPE_INVALID = 0,
                     FG_GFX_BASE_TYPE_SHADER = 1,
                     FG_GFX_BASE_TYPE_PROGRAM = 2
@@ -80,13 +80,13 @@ namespace fg {
 
             protected:
                 ///
-                objParamMap m_params;
+                ObjParamMap m_params;
                 ///
                 char *m_log;
                 ///
                 fgGFXuint m_gfxID;
                 /// 
-                shaderBaseType m_baseType;
+                ShaderBaseType m_baseType;
 
             public:
                 /**

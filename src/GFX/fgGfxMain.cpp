@@ -700,7 +700,10 @@ void gfx::CGfxMain::render(void) {
     m_shaderMgr->useProgram(sOrthoEasyProgram);    
     sOrthoEasyProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     context::setBlend(FG_TRUE);
-    m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
+    m_2DScene->getMVP()->setOrtho(0.0f,
+                                  (float)m_mainWindow->getWidth(),
+                                  (float)m_mainWindow->getHeight(),
+                                  0.0f);
     m_2DScene->render();
     context::blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     context::setBlend(FG_FALSE);
@@ -711,7 +714,10 @@ void gfx::CGfxMain::render(void) {
     CMVPMatrix mvp_lol;
     CMVPMatrix *MVP = &mvp_lol;
     MVP->identity();
-    MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
+    MVP->setOrtho(0.0f,
+                  (float)m_mainWindow->getWidth(),
+                  (float)m_mainWindow->getHeight(),
+                  0.0f);
     MVP->calculate(Model);
     sOrthoEasyProgram->setUniform(MVP);
     context::setBlend(FG_TRUE);

@@ -62,7 +62,7 @@ void fg::gfx::base::CShader::updateParams(void) {
         return;
     }
     GLint value;
-    objParamMapItor begin, end, itor;
+    ObjParamMapItor begin, end, itor;
     begin = m_params.begin();
     end = m_params.end();
     itor = begin;

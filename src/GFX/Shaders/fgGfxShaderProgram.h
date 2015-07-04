@@ -131,26 +131,26 @@ namespace fg {
 
         public:
             ///
-            typedef CVector<fg::gfx::CShader *> shaderVec;
+            typedef CVector<fg::gfx::CShader *> ShaderVec;
             ///
-            typedef shaderVec::iterator shaderVecItor;
+            typedef ShaderVec::iterator ShaderVecItor;
             ///
-            typedef CShaderConfig::UniformBindVec uniformBindVec;
+            typedef CShaderConfig::UniformBindVec UniformBindVec;
             ///
-            typedef uniformBindVec::iterator uniformBindVecItor;
+            typedef UniformBindVec::iterator UniformBindVecItor;
             ///
-            typedef CShaderConfig::AttributeBindVec attributeBindVec;
+            typedef CShaderConfig::AttributeBindVec AttributeBindVec;
             ///
-            typedef attributeBindVec::iterator attributeBindVecItor;
+            typedef AttributeBindVec::iterator AttributeBindVecItor;
 
         protected:
             /// Vector holding shaders (vertex/fragment/etc..) that 
             /// will be used to link the shader program
-            shaderVec m_shaders;
+            ShaderVec m_shaders;
             /// Special vector with uniforms binds for this shader program
-            uniformBindVec m_uniformBinds;
+            UniformBindVec m_uniformBinds;
             /// Vector with attribute binds for this shader program
-            attributeBindVec m_attrBinds;
+            AttributeBindVec m_attrBinds;
             /// Helper class for loading special shader configs
             CShaderConfig* m_config;
             /// Are the special config files loaded?
@@ -191,13 +191,13 @@ namespace fg {
              * @param binds
              * @return 
              */
-            fgBool appendUniformBinds(uniformBindVec & binds);
+            fgBool appendUniformBinds(UniformBindVec & binds);
             /**
              * 
              * @param binds
              * @return 
              */
-            fgBool appendAttributeBinds(attributeBindVec & binds);
+            fgBool appendAttributeBinds(AttributeBindVec & binds);
 
             /**
              * 
@@ -321,21 +321,21 @@ namespace fg {
              * 
              * @return 
              */
-            inline shaderVec & getRefShaderVec(void) {
+            inline ShaderVec & getRefShaderVec(void) {
                 return m_shaders;
             }
             /**
              * 
              * @return 
              */
-            inline attributeBindVec & getRefAttrBinds(void) {
+            inline AttributeBindVec & getRefAttrBinds(void) {
                 return m_attrBinds;
             }
             /**
              * 
              * @return 
              */
-            inline uniformBindVec & getRefUniformBinds(void) {
+            inline UniformBindVec & getRefUniformBinds(void) {
                 return m_uniformBinds;
             }
             /**

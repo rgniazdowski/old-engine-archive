@@ -25,7 +25,9 @@ m_defaultDrawCallType(drawCallType),
 m_defaultAttribMask(attribMask),
 m_scissorBox(0, 0, 0, 0),
 m_relMove(),
-m_pShaderMgr(NULL) {
+m_MVP(),
+m_pShaderMgr(NULL),
+m_pDefaultShader(NULL) {
     reserve(reservedSize);
 }
 //------------------------------------------------------------------------------
@@ -42,6 +44,9 @@ gfx::CDrawingBatch::~CDrawingBatch() {
     }*/
     m_freeSlots.clear_optimised();
     m_drawCalls.clear_optimised();
+    m_pShaderMgr = NULL;
+    m_pDefaultShader = NULL;
+    m_numDrawCalls = 0;
 }
 //------------------------------------------------------------------------------
 
@@ -54,10 +59,36 @@ void gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
+void gfx::CDrawingBatch::setDefaultShader(CShaderProgram* pDefaultShader) {
+    if(pDefaultShader && pDefaultShader->isManaged())
+        m_pDefaultShader = pDefaultShader;
+}
+//------------------------------------------------------------------------------
+
+void gfx::CDrawingBatch::setDefaultShader(const char* nameTag) {
+    if(m_pShaderMgr || nameTag) {
+        CShaderManager* shaderMgrPtr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
+        CShaderProgram* pProgram = shaderMgrPtr->get(nameTag);
+        if(pProgram)
+            m_pDefaultShader = pProgram;
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CDrawingBatch::setDefaultShader(const std::string& nameTag) {
+    if(m_pShaderMgr || !nameTag.empty()) {
+        CShaderManager* shaderMgrPtr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
+        CShaderProgram* pProgram = shaderMgrPtr->get(nameTag);
+        if(pProgram)
+            m_pDefaultShader = pProgram;
+    }
+}
+//------------------------------------------------------------------------------
+
+gfx::CDrawCall* gfx::CDrawingBatch::requestDrawCall(int& index,
                                                     const fgGfxDrawCallType type,
                                                     const fgGFXuint attribMask,
-                                                    gfx::CShaderProgram *pProgram) {
+                                                    gfx::CShaderProgram* pProgram) {
     CDrawCall *drawCall = NULL;
     if(m_freeSlots.empty()) {
         // Increase the number of drawcalls, get the next drawcall index
@@ -75,7 +106,7 @@ gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
     }
     // fgGfxDrawCall *drawCall = new fgGfxDrawCall(type, attribMask);
     if(m_pShaderMgr && !pProgram) {
-        gfx::CShaderManager *shaderMgrPtr = static_cast<gfx::CShaderManager *>(getShaderManager());
+        CShaderManager* shaderMgrPtr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
         drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
     } else {
         drawCall->setShaderProgram(pProgram);

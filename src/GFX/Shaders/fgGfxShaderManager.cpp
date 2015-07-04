@@ -74,9 +74,9 @@ fgBool gfx::CShaderManager::initialize(void) {
     CShaderProgram *defaultProgram = new CShaderProgram();
     defaultProgram->setName("DefaultShader"); // #FIXME - const name
     defaultProgram->setFilePath("DefaultShader");
-    CShaderProgram::attributeBindVec &attrBinds = defaultProgram->getRefAttrBinds();
-    CShaderProgram::uniformBindVec &uniformBinds = defaultProgram->getRefUniformBinds();
-    CShaderProgram::shaderVec & shaderVec = defaultProgram->getRefShaderVec();
+    CShaderProgram::AttributeBindVec &attrBinds = defaultProgram->getRefAttrBinds();
+    CShaderProgram::UniformBindVec &uniformBinds = defaultProgram->getRefUniformBinds();
+    CShaderProgram::ShaderVec & shaderVec = defaultProgram->getRefShaderVec();
     char *sourceFragment = fgMalloc<char>(2048);
     char *sourceVertex = fgMalloc<char>(2048);
 

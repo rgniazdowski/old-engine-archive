@@ -177,7 +177,7 @@ fgBool gfx::CShaderProgram::compile(void) {
         FG_LOG_ERROR("GFX: Failed to create shader program: name[%s], path[%s]", getNameStr(), getFilePathStr());
         return FG_FALSE;
     }
-    shaderVecItor begin, end, itor;
+    ShaderVecItor begin, end, itor;
     begin = m_shaders.begin(), end = m_shaders.end();
     itor = begin;
     for(; itor != end; itor++) {
@@ -245,7 +245,7 @@ fgBool gfx::CShaderProgram::link(void) {
     }
     {
         FG_LOG_DEBUG("GFX: Validating bound locations of attributes...");
-        attributeBindVecItor begin, end, itor;
+        AttributeBindVecItor begin, end, itor;
         begin = m_attrBinds.begin();
         end = m_attrBinds.end();
         itor = begin;
@@ -305,7 +305,7 @@ fgBool gfx::CShaderProgram::deleteProgram(void) {
     return FG_FALSE;
 }
 
-fgBool gfx::CShaderProgram::appendUniformBinds(uniformBindVec & binds) {
+fgBool gfx::CShaderProgram::appendUniformBinds(UniformBindVec & binds) {
     if(binds.empty())
         return FG_FALSE;
     const int imax = binds.size();
@@ -317,7 +317,7 @@ fgBool gfx::CShaderProgram::appendUniformBinds(uniformBindVec & binds) {
     return FG_TRUE;
 }
 
-fgBool gfx::CShaderProgram::appendAttributeBinds(attributeBindVec & binds) {
+fgBool gfx::CShaderProgram::appendAttributeBinds(AttributeBindVec & binds) {
     if(binds.empty())
         return FG_FALSE;
     const int imax = binds.size();
@@ -354,7 +354,7 @@ fgBool gfx::CShaderProgram::attachShaders(void) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
-    shaderVecItor begin, end, itor;
+    ShaderVecItor begin, end, itor;
     begin = m_shaders.begin(), end = m_shaders.end();
     itor = begin;
     for(; itor != end; itor++) {
@@ -377,7 +377,7 @@ fgBool gfx::CShaderProgram::deleteShader(gfx::CShader *shader) {
 
 fgBool gfx::CShaderProgram::deleteShaders(void) {
     fgBool status = FG_TRUE;
-    shaderVecItor begin, end, itor;
+    ShaderVecItor begin, end, itor;
     begin = m_shaders.begin(), end = m_shaders.end();
     itor = begin;
     for(; itor != end; itor++) {
@@ -403,7 +403,7 @@ fgBool gfx::CShaderProgram::detachShaders(void) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
-    shaderVecItor begin, end, itor;
+    ShaderVecItor begin, end, itor;
     begin = m_shaders.begin(), end = m_shaders.end();
     itor = begin;
     for(; itor != end; itor++) {
@@ -471,7 +471,7 @@ fgBool gfx::CShaderProgram::bindAttributes(void) {
         FG_LOG_ERROR("GFX: Bind attributes: current program gfxID(%d) is invalid.", m_gfxID);
         return FG_FALSE;
     }
-    attributeBindVecItor begin, end, itor;
+    AttributeBindVecItor begin, end, itor;
     begin = m_attrBinds.begin();
     end = m_attrBinds.end();
     itor = begin;
@@ -501,7 +501,7 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
     if(FG_GFX_FALSE == glIsProgram(m_gfxID)) {
         return FG_FALSE;
     }
-    uniformBindVecItor begin, end, itor;
+    UniformBindVecItor begin, end, itor;
     begin = m_uniformBinds.begin();
     end = m_uniformBinds.end();
     itor = begin;
