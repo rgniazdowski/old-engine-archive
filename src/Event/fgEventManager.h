@@ -21,23 +21,9 @@
     #include "fgThrownEvent.h"
     #include "fgTimeoutCallback.h"
     #include "fgCyclicCallback.h"
-
     #include "fgCallback.h"
 
-// #FIXME #TODO #P3 key codes standard mapping / translation
-// #TODO #P2 change std::vector to standard FG shadow type
 // #TODO #P4 make event manager thread friendly / multi-thread support
-
-/* EXAMPLE OF USE 
-        KeyboardEvent *event = new KeyboardEvent(keyCode);
-        event->m_pressed = true;
-        ArgumentList *argv = new ArgumentList();
-        argv->pushArgument(POINTER, (void *)keyboardEvent);
-        throwEvent(KEYBOARD_DOWN, argv);
-        ArgumentList *argv = new ArgumentList();
-        argv->pushArgument(POINTER, (void *)getWidgetByName("buttonNewGame"));
-        throwEvent(BUTTON_CLICKED, argv);
- */
 
     #define FG_MANAGER_EVENT        0x00000008
 

@@ -39,72 +39,69 @@ namespace fg {
         typedef unsigned int EventType;
     #endif
 
-        /// 
+        /// Invalid event code - never thrown
         const EventType INVALID = 0;
 
-        /// 
+        /// Touch event - finger pressed against the screen
         const EventType TOUCH_PRESSED = 1;
-        /// 
+        /// Finger released
         const EventType TOUCH_RELEASED = 2;
-        /// 
+        /// Touch/finger motion
         const EventType TOUCH_MOTION = 3;
-        /// 
-        const EventType TOUCH_TAP_FINISHED = 4;
-        //const EventType TOUCH=5;
+        /// Touch tap event
+        const EventType TOUCH_TAP_FINISHED = 4;        
 
-        /// 
+        /// Mouse button pressed
         const EventType MOUSE_PRESSED = 6;
-        /// 
+        /// Mouse button released
         const EventType MOUSE_RELEASED = 7;
-        /// 
+        /// Mouse pointer motion
         const EventType MOUSE_MOTION = 8;
-        ///
+        /// Mouse tap event
         const EventType MOUSE_TAP_FINISHED = TOUCH_TAP_FINISHED;
 
-        //const EventType MOUSE=9;
-
-        /// 
+        /// Swipe event - horizontal
         const EventType SWIPE_X = 10;
-        /// 
+        /// Swipe event - vertical
         const EventType SWIPE_Y = 11;
-        /// 
+        /// Swipe event - mix/angle
         const EventType SWIPE_XY = 12;
-        /// 
+        /// Swipe event - mix/angle
         const EventType SWIPE_ANGLE = 12;
 
-        /// 
+        /// Swipe pinch event
         const EventType SWIPE_PINCH = 14;
 
-        /// 
+        /// Swipe rotation event
         const EventType MULTI_SWIPE_ROTATE = 15;
 
-        /// 
+        /// Key is being held down
         const EventType KEY_DOWN = 16;
-        /// 
+        /// Key is released
         const EventType KEY_UP = 17;
-        ///
+        /// Key is just being pressed (changing state from up to down)
         const EventType KEY_PRESSED = 18;
-        ///
+        /// Key is released
         const EventType KEY_RELEASED = KEY_UP;
 
-        /// 
+        /// Resource was just created
         const EventType RESOURCE_CREATED = 30;
-        /// 
+        /// Resource was removed from Resource Manager
         const EventType RESOURCE_REMOVED = 31;
-        /// 
+        /// Resource was disposed (memory freed)
         const EventType RESOURCE_DISPOSED = 32;
-        /// 
+        /// Resource was destroyed - it is no longer available
         const EventType RESOURCE_DESTROYED = 33;
-        /// 
+        /// Resource was requested (first use)
         const EventType RESOURCE_REQUESTED = 34;
 
-        /// 
+        /// Event thrown when the program finishes initializing
         const EventType PROGRAM_INIT = 40;
-        ///
+        /// Event thrown on quit
         const EventType PROGRAM_QUIT = 41;
-        ///
+        /// Event thrown when program is suspended (outside pause, mostly mobile)
         const EventType PROGRAM_SUSPEND = 42;
-        ///
+        /// Event thrown when program resumes (un-pause)
         const EventType PROGRAM_RESUME = 43;
 
         /// 
@@ -113,18 +110,18 @@ namespace fg {
         const EventType LOADING_FINISHED = 51;
         /// 
         const EventType SPLASHSCREEN = 52;
-        ///
+        /// The buffers are being swapped
         const EventType SWAP_BUFFERS = 53;
-        ///
+        /// Event called on every update function (per frame)
         const EventType UPDATE_SHOT = 54;
-        ///
+        /// Event called on every update function (per frame)
         const EventType IDLE = UPDATE_SHOT;
-        ///
+        /// Event called on every pre-render function (per frame)
         const EventType PRERENDER_SHOT = 55;
-        ///
+        /// Event called on every render function (per frame)
         const EventType RENDER_SHOT = 56;
 
-        ///
+        /// Event called when the frame freezes (special pause)
         const EventType FRAME_FREEZE = 57;
 
         /// 
@@ -132,7 +129,7 @@ namespace fg {
         /// 
         const EventType CAMERA_CHANGED = 61;
 
-        /// 
+        /// Event thrown when the sound is starting to play
         const EventType SOUND_PLAYED = 70;
 
         /// 
@@ -140,26 +137,26 @@ namespace fg {
         /// 
         const EventType WIDGET_STATE_CHANGED = 81;
 
-        /// 
+        /// Event thrown on sensors change (gyro/accel)
         const EventType SENSORS_CHANGED = 90;
 
-        /// 
+        /// Game controller (joystick) added
         const EventType GAME_CONTROLLER_ADDED = 100;
-        /// 
+        /// Game controller (joystick) removed
         const EventType GAME_CONTROLLER_REMOVED = 101;
-        /// 
+        /// Game controller (joystick) button event
         const EventType GAME_CONTROLLER_BUTTON = 102;
-        /// 
+        /// Game controller (joystick) axis event
         const EventType GAME_CONTROLLER_AXIS = 103;
 
-        /// 
+        /// Reserved event code
         const EventType RESERVED1 = 110;
-        /// 
+        /// Reserved event code
         const EventType RESERVED2 = 111;
-        /// 
+        /// Reserved event code
         const EventType RESERVED3 = 112;
 
-        /// 
+        /// Special id - last valid standard event code
         const EventType LAST_STANDARD_EVENT_CODE = RESERVED3;
 
         /**

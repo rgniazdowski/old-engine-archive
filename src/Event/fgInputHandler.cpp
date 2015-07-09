@@ -498,10 +498,14 @@ void event::CInputHandler::addKeyPressed(KeyVirtualCode keyCode) {
     if(keyCode == FG_KEY_NULL)
         return;
     if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
-        return;
-    m_keysDownPool.push_back(keyCode);
-    if(m_keysPressedPool.find(keyCode) < 0 && !m_keyRepeats[(unsigned int)keyCode])
+        return;    
+    if(m_keysPressedPool.find(keyCode) < 0 && !m_keyRepeats[(unsigned int)keyCode]) {
+        // key is down for the first time (0 -> 1)
         m_keysPressedPool.push_back(keyCode);
+    } else {
+        // key is still being down (1 -> 1)
+        m_keysDownPool.push_back(keyCode);
+    }
     m_keyRepeats[(unsigned int)keyCode]++;
     toggleKeyboardMod(keyCode, FG_TRUE);
 }
@@ -512,8 +516,10 @@ void event::CInputHandler::addKeyUp(KeyVirtualCode keyCode) {
         return;
     if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
         return;
-    if(m_keysUpPool.find(keyCode) < 0)
+    if(m_keysUpPool.find(keyCode) < 0) {
+        // key is released (1 -> 0)
         m_keysUpPool.push_back(keyCode);
+    }
     CVector<KeyVirtualCode>::iterator itor = m_keysDownPool.findItor(keyCode);
     if(itor != m_keysDownPool.end())
         m_keysDownPool.erase(itor);

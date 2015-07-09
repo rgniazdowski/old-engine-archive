@@ -594,13 +594,11 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
     
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::render(void) {
     glm::mat4 Model;
     resource::CResourceManager *rm = NULL;
-#if defined(FG_USING_SDL2)
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
-#endif
     ::std::string sPlainEasyShaderName("sPlainEasy");
     ::std::string sOrthoEasyShaderName("sOrthoEasy");
     ::std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
@@ -611,37 +609,6 @@ void gfx::CGfxMain::render(void) {
         return;
     }
 
-#if defined(FG_USING_SDL2)
-    if(state[SDL_SCANCODE_W] == SDL_PRESSED) {
-        m_3DScene->getCamera()->moveForward();
-    }
-
-    if(state[SDL_SCANCODE_S] == SDL_PRESSED) {
-        m_3DScene->getCamera()->moveBackward();
-    }
-
-    if(state[SDL_SCANCODE_A] == SDL_PRESSED)
-        m_3DScene->getCamera()->moveLeft();
-
-    if(state[SDL_SCANCODE_D] == SDL_PRESSED)
-        m_3DScene->getCamera()->moveRight();
-
-    if(state[SDL_SCANCODE_SPACE] == SDL_PRESSED)
-        m_3DScene->getCamera()->moveUp();
-
-    if(state[SDL_SCANCODE_LCTRL] == SDL_PRESSED)
-        m_3DScene->getCamera()->moveDown();
-#elif defined(FG_USING_MARMALADE)
-    if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN)
-        m_3DScene->getCamera()->moveForward();
-    if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN)
-        m_3DScene->getCamera()->moveBackward();
-    if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_DOWN)
-        m_3DScene->getCamera()->moveLeft();
-    if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN)
-        m_3DScene->getCamera()->moveRight();
-
-#endif
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());

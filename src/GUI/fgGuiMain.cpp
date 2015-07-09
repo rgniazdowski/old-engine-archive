@@ -11,6 +11,8 @@
 #include "fgGuiMain.h"
 #include "fgDebugConfig.h"
 
+#include "Resource/fgResourceManager.h"
+
 #include "GFX/fgGfxPrimitives.h"
 #include "GFX/Shaders/fgGfxShaderManager.h"
 
@@ -45,11 +47,6 @@
 
 #include "fgColors.h"
 #include "fgLog.h"
-#include "Font/fgFontStbTimesBold.h"
-
-#if defined(FG_USING_MARMALADE)
-#include "s3eKeyboard.h"
-#endif
 
 using namespace fg;
 
@@ -66,9 +63,10 @@ m_pEventMgr(eventMgr),
 m_pResourceMgr(resourceMgr),
 m_guiDrawer(NULL),
 m_pShaderMgr(NULL),
-m_pPointerInputReceiver(NULL),
+m_pInputHandler(NULL),
 m_guiTouchCallback(NULL),
 m_guiMouseCallback(NULL),
+m_guiKeyboardCallback(NULL),
 m_guiLinkCallback(NULL),
 m_changeToMenu(NULL),
 m_currentMenu(NULL),
@@ -102,7 +100,7 @@ m_screenBox() {
     m_guiLinkCallback = new CGuiMethodCallback<CGuiMain>(this, this, &CGuiMain::guiLinkHandler);
 
     m_console = new CConsole();
-    m_console->setVisible(FG_FALSE); // #FIXME :o
+    m_console->setVisible(FG_FALSE);
 }
 //------------------------------------------------------------------------------
 
@@ -161,7 +159,7 @@ fgBool gui::CGuiMain::destroy(void) {
         delete m_guiLinkCallback;
     m_guiLinkCallback = NULL;
 
-    m_pPointerInputReceiver = NULL;
+    m_pInputHandler = NULL;
     m_pShaderMgr = NULL;
     m_pEventMgr = NULL;
     m_pResourceMgr = NULL;
@@ -174,7 +172,7 @@ fgBool gui::CGuiMain::destroy(void) {
 fgBool gui::CGuiMain::initialize(void) {
     if(m_init)
         return FG_TRUE;
-    if(!m_pEventMgr || !m_pResourceMgr || !m_pShaderMgr || !m_pPointerInputReceiver) {
+    if(!m_pEventMgr || !m_pResourceMgr || !m_pShaderMgr || !m_pInputHandler) {
         log::PrintError("GUI: Initialization of main GUI module failed - not all external pointers are set");
         m_init = FG_FALSE;
         return FG_FALSE;
@@ -399,6 +397,13 @@ void gui::CGuiMain::registerGuiCallbacks(void) {
     m_pEventMgr->addCallback(event::MOUSE_PRESSED, m_guiMouseCallback);
     m_pEventMgr->addCallback(event::MOUSE_RELEASED, m_guiMouseCallback);
     m_pEventMgr->addCallback(event::MOUSE_MOTION, m_guiMouseCallback);
+
+    if(!m_guiKeyboardCallback)
+        m_guiKeyboardCallback = new event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiKeyboardHandler);
+
+    m_pEventMgr->addCallback(event::KEY_UP, m_guiKeyboardCallback);
+    m_pEventMgr->addCallback(event::KEY_DOWN, m_guiKeyboardCallback);
+    m_pEventMgr->addCallback(event::KEY_PRESSED, m_guiKeyboardCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -410,9 +415,14 @@ void gui::CGuiMain::unregisterGuiCallbacks(void) {
     m_pEventMgr->removeCallback(event::TOUCH_RELEASED, m_guiTouchCallback);
     m_pEventMgr->removeCallback(event::TOUCH_MOTION, m_guiTouchCallback);
     m_pEventMgr->removeCallback(event::TOUCH_TAP_FINISHED, m_guiTouchCallback);
+
     m_pEventMgr->removeCallback(event::MOUSE_PRESSED, m_guiMouseCallback);
     m_pEventMgr->removeCallback(event::MOUSE_RELEASED, m_guiMouseCallback);
     m_pEventMgr->removeCallback(event::MOUSE_MOTION, m_guiMouseCallback);
+
+    m_pEventMgr->removeCallback(event::KEY_UP, m_guiKeyboardCallback);
+    m_pEventMgr->removeCallback(event::KEY_DOWN, m_guiKeyboardCallback);
+    m_pEventMgr->removeCallback(event::KEY_PRESSED, m_guiKeyboardCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -494,7 +504,7 @@ fgBool gui::CGuiMain::addWidgetCallback(const std::string& widgetName,
 //------------------------------------------------------------------------------
 
 void gui::CGuiMain::updateState(void) {
-    if(!m_widgetMgr || !m_pResourceMgr || !m_pPointerInputReceiver)
+    if(!m_widgetMgr || !m_pResourceMgr || !m_pInputHandler)
         return;
     if(m_isMenuChanging) {
         if(m_changeToMenu) {
@@ -517,7 +527,7 @@ void gui::CGuiMain::updateState(void) {
             return;
         m_currentMenu = static_cast<CMenu *>(mainMenu);
     }
-    event::SPointerData *pt = m_pPointerInputReceiver->getPointerData();
+    event::SPointerData *pt = m_pInputHandler->getPointerData();
     //if(pt) {
     //    pt->m_x = (int)((float)pt->m_x * ((1.0f - guiScale) / guiScale + 1.0f));
     //    pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale) / guiScale + 1.0f));
@@ -547,27 +557,13 @@ void gui::CGuiMain::preRender(void) {
     //        return;
     if(!(m_currentMenu->getTypeTraits() & CONTAINER))
         return;
+    // clear the internal gui drawing batch (font & forms)
+    m_guiDrawer->flush();
 
     // Maybe update bounds should be in update part? not display...
     m_currentMenu->updateBounds(m_screenBox);
     m_currentMenu->preRender(m_guiDrawer);
 
-#if defined(FG_USING_SDL2)
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
-    static int tylda = 0;
-    if(state[SDL_SCANCODE_GRAVE] == SDL_PRESSED && !tylda) {
-        tylda++;
-        m_console->setVisible(!m_console->isVisible());
-        g_DebugConfig.consoleShow = (bool)m_console->isVisible();
-    } else if(state[SDL_SCANCODE_GRAVE] == SDL_RELEASED) {
-        tylda = 0;
-    }
-#elif defined(FG_USING_MARMALADE)
-    if(s3eKeyboardGetState(s3eKeyBacktick) & S3E_KEY_STATE_PRESSED || s3eKeyboardGetState(s3eKeyTab) & S3E_KEY_STATE_PRESSED) {
-        m_console->setVisible(!m_console->isVisible());
-        g_DebugConfig.consoleShow = (bool)m_console->isVisible();
-    }
-#endif
     // #FUBAR #MSG
     if(m_console) {
         int numMessages = FG_MessageSubsystem->getStatusVec().size();
@@ -585,7 +581,6 @@ void gui::CGuiMain::preRender(void) {
 
 void gui::CGuiMain::render(void) {
     m_guiDrawer->render();
-    m_guiDrawer->flush();
 }
 //------------------------------------------------------------------------------
 
@@ -624,8 +619,8 @@ base::CManager *gui::CGuiMain::getShaderManager(void) const {
 }
 //------------------------------------------------------------------------------
 
-event::CInputHandler *gui::CGuiMain::getPointerInputReceiver(void) const {
-    return m_pPointerInputReceiver;
+event::CInputHandler *gui::CGuiMain::getInputHandler(void) const {
+    return m_pInputHandler;
 }
 //------------------------------------------------------------------------------
 
@@ -659,18 +654,17 @@ void gui::CGuiMain::setShaderManager(base::CManager* pShaderMgr) {
 }
 //------------------------------------------------------------------------------
 
-void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler* pointerInputReceiver) {
-    m_pPointerInputReceiver = pointerInputReceiver;
+void gui::CGuiMain::setInputHandler(event::CInputHandler* pInputHandler) {
+    m_pInputHandler = pInputHandler;
 }
 //------------------------------------------------------------------------------
 
 fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
+    event::SEvent* pEvent = (event::SEvent*)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
-    //fgEventType type = pEvent->eventType;
     this->updateState();
     return FG_TRUE;
 }
@@ -679,11 +673,27 @@ fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList* argv) {
 fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
+    event::SEvent* pEvent = (event::SEvent*)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
-    //fgEventType type = pEvent->eventType;
     this->updateState();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gui::CGuiMain::guiKeyboardHandler(event::CArgumentList* argv) {
+    if(!argv)
+        return FG_FALSE;
+    event::SEvent* pEvent = (event::SEvent*)argv->getValueByID(0);
+    if(!pEvent)
+        return FG_FALSE;
+    event::SKey* pKey = (event::SKey*)pEvent;
+    if(pKey->eventType == event::KEY_PRESSED) {
+        if(pKey->which == event::FG_KEY_TILDE && pKey->pressed) {
+            m_console->setVisible(!m_console->isVisible());
+            g_DebugConfig.consoleShow = (bool)m_console->isVisible();
+        }
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

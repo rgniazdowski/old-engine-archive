@@ -298,19 +298,25 @@ namespace fg {
          * @param argv
          * @return 
          */
-        fgBool gameTouchHandler(event::CArgumentList *argv);
+        fgBool gameTouchHandler(event::CArgumentList* argv);
         /**
          * 
          * @param argv
          * @return 
          */
-        fgBool gameMouseHandler(event::CArgumentList *argv);
+        fgBool gameMouseHandler(event::CArgumentList* argv);
         /**
          * 
          * @param argv
          * @return 
          */
-        fgBool gameFreeLookHandler(event::CArgumentList *argv);
+        fgBool gameFreeLookHandler(event::CArgumentList* argv);
+        /**
+         * 
+         * @param argv
+         * @return
+         */
+        fgBool gameKeyboardHandler(event::CArgumentList* argv);
 
     protected:
         /**
@@ -358,11 +364,13 @@ namespace fg {
         game::CGameMain *m_gameMain;
 
         /// Callback for Touch events
-        event::CFunctionCallback *m_gameTouchCallback;
+        event::CFunctionCallback* m_gameTouchCallback;
         /// Callback for Mouse events
-        event::CFunctionCallback *m_gameMouseCallback;
+        event::CFunctionCallback* m_gameMouseCallback;
         /// Special callback for game free look (controlling camera via touch/click)
-        event::CFunctionCallback *m_gameFreeLookCallback;
+        event::CFunctionCallback* m_gameFreeLookCallback;
+        ///
+        event::CFunctionCallback* m_gameKeyboardCallback;
 
     }; // class CEngineMain
 } // namespace fg

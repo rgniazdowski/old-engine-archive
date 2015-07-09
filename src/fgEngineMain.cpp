@@ -85,7 +85,8 @@ m_soundMgr(NULL),
 m_gameMain(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
-m_gameFreeLookCallback(NULL) {
+m_gameFreeLookCallback(NULL),
+m_gameKeyboardCallback(NULL) {
     if(!base_type::initialize()) {
 
     }
@@ -179,7 +180,7 @@ CEngineMain::~CEngineMain() {
         m_inputHandler = NULL;
     }
     if(m_guiMain) {
-        m_guiMain->setPointerInputReceiver(NULL);
+        m_guiMain->setInputHandler(NULL);
     }
     // Joystick Controller
     if(m_joypadController) {
@@ -304,6 +305,14 @@ void CEngineMain::registerGameCallbacks(void) {
     event::CEventManager::addCallback(event::MOUSE_PRESSED, m_gameFreeLookCallback);
     event::CEventManager::addCallback(event::MOUSE_RELEASED, m_gameFreeLookCallback);
     event::CEventManager::addCallback(event::MOUSE_MOTION, m_gameFreeLookCallback);
+
+    if(!m_gameKeyboardCallback)
+        m_gameKeyboardCallback = new event::CMethodCallback<CEngineMain>(this, &CEngineMain::gameKeyboardHandler);
+
+    event::CEventManager::addCallback(event::KEY_UP, m_gameKeyboardCallback);
+    event::CEventManager::addCallback(event::KEY_DOWN, m_gameKeyboardCallback);
+    event::CEventManager::addCallback(event::KEY_PRESSED, m_gameKeyboardCallback);
+
 }
 //------------------------------------------------------------------------------
 
@@ -324,6 +333,10 @@ void CEngineMain::unregisterGameCallbacks(void) {
     event::CEventManager::removeCallback(event::MOUSE_PRESSED, m_gameFreeLookCallback);
     event::CEventManager::removeCallback(event::MOUSE_RELEASED, m_gameFreeLookCallback);
     event::CEventManager::removeCallback(event::MOUSE_MOTION, m_gameFreeLookCallback);
+
+    event::CEventManager::removeCallback(event::KEY_UP, m_gameKeyboardCallback);
+    event::CEventManager::removeCallback(event::KEY_DOWN, m_gameKeyboardCallback);
+    event::CEventManager::removeCallback(event::KEY_PRESSED, m_gameKeyboardCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -335,7 +348,7 @@ void CEngineMain::setEventManager(void) {
         m_joypadController->setEventManager(this);
     if(m_guiMain) {
         m_guiMain->setEventManager(this);
-        m_guiMain->setPointerInputReceiver(m_inputHandler);
+        m_guiMain->setInputHandler(m_inputHandler);
     }
     if(m_resourceMgr) {
         m_resourceMgr->setEventManager(this);
@@ -435,7 +448,7 @@ fgBool CEngineMain::initialize(void) {
     m_gfxMain->getLoader()->update(10.0f);
     // Create object for Game Logic Manager
     if(!m_gameMain)
-        m_gameMain = new game::CGameMain(NULL);
+        m_gameMain = new game::CGameMain(this);
     // Setup Game Logic external pointers
     if(m_gameMain) {
         m_gameMain->setEventManager(this);
@@ -451,7 +464,7 @@ fgBool CEngineMain::initialize(void) {
     // Setup GUI Main external pointers
     m_guiMain->setResourceManager(m_resourceMgr);
     m_guiMain->setShaderManager(m_gfxMain->getShaderManager());
-    m_guiMain->setPointerInputReceiver(m_inputHandler);
+    m_guiMain->setInputHandler(m_inputHandler);
     m_guiMain->setEventManager(this);
     m_inputHandler->setEventManager(this);
     m_resourceMgr->setEventManager(this);
@@ -534,9 +547,9 @@ fgBool CEngineMain::loadResources(void) {
     float t1 = timesys::ms();
     FG_LOG_DEBUG("Loading resources...");
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
-    m_gfxMain->preLoadShaders();    
+    m_gfxMain->preLoadShaders();
     m_gfxMain->generateBuiltInData();
-    
+
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     std::string mainScriptPath, modScriptPath;
@@ -743,15 +756,34 @@ fgBool CEngineMain::update(fgBool force) {
     // Update logic manager
     if(m_gameMain)
         m_gameMain->update();
-    // TouchReceiver processes the data received from marmalade/system event
-    // callbacks and throws proper events
-    // Pointer input receiver needs name change #FIXME - need some
-    // special object for managing input - mouse / joystick / keyboard / touch
-    // InputReceiver ? #FIXME
-    // Also SDL events throwing needs some fixing
-    if(m_inputHandler)
+    // Handler for input events (touch, mouse, keys)
+    if(m_inputHandler) {
         m_inputHandler->processData();
-    // DEVICE YIELD
+
+#if defined(FG_DEBUG)
+        if(fg::g_DebugConfig.gameFreeLook) {
+            if(m_inputHandler->isKeyDown(event::FG_KEY_W)) {
+                this->m_gfxMain->get3DSceneCamera()->moveForward();
+            }
+            if(m_inputHandler->isKeyDown(event::FG_KEY_S)) {
+                this->m_gfxMain->get3DSceneCamera()->moveBackward();
+            }
+            if(m_inputHandler->isKeyDown(event::FG_KEY_A)) {
+                this->m_gfxMain->get3DSceneCamera()->moveLeft();
+            }
+            if(m_inputHandler->isKeyDown(event::FG_KEY_D)) {
+                this->m_gfxMain->get3DSceneCamera()->moveRight();
+            }
+            if(m_inputHandler->isKeyDown(event::FG_KEY_SPACE)) {
+                this->m_gfxMain->get3DSceneCamera()->moveUp();
+            }
+            if(m_inputHandler->isKeyDown(event::FG_KEY_LCTRL)) {
+                this->m_gfxMain->get3DSceneCamera()->moveDown();
+            }
+        }
+#endif
+    }
+    
     // Well this is really useful system, in the end GUI and others will be hooked
     // to EventManager so everything what needs to be done is done in this function
     event::CEventManager::executeEvents();
@@ -828,15 +860,12 @@ fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
         return FG_FALSE;
     if(!this->m_gfxMain->get3DSceneCamera())
         return FG_FALSE;
-    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
+    event::SEvent* pEvent = (event::SEvent*)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     if(!fg::g_DebugConfig.gameFreeLook)
         return FG_FALSE;
-
     event::EventType type = pEvent->code;
-    static int lastx = 128000;
-    static int lasty = 128000;
     int xRel = 0, yRel = 0, x = 0, y = 0;
     fgBool pressed = FG_FALSE;
 
@@ -847,6 +876,8 @@ fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
         event::STouch *touch = (event::STouch *)pEvent;
         x = touch->x;
         y = touch->y;
+        xRel = touch->relX;
+        yRel = touch->relY;
         pressed = touch->pressed;
         if(touch->touchID > FG_POINTER_BUTTON_SELECT)
             return FG_TRUE;
@@ -856,26 +887,27 @@ fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
         event::SMouse *mouse = (event::SMouse *)pEvent;
         x = mouse->x;
         y = mouse->y;
+        xRel = mouse->relX;
+        yRel = mouse->relY;
         pressed = mouse->pressed;
         if(mouse->buttonID > FG_POINTER_BUTTON_SELECT)
             return FG_TRUE;
     } else {
         return FG_FALSE;
     }
-    if(lastx > 100000 && lasty > 100000) {
-        lastx = x;
-        lasty = y;
-    }
-    xRel = -(lastx - x);
-    yRel = -(lasty - y);
-    lastx = x;
-    lasty = y;
     if(pressed)
         this->m_gfxMain->get3DSceneCamera()->update((float)xRel, (float)yRel);
-    if(type == event::TOUCH_RELEASED || type == event::MOUSE_RELEASED) {
-        lastx = 128000;
-        lasty = 128000;
-    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool CEngineMain::gameKeyboardHandler(event::CArgumentList* argv) {
+    if(!argv || !this->m_gfxMain)
+        return FG_FALSE;
+    event::SEvent* pEvent = (event::SEvent*)argv->getValueByID(0);
+    if(!pEvent)
+        return FG_FALSE;
+    event::SKey* pKey = (event::SKey*)pEvent;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
