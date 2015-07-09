@@ -33,8 +33,6 @@
     #include "fgGuiStyleContent.h"
     #include "fgGuiCallback.h"
 
-    #include <string>
-
     #ifndef FG_INC_GFX_LAYER
         #include "GFX/fgGfxLayer.h"
     #endif
@@ -776,7 +774,7 @@ namespace fg {
             inline CGuiCallback* getOnLinkCallback(void) const {
                 return m_onLink;
             }
-        };
+        }; // class CWidget
 
         FG_ENUM_FLAGS(CWidget::StateFlags);
         /**

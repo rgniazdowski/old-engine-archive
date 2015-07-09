@@ -87,7 +87,8 @@ namespace fg {
 
         public:
             /**
-             * Destroy the shader manager and all managed data (destructors called - every handle becomes invalid)
+             * Destroy the shader manager and all managed data
+             * (destructors called - every handle becomes invalid)
              * @return 
              */
             fgBool destroy(void);
@@ -108,13 +109,21 @@ namespace fg {
              * This will compile all shader programs (no linking will occur)
              * @return 
              */
-            fgBool compileShaders(void);
+            fgBool compileShaders(fgBool recentOnly = FG_FALSE);
 
             /**
              * This will link all shader programs (compile will occur if needed)
              * @return 
              */
-            fgBool linkShaders(void);
+            fgBool linkShaders(fgBool recentOnly = FG_FALSE);
+
+            /**
+             * This will make all gfx IDs invalid (free gfx side data)
+             * @return
+             */
+            fgBool allReleaseGFX(void);
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -122,12 +131,6 @@ namespace fg {
              * @return
              */
             fgBool getShaderNames(CStringVector& strVec);
-
-            /**
-             * This will make all gfx IDs invalid (free gfx side data)
-             * @return 
-             */
-            fgBool allReleaseGFX(void);
 
             /**
              * 
@@ -154,6 +157,8 @@ namespace fg {
              */
             fgBool isProgramUsed(const char *nameTag);
 
+            //------------------------------------------------------------------
+
             /**
              * 
              * @param pProgram
@@ -179,6 +184,8 @@ namespace fg {
              */
             fgBool useProgram(const char *nameTag);
 
+            //------------------------------------------------------------------
+
             /**
              * 
              * @param pProgram
@@ -193,6 +200,8 @@ namespace fg {
              * @return 
              */
             virtual fgBool insertProgram(CShaderProgram *pProgram);
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -224,12 +233,14 @@ namespace fg {
              * @param pProgram
              */
             void setInternalCurrentProgram(CShaderProgram *pProgram);
-            
+
             /**
              * 
              * @return 
              */
             CShaderProgram *getCurrentProgram(void) const;
+
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -237,21 +248,55 @@ namespace fg {
             fgBool isPreloadDone(void) const {
                 return m_isPreloadDone;
             }
+            /**
+             *
+             * @return
+             */
+            fgBool isLinkOnRequest(void) const {
+                return m_isLinkOnRequest;
+            }
+            /**
+             *
+             * @return
+             */
+            fgBool isLinkOnUse(void) const {
+                return m_isLinkOnUse;
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            void setLinkOnRequest(fgBool toggle = FG_TRUE) {
+                m_isLinkOnRequest = toggle;
+            }
+            /**
+             *
+             * @param toggle
+             */
+            void setLinkOnUse(fgBool toggle = FG_TRUE) {
+                m_isLinkOnUse = toggle;
+            }
+
+            //------------------------------------------------------------------
 
         private:
             /// Pointer to shader program object which is being currently used
             /// For double checking - after GFX suspend/resume program ID
             /// will become invalid, need to set this pointer to NULL on suspend
-            CShaderProgram *m_currentProgram;
+            CShaderProgram* m_currentProgram;
             ///
-            util::CDirent *m_shadersDir;
+            util::CDirent* m_shadersDir;
             ///
             std::string m_shadersPath;
             ///
             fgBool m_isPreloadDone;
-        };
-    };
-};
+            /// Should shaders be linked on request?
+            fgBool m_isLinkOnRequest;
+            /// Should shaders be linked on get/dereference?
+            fgBool m_isLinkOnUse;
+        }; // class CShaderManager
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SHADER_MANAGER_BLOCK
 #endif /* FG_INC_GFX_SHADER_MANAGER */

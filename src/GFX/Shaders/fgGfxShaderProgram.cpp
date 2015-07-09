@@ -20,11 +20,14 @@
 
 using namespace fg;
 
-gfx::CShaderProgram::CShaderProgram() :
+//------------------------------------------------------------------------------
+
+gfx::CShaderProgram::CShaderProgram() : base_type(),
+m_stateFlags(NONE),
+m_shaders(),
+m_uniformBinds(),
+m_attrBinds(),
 m_config(NULL),
-m_isPreLoaded(FG_FALSE),
-m_isCompiled(FG_FALSE),
-m_isLinked(FG_FALSE),
 m_manager(NULL) {
     // this needs to depend on some global array GFX config #FIXME
     m_shaders.reserve(6);
@@ -41,10 +44,12 @@ m_manager(NULL) {
     m_params[FG_GFX_PROGRAM_ACTIVE_UNIFORMS] = 0;
     m_baseType = FG_GFX_BASE_TYPE_PROGRAM;
 }
+//------------------------------------------------------------------------------
 
 gfx::CShaderProgram::~CShaderProgram() {
     gfx::CShaderProgram::clearAll();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShaderProgram::clearAll(void) {
     if(m_config)
@@ -62,14 +67,13 @@ void gfx::CShaderProgram::clearAll(void) {
     m_uniformBinds.clear_optimised();
     m_attrBinds.clear_optimised();
     m_shaders.clear_optimised();
+    m_stateFlags = NONE;
     deleteProgram();
-    m_isLinked = FG_FALSE;
-    m_isCompiled = FG_FALSE;
-    m_isPreLoaded = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
-    if(m_isPreLoaded) {
+    if(isPreloaded()) {
         return FG_FALSE;
     }
     setFilePath(path);
@@ -142,19 +146,21 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
     }
     delete m_config;
     m_config = NULL;
-    m_isPreLoaded = FG_TRUE;
+    setPreloaded(FG_TRUE);
     FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "Shader program loaded successfully: '%s'", m_nameTag.c_str());
     FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);
     ////////////////////////////////////////////////////////////////////////////
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::preLoadConfig(std::string &path) {
     return preLoadConfig(path.c_str());
 }
+//------------------------------------------------------------------------------
 
 fgGFXuint gfx::CShaderProgram::create(void) {
-    if(!m_isPreLoaded)
+    if(!isPreloaded())
         return 0;
     if(!m_gfxID || FG_GFX_FALSE == glIsProgram(m_gfxID)) {
         m_gfxID = glCreateProgram();
@@ -163,13 +169,14 @@ fgGFXuint gfx::CShaderProgram::create(void) {
     }
     return m_gfxID;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::compile(void) {
-    if(!m_isPreLoaded) {
+    if(!isPreloaded()) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_EPERM, "Compile function called without loaded shader configuration");
         return FG_FALSE;
     }
-    if(m_isCompiled && FG_GFX_TRUE == glIsProgram(m_gfxID)) {
+    if(isCompiled() && FG_GFX_TRUE == glIsProgram(m_gfxID)) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_EPERM, "Shader program is already compiled. Use option for forced recompilation.");
         return FG_FALSE;
     }
@@ -195,17 +202,18 @@ fgBool gfx::CShaderProgram::compile(void) {
         }
     }
     attachShaders(); // status ?
-    m_isCompiled = FG_TRUE;
+    setCompiled(FG_TRUE);
     FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "Shaders for '%s' compiled successfully", getNameStr());
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::link(void) {
-    if(m_isLinked || !m_isPreLoaded) {
+    if(isLinked() || !isPreloaded()) {
         FG_LOG_ERROR("GFX: Shader is already linked / is not pre-loaded on link() for program '%s'", getNameStr());
         return FG_FALSE;
     }
-    if(!m_isCompiled) {
+    if(!isCompiled()) {
         if(!compile()) {
             FG_LOG_ERROR("GFX: Failed to compile shaders for program '%s'", getNameStr());
             return FG_FALSE;
@@ -237,7 +245,7 @@ fgBool gfx::CShaderProgram::link(void) {
     if(status) {
         FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "GFX: Shader program '%s' linked with no errors", getNameStr());
     }
-    m_isLinked = FG_TRUE;
+    setLinked(FG_TRUE);
     if(!bindUniforms()) {
         // ERROR CODES ! ! !
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_EINVAL, "GFX: Failed to bind all uniforms in shader program '%s'", getNameStr());
@@ -259,14 +267,13 @@ fgBool gfx::CShaderProgram::link(void) {
             GLCheckError("glGetAttribLocation");
         }
     }
-    {
-        detachShaders();
-    }
+    detachShaders();
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::isUsed(void) {
-    if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !m_isPreLoaded)
+    if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !isPreloaded())
         return FG_FALSE;
     if(m_manager) {
         CShaderManager *shaderMgr = (CShaderManager *)m_manager;
@@ -275,22 +282,25 @@ fgBool gfx::CShaderProgram::isUsed(void) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::use(void) {
     // call to glIsProgram may be a slowdown, this shouldn't be necessary at some point
-    if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !m_isPreLoaded)
+    if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !isPreloaded())
         return FG_FALSE;
     if(m_manager) {
         CShaderManager *shaderMgr = static_cast<CShaderManager *>(m_manager);
         if(shaderMgr->isProgramUsed(this))
             return FG_FALSE;
-        shaderMgr->setInternalCurrentProgram(this); // ?
+        shaderMgr->setInternalCurrentProgram(this);
     }
-    fgGFXuint last = context::activeProgram();
+    //fgGFXuint last = context::activeProgram();
     context::useProgram(m_gfxID);
-    GLCheckError("glUseProgram"); // #FIXME - GL error reporting - rtard?
+    this->setRecentlyUsed(FG_TRUE);
+    GLCheckError("glUseProgram");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::deleteProgram(void) {
     if(FG_GFX_TRUE == glIsProgram(m_gfxID)) {
@@ -298,12 +308,13 @@ fgBool gfx::CShaderProgram::deleteProgram(void) {
         //detachShaders(); // status?
         glDeleteProgram(m_gfxID);
         m_gfxID = 0;
-        m_isLinked = FG_FALSE;
-        m_isCompiled = FG_FALSE;
+        setLinked(FG_FALSE);
+        setCompiled(FG_FALSE);
         return FG_TRUE;
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::appendUniformBinds(UniformBindVec & binds) {
     if(binds.empty())
@@ -316,6 +327,7 @@ fgBool gfx::CShaderProgram::appendUniformBinds(UniformBindVec & binds) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::appendAttributeBinds(AttributeBindVec & binds) {
     if(binds.empty())
@@ -339,6 +351,7 @@ fgBool gfx::CShaderProgram::appendAttributeBinds(AttributeBindVec & binds) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::attachShader(gfx::CShader *shader) {
     if(!shader) {
@@ -348,9 +361,10 @@ fgBool gfx::CShaderProgram::attachShader(gfx::CShader *shader) {
     updateParams();
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::attachShaders(void) {
-    if(!m_isPreLoaded) {
+    if(!isPreloaded()) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
@@ -365,6 +379,7 @@ fgBool gfx::CShaderProgram::attachShaders(void) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::deleteShader(gfx::CShader *shader) {
     if(!shader) {
@@ -374,6 +389,7 @@ fgBool gfx::CShaderProgram::deleteShader(gfx::CShader *shader) {
     updateParams();
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::deleteShaders(void) {
     fgBool status = FG_TRUE;
@@ -388,6 +404,7 @@ fgBool gfx::CShaderProgram::deleteShaders(void) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::detachShader(gfx::CShader *shader) {
     if(!shader) {
@@ -397,9 +414,10 @@ fgBool gfx::CShaderProgram::detachShader(gfx::CShader *shader) {
     updateParams();
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::detachShaders(void) {
-    if(!m_isPreLoaded) {
+    if(!isPreloaded()) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
@@ -415,17 +433,19 @@ fgBool gfx::CShaderProgram::detachShaders(void) {
     return status;
 
 }
+//------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::updateLinkStatus(void) {
     return updateParam(FG_GFX_PROGRAM_LINK_STATUS);
 }
+//------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::updateValidateStatus(void) {
     return updateParam(FG_GFX_PROGRAM_VALIDATE_STATUS);
 }
+//------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::releaseGFX(void) {
-    //fgStatusReporter anyone?
+fgBool gfx::CShaderProgram::releaseGFX(void) {    
     fgBool status = FG_TRUE;
     if(!deleteProgram())
         status = FG_FALSE; // errors? meh
@@ -454,6 +474,7 @@ fgBool gfx::CShaderProgram::releaseGFX(void) {
     // P3
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setManager(fg::base::CManager *pManager) {
     if(!pManager)
@@ -462,9 +483,10 @@ fgBool gfx::CShaderProgram::setManager(fg::base::CManager *pManager) {
     m_manager = pManager;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::bindAttributes(void) {
-    if(!m_isPreLoaded || !m_isCompiled) {
+    if(!isPreloaded() || !isCompiled()) {
         return FG_FALSE;
     }
     if(FG_GFX_FALSE == glIsProgram(m_gfxID)) {
@@ -493,9 +515,10 @@ fgBool gfx::CShaderProgram::bindAttributes(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::bindUniforms(void) {
-    if(!m_isPreLoaded || !m_isCompiled) {
+    if(!isPreloaded() || !isCompiled()) {
         return FG_FALSE;
     }
     if(FG_GFX_FALSE == glIsProgram(m_gfxID)) {
@@ -516,6 +539,7 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::getUniformBindIndex(UniformType type) {
     if(type == FG_GFX_UNIFORM_INVALID)
@@ -533,6 +557,7 @@ fgGFXint gfx::CShaderProgram::getUniformBindIndex(UniformType type) {
     }
     return foundIndex;
 }
+//------------------------------------------------------------------------------
 
 gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(UniformType type) {
     int index = getUniformBindIndex(type);
@@ -540,6 +565,7 @@ gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(UniformType type) {
         return NULL;
     return &m_uniformBinds[index];
 }
+//------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::getUniformLocation(UniformType type) {
     SUniformBind * bind = getUniformBind(type);
@@ -547,14 +573,14 @@ fgGFXint gfx::CShaderProgram::getUniformLocation(UniformType type) {
         return -1;
     return bind->location;
 }
+//------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::getUniformLocation(std::string variableName) {
     if(!m_gfxID || variableName.empty())
         return -1;
     return glGetUniformLocation(m_gfxID, variableName.c_str());
 }
-
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(CMVPMatrix *matrix) {
     if(!matrix)
@@ -568,6 +594,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVPMatrix *matrix) {
     GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(CMVMatrix *matrix) {
     SUniformBind * bind = getUniformBind(FG_GFX_MV_MATRIX);
@@ -579,8 +606,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVMatrix *matrix) {
     GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
 }
-
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXfloat v0) {
@@ -593,6 +619,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform1f");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXfloat v0,
@@ -606,6 +633,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform2f");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXfloat v0,
@@ -620,6 +648,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform3f");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXfloat v0,
@@ -635,6 +664,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform4f");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXint v0) {
@@ -647,6 +677,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform1i");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXint v0,
@@ -660,6 +691,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform2i");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXint v0,
@@ -674,6 +706,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform3i");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXint v0,
@@ -689,6 +722,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     GLCheckError("glUniform4i");
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXsizei count,
@@ -701,6 +735,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     // NEED MORE IFS :D
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(UniformType type,
                                        fgGFXsizei count,
@@ -713,3 +748,4 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     // NEED MORE IFS :D
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

@@ -356,6 +356,20 @@ void gfx::CSceneManager::setSkyBoxShader(const std::string& shaderName) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CSceneManager::refreshGfxInternals(void) {
+    m_traverse.rewind();
+    while(m_traverse.next(getActiveRootNode())) {
+        CSceneNode *pSceneNode = m_traverse.current;
+        if(!pSceneNode)
+            continue;
+        if(pSceneNode->getNodeType() == SCENE_NODE_ROOT) {
+            continue; // for now skip the root nodes in linear traversal
+        }
+        pSceneNode->refreshGfxInternals();
+    }
+}
+//------------------------------------------------------------------------------
+
 void gfx::CSceneManager::flush(void) {
     CDrawingBatch::flush();
     while(!m_nodeQueue.empty())

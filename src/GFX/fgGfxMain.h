@@ -81,9 +81,17 @@ namespace fg {
             void registerSceneCallbacks(void);
             /**
              * 
-             * @param argv
              */
             void unregisterSceneCallbacks(void);
+
+            /**
+             *
+             */
+            void registerProgramCallbacks(void);
+            /**
+             *
+             */
+            void unregisterProgramCallbacks(void);
 
             /**
              * 
@@ -91,7 +99,7 @@ namespace fg {
              * @param pUserData
              * @return
              */
-            static fgBool handleMainWindowBufferSwap(void *pSystemData, void *pUserData);
+            static fgBool handleMainWindowBufferSwap(void* pSystemData, void* pUserData);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -100,14 +108,21 @@ namespace fg {
              * @param argv
              * @return 
              */
-            fgBool resourceCreatedHandler(fg::event::CArgumentList *argv);
+            fgBool resourceCreatedHandler(event::CArgumentList* argv);
 
             /**
              * 
              * @param argv
              * @return 
              */
-            fgBool sceneNodeInsertedHandler(fg::event::CArgumentList * argv);
+            fgBool sceneNodeInsertedHandler(event::CArgumentList* argv);
+
+            /**
+             * 
+             * @param argv
+             * @return 
+             */
+            fgBool programEventHandler(event::CArgumentList* argv);
 
         public:
             /**
@@ -115,7 +130,7 @@ namespace fg {
              * @param pResourceManager
              * @return 
              */
-            fgBool setupResourceManager(fg::base::CManager *pResourceManager);
+            fgBool setupResourceManager(fg::base::CManager* pResourceManager);
 
             /**
              * Init the whole GFX subsystem - set the screen
@@ -299,14 +314,14 @@ namespace fg {
                  *
                  * @param pSplashTex
                  */
-                void setSplashTexture(CTextureResource *pSplashTex) {
+                void setSplashTexture(CTextureResource* pSplashTex) {
                     m_pSplashTex = pSplashTex;
                 }
                 /**
                  *
                  * @param pProgressTex
                  */
-                void setProgressTexture(CTextureResource *pProgressTex) {
+                void setProgressTexture(CTextureResource* pProgressTex) {
                     m_pProgressTex = pProgressTex;
                 }
                 /**
@@ -332,10 +347,10 @@ namespace fg {
             private:
                 /// Pointer to the splash texture to display as the background
                 /// Please note that this textures need to be uploaded to the GFX
-                CTextureResource *m_pSplashTex;
+                CTextureResource* m_pSplashTex;
                 /// Pointer to the progress texture - used to draw the simple bar
                 /// This can be NULL - if so, no progress bar will be displayed
-                CTextureResource *m_pProgressTex;
+                CTextureResource* m_pProgressTex;
                 /// Pointer to the gfx main class
                 CGfxMain* m_pGfxMain;
                 /// Main Model-Projection-View matrix to use with shader
@@ -351,25 +366,27 @@ namespace fg {
             /// stages of initialization - before GUI subsystem full initialization
             CLoader* m_loader;
             /// Texture manager for GFX upload/reload - works with Resource manager
-            CTextureManager *m_textureMgr;
+            CTextureManager* m_textureMgr;
             /// Pointer to the resource manager - defined and managed outside
-            fg::base::CManager *m_pResourceMgr;
+            fg::base::CManager* m_pResourceMgr;
             /// Pointer to the external event manager
-            fg::base::CManager *m_pEventMgr;
+            fg::base::CManager* m_pEventMgr;
             /// Main GFX shader manager
-            CShaderManager *m_shaderMgr;
+            CShaderManager* m_shaderMgr;
             /// Main GFX OS specific window
-            CWindow *m_mainWindow;
+            CWindow* m_mainWindow;
             /// Main 3D scene management
-            CScene3D *m_3DScene;
+            CScene3D* m_3DScene;
             /// Main 2D scene management
-            CScene2D *m_2DScene;
+            CScene2D* m_2DScene;
             /// Main Particle System
-            CParticleSystem *m_particleSystem;
+            CParticleSystem* m_particleSystem;
             /// 
-            fg::event::CFunctionCallback *m_resourceCreatedCallback;
+            fg::event::CFunctionCallback* m_resourceCreatedCallback;
             ///
-            fg::event::CFunctionCallback *m_sceneNodeInsertedCallback;
+            fg::event::CFunctionCallback* m_sceneNodeInsertedCallback;
+            ///
+            fg::event::CFunctionCallback* m_programEventCallback;
             /// Is GFX init properly?
             fgBool m_init;
         }; // class CGfxMain

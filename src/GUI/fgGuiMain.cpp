@@ -159,6 +159,10 @@ fgBool gui::CGuiMain::destroy(void) {
         delete m_guiLinkCallback;
     m_guiLinkCallback = NULL;
 
+    if(m_guiKeyboardCallback)
+        delete m_guiKeyboardCallback;
+    m_guiKeyboardCallback = NULL;
+
     m_pInputHandler = NULL;
     m_pShaderMgr = NULL;
     m_pEventMgr = NULL;

@@ -202,6 +202,10 @@ CEngineMain::~CEngineMain() {
         delete m_gameFreeLookCallback;
         m_gameFreeLookCallback = NULL;
     }
+    if(m_gameKeyboardCallback) {
+        delete m_gameKeyboardCallback;
+        m_gameKeyboardCallback = NULL;
+    }
     // Destroy the quality manager
     if(m_qualityMgr) {
         delete m_qualityMgr;

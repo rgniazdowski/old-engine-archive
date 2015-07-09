@@ -63,9 +63,10 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const 
     // Set pointer to front of vertices array (positions)
     uintptr_t offset = 0;
     uintptr_t pointer = (uintptr_t)((unsigned int *)&vertices.front());
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates - activated
     index = FG_GFX_ATTRIB_POS_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[POSITIONS_VBO_ARRAY_IDX].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -81,7 +82,7 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const 
     pointer = (uintptr_t)((unsigned int*)&normals.front());
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[NORMALS_VBO_ARRAY_IDX].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -96,7 +97,7 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const 
     pointer = (uintptr_t)((unsigned int*)&uvs.front());
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -127,6 +128,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     // Set pointer to front of vertices array (positions)
     uintptr_t offset = 0;
     uintptr_t pointer = (uintptr_t)((unsigned int *)&vertices.front());
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates - activated
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
@@ -137,7 +139,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[POSITIONS_VBO_ARRAY_IDX].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -161,7 +163,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[NORMALS_VBO_ARRAY_IDX].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -184,7 +186,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -273,6 +275,8 @@ fgGFXboolean gfx::SMeshSoA::destroyBuffers(void) {
     SBufferID *& refBuf = getRefPtrVBO();
     fgFree<SBufferID>(refBuf);
     refBuf = NULL;
+    int& count = getRefVBOCount();
+    count = 0;
     return FG_GFX_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -371,6 +375,8 @@ fgGFXboolean gfx::SMeshAoS::destroyBuffers(void) {
     SBufferID *& refBuf = getRefPtrVBO();
     fgFree<SBufferID>(refBuf);
     refBuf = NULL;
+    int& count = getRefVBOCount();
+    count = 0;
     return FG_GFX_TRUE;
 }
 //------------------------------------------------------------------------------

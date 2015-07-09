@@ -68,6 +68,7 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
     if(!m_pModel) {
         return;
     }
+    m_pModel->genBuffers();
     SMaterial* pMainMaterial = m_pModel->getMainMaterial();
     CModel::ShapesVecItor sit = m_pModel->getRefShapes().begin(),
             send = m_pModel->getRefShapes().end();

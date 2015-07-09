@@ -14,6 +14,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -22,10 +24,11 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     // If VBOs are not set this will act as data address
     uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData2v::front());
     uintptr_t offset = 0;
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -44,7 +47,7 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -62,6 +65,7 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -71,6 +75,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     // If VBOs are not set this will act as data address
     uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData2v::front());
     uintptr_t offset = 0;
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
@@ -81,7 +86,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -107,7 +112,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -125,6 +130,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData2v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
@@ -136,6 +142,7 @@ fgGFXboolean gfx::CVertexData2v::genBuffers(void) {
     context::bufferData(getRefPtrVBO()[0], this->stride() * this->size(), gfx::CVertexData2v::front());
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData2v::deleteBuffers(void) {
     if(!getPtrVBO())
@@ -144,6 +151,7 @@ fgGFXboolean gfx::CVertexData2v::deleteBuffers(void) {
     return FG_GFX_TRUE;
 
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData2v::destroyBuffers(void) {
     if(!getPtrVBO())
@@ -152,8 +160,11 @@ fgGFXboolean gfx::CVertexData2v::destroyBuffers(void) {
     SBufferID *& refBuf = getRefPtrVBO();
     fgFree<SBufferID>(refBuf);
     refBuf = NULL;
+    int& count = getRefVBOCount();
+    count = 0;
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -163,9 +174,10 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     // If VBOs are not set this will act as data address
     uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData3v::front());
     uintptr_t offset = 0;
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -180,7 +192,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     pointer += sizeof (Vector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -195,7 +207,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -214,6 +226,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -223,6 +236,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     // If VBOs are not set this will act as data address
     uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData3v::front());
     uintptr_t offset = 0;
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
@@ -233,7 +247,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -256,7 +270,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -279,7 +293,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -287,7 +301,6 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
         pDataArray[index].isBO = FG_FALSE;
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
-
     }
 
     // Colors = there are no colors, this attribute will be disabled
@@ -298,17 +311,19 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData3v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
-    int &count = getRefVBOCount();
+    int& count = getRefVBOCount();
     count = 1;
     context::genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     context::bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
     context::bufferData(getRefPtrVBO()[0], this->stride() * this->size(), gfx::CVertexData3v::front());
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData3v::deleteBuffers(void) {
     if(!getPtrVBO())
@@ -316,6 +331,7 @@ fgGFXboolean gfx::CVertexData3v::deleteBuffers(void) {
     context::deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData3v::destroyBuffers(void) {
     if(!getPtrVBO())
@@ -324,8 +340,11 @@ fgGFXboolean gfx::CVertexData3v::destroyBuffers(void) {
     SBufferID *& refBuf = getRefPtrVBO();
     fgFree<SBufferID>(refBuf);
     refBuf = NULL;
+    int& count = getRefVBOCount();
+    count = 0;
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -336,9 +355,10 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     // If VBOs are not set this will act as data address
     uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData4v::front());
     uintptr_t offset = 0;
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates - always present (at least at the moment)
-    index = FG_GFX_ATTRIB_POS_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    index = FG_GFX_ATTRIB_POS_LOCATION;    
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -353,7 +373,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     pointer += sizeof (Vector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -368,7 +388,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -384,7 +404,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
 
     // Colors = there are no colors, this attribute will be disabled
     index = FG_GFX_ATTRIB_COLOR_LOCATION;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -399,6 +419,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
@@ -408,6 +429,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     // If VBOs are not set this will act as data address
     uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData4v::front());
     uintptr_t offset = 0;
+    const fgBool b_hasVBO = hasVBO();
     // Position coordinates - always present (at least at the moment)
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
@@ -418,7 +440,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -441,7 +463,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -464,7 +486,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -488,7 +510,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
     pDataArray[index].isNormalized = FG_FALSE;
-    if(getPtrVBO() && getVBOCount()) {
+    if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
@@ -503,17 +525,19 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
 
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData4v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
-    int &count = getRefVBOCount();
+    int& count = getRefVBOCount();
     count = 1;
     context::genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     context::bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
     context::bufferData(getRefPtrVBO()[0], this->stride() * this->size(), gfx::CVertexData4v::front());
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData4v::deleteBuffers(void) {
     if(!getPtrVBO())
@@ -521,6 +545,7 @@ fgGFXboolean gfx::CVertexData4v::deleteBuffers(void) {
     context::deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData4v::destroyBuffers(void) {
     if(!getPtrVBO())
@@ -529,5 +554,8 @@ fgGFXboolean gfx::CVertexData4v::destroyBuffers(void) {
     SBufferID *& refBuf = getRefPtrVBO();
     fgFree<SBufferID>(refBuf);
     refBuf = NULL;
+    int& count = getRefVBOCount();
+    count = 0;
     return FG_GFX_TRUE;
 }
+//------------------------------------------------------------------------------

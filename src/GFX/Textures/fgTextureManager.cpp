@@ -192,7 +192,7 @@ fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv)
     // Normally this should work without the force flag...
     // It's needed because for now resource lock/unlock 
     // is not working completely...
-    return CTextureManager::uploadToVRAM(pTexture); // force flag
+    return CTextureManager::uploadToVRAM(pTexture, FG_TRUE); // force flag
 }
 //------------------------------------------------------------------------------
 
@@ -224,8 +224,9 @@ fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
             quality == Quality::UNIVERSAL)) {
             fgBool force = FG_FALSE;
             CTextureResource *textureResource = (CTextureResource *)resource;
-            if(reupload && textureResource->isInVRAM())
+            if(reupload && textureResource->isInVRAM()) {
                 force = FG_TRUE;
+            }
             gfx::CTextureManager::uploadToVRAM(textureResource, force);
         }
         ((resource::CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
@@ -251,7 +252,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
         return result;
     }
     FG_LOG_DEBUG("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
-    if(texture->isLocked() || force || 1) {
+    if(texture->isLocked() || force) {
         FG_LOG_DEBUG("GFX: Going to upload texture to VRAM - '%s'", texture->getNameStr());
         FG_LOG_DEBUG("GFX: Is Texture? [%d] ; Was in VRAM? [%d]", (int)glIsTexture(texGfxID), texture->isInVRAM());
         if(glIsTexture(texGfxID) == GL_TRUE) {

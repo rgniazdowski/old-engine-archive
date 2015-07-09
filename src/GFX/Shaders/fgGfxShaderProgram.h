@@ -64,10 +64,10 @@ typedef fgGFXuint fgGfxProgramObjParamType;
 
 namespace fg {
     namespace gfx {
-        
+
         ///
         typedef FG_TAG_GFX_SHADER_PROGRAM ShaderProgramTag;
-        
+
         /**
          *
          */
@@ -80,6 +80,24 @@ namespace fg {
             typedef ShaderProgramTag tag_type;
 
         public:
+
+            /**
+             *
+             */
+            enum StateFlags {
+                /// Empty state flags - nothing activated
+                NONE = 0x0000,
+                /// Whether or not the shader program is pre-loaded (from config)
+                PRELOADED = 0x0001,
+                /// Is the shader program compiled?
+                COMPILED = 0x0002,
+                /// Is the shader program successfully linked?
+                LINKED = 0x0004,
+                /// Was the shader program recently linked?
+                RECENTLY_LINKED = 0x0010,
+                /// Was the shader program recently used?
+                RECENTLY_USED = 0x0020
+            };
 
             enum {
                 SP_FRAGMENT_SHADER_ID = 0,
@@ -144,6 +162,8 @@ namespace fg {
             typedef AttributeBindVec::iterator AttributeBindVecItor;
 
         protected:
+            /// Current state flags for the shader program
+            StateFlags m_stateFlags;
             /// Vector holding shaders (vertex/fragment/etc..) that 
             /// will be used to link the shader program
             ShaderVec m_shaders;
@@ -153,12 +173,7 @@ namespace fg {
             AttributeBindVec m_attrBinds;
             /// Helper class for loading special shader configs
             CShaderConfig* m_config;
-            /// Are the special config files loaded?
-            fgBool m_isPreLoaded;
-            /// Did compilation for this shader program ended successfully
-            fgBool m_isCompiled;
-            /// Is the shader program linked and ready to use
-            fgBool m_isLinked;
+
             /// Pointer to the managing class
             fg::base::CManager *m_manager;
 
@@ -184,6 +199,86 @@ namespace fg {
              * @return 
              */
             fgBool preLoadConfig(std::string &path);
+
+        public:
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPreloaded(void) const {
+                return (fgBool)!!(m_stateFlags & PRELOADED);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isCompiled(void) const {
+                return (fgBool)!!(m_stateFlags & COMPILED);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isLinked(void) const {
+                return (fgBool)!!(m_stateFlags & LINKED);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool wasRecentlyLinked(void) const {
+                return (fgBool)!!(m_stateFlags & RECENTLY_LINKED);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool wasRecentlyUsed(void) const {
+                return (fgBool)!!(m_stateFlags & RECENTLY_USED);
+            }
+
+        protected:
+            /**
+             *
+             * @param flags
+             * @param toggle
+             */
+            void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPreloaded(fgBool toggle = FG_TRUE) {
+                setFlag(PRELOADED, toggle);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setCompiled(fgBool toggle = FG_TRUE) {
+                setFlag(COMPILED, toggle);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setLinked(fgBool toggle = FG_TRUE) {
+                setFlag(LINKED, toggle);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setRecentlyLinked(fgBool toggle = FG_TRUE) {
+                setFlag(RECENTLY_LINKED, toggle);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setRecentlyUsed(fgBool toggle = FG_TRUE) {
+                setFlag(RECENTLY_USED, toggle);
+            }
 
         protected:
             /**
@@ -263,6 +358,7 @@ namespace fg {
             // Create the shader program with direct GL calls
             // Gfx ID will become valid if this function is successful
             fgGFXuint create(void);
+            
             // Try to compile the shaders for this shader program
             // If needed the source code files will be loaded
             fgBool compile(void);
@@ -301,41 +397,27 @@ namespace fg {
              * @return 
              */
             fgBool isUsed(void);
-            /**
-             * 
-             * @return 
-             */
-            fgBool isLinked(void) const {
-                return m_isLinked;
-            }
-            /**
-             * 
-             * @return 
-             */
-            fgBool isCompiled(void) const {
-                return m_isCompiled;
-            }
 
         public:
             /**
              * 
              * @return 
              */
-            inline ShaderVec & getRefShaderVec(void) {
+            inline ShaderVec& getRefShaderVec(void) {
                 return m_shaders;
             }
             /**
              * 
              * @return 
              */
-            inline AttributeBindVec & getRefAttrBinds(void) {
+            inline AttributeBindVec& getRefAttrBinds(void) {
                 return m_attrBinds;
             }
             /**
              * 
              * @return 
              */
-            inline UniformBindVec & getRefUniformBinds(void) {
+            inline UniformBindVec& getRefUniformBinds(void) {
                 return m_uniformBinds;
             }
             /**
@@ -351,7 +433,7 @@ namespace fg {
                     return NULL;
             }
 
-            ///////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -365,6 +447,8 @@ namespace fg {
              * @return 
              */
             fgGFXint getUniformLocation(std::string variableName);
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -384,13 +468,15 @@ namespace fg {
              * @param matrix
              * @return 
              */
-            fgBool setUniform(CMVPMatrix *matrix);
+            fgBool setUniform(CMVPMatrix* matrix);
             /**
              * 
              * @param matrix
              * @return 
              */
-            fgBool setUniform(CMVMatrix *matrix);
+            fgBool setUniform(CMVMatrix* matrix);
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -433,6 +519,8 @@ namespace fg {
                               fgGFXfloat v1,
                               fgGFXfloat v2,
                               fgGFXfloat v3);
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -497,19 +585,19 @@ namespace fg {
                               fgGFXsizei count,
                               const fgGFXint *value);
 
-            ////////////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
              */
-            inline CShader *getFragmentShader(void) const {
+            inline CShader* getFragmentShader(void) const {
                 return m_shaders[SP_FRAGMENT_SHADER_ID];
             }
             /**
              * 
              * @return 
              */
-            inline CShader *getVertexShader(void) const {
+            inline CShader* getVertexShader(void) const {
                 return m_shaders[SP_VERTEX_SHADER_ID];
             }
     #if defined FG_USING_OPENGL
@@ -517,34 +605,49 @@ namespace fg {
              * 
              * @return 
              */
-            inline CShader *getTessControlShader(void) const {
+            inline CShader* getTessControlShader(void) const {
                 return m_shaders[SP_TESS_CONTROL_SHADER_ID];
             }
             /**
              * 
              * @return 
              */
-            inline CShader *getTessEvaluationShader(void) const {
+            inline CShader* getTessEvaluationShader(void) const {
                 return m_shaders[SP_TESS_EVALUATION_SHADER_ID];
             }
             /**
              * 
              * @return 
              */
-            inline CShader *getGeometryShader(void) const {
+            inline CShader* getGeometryShader(void) const {
                 return m_shaders[SP_GEOMETRY_SHADER_ID];
             }
             /**
              * 
              * @return 
              */
-            inline CShader *getComputeShader(void) const {
+            inline CShader* getComputeShader(void) const {
                 return m_shaders[SP_COMPUTE_SHADER_ID];
             }
     #endif
-        };
-    };
-};
+        }; // class CShaderProgram
+
+        FG_ENUM_FLAGS(CShaderProgram::StateFlags);
+        /**
+         *
+         * @param flags
+         * @param toggle
+         */
+        inline void CShaderProgram::setFlag(const StateFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_stateFlags |= flags;
+            } else {
+                m_stateFlags |= flags;
+                m_stateFlags ^= flags;
+            }
+        }
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SHADER_PROGRAM_BLOCK
 #endif /* FG_INC_GFX_SHADER_PROGRAM */

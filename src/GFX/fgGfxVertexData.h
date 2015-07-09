@@ -75,6 +75,8 @@ namespace fg {
                     return FG_FALSE;
                 if(!m_VBOCount)
                     return FG_FALSE;
+                if(!m_VBO[0].id)
+                    return FG_FALSE;
                 return FG_TRUE;
             }
             /**

@@ -22,7 +22,9 @@ gfx::CShaderManager::CShaderManager() :
 m_currentProgram(NULL),
 m_shadersDir(NULL),
 m_shadersPath(),
-m_isPreloadDone(FG_FALSE) {
+m_isPreloadDone(FG_FALSE),
+m_isLinkOnRequest(FG_FALSE),
+m_isLinkOnUse(FG_FALSE) {
     m_shadersDir = new util::CDirent();
     m_managerType = FG_MANAGER_GFX_SHADER;
     m_init = FG_FALSE;
@@ -159,7 +161,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     uniformBinds.push_back(SUniformBind("u_useTexture", UniformType::FG_GFX_USE_TEXTURE));
     uniformBinds.push_back(SUniformBind("s_texture", UniformType::FG_GFX_PLAIN_TEXTURE));
 
-    defaultProgram->m_isPreLoaded = FG_TRUE;
+    defaultProgram->setPreloaded(FG_TRUE);
 
     if(!defaultProgram->compile()) {
         FG_LOG_ERROR("GFX: Unable to compile default built-in shader program");
@@ -181,7 +183,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     }
 
     m_init = FG_TRUE;
-    return m_init; //preLoadShaders(); // ?
+    return m_init;
 }
 //------------------------------------------------------------------------------
 
@@ -272,11 +274,11 @@ fgBool gfx::CShaderManager::insertProgram(CShaderProgram *pProgram) {
 gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
     if(!m_shadersDir || !m_init || info.empty())
         return NULL;
-    CShaderProgram *shaderPtr = NULL;
+    CShaderProgram *pRequestedShader = NULL;
     // This is a fallback
-    shaderPtr = CShaderManager::get(info);
-    if(shaderPtr) {
-        return shaderPtr;
+    pRequestedShader = CShaderManager::get(info);
+    if(pRequestedShader) {
+        return pRequestedShader;
     }
     // info cannot be a path, it has to be resource name or config name
     // required file will be found
@@ -347,22 +349,29 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
     if(!isFound)
         return NULL;
     if(isConfig) {
-        shaderPtr = new CShaderProgram();
-        if(!shaderPtr->preLoadConfig(filePath)) {
-            delete shaderPtr;
-            shaderPtr = NULL;
+        pRequestedShader = new CShaderProgram();
+        if(!pRequestedShader->preLoadConfig(filePath)) {
+            delete pRequestedShader;
+            pRequestedShader = NULL;
             return NULL;
         }
     }
-    if(shaderPtr) {
-        if(!insertProgram(shaderPtr)) {
-            releaseHandle(shaderPtr->getHandle());
-            delete shaderPtr;
-            shaderPtr = NULL;
+    if(pRequestedShader) {
+        if(!insertProgram(pRequestedShader)) {
+            releaseHandle(pRequestedShader->getHandle());
+            delete pRequestedShader;
+            pRequestedShader = NULL;
             return NULL;
         }
+        // #FIXME - link on request/use/get should maybe throw some kind of event
+        // this is for the future - compiling/linking should be done in special
+        // place - can also throw proper event SHADER_LINK(?) to react properly
+        if(m_isLinkOnRequest) {
+            pRequestedShader->compile();
+            pRequestedShader->link();
+        }
     }
-    return shaderPtr;
+    return pRequestedShader;
 }
 //------------------------------------------------------------------------------
 
@@ -406,20 +415,22 @@ void gfx::CShaderManager::setShadersPath(const char *path) {
     }
     m_shadersPath = path;
     if(m_shadersPath[0] != '.') {
-        if(m_shadersPath[0] == '/' || m_shadersPath[0] == '\\')
+        if(m_shadersPath[0] == '/' || m_shadersPath[0] == '\\') {
             m_shadersPath.insert(m_shadersPath.begin(), 1, '.');
-        else
+        } else {
             m_shadersPath.insert(0, "./");
+        }
     }
     FG_LOG_DEBUG("GFX:%s: Set shaders path to: '%s'", tag_type::name(), m_shadersPath.c_str());
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderManager::compileShaders(void) {
+fgBool gfx::CShaderManager::compileShaders(fgBool recentOnly) {
     if(!m_init) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
+    int nCompiled = 0;
     ProgramVecItor end, itor;
     end = getRefDataVector().end();
     itor = getRefDataVector().begin();
@@ -427,23 +438,29 @@ fgBool gfx::CShaderManager::compileShaders(void) {
         CShaderProgram *pProgram = (*itor).data;
         if(!pProgram)
             continue;
+        if(recentOnly && !(pProgram->wasRecentlyUsed() || pProgram->wasRecentlyLinked()))
+            continue; // skip the ones that never were linked nor used
         if(!pProgram->compile()) {
             status = FG_FALSE;
+        } else {
+            nCompiled++;
         }
     }
-    if(status)
+    if(status) {
         FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "All shader programs compiled successfully");
-    else
+    } else {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when compiling shader programs");
+    }
     return status;
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderManager::linkShaders(void) {
+fgBool gfx::CShaderManager::linkShaders(fgBool recentOnly) {
     if(!m_init) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
+    int nLinked = 0;
     ProgramVecItor end, itor;
     end = getRefDataVector().end();
     itor = getRefDataVector().begin();
@@ -451,14 +468,19 @@ fgBool gfx::CShaderManager::linkShaders(void) {
         CShaderProgram *pProgram = (*itor).data;
         if(!pProgram)
             continue;
+        if(recentOnly && !(pProgram->wasRecentlyUsed() || pProgram->wasRecentlyLinked()))
+            continue; // skip the ones that never were compiled nor used
         if(!pProgram->link()) {
             status = FG_FALSE;
+        } else {
+            nLinked++;
         }
     }
-    if(status)
+    if(status) {
         FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "All shader programs linked successfully");
-    else
+    } else {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when linking shader programs");
+    }
     return status;
 }
 //------------------------------------------------------------------------------
@@ -471,12 +493,12 @@ fgBool gfx::CShaderManager::getShaderNames(CStringVector& strVec) {
     itor = getRefDataVector().begin();
     for(; itor != end; itor++) {
         CShaderProgram *pProgram = (*itor).data;
-        if(!pProgram)
+        if(!pProgram) {
             continue;
+        }
         strVec.push_back(pProgram->getName());
         nFound++;
     }
-    
     return (fgBool)!!(nFound > 0);
 }
 //------------------------------------------------------------------------------
@@ -497,17 +519,25 @@ fgBool gfx::CShaderManager::allReleaseGFX(void) {
             status = FG_FALSE;
         }
     }
-    if(status)
+    if(status) {
         FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "All shader programs released successfully");
-    else
+    } else {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when releasing shader programs");
+    }
     return status;
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::useProgram(CShaderProgram *pProgram) {
-    if(!pProgram)
+    if(!pProgram) {
         return FG_FALSE;
+    }
+    if(m_isLinkOnUse && !pProgram->isLinked()) {
+        if(!pProgram->compile()) {
+            return FG_FALSE;
+        }
+        pProgram->link();
+    }
     if(pProgram->use()) {
         m_currentProgram = pProgram;
         return FG_TRUE;
@@ -521,6 +551,12 @@ fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
     if(!pProgram) {
         return FG_FALSE;
     }
+    if(m_isLinkOnUse && !pProgram->isLinked()) {
+        if(!pProgram->compile()) {
+            return FG_FALSE;
+        }
+        pProgram->link();
+    }
     if(pProgram == m_currentProgram)
         return FG_FALSE;
     m_currentProgram = pProgram;
@@ -533,8 +569,15 @@ fgBool gfx::CShaderManager::useProgram(const std::string &nameTag) {
     if(!pProgram) {
         return FG_FALSE;
     }
-    if(pProgram == m_currentProgram)
+    if(m_isLinkOnUse && !pProgram->isLinked()) {
+        if(!pProgram->compile()) {
+            return FG_FALSE;
+        }
+        pProgram->link();
+    }
+    if(pProgram == m_currentProgram) {
         return FG_FALSE;
+    }
     m_currentProgram = pProgram;
     return pProgram->use();
 }
@@ -544,6 +587,12 @@ fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
     gfx::CShaderProgram *pProgram = dereference(nameTag);
     if(!pProgram) {
         return FG_FALSE;
+    }
+    if(m_isLinkOnUse && !pProgram->isLinked()) {
+        if(!pProgram->compile()) {
+            return FG_FALSE;
+        }
+        pProgram->link();
     }
     if(pProgram == m_currentProgram)
         return FG_FALSE;

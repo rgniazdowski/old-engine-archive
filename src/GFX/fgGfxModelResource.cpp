@@ -287,12 +287,12 @@ void gfx::CModelResource::dispose(void) {
     }
     m_materialOverride = NULL;
     m_hasMaterial = FG_FALSE;
-    m_isReady = FG_FALSE;
+    base_type::m_isReady = FG_FALSE;
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::isDisposed(void) const {
-    return (fgBool)(/*m_shapes.empty() &&*/!m_isReady && !m_size);
+    return (fgBool)(/*m_shapes.empty() &&*/!base_type::m_isReady && !base_type::m_size);
 }
 //------------------------------------------------------------------------------
 
@@ -319,7 +319,9 @@ fgBool gfx::CModelResource::genBuffers(void) {
     int n = m_shapes.size();
     for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
-            m_shapes[i]->mesh->genBuffers();
+            if(!m_shapes[i]->mesh->hasVBO()) {
+                m_shapes[i]->mesh->genBuffers();
+            }
         }
     }
     return FG_TRUE;

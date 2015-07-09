@@ -255,6 +255,9 @@ fgBool resource::CResourceManager::goToNext(const ResourceType* resTypes, int n)
         if(!isValid()) {
             break;
         }
+        if(!(*m_currentResource).data) {
+            continue;
+        }
         fgBool status = FG_FALSE;
         int i = 0;
         while(!status) {

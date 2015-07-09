@@ -47,6 +47,7 @@ m_2DScene(NULL),
 m_particleSystem(NULL),
 m_resourceCreatedCallback(NULL),
 m_sceneNodeInsertedCallback(NULL),
+m_programEventCallback(NULL),
 m_init(FG_FALSE) {
     m_3DScene = new gfx::CScene3D();
     m_2DScene = new gfx::CScene2D();
@@ -61,6 +62,7 @@ m_init(FG_FALSE) {
 
 gfx::CGfxMain::~CGfxMain() {
     unregisterResourceCallbacks();
+    unregisterProgramCallbacks();
     unregisterSceneCallbacks();
 
     if(m_particleSystem) {
@@ -106,6 +108,10 @@ gfx::CGfxMain::~CGfxMain() {
     if(m_sceneNodeInsertedCallback) {
         delete m_sceneNodeInsertedCallback;
         m_sceneNodeInsertedCallback = NULL;
+    }
+    if(m_programEventCallback) {
+        delete m_programEventCallback;
+        m_programEventCallback = NULL;
     }
 
     if(m_loader) {
@@ -177,6 +183,29 @@ void gfx::CGfxMain::unregisterSceneCallbacks(void) {
 
     m_3DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
     m_2DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CGfxMain::registerProgramCallbacks(void) {
+    if(!m_pEventMgr)
+        return;
+
+    if(!m_programEventCallback)
+        m_programEventCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::programEventHandler);
+
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_QUIT, m_programEventCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_SUSPEND, m_programEventCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_RESUME, m_programEventCallback);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CGfxMain::unregisterProgramCallbacks(void) {
+    if(!m_pEventMgr)
+        return;
+
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_QUIT, m_programEventCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_SUSPEND, m_programEventCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_RESUME, m_programEventCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -291,11 +320,11 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(cubeModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(cubeModel);
         delete cubeModel;
-    } else {
-        // Should not call create manually on the 3D Model
-        // This wont call the function for VBO upload
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinCube1x1");
     }
+    // Should not call create manually on the 3D Model
+    // This wont call the function for VBO upload
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinCube1x1");
+    //---------------------------------------------
 
     SMeshAoS *builtin_sphere_mesh = new SMeshAoS();
     SShape *builtin_sphere_shape = new SShape();
@@ -305,7 +334,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     sphereModel->setName("builtinSphere");
     builtin_sphere_shape->name = "builtinSphere";
     builtin_sphere_shape->mesh = builtin_sphere_mesh;
-    builtin_sphere_shape->material = new SMaterial();    
+    builtin_sphere_shape->material = new SMaterial();
     builtin_sphere_shape->material->diffuseTexName = "empty.tga";
     builtin_sphere_shape->material->shaderName = "sPlainEasy";
     sphereModel->addShape(builtin_sphere_shape);
@@ -313,9 +342,9 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(sphereModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(sphereModel);
         delete sphereModel;
-    } else {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
     }
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
+    //---------------------------------------------
 
     SMeshAoS *builtin_quad_mesh = new SMeshAoS();
     SShape *builtin_quad_shape = new SShape();
@@ -333,9 +362,8 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(quadModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(quadModel);
         delete quadModel;
-    } else {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");
     }
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -494,19 +522,28 @@ fgBool gfx::CGfxMain::suspendGFX(void) {
         if(!m_shaderMgr->allReleaseGFX())
             status = FG_FALSE;
     }
-    {
-        if(context::isInit())
-            context::deleteAllBuffers();
+
+    if(context::isInit()) {
+        context::deleteAllBuffers();
     }
+
     if(status) {
         // With parameter TRUE the SDL will not be closed
         // Window will not be destroyed
         closeGFX(FG_TRUE);
     }
-    if(!status)
+    if(!status) {
         FG_LOG_WARNING("GFX: Suspension of GFX subsystem finished with errors");
-    else
+    } else {
         FG_LOG_DEBUG("GFX: Suspension of GFX subsystem finished with no errors");
+    }
+    event::CEventManager* pEventMgr = static_cast<event::CEventManager*>(m_pEventMgr);
+    event::SProgram* programEvent = (event::SProgram*)pEventMgr->requestEventStruct(event::PROGRAM_SUSPEND);
+    event::CArgumentList* argList = pEventMgr->requestArgumentList();
+    programEvent->isOriginGfx = FG_TRUE;
+    programEvent->isSuccess = status;
+    argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void*)programEvent);
+    pEventMgr->throwEvent(event::PROGRAM_SUSPEND, argList);
     return status;
 }
 //------------------------------------------------------------------------------
@@ -519,24 +556,28 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
     if(m_textureMgr && status)
         if(!m_textureMgr->allToVRAM(FG_TRUE))
             status = FG_FALSE;
-    // This will compile all shaders, not just the used ones
-    // #FIXME #P1
     if(m_shaderMgr && m_textureMgr) {
-        if(!m_shaderMgr->compileShaders())
+        // compile and link only recent shaders
+        if(!m_shaderMgr->compileShaders(FG_TRUE))
             status = FG_FALSE;
-        if(!m_shaderMgr->linkShaders())
+        if(!m_shaderMgr->linkShaders(FG_TRUE))
             status = FG_FALSE;
     }
-    // REGENERATE VBOS #TODO
-    {
-        generateBuiltInData();
-    }
+    generateBuiltInData();
     registerSceneCallbacks();
 
-    if(!status)
+    if(!status) {
         FG_LOG_WARNING("GFX: Resume of GFX subsystem finished with errors");
-    else
+    } else {
         FG_LOG_DEBUG("GFX: Resume of GFX subsystem finished with no errors");
+    }
+    event::CEventManager* pEventMgr = static_cast<event::CEventManager*>(m_pEventMgr);
+    event::SProgram* programEvent = (event::SProgram*)pEventMgr->requestEventStruct(event::PROGRAM_RESUME);
+    event::CArgumentList* argList = pEventMgr->requestArgumentList();
+    programEvent->isOriginGfx = FG_TRUE;
+    programEvent->isSuccess = status;
+    argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void*)programEvent);
+    pEventMgr->throwEvent(event::PROGRAM_RESUME, argList);
     return status;
 }
 //------------------------------------------------------------------------------
@@ -591,7 +632,7 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
     context::setBlend(FG_FALSE);
     context::frontFace(FrontFace::FACE_CCW);
     context::setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
-    
+
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -663,8 +704,8 @@ void gfx::CGfxMain::render(void) {
     if(!sOrthoEasyProgram) {
         FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
         return;
-    }    
-    m_shaderMgr->useProgram(sOrthoEasyProgram);    
+    }
+    m_shaderMgr->useProgram(sOrthoEasyProgram);
     sOrthoEasyProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     context::setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0.0f,
@@ -717,13 +758,17 @@ fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager)
     fg::base::CManager *pEventMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr)->getEventManager();
     if(!pEventMgr) {
         unregisterResourceCallbacks();
+        unregisterProgramCallbacks();
         m_pEventMgr = NULL;
     } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
         unregisterResourceCallbacks();
+        unregisterProgramCallbacks();
     }
     m_pEventMgr = pEventMgr;
-    if(m_pEventMgr)
+    if(m_pEventMgr) {
         registerResourceCallbacks();
+        registerProgramCallbacks();
+    }
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 //------------------------------------------------------------------------------
@@ -750,16 +795,16 @@ fgBool gfx::CGfxMain::releaseTextures(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
+fgBool gfx::CGfxMain::resourceCreatedHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SEvent *event_struct = (event::SEvent *)argv->getValueByID(0);
+    event::SEvent* event_struct = (event::SEvent*)argv->getValueByID(0);
     if(!event_struct)
         return FG_FALSE;
     event::EventType type = event_struct->code;
     if(type != event::RESOURCE_CREATED)
         return FG_FALSE;
-    event::SResource *resourceEvent = (event::SResource *)event_struct;
+    event::SResource* resourceEvent = (event::SResource*)event_struct;
     resource::CResource *pResource = resourceEvent->resource;
     if(!pResource)
         return FG_FALSE;
@@ -769,19 +814,19 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
 
     if(pResource->getResourceType() == resource::MODEL3D) {
 
-        CModelResource *pModel = static_cast<CModelResource *>(pResource);
-        CModelResource::ShapesVec &shapes = pModel->getRefShapes();
-        resource::CResourceManager* pResourceMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr);
+        CModelResource* pModel = static_cast<CModelResource*>(pResource);
+        CModelResource::ShapesVec& shapes = pModel->getRefShapes();
+        resource::CResourceManager* pResourceMgr = static_cast<resource::CResourceManager*>(m_pResourceMgr);
 
         if(pModel) {
-            SMaterial *pMainMaterial = pModel->getMainMaterial();
+            SMaterial* pMainMaterial = pModel->getMainMaterial();
             if(!pModel->getMainMaterial()->shaderProgram) {
                 pModel->getMainMaterial()->shaderProgram =
                         m_shaderMgr->get(pModel->getMainMaterial()->shaderName);
             }
             //#FIXME
             if(pResourceMgr) {
-                resource::CResource *tex = NULL;
+                resource::CResource* tex = NULL;
                 // Ambient texture handle lookup
                 tex = pResourceMgr->request(pMainMaterial->ambientTexName);
                 if(tex) {
@@ -828,7 +873,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
                 }
             }
             if(pResourceMgr) {
-                resource::CResource *tex = NULL;
+                resource::CResource* tex = NULL;
                 // Ambient texture handle lookup
                 tex = pResourceMgr->request(pShape->material->ambientTexName);
                 if(tex) {
@@ -875,7 +920,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CGfxMain::sceneNodeInsertedHandler(fg::event::CArgumentList * argv) {
+fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
     event::SSceneEvent *event_struct = (event::SSceneEvent *)argv->getValueByID(0);
@@ -889,6 +934,31 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(fg::event::CArgumentList * argv) 
         event_struct->node.pNodeA->refreshGfxInternals();
     }
 
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CGfxMain::programEventHandler(event::CArgumentList* argv) {
+    if(!argv)
+        return FG_FALSE;
+    event::SProgram* pProgram = (event::SProgram*)argv->getValueByID(0);
+    if(!pProgram)
+        return FG_FALSE;
+    event::EventType type = pProgram->eventType;
+    if(type != event::PROGRAM_RESUME && type != event::PROGRAM_SUSPEND) {
+        return FG_FALSE;
+    }
+    if(!pProgram->isOriginGfx) {
+        return FG_FALSE;
+    }
+    if(type == event::PROGRAM_SUSPEND) {
+
+    } else {
+        // GFX RESUME
+        // need to refresh gfx internals of all SCENE NODES
+        this->get3DScene()->refreshGfxInternals();
+        this->get2DScene()->refreshGfxInternals();
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

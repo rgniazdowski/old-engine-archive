@@ -419,6 +419,8 @@ namespace fg {
         //#define FG_EVENT_SPLASHSCREEN       26
 
         struct SProgram : SEventBase {
+            fgBool isSuccess;
+            fgBool isOriginGfx;
         };
 
         struct SLoading : SEventBase {
