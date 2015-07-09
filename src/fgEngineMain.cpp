@@ -566,40 +566,8 @@ fgBool CEngineMain::loadResources(void) {
     m_scriptSubsystem->executeFile(modScriptPath);
 #endif
     m_gfxMain->getLoader()->update(10.0f);
-    ////////////////////////////////////////////////////////////////////////////
-
-    std::string sPlainEasyShaderName("sPlainEasy");
-    gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
-    // DEVICE YIELD
-    FG_LOG_DEBUG("Will now try to compile and link 'sPlainEasy' shader program");
-    if(program) {
-        // Compile all required shaders
-        program->compile();
-        // this will also bind attributes and after successful link - bind uniforms
-        program->link();
-    }
-    m_gfxMain->getLoader()->update(10.0f);
-    {
-        std::string sOrthoEasyShaderName("sOrthoEasy");
-        gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
-        // DEVICE YIELD
-        FG_LOG_DEBUG("Init: Will now try to compile and link 'sOrthoEasyShader' shader program");
-        if(program) {
-            program->compile();
-            program->link(); // this will also bind attributes and after successful link - bind uniforms
-        }
-    }
-    m_gfxMain->getLoader()->update(10.0f);
-    {
-        std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
-        gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
-        // DEVICE YIELD
-        FG_LOG_DEBUG("Init: Will now try to compile and link 'sSkyBoxEasyShader' shader program");
-        if(program) {
-            program->compile();
-            program->link(); // this will also bind attributes and after successful link - bind uniforms
-        }
-    }
+    m_gfxMain->getShaderManager()->setLinkOnUse(FG_TRUE);
+    m_gfxMain->getShaderManager()->setLinkOnRequest(FG_TRUE);
     m_gfxMain->getLoader()->update(15.0f);
     // DEVICE YIELD
     ////////////////////////////////////////////////////////////////////////////
@@ -609,7 +577,7 @@ fgBool CEngineMain::loadResources(void) {
     m_gfxMain->getLoader()->update(15.0f);
     ////////////////////////////////////////////////////////////////////////////
 
-    m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
+    //m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
     this->update(FG_TRUE);
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
@@ -787,7 +755,7 @@ fgBool CEngineMain::update(fgBool force) {
         }
 #endif
     }
-    
+
     // Well this is really useful system, in the end GUI and others will be hooked
     // to EventManager so everything what needs to be done is done in this function
     event::CEventManager::executeEvents();
