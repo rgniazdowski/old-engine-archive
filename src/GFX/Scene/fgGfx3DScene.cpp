@@ -167,6 +167,9 @@ void gfx::CScene3D::sortCalls(void) {
             }
 #endif
             g_DebugConfig.gfxBBoxShow = true;
+            // #FIXME #TREE_TRAVERSE - tree needs also to contain child nodes
+            // of scene nodes (like meshes of the object)
+            // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes
             if(pSceneNode->isVisible()) {
                 // Checking for pick selection only when node is visible
                 if(m_pickSelection.shouldCheck) {

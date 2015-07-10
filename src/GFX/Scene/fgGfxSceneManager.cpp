@@ -946,14 +946,13 @@ void gfx::CSceneManager::sortCalls(void) {
             }
         }
         g_DebugConfig.gfxBBoxShow = true;
-        // ? also need to push to queue more than one draw call
-        // And i mean... wait wut? All children are registered
-        // This is a tree - that needs to be traversed
-        // There is no need to go through all (linear) objects through the scene
-        // The aabb for each object is updated based on the children
-        // Need some standard for manipulating this objects, and also for traversing
-        // the tree. Also one would need some standard for special kind of tree - loose octrees?
-        if(pSceneNode->isVisible()) {
+        // #FIXME #LINEAR_TRAVERSE - linear traverse should push to queue
+        // only the deepest child nodes - the same goes with octree
+        // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes
+        // ? also need to push to queue more than one draw call        
+        // The aabb for each object is updated based on the children        
+        if(pSceneNode->isVisible() && !pSceneNode->getRefHandle().isNull()) {
+            // push to queue only nodes that have valid handle
             m_nodeQueue.push(pSceneNode);
         }
         // #FIXME - srsly?
@@ -1001,7 +1000,7 @@ void gfx::CSceneManager::render(void) {
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
             }
-#endif       
+#endif            
             pSceneNode->draw();
             pProgram = pShaderMgr->getCurrentProgram();
 #if defined(FG_DEBUG)

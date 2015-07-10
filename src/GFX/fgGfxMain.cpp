@@ -688,7 +688,7 @@ void gfx::CGfxMain::render(void) {
 #endif
     // 
     // RENDER THE 3D SCENE
-    //    
+    //
     m_3DScene->render();
 
 #if defined(FG_DEBUG)
