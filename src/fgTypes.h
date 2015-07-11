@@ -70,10 +70,17 @@
     #define FG_RETURN_VAL_IF_EQUAL(varToCheck, valueToCheck, returnVal) \
 	do { if(varToCheck == valueToCheck ) return returnVal; } while(0)
 
+    #define FG_YES 1
+    #define FG_NO 0
+    #define FG_YES_TEXT "yes"
+    #define FG_NO_TEXT "no"
+
 // Convert text (literal) to corresponding enum value
 inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
     if(!text)
         return FG_BOOL_INVALID;
+    FG_RETURN_ENUM_IF_TEXT_EQ(FG_YES);
+    FG_RETURN_ENUM_IF_TEXT_EQ(FG_NO);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_TRUE);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_FALSE);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_SUCCESS);
@@ -82,6 +89,8 @@ inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
     return FG_BOOL_INVALID;
 }
 inline const char * _FG_BOOL_TO_TEXT(fgBool value) {
+    FG_RETURN_VAL_IF_EQUAL(value, FG_TRUE, "yes");
+    FG_RETURN_VAL_IF_EQUAL(value, FG_FALSE, "no");
     FG_RETURN_VAL_IF_EQUAL(value, FG_TRUE, FG_TEXT(FG_TRUE));
     FG_RETURN_VAL_IF_EQUAL(value, FG_FALSE, FG_TEXT(FG_FALSE));
     FG_RETURN_VAL_IF_EQUAL(value, FG_WARNING, FG_TEXT(FG_WARNING));

@@ -945,7 +945,6 @@ void gfx::CSceneManager::sortCalls(void) {
                 m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
             }
         }
-        g_DebugConfig.gfxBBoxShow = true;
         // #FIXME #LINEAR_TRAVERSE - linear traverse should push to queue
         // only the deepest child nodes - the same goes with octree
         // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes

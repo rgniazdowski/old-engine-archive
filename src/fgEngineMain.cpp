@@ -521,23 +521,224 @@ fgBool CEngineMain::loadConfiguration(void) {
     path::changeCurrentWorkingDir(m_settings->getInstallationPath());
     path::changeCurrentWorkingDir(m_settings->getDefaultDataPath());
 #endif
+    // #FIXME enumeration
+    enum {
+        OPT_MOD = 0,
+        OPT_HELP,
+        OPT_VERBOSE_LEVEL,
+        OPT_PHYSICS_BBOX,
+        OPT_GUI_BBOX,
+        OPT_GFX_BBOX,
+        OPT_GFX_TREE_BBOX,
+        OPT_GFX_FRUSTUM,
+        OPT_GFX_LIGHT,
+        OPT_GFX_DUMP_CONFIG,
+        OPT_GFX_DUMP_DISPLAY,
+        OPT_GAME_FREE_LOOK,
+        OPT_LABELS,
+        OPT_DUMP_CONFIG,
+        OPT_FORCE_FULLSCREEN,
+        OPT_DEBUG_PROFILING,
+        OPT_SHOW_CONSOLE
+    };
+    //
+    // SO_NONE - No argument. Just the option flags. e.g. -o --opt
+    //
+    // SO_REQ_SEP - Required separate argument.  e.g. -o ARG --opt ARG
+    //
+    // SO_REQ_CMB - Required combined argument.  e.g. -oARG -o=ARG --opt=ARG
+    //
+    // SO_OPT - Optional combined argument.  e.g. -o[ARG]    -o[=ARG]    --opt[=ARG]
+    //
+    // SO_MULTI - Multiple separate arguments. The actual number of arguments is
+    // determined at the time the argument is processed.
+    // e.g. -o N ARG1 ARG2 ... ARGN    --opt N ARG1 ARG2 ... ARGN
+    //
     // #FIXME
     CSimpleOpt::SOption gameOptions[] = {
-        {0, "--mod", SO_REQ_SEP},
+        {OPT_MOD, "--mod", SO_REQ_SEP},
+        {OPT_HELP, "--help", SO_NONE},
+        {OPT_VERBOSE_LEVEL, "--verbose", SO_OPT},
+        {OPT_PHYSICS_BBOX, "--physics-bbox", SO_OPT},
+        {OPT_PHYSICS_BBOX, "--physics-bbox-show", SO_NONE},
+        {OPT_GUI_BBOX, "--gui-bbox", SO_OPT},
+        {OPT_GUI_BBOX, "--gui-bbox-show", SO_NONE},
+        {OPT_GFX_BBOX, "--gfx-bbox", SO_OPT},
+        {OPT_GFX_BBOX, "--gfx-bbox-show", SO_NONE},
+        {OPT_GFX_TREE_BBOX, "--gfx-tree-bbox", SO_OPT},
+        {OPT_GFX_TREE_BBOX, "--gfx-tree-bbox-show", SO_NONE},
+        {OPT_GFX_FRUSTUM, "--gfx-frustum-show", SO_OPT},
+        {OPT_GFX_LIGHT, "--gfx-light-show", SO_OPT},
+        {OPT_GFX_DUMP_CONFIG, "--gfx-dump-config", SO_OPT},
+        {OPT_GFX_DUMP_DISPLAY, "--gfx-dump-display", SO_OPT},
+        {OPT_GAME_FREE_LOOK, "--game-free-look", SO_OPT},
+        {OPT_LABELS, "--show-labels", SO_OPT},
+        {OPT_DUMP_CONFIG, "--dump-config", SO_OPT},
+        {OPT_FORCE_FULLSCREEN, "--fullscreen", SO_NONE},
+        {OPT_FORCE_FULLSCREEN, "--fs", SO_NONE},
+        {OPT_DEBUG_PROFILING, "--profiling-debug", SO_NONE},
+        {OPT_SHOW_CONSOLE, "--console", SO_NONE},
+        {OPT_SHOW_CONSOLE, "--show-console", SO_NONE},
         { -1, NULL, SO_NONE}
     };
     CSimpleOpt args;
     args.Init(m_argc, m_argv, gameOptions, SO_O_NOERR | SO_O_EXACT);
     while(args.Next()) {
+        const char* pArgStr = NULL;
+        fgBool hasArgument = (fgBool)!!(args.OptionArg() && strlen(args.OptionArg()));
+        if(hasArgument)
+            pArgStr = args.OptionArg();
         switch(args.OptionId()) {
-            case 0:
-                if(args.OptionArg()) {
-                    if(strlen(args.OptionArg())) {
-                        m_settings->setCurrentModPath(args.OptionArg());
-                        FG_LOG_DEBUG("SETUP: Setting new current mod path: '%s'", args.OptionArg());
-                    }
+            case OPT_MOD:
+                if(hasArgument) {
+                    m_settings->setCurrentModPath(pArgStr);
+                    FG_LOG_DEBUG("SETUP: Setting new current mod path: '%s'", pArgStr);
                 }
                 break;
+#if defined(FG_DEBUG)
+            case OPT_VERBOSE_LEVEL:
+                if(hasArgument) {
+                    // #FIXME - need to check for more than just numbers
+                    const unsigned char high = FG_VERBOSE_LVL_HIGH;
+                    const unsigned char none = FG_VERBOSE_LVL_NONE;
+                    const unsigned char low = FG_VERBOSE_LVL_LOW;
+                    char verboseLevel = (char)std::atoi(pArgStr);
+                    if(verboseLevel > high)
+                        verboseLevel = high;
+                    if(verboseLevel < none)
+                        verboseLevel = none;
+                    g_DebugConfig.verboseLevel = verboseLevel;
+                } else {
+                    g_DebugConfig.verboseLevel = FG_VERBOSE_LVL_HIGH;
+                }
+                break;
+
+            case OPT_PHYSICS_BBOX:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.physicsBBoxShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.physicsBBoxShow = true;
+                }
+                break;
+
+            case OPT_GUI_BBOX: 
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.guiBBoxShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.guiBBoxShow = true;
+                }
+                break;
+
+            case OPT_GFX_BBOX: 
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxBBoxShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxBBoxShow = true;
+                }
+                break;
+
+            case OPT_GFX_TREE_BBOX: 
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxTreeBBoxShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxTreeBBoxShow = true;
+                }
+                break;
+
+            case OPT_GFX_FRUSTUM: 
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxTreeBBoxShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxTreeBBoxShow = true;
+                }
+                break;
+
+            case OPT_GFX_LIGHT:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxLightShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxLightShow = true;
+                }
+                break;
+
+            case OPT_GFX_DUMP_CONFIG:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxDumpConfig = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxDumpConfig = true;
+                }
+                break;
+
+            case OPT_GFX_DUMP_DISPLAY:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxDumpDisplay = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxDumpDisplay = true;
+                }
+                break;
+
+            case OPT_GAME_FREE_LOOK:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gameFreeLook = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gameFreeLook = true;
+                }
+                break;
+
+            case OPT_LABELS:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.labelsShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.labelsShow = true;
+                }
+                break;
+
+            case OPT_DUMP_CONFIG:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.dumpConfig = (bool)boolValue;
+                } else {
+                    g_DebugConfig.dumpConfig = true;
+                }
+                break;
+
+            case OPT_FORCE_FULLSCREEN:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.forceFullscreen = (bool)boolValue;
+                } else {
+                    g_DebugConfig.forceFullscreen = true;
+                }
+                break;
+
+            case OPT_DEBUG_PROFILING:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.isDebugProfiling = (bool)boolValue;
+                } else {
+                    g_DebugConfig.isDebugProfiling = true;
+                }
+                break;
+
+            case OPT_SHOW_CONSOLE:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.consoleShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.consoleShow = true;
+                }
+                break;
+#endif
             default:
                 break;
         };
@@ -880,6 +1081,16 @@ fgBool CEngineMain::gameKeyboardHandler(event::CArgumentList* argv) {
     if(!pEvent)
         return FG_FALSE;
     event::SKey* pKey = (event::SKey*)pEvent;
+    if(pKey->eventType == event::KEY_PRESSED) {
+        if(pKey->keyCode == event::FG_KEY_1) {
+            printf("GFX SUSPEND FORCED!\n");
+            this->m_gfxMain->suspendGFX();
+        }
+        if(pKey->keyCode == event::FG_KEY_2) {
+            printf("GFX RESUME FORCED!\n");
+            this->m_gfxMain->resumeGFX();
+        }
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
