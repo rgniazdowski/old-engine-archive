@@ -375,9 +375,9 @@ namespace fg {
             score_type m_stageScore;
             /// Player ID/Name/Nickname
             std::string m_playerName;
-        };
-    };
-};
+        }; // class CGameMain
+    } // namespace game
+} // namespace fg
 
     #undef FG_INC_GAME_MAIN_BLOCK
-#endif /* FG_INC_GAME_LOGIC */
+#endif /* FG_INC_GAME_MAIN */

@@ -144,6 +144,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534589759/fgGuiWidgetManager.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiWindow.o \
 	${OBJECTDIR}/_ext/477241454/fgGameMain.o \
+	${OBJECTDIR}/_ext/477241454/fgGrid.o \
 	${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o \
 	${OBJECTDIR}/_ext/484399070/fgHardwareState.o \
 	${OBJECTDIR}/_ext/484399070/fgQualityManager.o \
@@ -776,6 +777,11 @@ ${OBJECTDIR}/_ext/477241454/fgGameMain.o: ../../../src/GameLogic/fgGameMain.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/477241454
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGameMain.o ../../../src/GameLogic/fgGameMain.cpp
+
+${OBJECTDIR}/_ext/477241454/fgGrid.o: ../../../src/GameLogic/fgGrid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/477241454
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGrid.o ../../../src/GameLogic/fgGrid.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o: ../../../src/Hardware/fgDeviceQuery.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070

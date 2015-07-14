@@ -111,6 +111,7 @@
             <word>fragment's</word>
             <word>framebuffer</word>
             <word>freeglut</word>
+            <word>fs</word>
             <word>fubar</word>
             <word>fullscreen</word>
             <word>func</word>
@@ -213,6 +214,7 @@
             <word>Radoslaw</word>
             <word>rasterized</word>
             <word>readdir</word>
+            <word>realloc</word>
             <word>renderbuffer</word>
             <word>renderbuffers</word>
             <word>rfactor</word>

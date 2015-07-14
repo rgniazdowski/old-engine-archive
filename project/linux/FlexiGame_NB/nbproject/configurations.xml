@@ -53,6 +53,8 @@
       <logicalFolder name="GameLogic" displayName="GameLogic" projectFiles="true">
         <itemPath>../../../src/GameLogic/fgGameMain.cpp</itemPath>
         <itemPath>../../../src/GameLogic/fgGameMain.h</itemPath>
+        <itemPath>../../../src/GameLogic/fgGrid.cpp</itemPath>
+        <itemPath>../../../src/GameLogic/fgGrid.h</itemPath>
       </logicalFolder>
       <logicalFolder name="GFX" displayName="GFX" projectFiles="true">
         <logicalFolder name="Particles" displayName="Particles" projectFiles="true">
@@ -1661,6 +1663,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -3331,6 +3337,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
             tool="1"
@@ -4965,6 +4975,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
             tool="1"
@@ -6576,6 +6590,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -8218,6 +8236,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
             tool="1"
@@ -9850,6 +9872,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"

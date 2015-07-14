@@ -96,9 +96,6 @@ template <> inline void *fgRealloc<void>(void *inptr, const int count, const fgB
     return data;
 }
 
-/*
- *
- */
 inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FALSE) {
     if(!item)
         return;
@@ -112,9 +109,6 @@ inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FA
     item = NULL;
 }
 
-/*
- *
- */
 template<class Type>
 inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
     if(!item)
