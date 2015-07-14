@@ -33,10 +33,10 @@ m_data(NULL),
 m_dummy() {
     if(m_dimension == Dimension::NONE)
         m_dimension = Dimension::TWO_DIMENSIONAL;
-    setMaxSize(MAX_SIZE_ONE_DIMENSIONAL,
-               MAX_SIZE_ONE_DIMENSIONAL,
-               MAX_SIZE_ONE_DIMENSIONAL,
-               MAX_SIZE_ONE_DIMENSIONAL);
+    setMaxSize(MAX_SIZE_TWO_DIMENSIONAL,
+               MAX_SIZE_TWO_DIMENSIONAL,
+               2,
+               2);
 }
 //------------------------------------------------------------------------------
 
@@ -415,7 +415,7 @@ void game::CGrid::resize(unsigned short x,
     // if requested resize size is smaller than current
     // no reallocation will occur - memory will be preserved
 
-    if(is_w_diff && !is_w_less) {
+    if(is_w_diff && !is_w_less && m_capacity.w < w) {
         // W dimension changed bigger
         // realloc W dimension
         m_data = (SCellHolder ****)realloc(m_data, w * sizeof (SCellHolder ***));
@@ -428,13 +428,23 @@ void game::CGrid::resize(unsigned short x,
         z = m_size.z;
     }
     m_size.w = w;
+    int oldCapacityW = m_capacity.w;
     if(is_w_diff && !is_w_less)
         m_capacity.w = newW;
+    int oldCapacityZ = m_capacity.z;
+    int oldCapacityY = m_capacity.y;
+    int oldCapacityX = m_capacity.x;
+    if(is_z_diff && !is_z_less && m_capacity.z < newZ)
+        m_capacity.z = newZ;
+    if(is_y_diff && !is_y_less && m_capacity.y < newY)
+        m_capacity.y = newY;
+    if(is_x_diff && !is_x_less && m_capacity.x < newX)
+        m_capacity.x = newX;
     if((is_z_diff && !is_z_less) || is_w_diff) {
         for(unsigned short iw = beginW; iw < m_size.w; iw++) {
-            m_data[iw] = (SCellHolder ***)realloc(m_data[iw], z * sizeof (SCellHolder **));
-            unsigned short iz = m_size.z;
-            if(is_w_diff && iw >= oldW)
+            m_data[iw] = (SCellHolder ***)realloc(m_data[iw], m_capacity.z * sizeof (SCellHolder **));
+            unsigned short iz = oldCapacityZ;
+            if(is_w_diff && iw >= oldCapacityW)
                 iz = 0;
             for(; iz < z; iz++)
                 m_data[iw][iz] = NULL;
@@ -445,15 +455,13 @@ void game::CGrid::resize(unsigned short x,
         beginZ = m_size.z;
         y = m_size.y;
     }
-    m_size.z = z;
-    if(is_z_diff && !is_z_less)
-        m_capacity.z = newZ;
+    m_size.z = z;    
     if((is_y_diff && !is_y_less) || is_z_diff || is_w_diff) {
         for(unsigned short iw = 0; iw < m_size.w; iw++) {
             for(unsigned short iz = beginZ; iz < m_size.z; iz++) {
-                m_data[iw][iz] = (SCellHolder **)realloc(m_data[iw][iz], y * sizeof (SCellHolder *));
-                unsigned short iy = m_size.y;
-                if((is_z_diff && iz >= oldZ) || (is_w_diff && iw >= oldW))
+                m_data[iw][iz] = (SCellHolder **)realloc(m_data[iw][iz], m_capacity.y * sizeof (SCellHolder *));
+                unsigned short iy = oldCapacityY;
+                if((is_z_diff && iz >= oldCapacityZ) || (is_w_diff && iw >= oldCapacityW))
                     iy = 0;
                 for(; iy < y; iy++)
                     m_data[iw][iz][iy] = NULL;
@@ -465,14 +473,13 @@ void game::CGrid::resize(unsigned short x,
         beginY = m_size.y;
         x = m_size.x;
     }
-    m_size.y = y;
-    if(is_y_diff && !is_y_less)
-        m_capacity.y = newY;
+    m_size.y = y;    
     if((is_x_diff && !is_x_less) || is_y_diff || is_z_diff || is_w_diff) {
         for(unsigned short iw = 0; iw < m_size.w; iw++) {
             for(unsigned short iz = 0; iz < m_size.z; iz++) {
                 for(unsigned short iy = beginY; iy < m_size.y; iy++) {
-                    m_data[iw][iz][iy] = (SCellHolder *)realloc(m_data[iw][iz][iy], x * sizeof (SCellHolder));
+                    
+                    m_data[iw][iz][iy] = (SCellHolder *)realloc(m_data[iw][iz][iy], m_capacity.x * sizeof (SCellHolder));
                     unsigned short ix = m_size.x;
                     if((is_y_diff && iy >= oldY) ||
                        (is_z_diff && iz >= oldZ) ||
@@ -490,9 +497,6 @@ void game::CGrid::resize(unsigned short x,
     m_size.y = newY;
     m_size.z = newZ;
     m_size.w = newW;
-    if(is_x_diff && !is_x_less)
-        m_capacity.x = newX;
-
 }
 //------------------------------------------------------------------------------
 
@@ -525,37 +529,7 @@ void game::CGrid::setMaxSize(unsigned short x,
                              unsigned short y,
                              unsigned short z,
                              unsigned short w) {
-    if(m_dimension == Dimension::FOUR_DIMENSIONAL) {
-        if(x > MAX_SIZE_FOUR_DIMENSIONAL)
-            x = MAX_SIZE_FOUR_DIMENSIONAL;
-        if(y > MAX_SIZE_FOUR_DIMENSIONAL)
-            y = MAX_SIZE_FOUR_DIMENSIONAL;
-        if(z > MAX_SIZE_FOUR_DIMENSIONAL)
-            z = MAX_SIZE_FOUR_DIMENSIONAL;
-        if(w > MAX_SIZE_FOUR_DIMENSIONAL)
-            w = MAX_SIZE_FOUR_DIMENSIONAL;
-    } else if(m_dimension == Dimension::THREE_DIMENSIONAL) {
-        if(x > MAX_SIZE_THREE_DIMENSIONAL)
-            x = MAX_SIZE_THREE_DIMENSIONAL;
-        if(y > MAX_SIZE_THREE_DIMENSIONAL)
-            y = MAX_SIZE_THREE_DIMENSIONAL;
-        if(z > MAX_SIZE_THREE_DIMENSIONAL)
-            z = MAX_SIZE_THREE_DIMENSIONAL;
-        w = 1;
-    } else if(m_dimension == Dimension::TWO_DIMENSIONAL) {
-        if(x > MAX_SIZE_TWO_DIMENSIONAL)
-            x = MAX_SIZE_TWO_DIMENSIONAL;
-        if(y < MAX_SIZE_TWO_DIMENSIONAL)
-            y = MAX_SIZE_TWO_DIMENSIONAL;
-        z = 1;
-        w = 1;
-    } else if(m_dimension == Dimension::SINGLE_DIMENSIONAL) {
-        if(x > MAX_SIZE_ONE_DIMENSIONAL)
-            x = MAX_SIZE_ONE_DIMENSIONAL;
-        y = 1;
-        z = 1;
-        w = 1;
-    }
+    fixSize(x, y, z, w);
     m_maxSize.x = x;
     m_maxSize.y = y;
     m_maxSize.z = z;
