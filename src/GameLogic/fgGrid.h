@@ -47,22 +47,43 @@ namespace fg {
 
         public:
 
+            /**
+             *
+             */
             struct SSize {
                 int x;
                 int y;
                 int z;
                 int w;
+                /**
+                 *
+                 */
                 SSize() : x(0), y(0), z(0), w(0) { }
-                ~SSize() {
+                /**
+                 * 
+                 * @param _x
+                 * @param _y
+                 * @param _z
+                 * @param _w
+                 */
+                SSize(int _x, int _y = 0, int _z = 0, int _w = 0) :
+                x(_x), y(_y), z(_z), w(_w) { }
+                /**
+                 *
+                 */
+                virtual ~SSize() {
                     zero();
                 }
+                /**
+                 *
+                 */
                 void zero(void) {
                     x = 0;
                     y = 0;
                     z = 0;
                     w = 0;
                 }
-            };
+            }; // struct SSize
 
             /**
              *
@@ -86,7 +107,7 @@ namespace fg {
                 THREE_DIMENSIONAL = 3,
                 ///
                 FOUR_DIMENSIONAL = 4
-            };
+            }; // enum Dimension
 
             /**
              *

@@ -364,6 +364,10 @@ fgBool game::CGrid::setCellData(void* pData,
         return FG_FALSE;
     }
     m_data[w][z][y][x].pData = pData;
+    m_data[w][z][y][x].pos.x = x;
+    m_data[w][z][y][x].pos.y = y;
+    m_data[w][z][y][x].pos.z = z;
+    m_data[w][z][y][x].pos.w = w;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -377,6 +381,10 @@ fgBool game::CGrid::setCellValue(unsigned short value,
         return FG_FALSE;
     }
     m_data[w][z][y][x].value = value;
+    m_data[w][z][y][x].pos.x = x;
+    m_data[w][z][y][x].pos.y = y;
+    m_data[w][z][y][x].pos.z = z;
+    m_data[w][z][y][x].pos.w = w;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
