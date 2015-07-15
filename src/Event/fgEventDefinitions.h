@@ -136,6 +136,8 @@ namespace fg {
         const EventType MENU_CHANGED = 80;
         /// 
         const EventType WIDGET_STATE_CHANGED = 81;
+        ///
+        const EventType GUI_ACTION = 82;
 
         /// Event thrown on sensors change (gyro/accel)
         const EventType SENSORS_CHANGED = 90;
@@ -495,6 +497,14 @@ namespace fg {
         /**
          *
          */
+        struct SGuiAction : SEventBase {
+            const char* action;
+            fgBool isFinished;
+        };
+
+        /**
+         *
+         */
         struct SSensors : SEventBase {
             // int type; or fgSensorType type;
 
@@ -537,6 +547,7 @@ namespace fg {
                 SSound sound;
                 SMenuChanged menuChanged;
                 SWidget widget;
+                SGuiAction guiAction;
                 SSensors sensors;
                 SSplashScreen splash;
                 SLoading loading;
