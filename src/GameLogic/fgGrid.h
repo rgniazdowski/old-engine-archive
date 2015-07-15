@@ -275,7 +275,7 @@ namespace fg {
                 inline fgBool hasBackward(void) {
                     return (fgBool)!!(backward());
                 }
-            };
+            }; // struct SCellHolder
 
         public:
             /**

@@ -36,8 +36,10 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <ccTool>
-          <standard>8</standard>
+        <cTool>
+          <architecture>2</architecture>
+          <standard>10</standard>
+          <commandlineTool>/usr/bin/gcc-4.8.1</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -46,10 +48,60 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </cTool>
+        <ccTool>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>8</standard>
+          <commandlineTool>/usr/bin/g++-4.8.1</commandlineTool>
+          <incDir>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
         </ccTool>
         <linkerTool>
           <commandLine>-rdynamic -Wl,--export-dynamic</commandLine>
@@ -69,10 +121,9 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-          <standard>8</standard>
+          <architecture>2</architecture>
+          <standard>10</standard>
+          <commandlineTool>/usr/bin/gcc-4.8.1</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -81,10 +132,54 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+          </preprocessorList>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
+          <standard>8</standard>
+          <commandlineTool>/usr/bin/g++-4.8.1</commandlineTool>
+          <incDir>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+          </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

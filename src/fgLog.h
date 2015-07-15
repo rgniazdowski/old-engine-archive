@@ -83,7 +83,7 @@ namespace fg {
     };
 };
 
-    #if defined(FG_DEBUG)
+    #if defined(FG_DEBUG) || defined(DEBUG)
         #define FG_LOG_INFO(...) fg::log::PrintInfo(__VA_ARGS__)
         #define FG_LOG_DEBUG(...) fg::log::PrintDebug(__VA_ARGS__)
         #define FG_LOG_ERROR(...) fg::log::PrintError(__VA_ARGS__)

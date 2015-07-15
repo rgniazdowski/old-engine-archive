@@ -14,9 +14,9 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=/usr/bin/gcc-4.8.1
+CCC=/usr/bin/g++-4.8.1
+CXX=/usr/bin/g++-4.8.1
 FC=gfortran
 AS=as
 
@@ -39,11 +39,11 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-m64
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-m64
+CXXFLAGS=-m64
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -65,7 +65,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libChainReaction.${CND_DLIB_EXT}: ${O
 ${OBJECTDIR}/ChainReaction.o: ChainReaction.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ChainReaction.o ChainReaction.cpp
+	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ChainReaction.o ChainReaction.cpp
 
 # Subprojects
 .build-subprojects:

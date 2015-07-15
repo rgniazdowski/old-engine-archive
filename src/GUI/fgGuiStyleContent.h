@@ -991,9 +991,9 @@ namespace fg {
             Align m_valign;
             /// Align of the text
             Align m_textAlign;
-        };
-    };
-};
+        }; // class CStyleContent
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_STYLE_CONTENT_BLOCK
 #endif /* FG_INC_GUI_STYLE_CONTENT */

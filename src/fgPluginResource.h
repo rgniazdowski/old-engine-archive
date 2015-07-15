@@ -50,7 +50,17 @@ namespace fg {
 
         struct SInternalInfo {
             ::fg::CEngineMain *pEngineMain;
-        };
+            void* pPluginData;
+
+            SInternalInfo() : pEngineMain(NULL), pPluginData(NULL) {
+
+            }
+
+            virtual ~SInternalInfo() {
+                pPluginData = NULL;
+                pEngineMain = NULL;
+            }
+        }; // struct SInternalInfo
 
     public:
         /**
