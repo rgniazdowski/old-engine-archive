@@ -21,6 +21,7 @@
     #include "fgManagerBase.h"
     #include "fgTypes.h"
     #include "fgPluginResource.h"
+    #include "CLevelVis.h"
     
     //                                0x00010000
     #define FG_MANAGER_CHAIN_REACTION 0x01100000
@@ -82,13 +83,7 @@ namespace fg {
          */
         virtual fgBool initialize(void);
 
-        /**
-         * 
-         * @return
-         */
-        ::fg::CEngineMain* getEngineMain(void) {
-            return m_pEngineMain;
-        }
+        
 
     public:
         /**
@@ -100,6 +95,28 @@ namespace fg {
          */
         void unregisterCallbacks(void);
 
+    public:
+        /**
+         *
+         * @return
+         */
+        ::fg::CEngineMain* getEngineMain(void) {
+            return m_pEngineMain;
+        }
+        /**
+         *
+         * @return
+         */
+        game::CGrid* getGameGrid(void) const {
+            return m_grid;
+        }
+        /**
+         *
+         * @return
+         */
+        CLevelVis* getLevelVis(void) const {
+            return m_levelVis;
+        }
     private:
         /**
          *
@@ -127,9 +144,7 @@ namespace fg {
          *
          * @param pEngineMain
          */
-        void setEngineMain(::fg::CEngineMain* pEngineMain) {
-            m_pEngineMain = pEngineMain;
-        }
+        void setEngineMain(::fg::CEngineMain* pEngineMain);
         /**
          *
          * @param pPluginInfo
@@ -137,6 +152,7 @@ namespace fg {
         void setPluginInfo(::fg::CPluginResource::SInternalInfo* pPluginInfo) {
             m_pPluginInfo = pPluginInfo;
         }
+
     private:
         ///
         ::fg::CPluginResource::SInternalInfo* m_pPluginInfo;
@@ -145,11 +161,17 @@ namespace fg {
         ///
         game::CGrid* m_grid;
         ///
+        CLevelVis* m_levelVis;
+        ///
         event::CFunctionCallback* m_updateCallback;
         ///
         event::CFunctionCallback* m_preRenderCallback;
         ///
         event::CFunctionCallback* m_renderCallback;
+        ///
+        gfx::SMaterial* m_materialBlack;
+        ///
+        gfx::SMaterial* m_materialWhite;
 
     }; // class CChainReaction
 

@@ -26,7 +26,10 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>fg</word>
+            <word>moar</word>
             <word>namespace</word>
+            <word>quads</word>
+            <word>reallocs</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

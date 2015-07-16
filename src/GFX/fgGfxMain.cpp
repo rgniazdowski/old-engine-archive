@@ -700,6 +700,7 @@ void gfx::CGfxMain::render(void) {
     // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY
     // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
     ////////////////////////////////////////////////////////////////////////////
+    context::frontFace(FrontFace::FACE_CCW);
     gfx::CShaderProgram *sOrthoEasyProgram = m_shaderMgr->get(sOrthoEasyShaderName);
     if(!sOrthoEasyProgram) {
         FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
@@ -731,6 +732,7 @@ void gfx::CGfxMain::render(void) {
     context::setBlend(FG_TRUE);
     context::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
+    context::frontFace(FrontFace::FACE_CCW);
 }
 //------------------------------------------------------------------------------
 

@@ -4,8 +4,10 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>CLevel.h</itemPath>
+      <itemPath>CLevelFile.h</itemPath>
+      <itemPath>CLevelVis.h</itemPath>
       <itemPath>ChainReaction.h</itemPath>
+      <itemPath>SQuadData.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,8 +16,10 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>CLevel.cpp</itemPath>
+      <itemPath>CLevelFile.cpp</itemPath>
+      <itemPath>CLevelVis.cpp</itemPath>
       <itemPath>ChainReaction.cpp</itemPath>
+      <itemPath>SQuadData.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -109,13 +113,21 @@
           <commandLine>-rdynamic -Wl,--export-dynamic</commandLine>
         </linkerTool>
       </compileType>
-      <item path="CLevel.cpp" ex="false" tool="1" flavor2="0">
+      <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CLevel.h" ex="false" tool="3" flavor2="0">
+      <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelVis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelVis.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SQuadData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="2">
@@ -194,13 +206,21 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="CLevel.cpp" ex="false" tool="1" flavor2="0">
+      <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CLevel.h" ex="false" tool="3" flavor2="0">
+      <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelVis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelVis.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SQuadData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

@@ -17,6 +17,7 @@
 #include "Event/fgCallback.h"
 #include "Event/fgEventManager.h"
 #include "GameLogic/fgGrid.h"
+#include "CLevelFile.h"
 
 extern "C" {
     fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* info);
@@ -31,7 +32,7 @@ fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
     if(!info->pEngineMain) {
         return FG_FALSE;
     }
-   
+
     fg::CChainReaction* pChainReactionMgr = new fg::CChainReaction(info->pEngineMain, info);
     if(!pChainReactionMgr) {
         return FG_FALSE;
@@ -82,16 +83,19 @@ CChainReaction::CChainReaction(CEngineMain* pEngineMain,
 m_pEngineMain(pEngineMain),
 m_pPluginInfo(pPluginInfo),
 m_grid(NULL),
+m_levelVis(NULL),
 m_updateCallback(NULL),
 m_preRenderCallback(NULL),
-m_renderCallback(NULL) {
-
+m_renderCallback(NULL),
+m_materialBlack(NULL),
+m_materialWhite(NULL) {
+    this->setEngineMain(pEngineMain);
     m_managerType = FG_MANAGER_CHAIN_REACTION;
 }
 //------------------------------------------------------------------------------
 
-CChainReaction::~CChainReaction() { 
-    destroy();    
+CChainReaction::~CChainReaction() {
+    destroy();
 }
 //------------------------------------------------------------------------------
 
@@ -105,6 +109,10 @@ void CChainReaction::clear(void) {
 fgBool CChainReaction::destroy(void) {
     m_init = FG_FALSE;
     unregisterCallbacks();
+    if(m_levelVis) {
+        delete m_levelVis;
+        m_levelVis = NULL;
+    }
     if(m_grid) {
         delete m_grid;
         m_grid = NULL;
@@ -121,6 +129,15 @@ fgBool CChainReaction::destroy(void) {
         delete m_renderCallback;
         m_renderCallback = NULL;
     }
+    if(m_materialBlack) {
+        delete m_materialBlack;
+        m_materialBlack = NULL;
+    }
+    if(m_materialWhite) {
+        delete m_materialWhite;
+        m_materialWhite = NULL;
+    }
+    m_pEngineMain = NULL;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -137,8 +154,46 @@ fgBool CChainReaction::initialize(void) {
     m_grid = new game::CGrid(game::CGrid::TWO_DIMENSIONAL);
     m_grid->setMaxSize(48, 48);
     m_grid->reserve(48, 48);
+    m_levelVis = new CLevelVis(m_grid);
+    m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
+
+    if(m_materialWhite)
+        delete m_materialWhite;
+    if(m_materialBlack)
+        delete m_materialBlack;
+    m_materialWhite = new gfx::SMaterial();
+    m_materialBlack = new gfx::SMaterial();
+
+    m_materialBlack->diffuseTexName = "qBlack.jpg";
+    m_materialBlack->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialBlack->diffuseTexName);
+    m_materialBlack->shaderName = "sPlainEasy";
+    m_materialBlack->diffuse = Color4f(0.1f, 0.1f, 0.1f, 1.0f);
+    m_materialBlack->setFrontFace(gfx::FrontFace::FACE_CW);
+    //m_materialBlack->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+
+    m_materialWhite->diffuseTexName = "qWhite.jpg";
+    m_materialWhite->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialWhite->diffuseTexName);
+    m_materialWhite->shaderName = "sPlainEasy";
+    m_materialWhite->diffuse = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+    m_materialWhite->setFrontFace(gfx::FrontFace::FACE_CW);
+    //m_materialWhite->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+
+    m_levelVis->setMaterialBlack(m_materialBlack);
+    m_levelVis->setMaterialWhite(m_materialWhite);
+
+    //    m_pEngineMain->getGfxMain()->get3DSceneCamera()->setEye(Vector3f(0.0f, 0.0f, -200.0f));
     m_init = FG_TRUE;
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+void CChainReaction::setEngineMain(::fg::CEngineMain* pEngineMain) {
+    m_pEngineMain = pEngineMain;
+    if(m_pEngineMain) {
+        if(m_levelVis) {
+            m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
+        }
+    }
 }
 //------------------------------------------------------------------------------
 

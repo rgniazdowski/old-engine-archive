@@ -8,15 +8,15 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 /* 
- * File:   CLevel.h
+ * File:   CLevelFile.h
  * Author: vigilant
  *
  * Created on July 15, 2015, 9:57 PM
  */
 
-#ifndef FG_INC_CR_LEVEL
-    #define FG_INC_CR_LEVEL
-    #define FG_INC_CR_LEVEL_BLOCK
+#ifndef FG_INC_CR_LEVEL_FILE
+    #define FG_INC_CR_LEVEL_FILE
+    #define FG_INC_CR_LEVEL_FILE_BLOCK
 
     #include "fgVector.h"
     #include "fgBool.h"
@@ -39,15 +39,15 @@ namespace fg {
     /**
      *
      */
-    class CLevel {
+    class CLevelFile {
     public:
-        typedef CLevel self_type;
-        typedef CLevel type;
+        typedef CLevelFile self_type;
+        typedef CLevelFile type;
 
     public:
 
         static const unsigned int MIN_COLOR_ID = 0;
-        static const unsigned int MAX_COLOR_ID = 2;
+        static const unsigned int MAX_COLOR_ID = 3;
 
     public:
 
@@ -74,7 +74,8 @@ namespace fg {
             EMPTY = 0,
             NONE = 0,
             BLACK = 1,
-            WHITE = 2
+            WHITE = 2,
+            GRAY = 3,
         };
 
         /**
@@ -115,21 +116,21 @@ namespace fg {
          *
          * @param filePath
          */
-        CLevel(const char* filePath = NULL);
+        CLevelFile(const char* filePath = NULL);
         /**
          *
          * @param filePath
          */
-        explicit CLevel(const std::string& filePath);
+        explicit CLevelFile(const std::string& filePath);
         /**
          *
          * @param orig
          */
-        CLevel(const CLevel& orig);
+        CLevelFile(const CLevelFile& orig);
         /**
          *
          */
-        virtual ~CLevel();
+        virtual ~CLevelFile();
 
     public:
         /**
@@ -316,5 +317,5 @@ namespace fg {
     }; // class CLevel
 } // namespace fg
 
-    #undef FG_INC_CR_LEVEL_BLOCK
-#endif	/* FG_INC_CR_LEVEL */
+    #undef FG_INC_CR_LEVEL_FILE_BLOCK
+#endif	/* FG_INC_CR_LEVEL_FILE */

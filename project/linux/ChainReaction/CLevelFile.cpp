@@ -8,7 +8,7 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 /* 
- * File:   CLevel.cpp
+ * File:   CLevelFile.cpp
  * Author: vigilant
  * 
  * Created on July 15, 2015, 9:57 PM
@@ -17,7 +17,7 @@
 #include <climits>
 #include <limits.h>
 
-#include "CLevel.h"
+#include "CLevelFile.h"
 #include "GameLogic/fgGrid.h"
 #include "Util/fgFile.h"
 #include "Util/fgStrings.h"
@@ -25,7 +25,7 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-CLevel::CLevel(const char* filePath) :
+CLevelFile::CLevelFile(const char* filePath) :
 m_levelIdx(-1),
 m_filePath(),
 m_size(),
@@ -43,7 +43,7 @@ m_quads() {
 }
 //------------------------------------------------------------------------------
 
-CLevel::CLevel(const std::string& filePath) :
+CLevelFile::CLevelFile(const std::string& filePath) :
 m_levelIdx(-1),
 m_filePath(),
 m_quads() {
@@ -60,7 +60,7 @@ m_quads() {
 }
 //------------------------------------------------------------------------------
 
-CLevel::CLevel(const CLevel& orig) {
+CLevelFile::CLevelFile(const CLevelFile& orig) {
     this->m_quads.reserve(48);
     this->m_size.x = orig.m_size.x;
     this->m_size.y = orig.m_size.y;
@@ -74,12 +74,12 @@ CLevel::CLevel(const CLevel& orig) {
 }
 //------------------------------------------------------------------------------
 
-CLevel::~CLevel() {
+CLevelFile::~CLevelFile() {
     reset();
 }
 //------------------------------------------------------------------------------
 
-fgBool CLevel::load(void) {
+fgBool CLevelFile::load(void) {
     if(m_filePath.empty()) {
         return FG_FALSE;
     }
@@ -151,7 +151,7 @@ fgBool CLevel::load(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CLevel::load(const char* filePath) {
+fgBool CLevelFile::load(const char* filePath) {
     if(!filePath) {
         return FG_FALSE;
     }
@@ -162,7 +162,7 @@ fgBool CLevel::load(const char* filePath) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CLevel::load(const std::string& filePath) {
+fgBool CLevelFile::load(const std::string& filePath) {
     if(filePath.empty()) {
         return FG_FALSE;
     }
@@ -171,7 +171,7 @@ fgBool CLevel::load(const std::string& filePath) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CLevel::applyToGrid(game::CGrid* pGrid) {
+fgBool CLevelFile::applyToGrid(game::CGrid* pGrid) {
     if(!pGrid || !isValid()) {
         return FG_FALSE;
     }
@@ -189,13 +189,13 @@ fgBool CLevel::applyToGrid(game::CGrid* pGrid) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getSize(unsigned short& x, unsigned short& y) {
+void CLevelFile::getSize(unsigned short& x, unsigned short& y) {
     x = m_size.x;
     y = m_size.y;
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getSize(unsigned short* x, unsigned short* y) {
+void CLevelFile::getSize(unsigned short* x, unsigned short* y) {
     if(x)
         *x = m_size.x;
     if(y)
@@ -203,13 +203,13 @@ void CLevel::getSize(unsigned short* x, unsigned short* y) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getAreaSize(unsigned short& x, unsigned short& y) {
+void CLevelFile::getAreaSize(unsigned short& x, unsigned short& y) {
     x = m_area.size.x;
     y = m_area.size.y;
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getAreaSize(unsigned short* x, unsigned short* y) {
+void CLevelFile::getAreaSize(unsigned short* x, unsigned short* y) {
     if(x)
         *x = m_area.size.x;
     if(y)
@@ -217,13 +217,13 @@ void CLevel::getAreaSize(unsigned short* x, unsigned short* y) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getAreaMin(unsigned short& x, unsigned short& y) {
+void CLevelFile::getAreaMin(unsigned short& x, unsigned short& y) {
     x = m_area.min.x;
     y = m_area.min.y;
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getAreaMin(unsigned short* x, unsigned short* y) {
+void CLevelFile::getAreaMin(unsigned short* x, unsigned short* y) {
     if(x)
         *x = m_area.min.x;
     if(y)
@@ -231,13 +231,13 @@ void CLevel::getAreaMin(unsigned short* x, unsigned short* y) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getAreaMax(unsigned short& x, unsigned short& y) {
+void CLevelFile::getAreaMax(unsigned short& x, unsigned short& y) {
     x = m_area.max.x;
     y = m_area.max.y;
 }
 //------------------------------------------------------------------------------
 
-void CLevel::getAreaMax(unsigned short* x, unsigned short* y) {
+void CLevelFile::getAreaMax(unsigned short* x, unsigned short* y) {
     if(x)
         *x = m_area.max.x;
     if(y)
@@ -245,7 +245,7 @@ void CLevel::getAreaMax(unsigned short* x, unsigned short* y) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::clear(void) {    
+void CLevelFile::clear(void) {
     m_levelIdx = -1;
     m_size.x = 0;
     m_size.y = 0;
@@ -259,7 +259,7 @@ void CLevel::clear(void) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::setFilePath(const char* filePath) {
+void CLevelFile::setFilePath(const char* filePath) {
     if(filePath) {
         m_filePath.clear();
         m_filePath.append(filePath);
@@ -267,7 +267,7 @@ void CLevel::setFilePath(const char* filePath) {
 }
 //------------------------------------------------------------------------------
 
-void CLevel::setFilePath(const std::string& filePath) {
+void CLevelFile::setFilePath(const std::string& filePath) {
     if(!filePath.empty()) {
         m_filePath.clear();
         m_filePath.append(filePath);
