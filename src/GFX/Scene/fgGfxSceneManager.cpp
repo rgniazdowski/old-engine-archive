@@ -399,6 +399,7 @@ void gfx::CSceneManager::reportSelectionClick(const fgBool state) {
             m_pickSelection.groundIntersectionPoint[0] = Vector3f();
 
     }
+
 }
 //------------------------------------------------------------------------------
 
@@ -708,10 +709,9 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
     fgBool shouldThrow = FG_TRUE;
     fgBool shouldRemove = FG_FALSE;
     const float exact = timesys::exact();
-    int idx = -1;
+    int idx = h_selectedNodes.find(nodeHandle);
     if(pickResult == goodPickResult) {
-        CSceneNode* pLastNode = pSceneMgr->getLastPickedNode();
-        idx = h_selectedNodes.find(nodeHandle);
+        CSceneNode* pLastNode = pSceneMgr->getLastPickedNode();        
         const float ts = pickedNodesInfo[nodeHandle].timeStamp;
         if(isToggle && ts < pickBegin) {
             pNode->setSelected(!pNode->isSelected());
@@ -746,13 +746,7 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
                 pickedNodesInfo[nodeHandle].timeStamp = exact;
             }
         }
-        if(shouldRemove && h_selectedNodes.size()) {
-            unsigned int size = h_selectedNodes.size();
-            h_selectedNodes[idx] = h_selectedNodes[size - 1];
-            h_selectedNodes[size - 1].reset();
-            h_selectedNodes.resize(size - 1);
-            pickedNodesInfo[nodeHandle].timeStamp = exact;
-        }
+
         if(pNode->isSelected())
             h_lastSelectedNode = nodeHandle;
         if(shouldThrow) {
@@ -767,9 +761,16 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
     } else {
         if(shouldUnselect) {
             pNode->unselect();
+            shouldRemove = FG_TRUE;
         }
     }
-
+    if(shouldRemove && h_selectedNodes.size() && idx >= 0) {
+        unsigned int size = h_selectedNodes.size();
+        h_selectedNodes[idx] = h_selectedNodes[size - 1];
+        h_selectedNodes[size - 1].reset();
+        h_selectedNodes.resize(size - 1);
+        pickedNodesInfo[nodeHandle].timeStamp = exact;
+    }
     return pickResult;
 }
 //------------------------------------------------------------------------------
