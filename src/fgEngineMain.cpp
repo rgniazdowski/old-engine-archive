@@ -813,6 +813,7 @@ fgBool CEngineMain::preRender(void) {
     // This should be synchronized to 60FPS, meaning that should be called in display / render
     // maybe should give some categories ?
     timesys::markTick(timesys::TICK_PRERENDER);
+    executeEvent(event::PRERENDER_SHOT, (void*)this);
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling)
         profile::g_debugProfiling->begin("GFX::preRender");
@@ -829,8 +830,7 @@ fgBool CEngineMain::preRender(void) {
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GUI::preRender");
     }
-#endif
-    executeEvent(event::PRERENDER_SHOT, (void*)this);
+#endif    
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
