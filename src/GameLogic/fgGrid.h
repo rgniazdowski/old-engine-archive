@@ -296,6 +296,28 @@ namespace fg {
                 inline fgBool hasBackward(void) {
                     return (fgBool)!!(backward());
                 }
+                /**
+                 * 
+                 * @return
+                 */
+                inline fgBool hasNeighbours(void) {
+                    fgBool status = hasLeft();
+                    if(!status)
+                        status = hasRight();
+                    if(!status)
+                        status = hasFront();
+                    if(!status)
+                        status = hasBack();
+                    if(!status)
+                        status = hasUp();
+                    if(!status)
+                        status = hasDown();
+                    if(!status)
+                        status = hasForward();
+                    if(!status)
+                        status = hasBackward();
+                    return status;
+                }
             }; // struct SCellHolder
 
         public:
