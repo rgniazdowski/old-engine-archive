@@ -25,11 +25,19 @@
             </formatting>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>cpp</word>
+            <word>cr</word>
+            <word>dx</word>
             <word>fg</word>
+            <word>fubar</word>
             <word>moar</word>
             <word>namespace</word>
+            <word>printf</word>
             <word>quads</word>
             <word>reallocs</word>
+            <word>struct</word>
+            <word>Vec</word>
+            <word>wut</word>
         </spellchecker-wordlist>
     </configuration>
 </project>
