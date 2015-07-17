@@ -406,14 +406,22 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                     doReset = FG_FALSE;
             }            
             if(doReset) {
-                float rotation = m_drag.pQuadData->rotation;
-                m_drag.pNode->translateMatrix(translationAxis);
-                m_drag.pNode->rotate(-rotation, rotationAxis);
-                m_drag.pNode->translateMatrix(-1.0f * translationAxis);
-
-                m_drag.pQuadData->rotation = 0.0f;
-                m_drag.pQuadData->isDragged = FG_FALSE;
-                m_drag.pQuadData->rotDir = SQuadData::STATIC;
+                // need to check for finished rotation
+                if(m_drag.pQuadData->isRotationFinished()) {
+                    unsigned short x=0, y=0;
+                    m_drag.pQuadData->getCoveredNeighbourCoord(x ,y);
+                    m_levelVis->moveQuadToNewPlace(m_drag.pQuadData, x, y);
+                    m_drag.pNode = NULL;
+                    m_drag.pQuadData = NULL;
+                } else {
+                    float rotation = m_drag.pQuadData->rotation;
+                    m_drag.pNode->translateMatrix(translationAxis);
+                    m_drag.pNode->rotate(-rotation, rotationAxis);
+                    m_drag.pNode->translateMatrix(-1.0f * translationAxis);
+                    m_drag.pQuadData->rotation = 0.0f;
+                    m_drag.pQuadData->isDragged = FG_FALSE;
+                    m_drag.pQuadData->rotDir = SQuadData::STATIC;
+                }                
             }
         }
     }
@@ -501,15 +509,15 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 float angle = math::acos((scale - math::abs(lenDiff)) / scale);
                 float reverse = 1.0f;
                 float rotationStep = 0.1f;
-                if(m_drag.pQuadData->isOppositeRotation(propRotDir))
-                    reverse = -1.0f;
-                m_drag.pNode->translateMatrix(reverse * translationAxis);
+                //if(m_drag.pQuadData->isOppositeRotation(propRotDir))
+                    //reverse = -1.0f;
+                m_drag.pQuadData->rotate(propRotDir, rotationStep * rSteps);
+                //m_drag.pNode->translateMatrix(reverse * translationAxis);
                 //m_drag.pNode->rotate(m_drag.pQuadData->rotation * -1.0f, rotationAxis);
                 //m_drag.pNode->rotate(angle, rotationAxis);
-                m_drag.pNode->rotate(rotationStep * reverse * rSteps, reverse * rotationAxis);
-                m_drag.pNode->translateMatrix(-1.0f * translationAxis * reverse);
-
-                m_drag.pQuadData->rotation += rotationStep * reverse * rSteps;
+                //m_drag.pNode->rotate(rotationStep * reverse * rSteps, reverse * rotationAxis);
+                //m_drag.pNode->translateMatrix(-1.0f * translationAxis * reverse);
+                //m_drag.pQuadData->rotation += rotationStep * reverse * rSteps;
             }
         }
     }
@@ -522,9 +530,13 @@ void CChainReaction::updateStep(void) {
     }
     gfx::CSceneNode* pPicked = m_pSceneMgr->getCurrentPickedNode();
     gfx::CCameraAnimation* pCamera = m_pSceneMgr->getCamera();
-    gfx::CSceneNode* pLastPicked = m_pSceneMgr->getLastPickedNode();
+    //gfx::CSceneNode* pLastPicked = m_pSceneMgr->getLastPickedNode();
     fgBool isPickerDown = m_pSceneMgr->isPickSelectionPickerActive();
-
+    //
+    // Remember that updateStep is called at the end of the update loop step
+    // (via event manager) - first called are the event callbacks for mouse,
+    // touch or keyboard events.
+    //
     if(isPickerDown) {
 
     }
@@ -555,19 +567,23 @@ void CChainReaction::updateStep(void) {
                                   m_drag.begin.y * m_drag.zoomProp,
                                   zoomIn));
             m_drag.isValid = FG_TRUE;
+            float scale = m_levelVis->getScale();
+            m_drag.pNode->setScale(scale+0.05f, scale+0.05f, 1.5f);
         } else {
             m_drag.pQuadData = NULL;
         }
     } else if(!isPickerDown) {
+        if(m_drag.pNode) {
+            float scale = m_levelVis->getScale();
+            m_drag.pNode->setScale(scale, scale, 1.0f);            
+        }
         m_levelVis->setDraggedNode(NULL);
         m_levelVis->setDraggedCoord(0, 0);
         pCamera->setCenter(Vec3f(0.0f, 0.0f, 0.0f));
         pCamera->setEye(Vec3f(0.0f, 0.0f, zoomOut)); // #FIXME
-
         m_drag.invalidate();
     }
     if(isPickerDown && m_drag.pNode) {
-
         m_drag.current = m_pSceneMgr->getGroundIntersectionPoint(1);
         m_drag.length = math::length(m_drag.current - m_drag.begin);
         //Vec3f intP1 = m_pSceneMgr->getGroundIntersectionPoint(1);

@@ -71,6 +71,218 @@ CLevelVis::~CLevelVis() {
 }
 //------------------------------------------------------------------------------
 
+SQuadData* CLevelVis::insertNewQuad(unsigned short x,
+                                    unsigned short y,
+                                    SQuadData::QuadColor color) {
+    if(!m_pGrid) {
+        return NULL;
+    }
+    if(!m_pGrid->isValidAddress(x, y)) {
+        return NULL;
+    }
+    int index = destroyQuad(x, y); // this destroy any original in that place
+    gfx::CSceneNode* pRootNode = m_pSceneMgr->getActiveRootNode();
+    // now need to insert new quad in that place
+    // allocate new quad data
+    SQuadData* pQuadData = new SQuadData();
+    pQuadData->color = color;
+    pQuadData->pSceneNode = prepareSceneNode(x, y, pQuadData->color);
+    if(!m_pSceneMgr->addNode(pQuadData->pSceneNode->getRefHandle(), pQuadData->pSceneNode,
+                             pRootNode)) {
+        // adding of the node failed?
+        delete pQuadData->pSceneNode;
+        pQuadData->pSceneNode = NULL;
+        delete pQuadData;
+        pQuadData = NULL;
+        return NULL;
+    }
+    game::CGrid::SCellHolder* pCellHolder = m_pGrid->atPtr(x, y);
+    if(!pCellHolder) {
+        // probably game::CGrid is not prepared - should call applyToGrid
+        // destroy the scene node
+        m_pSceneMgr->destroyNode(pQuadData->pSceneNode);
+        pQuadData->pSceneNode = NULL;
+        delete pQuadData;
+        pQuadData = NULL;
+        return NULL;
+    }
+    pQuadData->bind(pCellHolder);
+    pQuadData->isValid = FG_TRUE;
+    pQuadData->isDragged = FG_FALSE;
+    pQuadData->activate();
+    pQuadData->show();
+    m_quadsData.push_back(pQuadData);
+}
+//------------------------------------------------------------------------------
+
+int CLevelVis::destroyQuad(unsigned short x, unsigned short y) {
+    if(!m_pGrid) {
+        return -1;
+    }
+    if(!m_pGrid->isValidAddress(x, y)) {
+        return -1;
+    }
+    SQuadData* pQuadData = NULL;
+    // need also to find SQuadData that already resides on this address
+    int index = getQuadDataIndex(x, y);
+    if(index != -1) {
+        unsigned int nQuads = m_quadsData.size();
+        // there already is a quad data in that place
+        // need to destroy it completely
+        pQuadData = m_quadsData[index];
+        pQuadData->deactivate();
+        pQuadData->unbind();
+        if(m_pSceneMgr) {
+            gfx::CSceneNode* pDelNode = pQuadData->pSceneNode;
+            m_pSceneMgr->destroyNode(pQuadData->pSceneNode);
+            pDelNode = NULL;
+            pQuadData->pSceneNode = NULL;
+        }
+        delete pQuadData;
+        pQuadData = NULL;
+        //m_quadsData[index] = NULL;
+        m_quadsData[index] = m_quadsData[nQuads - 1];
+        m_quadsData[nQuads - 1] = NULL;
+        m_quadsData.resize(nQuads - 1);
+        // previous quad is now completely removed
+    }
+    return index; // return the index from which the quad was destroyed
+}
+//------------------------------------------------------------------------------
+
+SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
+                                         unsigned short newX,
+                                         unsigned short newY) {
+    if(!m_pGrid || !original) {
+        return NULL;
+    }
+    if(!m_pGrid->isValidAddress(newX, newX)) {
+        return NULL;
+    }
+    // the quad moves to the new place
+    // if something already exists in that place
+    // there must be a way to preserve as much memory as possible.
+    // the scene node with valid name (cr_node_XxY) cannot have the name changed
+    // need to replace material
+
+    if(original->pCellHolder->pos.x == newX && original->pCellHolder->pos.y == newY) {
+        return original; // nothing to do
+    }
+    // determine if there is something in that place
+    SQuadData* pNewPlace = getQuadData(newX, newY);
+    if(pNewPlace == original) {
+        return original; // nothing to do
+    }
+    if(pNewPlace) {
+        // replace the color, value and material in the new location
+        // change the value
+        pNewPlace->pCellHolder->value = original->pCellHolder->value;
+        // change the color
+        pNewPlace->color = original->color;
+        // replace the material in scene node
+        if(pNewPlace->pSceneNode && pNewPlace->pSceneNode->getNodeType() == gfx::SCENE_NODE_OBJECT) {
+            gfx::CSceneNodeObject* pNodeObj = (gfx::CSceneNodeObject*)pNewPlace->pSceneNode;
+            gfx::CDrawCall* pDrawCall = pNewPlace->pSceneNode->getDrawCall();
+            if(pDrawCall) {
+                if(pNewPlace->color == SQuadData::BLACK) {
+                    if(m_pMaterialBlack) {
+                        ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialBlack);
+                        pDrawCall->setupMaterial(m_pMaterialBlack);
+                    }
+                } else if(pNewPlace->color == SQuadData::WHITE) {
+                    if(m_pMaterialWhite) {
+                        ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialWhite);
+                        pDrawCall->setupMaterial(m_pMaterialWhite);
+                    }
+                }
+            }
+        }
+        // now need to remove the original
+        // this will also destroy the original scene node and unbind
+        destroyQuad(original->pCellHolder->pos.x, original->pCellHolder->pos.y);
+        original = NULL;
+        pNewPlace->isValid = FG_TRUE;
+        pNewPlace->isDragged = FG_FALSE;
+        pNewPlace->rotation = 0.0f;
+        return pNewPlace; // return the quad pointer after move
+    }
+    // if there is nothing in the target location
+    // need to create new scene node
+    gfx::CSceneNode* pNode = prepareSceneNode(newX, newY, original->color);    
+    m_pSceneMgr->destroyNode(original->pSceneNode);
+    if(!m_pSceneMgr->addNode(pNode->getRefHandle(), pNode)) {
+        // adding of the node failed?
+        delete pNode;
+        pNode = NULL;
+        original->pSceneNode = NULL;
+        return NULL;
+    }
+    // need to remove the old scene node
+    original->deactivate();
+    // need to unbind the old quad data
+    original->unbind();
+    original->pSceneNode = pNode; // replace the scene node
+    // can retain the old SQuadData - just replace the pointers and bind again
+    original->bind(m_pGrid->atPtr(newX, newY));
+    original->isValid = FG_TRUE;
+    original->isDragged = FG_FALSE;
+    original->rotation = 0.0f;
+    original->show();
+    original->activate();
+    return original;
+}
+
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode* CLevelVis::prepareSceneNode(unsigned short x,
+                                             unsigned short y,
+                                             SQuadData::QuadColor color) {
+    if(!m_pLevelFile) {
+        return NULL;
+    }
+    Vec2f startPos;
+    unsigned short areaSX, areaSY;
+    m_pLevelFile->getAreaSize(areaSX, areaSY);
+    unsigned short areaMinX, areaMaxX;
+    unsigned short areaMinY, areaMaxY;
+    m_pLevelFile->getAreaMin(areaMinX, areaMinY);
+    m_pLevelFile->getAreaMax(areaMaxX, areaMaxY);
+    startPos.x = -1.0f * (float)areaSX / 2.0f * m_scale + m_scale / 2.0f;
+    startPos.y = (float)areaSY / 2.0f * m_scale - m_scale / 2.0f;
+    char quadNodeName[64];
+    //const char* modelNameStr = "builtinQuad1x1";
+    const char* modelNameStr = "builtinCube1x1";
+
+    std::sprintf(quadNodeName, "cr_node_%dx%d", x, y);
+    gfx::CModelResource* pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
+    if(!pModelRes) {
+        return NULL;
+    }
+    gfx::CSceneNodeObject* pNodeObj = new gfx::CSceneNodeObject(pModelRes, NULL);
+    pNodeObj->setName(quadNodeName);
+    pNodeObj->setScale(m_scale, m_scale, 1.0f);
+    pNodeObj->setPosition(startPos.x + (float)(x - areaMinX) * (m_scale),
+                          startPos.y - 1.0f * (float)(y - areaMinY) * (m_scale),
+                          0.0f);
+    gfx::CDrawCall* pDrawCall = pNodeObj->getDrawCall();
+    if(pDrawCall) {
+        if(color == SQuadData::BLACK) {
+            if(m_pMaterialBlack) {
+                ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialBlack);
+                pDrawCall->setupMaterial(m_pMaterialBlack);
+            }
+        } else if(color == SQuadData::WHITE) {
+            if(m_pMaterialWhite) {
+                ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialWhite);
+                pDrawCall->setupMaterial(m_pMaterialWhite);
+            }
+        }
+    }
+    pNodeObj->refreshGfxInternals();
+    return pNodeObj;
+}
+//------------------------------------------------------------------------------
+
 fgBool CLevelVis::prepareQuads(void) {
     // this will reset the main root node children
     // also prepare the quadData
@@ -79,9 +291,7 @@ fgBool CLevelVis::prepareQuads(void) {
     }
     // need to check for root node
     char rootNodeName[64];
-    char quadNodeName[64];
-    //const char* modelNameStr = "builtinQuad1x1";
-    const char* modelNameStr = "builtinCube1x1";
+    
     std::sprintf(rootNodeName, "cr_root_n_%d", m_pLevelFile->getLevelIndex());
     gfx::CSceneNode* pRootNode = m_pSceneMgr->get(rootNodeName);
     if(!pRootNode) {
@@ -112,82 +322,16 @@ fgBool CLevelVis::prepareQuads(void) {
     // need to reserve proper size
     unsigned int nReserve = (unsigned int)(n * 1.5f);
     m_quadsData.reserve(nReserve);
-    m_quadsData.resize(n);
+    //m_quadsData.resize(n); // no need to resize now
     // Quad vector from level file contains just info about position and color.
     // Quad data vector is more detailed, contains scene node, draw call, and
     // cell holder from game logical grid.
-    Vec2f startPos;
-    unsigned short areaSX, areaSY;
-    m_pLevelFile->getAreaSize(areaSX, areaSY);
-    unsigned short areaMinX, areaMaxX;
-    unsigned short areaMinY, areaMaxY;
-    m_pLevelFile->getAreaMin(areaMinX, areaMinY);
-    m_pLevelFile->getAreaMax(areaMaxX, areaMaxY);
-    startPos.x = -1.0f * (float)areaSX / 2.0f * m_scale + m_scale / 2.0f;
-    startPos.y = (float)areaSY / 2.0f * m_scale - m_scale / 2.0f;
-    //startPos.x = -1.0f * (float)(areaMaxX-areaMinX) / 2.0f * m_scale;
-    //startPos.y = (float)(areaMaxY-areaMinY) / 2.0f * m_scale;
+
     // Prepare new number of quads
     for(unsigned int i = 0; i < n; i++) {
-        SQuadData* pQuadData = m_quadsData[i];
-        if(!pQuadData) {
-            // get quad proper position
-            unsigned short x = quads[i].pos.x;
-            unsigned short y = quads[i].pos.y;
-            std::sprintf(quadNodeName, "cr_node_%dx%d", x, y);
-            // just in case destroy node with this name
-            m_pSceneMgr->destroyNode(quadNodeName);
-            // allocate new quad data
-            pQuadData = new SQuadData();
-            m_quadsData[i] = pQuadData;
-            pQuadData->color = (SQuadData::QuadColor)quads[i].color;
-            gfx::CModelResource* pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
-            if(!pModelRes) {
-                // ? wut ?
-            }
-            gfx::CSceneNodeObject* pNodeObj = new gfx::CSceneNodeObject(pModelRes, pRootNode);
-            pQuadData->pSceneNode = pNodeObj;
-            if(!pQuadData->pSceneNode) {
-                // is this even possible?
-            }
-            pQuadData->pSceneNode->setName(quadNodeName);
-            //pQuadData->pSceneNode = m_pSceneMgr->addFromModel(modelNameStr, quadNodeName);
-            game::CGrid::SCellHolder* pCellHolder = NULL;
-            pQuadData->pSceneNode->setScale(m_scale, m_scale, 1.0f);
-            // position FIXME!
-            pQuadData->pSceneNode->setPosition(startPos.x + (float)(x - areaMinX) * (m_scale),
-                                               startPos.y - 1.0f * (float)(y - areaMinY) * (m_scale),
-                                               0.0f);
-            gfx::CDrawCall* pDrawCall = pQuadData->pSceneNode->getDrawCall();
-            if(pDrawCall) {
-                if(pQuadData->color == SQuadData::BLACK) {
-                    if(m_pMaterialBlack) {
-                        ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialBlack);
-                        pDrawCall->setupMaterial(m_pMaterialBlack);
-                    }
-                } else if(pQuadData->color == SQuadData::WHITE) {
-                    if(m_pMaterialWhite) {
-                        ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialWhite);
-                        pDrawCall->setupMaterial(m_pMaterialWhite);
-                    }
-                }
-            }
-            if(!m_pSceneMgr->addNode(pQuadData->pSceneNode->getRefHandle(), pQuadData->pSceneNode,
-                                     pRootNode)) {
-                // adding of the node failed?
-            }
-
-            pCellHolder = m_pGrid->atPtr(x, y);
-            if(!pCellHolder) {
-                // probably game::CGrid is not prepared - should call applyToGrid
-                return FG_FALSE;
-            }
-            pQuadData->bind(pCellHolder);
-            pQuadData->isValid = FG_TRUE;
-            pQuadData->isDragged = FG_FALSE;
-            pQuadData->activate();
-            pQuadData->show();
-        }
+        insertNewQuad(quads[i].pos.x,
+                      quads[i].pos.y,
+                      (SQuadData::QuadColor)quads[i].color);
     }
     m_pSceneMgr->refreshGfxInternals();
     return FG_TRUE;
@@ -292,6 +436,27 @@ SQuadData* CLevelVis::getQuadData(unsigned short x, unsigned short y) {
         }
         return NULL;
     }
+}
+//------------------------------------------------------------------------------
+
+int CLevelVis::getQuadDataIndex(unsigned short x, unsigned short y) {
+    unsigned int n = m_quadsData.size();
+    for(unsigned int i = 0; i < n; i++) {
+        SQuadData *pQuadData = m_quadsData[i];
+        if(!pQuadData) {
+            continue;
+        }
+        if(!pQuadData->pCellHolder) {
+            continue;
+        }
+        if(pQuadData->pCellHolder->pos.x == x &&
+           pQuadData->pCellHolder->pos.y == y) {
+            if(((SQuadData*)pQuadData->pCellHolder->pData) == pQuadData) {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 //------------------------------------------------------------------------------
 

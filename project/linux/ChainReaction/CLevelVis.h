@@ -22,7 +22,7 @@
     #include "SQuadData.h"
 
     #include "fgVector.h"
-    
+
     #include "Math/fgMathLib.h"
 
 namespace fg {
@@ -71,6 +71,48 @@ namespace fg {
     public:
         /**
          *
+         * @param x
+         * @param y
+         * @param color
+         * @return
+         */
+        SQuadData* insertNewQuad(unsigned short x,
+                                 unsigned short y,
+                                 SQuadData::QuadColor color);
+
+        /**
+         *
+         * @param x
+         * @param y
+         * @return
+         */
+        int destroyQuad(unsigned short x, unsigned short y);
+
+        /**
+         * This function will move the selected quad to the new position
+         * If the target exists - it will be replaced
+         * @param original
+         * @param newX
+         * @param newY
+         * @return
+         */
+        SQuadData* moveQuadToNewPlace(SQuadData* original,
+                                      unsigned short newX,
+                                      unsigned short newY);
+
+        /**
+         * Creates the new scene node with proper size, scale, position and material.
+         * The node is NOT being inserted into the scene manager.
+         * @param x
+         * @param y
+         * @param color
+         * @return
+         */
+        gfx::CSceneNode* prepareSceneNode(unsigned short x,
+                                          unsigned short y,
+                                          SQuadData::QuadColor color);
+        /**
+         *
          */
         fgBool restart(void);
         /**
@@ -92,6 +134,13 @@ namespace fg {
          * @return
          */
         SQuadData* getQuadData(unsigned short x, unsigned short y);
+        /**
+         *
+         * @param x
+         * @param y
+         * @return
+         */
+        int getQuadDataIndex(unsigned short x, unsigned short y);
         /**
          *
          * @param pLvlFile
