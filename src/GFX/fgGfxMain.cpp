@@ -363,7 +363,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(quadModel);
         delete quadModel;
     }
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");    
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -934,6 +934,65 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
 
     if(event_struct->node.pNodeA) {
         event_struct->node.pNodeA->refreshGfxInternals();
+
+        if(event_struct->node.pNodeA->getNodeType() == gfx::SCENE_NODE_OBJECT) {
+            // need to externally refresh any used materials
+            // #FIXME
+            CSceneNodeObject* pNodeObj = (CSceneNodeObject*)event_struct->node.pNodeA;
+            CSceneNode::ChildrenVec& children = pNodeObj->getChildren();
+            unsigned int n = children.size();
+            for(unsigned int i = 0; i < n; i++) {
+                CSceneNode* pNode = children[i];
+                if(!pNode)
+                    continue;
+                if(pNode->getNodeType() == gfx::SCENE_NODE_MESH) {
+                    // #FIXME MESH NODE FUBAR
+                    // #FIXME MATERIAL
+                    CSceneNodeMesh* pNodeMesh = (CSceneNodeMesh*)pNode;
+                    SMaterial* pMaterial = pNodeMesh->getMaterial();
+                    SMeshBase* pMesh = pNodeMesh->getMesh();
+                    resource::CResourceManager* pResourceMgr = static_cast<resource::CResourceManager*>(m_pResourceMgr);
+                    if(pMaterial) {
+                        // #FIXME - TOTAL FUBAR
+                        if(!pMaterial->shaderProgram) {
+                            pMaterial->shaderProgram = m_shaderMgr->get(pMaterial->shaderName);
+                        }
+                        //#FIXME
+                        if(pResourceMgr) {
+                            resource::CResource* tex = NULL;
+                            // Ambient texture handle lookup
+                            tex = pResourceMgr->request(pMaterial->ambientTexName);
+                            if(tex) {
+                                if(tex->getResourceType() == resource::TEXTURE) {
+                                    pMaterial->ambientTex = static_cast<CTextureResource *>(tex);
+                                }
+                            }
+                            // Diffuse texture handle lookup
+                            tex = pResourceMgr->request(pMaterial->diffuseTexName);
+                            if(tex) {
+                                if(tex->getResourceType() == resource::TEXTURE) {
+                                    pMaterial->diffuseTex = static_cast<CTextureResource *>(tex);
+                                }
+                            }
+                            // Specular texture handle lookup
+                            tex = pResourceMgr->request(pMaterial->specularTexName);
+                            if(tex) {
+                                if(tex->getResourceType() == resource::TEXTURE) {
+                                    pMaterial->specularTex = static_cast<CTextureResource *>(tex);
+                                }
+                            }
+                            // Normal texture handle lookup
+                            tex = pResourceMgr->request(pMaterial->normalTexName);
+                            if(tex) {
+                                if(tex->getResourceType() == resource::TEXTURE) {
+                                    pMaterial->normalTex = static_cast<CTextureResource *>(tex);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return FG_TRUE;
