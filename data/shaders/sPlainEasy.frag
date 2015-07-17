@@ -32,5 +32,5 @@ void main()
 		texel = v_color;
 		
 	}
-	gl_FragColor = texel;
+	gl_FragColor = texel * u_CustomColor;
 }

@@ -23,6 +23,6 @@ void main()
 		texel = texture2D(s_texture, v_texCoord);
 	else
 		texel = u_CustomColor;
-    gl_FragColor = texel * v_color;
+    gl_FragColor = texel * v_color * u_CustomColor;
 }
 
