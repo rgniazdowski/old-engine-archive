@@ -65,7 +65,7 @@ namespace fg {
         typedef CChainReaction type;
 
     public:
-        constexpr static const float QUAD_HALF_SIZE = 0.5f;
+        constexpr static const float QUAD_HALF_SIZE = SQuadData::QUAD_HALF_SIZE;
 
     public:
         /**
