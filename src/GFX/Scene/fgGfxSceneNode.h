@@ -366,11 +366,35 @@ namespace fg {
             }
             /**
              * 
+             * @param translateion
+             */
+            inline virtual void translateMatrix(const Vec3f& translation) {
+                m_modelMat = math::translate(m_modelMat, translation);
+            }
+            /**
+             *
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline virtual void translateMatrix(float x, float y, float z) {
+                m_modelMat = math::translate(m_modelMat, Vec3f(x, y, z));
+            }
+            /**
+             * 
              * @param angle
              * @param axis
              */
             inline virtual void rotate(float angle, const Vec3f& axis) {
+                // should scale?
+                Vec3f oldScale;
+                if(!m_collisionBody) {
+                    oldScale = m_scale;
+                    this->setScale(1.0f, 1.0f, 1.0f);
+                }
                 m_modelMat = math::rotate(m_modelMat, angle, axis);
+                if(!m_collisionBody)
+                    this->setScale(oldScale);
             }
             /**
              * 
@@ -380,7 +404,14 @@ namespace fg {
              * @param z
              */
             inline virtual void rotate(float angle, float x, float y, float z) {
+                Vec3f oldScale;
+                if(!m_collisionBody) {
+                    oldScale = m_scale;
+                    this->setScale(1.0f, 1.0f, 1.0f);
+                }
                 m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));
+                if(!m_collisionBody)
+                    this->setScale(oldScale);
             }
 
             /**

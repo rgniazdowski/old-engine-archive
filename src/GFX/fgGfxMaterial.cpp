@@ -19,6 +19,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::SMaterial::SMaterial() :
+customColor(-1.0f, -1.0f, -1.0f, 1.0f),
 ambient(1.0f, 1.0f, 1.0f, 1.0f),
 diffuse(1.0f, 1.0f, 1.0f, 1.0f),
 specular(1.0f, 1.0f, 1.0f, 1.0f),
@@ -59,6 +60,7 @@ size_t gfx::SMaterial::getDataSize(void) {
 //------------------------------------------------------------------------------
 
 gfx::SMaterial::SMaterial(const SMaterial& material) {
+    this->customColor = material.customColor;
     this->ambientTex = material.ambientTex;
     this->diffuseTex = material.diffuseTex;
     this->specularTex = material.specularTex;
@@ -111,6 +113,11 @@ fgBool gfx::SMaterial::loadFromConfig(SMaterial& output, const std::string& path
         if(param->name.compare("name") == 0) {
             if(param->type == util::SCfgParameter::STRING) {
                 output.name = param->string;
+            }
+
+        } else if(param->name.compare("customColor") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                output.customColor = strings::parseColor(param->string);
             }
 
         } else if(param->name.compare("ambient") == 0) {

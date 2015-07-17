@@ -202,6 +202,7 @@ void gfx::CScene3D::render(void) {
     CSceneManager::render();
     CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
     pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+    pProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     const unsigned int n = m_octNodes.size();
     unsigned int i = 0;
     while(i < n) {
@@ -224,6 +225,7 @@ void gfx::CScene3D::render(void) {
         }
 #endif        
     }
+    pProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
 }
 //------------------------------------------------------------------------------
 

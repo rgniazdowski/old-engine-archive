@@ -56,6 +56,8 @@ namespace fg {
             };
 
         public:
+            /// Custom color (used when shader does not use lighting)
+            Color4f customColor;
             /// Ambient color component
             Color4f ambient;
             /// Diffuse color component
@@ -188,6 +190,15 @@ namespace fg {
              */
             inline fgBool isBlend(void) const {
                 return (fgBool)(blendMode != BlendMode::BLEND_OFF);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isCustomColor(void) const {
+                // if any of the first color components is less than zero
+                // do not use custom color
+                return (fgBool)!(customColor.r < 0.0f || customColor.g < 0.0f);
             }
             /**
              * 

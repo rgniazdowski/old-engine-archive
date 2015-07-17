@@ -79,7 +79,7 @@ gfx::CDrawCall::~CDrawCall() {
 
 void gfx::CDrawCall::resetAttributeData(void) {
 
-    memset(m_attrData, 0, sizeof(m_attrData));
+    memset(m_attrData, 0, sizeof (m_attrData));
 
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
@@ -228,7 +228,7 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
 
     } else if(pMaterial->normalTex) {
 
-    }    
+    }
     // This replaces value in sorting slot
     m_fastCmp.setPart(CMP_SLOT_TEXTURE, (fg::util::CFastCmp::data_type_32)sortingValue);
 }
@@ -556,6 +556,15 @@ void gfx::CDrawCall::draw(void) {
             m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
         } else {
             m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+        }
+        if(m_material) {
+            if(m_material->isCustomColor()) {
+                m_program->setUniform(FG_GFX_CUSTOM_COLOR,
+                                      m_material->customColor.r,
+                                      m_material->customColor.g,
+                                      m_material->customColor.b,
+                                      m_material->customColor.a);
+            }
         }
     }
     // #FIXME - need to use attribute data array

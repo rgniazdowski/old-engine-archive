@@ -194,6 +194,7 @@ void gfx::CSceneNode::setScale(const Vector3f& scale) {
         m_modelMat[3].x = translation.x;
         m_modelMat[3].y = translation.y;
         m_modelMat[3].z = translation.z;
+        m_modelMat[3].w = translation.w;
 
     } else if(!isAutoScale()) {
         //Vector3f halfSize = m_collisionBody->getHalfSize();
