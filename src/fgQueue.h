@@ -98,6 +98,12 @@ namespace fg {
         typedef typename TSequence::const_reverse_iterator const_reverse_iterator;
 
     public:
+        iterator begin(void) {
+            return this->c.begin();
+        }
+        iterator end(void) {
+            return this->c.end();
+        }
         /**
          * 
          * @return

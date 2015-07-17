@@ -561,6 +561,8 @@ void gfx::CSceneManager::SPickSelection::end(StateFlags stateFlags) {
             pickBox.invalidate();
             //printf("%.3f: Removing last selected node\n", timesys::exact());
         }
+    } else if((fgBool)!!(stateFlags & PICK_SELECTION_ON_HOVER)) {
+
     }
 }
 //------------------------------------------------------------------------------
@@ -711,7 +713,7 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
     const float exact = timesys::exact();
     int idx = h_selectedNodes.find(nodeHandle);
     if(pickResult == goodPickResult) {
-        CSceneNode* pLastNode = pSceneMgr->getLastPickedNode();        
+        CSceneNode* pLastNode = pSceneMgr->getLastPickedNode();
         const float ts = pickedNodesInfo[nodeHandle].timeStamp;
         if(isToggle && ts < pickBegin) {
             pNode->setSelected(!pNode->isSelected());
@@ -1000,7 +1002,7 @@ void gfx::CSceneManager::render(void) {
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
             }
-#endif            
+#endif
             pSceneNode->draw();
             pProgram = pShaderMgr->getCurrentProgram();
 #if defined(FG_DEBUG)
@@ -1618,6 +1620,36 @@ fgBool gfx::CSceneManager::remove(CSceneNode* pObj) {
     if(!pObj || !isManaged(pObj)) {
         return FG_FALSE;
     }
+    if(!m_nodeQueue.empty()) {
+        // need to check if the scene node
+        // is already in the queue - if yes - remove
+        NodePriorityQueueItor nodesItor, nodesEnd;
+        fgBool found = FG_FALSE;
+        nodesEnd = m_nodeQueue.end();
+        nodesItor = m_nodeQueue.begin();
+        for(; nodesItor != nodesEnd; nodesItor++) {
+            CSceneNode* pSceneNodeQ = *nodesItor;
+            if(!pSceneNodeQ)
+                continue;
+            if(pSceneNodeQ == pObj) {
+                found = FG_TRUE;
+                break;
+            }
+        }
+        if(found) {
+            // need to create new priority queue
+            NodePriorityQueue newQueue;
+            nodesItor = m_nodeQueue.begin();
+            for(; nodesItor != nodesEnd; nodesItor++) {
+                CSceneNode* pSceneNodeQ = *nodesItor;
+                if(pSceneNodeQ != pObj) {
+                    newQueue.push(pSceneNodeQ);
+                }
+            }
+            m_nodeQueue.clear();
+            m_nodeQueue.swap(newQueue);
+        }
+    }
     if(pObj->getTreeNode()) {
         pObj->getTreeNode()->removeObject(pObj);
         pObj->setTreeNode(NULL);
@@ -1654,6 +1686,13 @@ fgBool gfx::CSceneManager::remove(const char* nameTag) {
 fgBool gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
     if(!gfx::CSceneManager::remove(pObj)) {
         return FG_FALSE;
+    }
+    if(pObj->getRefHandle().getHandle() == m_pickSelection.h_lastSelectedNode.getHandle()) {
+        m_pickSelection.h_lastSelectedNode.reset();
+    }
+    int index = m_pickSelection.h_selectedNodes.find(pObj->getRefHandle());
+    if(index >= 0) {
+        m_pickSelection.h_selectedNodes[index].reset();
     }
     pObj->setManager(this); // This is so the children can also be destroyed
     delete pObj;

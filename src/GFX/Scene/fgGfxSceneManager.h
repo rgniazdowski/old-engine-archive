@@ -72,6 +72,8 @@ namespace fg {
             ///
             typedef NodePriorityQueue::const_iterator NodePriorityQueueConstItor;
             ///
+            typedef NodePriorityQueue::iterator NodePriorityQueueItor;
+            ///
             typedef CVector<CSceneNode *> ObjectVec;
             ///
             typedef ObjectVec::iterator ObjectVecItor;
