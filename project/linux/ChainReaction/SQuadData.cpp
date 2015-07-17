@@ -25,7 +25,9 @@ pSceneNode(NULL),
 pCellHolder(NULL),
 color(NONE),
 isDragged(FG_FALSE),
-isValid(FG_FALSE) { }
+isValid(FG_FALSE),
+rotation(0.0f),
+rotDir(STATIC) { }
 //------------------------------------------------------------------------------
 
 SQuadData::SQuadData(const SQuadData& orig) {
@@ -34,6 +36,8 @@ SQuadData::SQuadData(const SQuadData& orig) {
     this->pCellHolder = orig.pCellHolder;
     this->isDragged = orig.isDragged;
     this->isValid = orig.isValid;
+    this->rotation = orig.rotation;
+    this->rotDir = orig.rotDir;
 }
 //------------------------------------------------------------------------------
 
@@ -48,6 +52,8 @@ void SQuadData::invalidate(void) {
     pCellHolder = NULL;
     isDragged = FG_FALSE;
     isValid = FG_FALSE;
+    rotation = 0.0f;
+    rotDir = STATIC;
 }
 //------------------------------------------------------------------------------
 
@@ -114,5 +120,16 @@ fgBool SQuadData::isVisible(void) const {
     if(pSceneNode) {
         pSceneNode->isVisible();
     }
+}
+//------------------------------------------------------------------------------
+
+fgBool SQuadData::isOppositeRotation(RotationDirection _oppoDir) const {
+    if(rotDir == STATIC)
+        return FG_FALSE;
+    if((rotDir == LEFT && _oppoDir == RIGHT) || (rotDir == RIGHT && _oppoDir == LEFT))
+        return FG_TRUE;
+    if((rotDir == UP && _oppoDir == DOWN) || (rotDir == DOWN && _oppoDir == UP))
+        return FG_TRUE;
+    return FG_FALSE;
 }
 //------------------------------------------------------------------------------

@@ -41,6 +41,16 @@ namespace fg {
             WHITE = 2,
             GRAY = 3
         };
+        /**
+         *
+         */
+        enum RotationDirection {
+            STATIC = 0,
+            LEFT = 1,
+            RIGHT = 2,
+            UP = 3,
+            DOWN = 4
+        };
         ///
         gfx::CSceneNode* pSceneNode;
         ///
@@ -51,7 +61,10 @@ namespace fg {
         fgBool isDragged;
         ///
         fgBool isValid;
-
+        ///
+        float rotation;
+        ///
+        RotationDirection rotDir;
         /**
          *
          */
@@ -117,6 +130,12 @@ namespace fg {
          * @return
          */
         fgBool isVisible(void) const;
+        /**
+         *
+         * @param _oppoDir
+         * @return
+         */
+        fgBool isOppositeRotation(RotationDirection _oppoDir) const;
     }; // struct SQuadData
 } // namespace fg
 

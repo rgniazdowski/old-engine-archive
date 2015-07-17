@@ -28,10 +28,12 @@ CLevelVis::CLevelVis(game::CGrid* pGrid, CLevelFile* pLvlFile) :
 m_pGrid(pGrid),
 m_pLevelFile(pLvlFile),
 m_pSceneMgr(NULL),
+m_pDraggedNode(NULL),
 m_pMaterialBlack(NULL),
 m_pMaterialWhite(NULL),
 m_quadsData(),
-m_scale(1.0f) {
+m_scale(1.0f),
+m_draggedCoord() {
     if(m_pLevelFile) {
         unsigned int n = m_pLevelFile->getQuadsCount();
         if(n) {
@@ -78,6 +80,8 @@ fgBool CLevelVis::prepareQuads(void) {
     // need to check for root node
     char rootNodeName[64];
     char quadNodeName[64];
+    //const char* modelNameStr = "builtinQuad1x1";
+    const char* modelNameStr = "builtinCube1x1";
     std::sprintf(rootNodeName, "cr_root_n_%d", m_pLevelFile->getLevelIndex());
     gfx::CSceneNode* pRootNode = m_pSceneMgr->get(rootNodeName);
     if(!pRootNode) {
@@ -119,8 +123,8 @@ fgBool CLevelVis::prepareQuads(void) {
     unsigned short areaMinY, areaMaxY;
     m_pLevelFile->getAreaMin(areaMinX, areaMinY);
     m_pLevelFile->getAreaMax(areaMaxX, areaMaxY);
-    startPos.x = -1.0f * (float)areaSX / 2.0f * m_scale + m_scale/2.0f;
-    startPos.y = (float)areaSY / 2.0f * m_scale - m_scale/2.0f;
+    startPos.x = -1.0f * (float)areaSX / 2.0f * m_scale + m_scale / 2.0f;
+    startPos.y = (float)areaSY / 2.0f * m_scale - m_scale / 2.0f;
     //startPos.x = -1.0f * (float)(areaMaxX-areaMinX) / 2.0f * m_scale;
     //startPos.y = (float)(areaMaxY-areaMinY) / 2.0f * m_scale;
     // Prepare new number of quads
@@ -137,7 +141,7 @@ fgBool CLevelVis::prepareQuads(void) {
             pQuadData = new SQuadData();
             m_quadsData[i] = pQuadData;
             pQuadData->color = (SQuadData::QuadColor)quads[i].color;
-            gfx::CModelResource* pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get("builtinQuad1x1"));
+            gfx::CModelResource* pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
             if(!pModelRes) {
                 // ? wut ?
             }
@@ -147,7 +151,7 @@ fgBool CLevelVis::prepareQuads(void) {
                 // is this even possible?
             }
             pQuadData->pSceneNode->setName(quadNodeName);
-            //pQuadData->pSceneNode = m_pSceneMgr->addFromModel("builtinQuad1x1", quadNodeName);            
+            //pQuadData->pSceneNode = m_pSceneMgr->addFromModel(modelNameStr, quadNodeName);
             game::CGrid::SCellHolder* pCellHolder = NULL;
             pQuadData->pSceneNode->setScale(m_scale, m_scale, 1.0f);
             // position FIXME!
@@ -215,6 +219,9 @@ fgBool CLevelVis::restart(void) {
         m_pSceneMgr->setPickSelectionOnHover(FG_TRUE);
         //m_pSceneMgr->setPickSelectionOnClick(FG_TRUE);
         m_pSceneMgr->setIgnoreCollisions(FG_TRUE);
+        //m_pSceneMgr->setShowGroundGrid(FG_TRUE); // TESTING
+        m_pSceneMgr->setGroundLevel(0.0f);
+        m_pSceneMgr->setGroundPlane(gfx::Planef::Z, 0.0f);
 
         float zDistance = 250.0f; // this should change based on scale and size
 

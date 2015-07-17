@@ -22,6 +22,8 @@
     #include "SQuadData.h"
 
     #include "fgVector.h"
+    
+    #include "Math/fgMathLib.h"
 
 namespace fg {
 
@@ -136,7 +138,7 @@ namespace fg {
          */
         void setScale(float scale) {
             if(scale < 0.0f)
-               scale = 1.0f;
+                scale = 1.0f;
             m_scale = scale;
         }
         /**
@@ -160,39 +162,100 @@ namespace fg {
          * @param y
          */
         void getSize(unsigned short* x, unsigned short* y);
-
+        /**
+         * 
+         * @param pMaterialBlack
+         */
         void setMaterialBlack(gfx::SMaterial* pMaterialBlack) {
             m_pMaterialBlack = pMaterialBlack;
         }
-
+        /**
+         *
+         * @return
+         */
         gfx::SMaterial* getMaterialBlack(void) const {
             return m_pMaterialBlack;
         }
-
+        /**
+         *
+         * @param pMaterialWhite
+         */
         void setMaterialWhite(gfx::SMaterial* pMaterialWhite) {
             m_pMaterialWhite = pMaterialWhite;
         }
-
+        /**
+         *
+         * @return
+         */
         gfx::SMaterial* getMaterialWhite(void) const {
             return m_pMaterialWhite;
         }
+        /**
+         *
+         * @param position
+         */
+        void setDraggedCoord(const Vec2i& coord) {
+            m_draggedCoord = coord;
+        }
+        /**
+         *
+         * @param x
+         * @param y
+         */
+        void setDraggedCoord(int x, int y) {
+            m_draggedCoord.x = x;
+            m_draggedCoord.y = y;
+        }
+        /**
+         *
+         * @return
+         */
+        Vector2i& getDraggedCoord(void) {
+            return m_draggedCoord;
+        }
+        /**
+         *
+         * @return
+         */
+        Vector2i const& getDraggedCoord(void) const {
+            return m_draggedCoord;
+        }
+        /**
+         *
+         * @param pGrabbedNode
+         */
+        void setDraggedNode(gfx::CSceneNode* pDraggedNode) {
+            m_pDraggedNode = pDraggedNode;
+        }
+        /**
+         *
+         * @return
+         */
+        gfx::CSceneNode* getDraggedNode(void) const {
+            return m_pDraggedNode;
+        }
 
     private:
-        ///
+        /// Pointer to the main game grid 
         game::CGrid* m_pGrid;
-        ///
+        /// Pointer to the level file containing positions and colors of the quads
         CLevelFile* m_pLevelFile;
-        ///
+        /// Pointer to the external Scene Manager
         gfx::CSceneManager* m_pSceneMgr;
-        ///
+        /// Pointer to the node that is selected and dragged (main animation)
+        gfx::CSceneNode* m_pDraggedNode;
+        /// External pointer to the black material (designed for black quads)
         gfx::SMaterial* m_pMaterialBlack;
-        ///
+        /// External pointer to the white material
         gfx::SMaterial* m_pMaterialWhite;
-        ///
+        /// Quads info/data special vector - stores all required information
         QuadDataVec m_quadsData;
-        ///
+        /// Scale (size) of a single quad object
         float m_scale;
+        /// Position on the game grid of the dragged (grabbed) quad (main action)
+        Vector2i m_draggedCoord;
     }; // class CLevelVis
+
 } // namespace fg
 
     #undef FG_INC_LEVEL_VIS_BLOCK
