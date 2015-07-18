@@ -26,12 +26,13 @@ namespace fg {
     namespace gfx {
         class CSceneNode;
     }
-    
+
     /**
      * 
      */
     struct SQuadData {
         constexpr static const float QUAD_HALF_SIZE = 0.5f;
+
         /**
          * 
          */
@@ -42,6 +43,7 @@ namespace fg {
             WHITE = 2,
             GRAY = 3
         };
+
         /**
          *
          */
@@ -82,6 +84,8 @@ namespace fg {
          */
         virtual ~SQuadData();
 
+        //----------------------------------------------------------------------
+
         /**
          *
          */
@@ -97,6 +101,40 @@ namespace fg {
          * @param _pCell
          */
         void bind(game::CGrid::SCellHolder* _pCell);
+
+        //----------------------------------------------------------------------
+
+        /**
+         * Get the pointer to quad data of the LEFT neighbour if exists
+         * @return  Pointer to the valid quad data of the LEFT neighbour.
+         *          NULL if there is no neighbour (the selected field is empty).
+         */
+        SQuadData* left(void);
+        /**
+         * Get the pointer to quad data of the RIGHT neighbour if exists
+         * @return  Pointer to the valid quad data of the RIGHT neighbour.
+         *          NULL if there is no neighbour (the selected field is empty).
+         */
+        SQuadData* right(void);
+        /**
+         * Get the pointer to quad data of the UP neighbour
+         * @return  Pointer to the valid quad data of the UP neighbour. 
+         *          NULL if there is no neighbour (the selected field is empty).
+         *          The game grid coordinates for UP neighbour are reversed.
+         *          Grid cell Y coordinate for UP neighbour is (this->Y - 1).
+         *
+         */
+        SQuadData* up(void);
+        /**
+         * Get the pointer to quad data of the DOWN neighbour
+         * @return  Pointer to the valid quad data of the DOWN neighbour.
+         *          NULL if there is no neighbour (the selected field is empty).
+         *          The game grid coordinates for UP neighbour are reversed.
+         *          Grid cell Y coordinate for DOWN neighbour is (this->Y + 1).
+         */
+        SQuadData* down(void);
+
+        //----------------------------------------------------------------------
 
         /**
          * Rotate the scene node based on the give direction and amount
@@ -162,6 +200,8 @@ namespace fg {
          */
         gfx::CSceneNode* getCoveredNeighbourNode(void);
 
+        //----------------------------------------------------------------------
+
         /**
          * Hide the scene node associated with this quad/cell data
          */
@@ -210,7 +250,9 @@ namespace fg {
          * @return
          */
         RotationDirection getOppositeRotation(RotationDirection direction = AUTO);
+
     }; // struct SQuadData
+
 } // namespace fg
 
     #undef FG_INC_QUAD_DATA_BLOCK

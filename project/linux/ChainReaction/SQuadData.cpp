@@ -61,7 +61,7 @@ void SQuadData::unbind(void) {
     if(pCellHolder) {
         pCellHolder->pData = NULL;
         pCellHolder->value = 0;
-        pCellHolder = NULL;        
+        pCellHolder = NULL;
     }
 }
 //------------------------------------------------------------------------------
@@ -73,6 +73,48 @@ void SQuadData::bind(game::CGrid::SCellHolder* _pCell) {
         pCellHolder->pData = (void *)this;
         pCellHolder->value = (unsigned short)this->color;
     }
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::left(void) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->left();
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SQuadData*)pNeighbourCell->pData;
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::right(void) {
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->right();
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SQuadData*)pNeighbourCell->pData;
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::up(void) {
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SQuadData*)pNeighbourCell->pData;
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::down(void) {
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SQuadData*)pNeighbourCell->pData;
 }
 //------------------------------------------------------------------------------
 

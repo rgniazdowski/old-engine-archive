@@ -128,6 +128,13 @@ namespace fg {
 
     public:
         /**
+         * 
+         */
+        void update(void);
+
+        //----------------------------------------------------------------------
+    public:
+        /**
          *
          * @param x
          * @param y
@@ -283,7 +290,58 @@ namespace fg {
         gfx::CSceneNode* getDraggedNode(void) const {
             return m_pDraggedNode;
         }
+        //----------------------------------------------------------------------
+    public:
 
+        /**
+         *
+         * @param pQuadData
+         */
+        void setUserDisturbance(SQuadData* pQuadData);
+        /**
+         *
+         * @param toggle
+         */
+        void setChainReaction(fgBool toggle = FG_TRUE) {
+            m_isChainReaction = toggle;
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isChainReaction(void) const {
+            return m_isChainReaction;
+        }
+        /**
+         *
+         * @return
+         */
+        QuadDataVec& getFinishedQuads(void) {
+            return m_finishedQuads;
+        }
+        /**
+         *
+         * @return
+         */
+        QuadDataVec const& getFinishedQuads(void) const {
+            return m_finishedQuads;
+        }
+        /**
+         *
+         * @return
+         */
+        QuadDataVec& getRotatingQuads(void) {
+            return m_rotatingQuads;
+        }
+        /**
+         * 
+         * @return
+         */
+        QuadDataVec const& getRotatingQuads(void) const {
+            return m_rotatingQuads;
+        }
+
+        //----------------------------------------------------------------------
     private:
         /// Pointer to the main game grid 
         game::CGrid* m_pGrid;
@@ -299,10 +357,20 @@ namespace fg {
         gfx::SMaterial* m_pMaterialWhite;
         /// Quads info/data special vector - stores all required information
         QuadDataVec m_quadsData;
+        /// Stores all quads that finished rotating (cover any neighbour)
+        /// Need to check if those quads cause any rule breaking (disturbance)
+        QuadDataVec m_finishedQuads;
+        /// Stores all quads that are currently being rotated
+        QuadDataVec m_rotatingQuads;
+        /// Stores all quads that are orphaned (have no neighbours)
+        /// These are scaled down gradually (then removed)
+        QuadDataVec m_orphanQuads;
         /// Scale (size) of a single quad object
         float m_scale;
         /// Position on the game grid of the dragged (grabbed) quad (main action)
         Vector2i m_draggedCoord;
+        /// Special flag - if TRUE the chain reaction begun and quads are rotating
+        fgBool m_isChainReaction;
     }; // class CLevelVis
 
 } // namespace fg

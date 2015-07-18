@@ -15,6 +15,7 @@
  */
 
 #include "CLevelVis.h"
+#include "fgVector.h"
 #include "GameLogic/fgGrid.h"
 #include "GFX/Scene/fgGfxSceneManager.h"
 #include "Resource/fgResourceManager.h"
@@ -32,8 +33,12 @@ m_pDraggedNode(NULL),
 m_pMaterialBlack(NULL),
 m_pMaterialWhite(NULL),
 m_quadsData(),
+m_finishedQuads(),
+m_rotatingQuads(),
+m_orphanQuads(),
 m_scale(1.0f),
-m_draggedCoord() {
+m_draggedCoord(),
+m_isChainReaction(FG_FALSE) {
     if(m_pLevelFile) {
         unsigned int n = m_pLevelFile->getQuadsCount();
         if(n) {
@@ -51,6 +56,9 @@ m_draggedCoord() {
         }
     }
     // Should level visualization have access to SceneManager?
+    m_finishedQuads.reserve(8);
+    m_rotatingQuads.reserve(8);
+    m_orphanQuads.reserve(8);
 }
 //------------------------------------------------------------------------------
 
@@ -208,7 +216,7 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
     }
     // if there is nothing in the target location
     // need to create new scene node
-    gfx::CSceneNode* pNode = prepareSceneNode(newX, newY, original->color);    
+    gfx::CSceneNode* pNode = prepareSceneNode(newX, newY, original->color);
     m_pSceneMgr->destroyNode(original->pSceneNode);
     if(!m_pSceneMgr->addNode(pNode->getRefHandle(), pNode)) {
         // adding of the node failed?
@@ -291,7 +299,7 @@ fgBool CLevelVis::prepareQuads(void) {
     }
     // need to check for root node
     char rootNodeName[64];
-    
+
     std::sprintf(rootNodeName, "cr_root_n_%d", m_pLevelFile->getLevelIndex());
     gfx::CSceneNode* pRootNode = m_pSceneMgr->get(rootNodeName);
     if(!pRootNode) {
@@ -410,6 +418,173 @@ void CLevelVis::clear(void) {
 }
 //------------------------------------------------------------------------------
 
+void CLevelVis::update(void) {
+    // special update procedure - rotate/animate - check for rule breaking
+    if(!isChainReaction() /*|| m_rotatingQuads.empty() || m_finishedQuads.empty() */) {
+        return;
+    }
+    SQuadData* pNeighbour = NULL;
+    while(!m_finishedQuads.empty()) {
+        SQuadData* pQuadData = m_finishedQuads.back();
+        m_finishedQuads.pop_back();
+        if(!pQuadData)
+            continue;
+        // check neighbours for rule breaking (for now only by edge)
+        SQuadData::QuadColor color = pQuadData->color;
+        // has any neighbour (any color?)
+        fgBool hasNeighbours = FG_FALSE;
+        // left (should rewind?)
+        pNeighbour = pQuadData->left();
+        if(pNeighbour) {
+            hasNeighbours = FG_TRUE;
+            if(pNeighbour->color == color) {
+                // the color of the neighbour is the same
+                // need to select the rotation direction and add to special vec
+                pNeighbour->rotDir = SQuadData::LEFT;
+                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
+                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                int index = m_rotatingQuads.find(pNeighbour);
+                if(index < 0) {
+                    m_rotatingQuads.push_back(pNeighbour);
+                }
+            }
+        }
+        pNeighbour = pQuadData->right();
+        if(pNeighbour) {
+            hasNeighbours = FG_TRUE;
+            if(pNeighbour->color == color) {
+                pNeighbour->rotDir = SQuadData::RIGHT;
+                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
+                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                int index = m_rotatingQuads.find(pNeighbour);
+                if(index < 0) {
+                    m_rotatingQuads.push_back(pNeighbour);
+                }
+            }
+        }
+        pNeighbour = pQuadData->up();
+        if(pNeighbour) {
+            hasNeighbours = FG_TRUE;
+            if(pNeighbour->color == color) {
+                pNeighbour->rotDir = SQuadData::UP;
+                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
+                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                int index = m_rotatingQuads.find(pNeighbour);
+                if(index < 0) {
+                    m_rotatingQuads.push_back(pNeighbour);
+                }
+            }
+        }
+        pNeighbour = pQuadData->down();
+        if(pNeighbour) {
+            hasNeighbours = FG_TRUE;
+            if(pNeighbour->color == color) {
+                pNeighbour->rotDir = SQuadData::DOWN;
+                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
+                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                int index = m_rotatingQuads.find(pNeighbour);
+                if(index < 0) {
+                    m_rotatingQuads.push_back(pNeighbour);
+                }
+            }
+        }
+
+        if(!hasNeighbours) {
+            // this finished quad is an orphan - will scale it down gradually
+            // and then remove
+            m_orphanQuads.push_back(pQuadData);
+            //printf("adding node for scaling down: %p\n", pQuadData);
+        }
+    }
+    pNeighbour = NULL;
+    // now check and animate rotating quads
+    unsigned int n = m_rotatingQuads.size();
+
+    for(unsigned int i = 0; i < n; i++) {
+        SQuadData* pQuadData = m_rotatingQuads[i];
+        if(!pQuadData) {
+            // This should not occur - however for safety...
+            // if the NULL entry would not be removed
+            // the chain reaction would not end automatically:
+            // the flag will remain TRUE
+            m_rotatingQuads[i] = m_rotatingQuads[n - 1];
+            m_rotatingQuads[n - 1] = NULL;
+            i--;
+            n--;
+            m_rotatingQuads.resize(n);
+            continue;
+        }
+        // elapsed is in seconds - 0.001f means one millisecond (0.01f - 10ms)
+        float elapsed = timesys::elapsed(timesys::TICK_UPDATE);
+        // the rotation speed in RADIANS/SECOND
+        const float rotSpeed = 6.0f; // need to adjust externally
+        pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);        
+        if(pQuadData->isRotationFinished()) {
+            // rotation finished
+            // need to move to the new position
+            unsigned short x = 0, y = 0;
+            pQuadData->getCoveredNeighbourCoord(x, y);
+            //int idxTest = m_finishedQuads.find(pQuadData->getCoveredNeighbourQuadData());
+            SQuadData* pNewQuad = moveQuadToNewPlace(pQuadData, x, y);
+            // add the quad to finished vec
+            if(m_finishedQuads.find(pNewQuad) < 0) {
+                m_finishedQuads.push_back(pNewQuad);
+                //printf("adding finished node: %p\n", pNewQuad);
+            }
+            // remove the quad from rotation vec
+            m_rotatingQuads[i] = m_rotatingQuads[n - 1];
+            m_rotatingQuads[n - 1] = NULL;
+            i--;
+            n--;
+            m_rotatingQuads.resize(n);
+        }
+    }
+
+    // now check and animate orphans
+    n = m_orphanQuads.size();
+    fgBool canDissolve = (fgBool)!!(m_rotatingQuads.empty() && m_finishedQuads.empty());
+    for(unsigned int i = 0; i < n && canDissolve; i++) {
+        SQuadData* pQuadData = m_orphanQuads[i];
+        if(!pQuadData) {
+            // This should not occur - however for safety...
+            // if the NULL entry would not be removed
+            // the chain reaction would not end automatically:
+            // the flag will remain TRUE
+            m_orphanQuads[i] = m_orphanQuads[n - 1];
+            m_orphanQuads[n - 1] = NULL;
+            i--;
+            n--;
+            m_orphanQuads.resize(n);
+            continue;
+        }
+        // elapsed is in seconds - 0.001f means one millisecond (0.01f - 10ms)
+        float elapsed = timesys::elapsed(timesys::TICK_UPDATE);
+        // the scale speed in UNITS/SECOND
+        const float scaleSpeed = m_scale*1.25f; // need to adjust externally
+        //pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);        
+        Vector3f scale = pQuadData->pSceneNode->getScale();
+        scale.x -= scaleSpeed * elapsed;
+        scale.y -= scaleSpeed * elapsed;
+        if(scale.x < 0.0f || scale.y < 0.0f) {
+            //printf("destroying quad: %p\n", pQuadData);
+            this->destroyQuad(pQuadData->pCellHolder->pos.x,
+                              pQuadData->pCellHolder->pos.y);
+            // remove the quad from orphan vec
+            m_orphanQuads[i] = m_orphanQuads[n - 1];
+            m_orphanQuads[n - 1] = NULL;
+            i--;
+            n--;
+            m_orphanQuads.resize(n);
+        } else {
+            pQuadData->pSceneNode->setScale(scale);
+        }
+    }
+    if(m_rotatingQuads.empty() && m_finishedQuads.empty() && m_orphanQuads.empty()) {
+        setChainReaction(FG_FALSE);
+    }
+}
+//------------------------------------------------------------------------------
+
 SQuadData* CLevelVis::getQuadData(unsigned short x, unsigned short y) {
     if(m_pGrid) {
         void *cellData = m_pGrid->getCellData(x, y);
@@ -475,6 +650,14 @@ void CLevelVis::getSize(unsigned short& x, unsigned short& y) {
 void CLevelVis::getSize(unsigned short* x, unsigned short* y) {
     if(m_pLevelFile) {
         m_pLevelFile->getSize(x, x);
+    }
+}
+//------------------------------------------------------------------------------
+
+void CLevelVis::setUserDisturbance(SQuadData* pQuadData) {
+    if(!isChainReaction()) {
+        m_finishedQuads.push_back(pQuadData);
+        setChainReaction();
     }
 }
 //------------------------------------------------------------------------------

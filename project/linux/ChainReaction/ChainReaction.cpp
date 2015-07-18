@@ -410,7 +410,9 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 if(m_drag.pQuadData->isRotationFinished()) {
                     unsigned short x=0, y=0;
                     m_drag.pQuadData->getCoveredNeighbourCoord(x ,y);
-                    m_levelVis->moveQuadToNewPlace(m_drag.pQuadData, x, y);
+                    SQuadData* pNewQuad = m_levelVis->moveQuadToNewPlace(m_drag.pQuadData, x, y);
+                    m_levelVis->setUserDisturbance(pNewQuad);
+                    m_levelVis->setChainReaction(); // now should animate
                     m_drag.pNode = NULL;
                     m_drag.pQuadData = NULL;
                 } else {
@@ -426,7 +428,7 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
         }
     }
 
-    if(!pressed || released) {
+    if(!pressed || released || m_levelVis->isChainReaction()) {
         // nothing to do - this is mouse motion without keys pressed
         return;
     }
@@ -543,7 +545,7 @@ void CChainReaction::updateStep(void) {
     float zoomOut = 250.0f;
     float zoomIn = 100.0f;
     m_drag.zoomProp = (zoomOut - zoomIn) / zoomOut;
-    if(pPicked && isPickerDown && !m_drag.pNode) {
+    if(pPicked && isPickerDown && !m_drag.pNode && !m_levelVis->isChainReaction()) {
         m_drag.begin = m_pSceneMgr->getGroundIntersectionPoint(1);
         //printf("BEGIN: %.2f %.2f %.2f | END: %.2f %.2f %.2f\n",
         //intP0.x, intP0.y, intP0.z,
@@ -590,6 +592,8 @@ void CChainReaction::updateStep(void) {
         //pCamera->setCenter(intP1 * 0.6f);
         //pCamera->setEye(Vec3f(intP1.x * 0.6f, intP1.y * 0.6f, 100.0f));
     }
+    // this will animate the quads (if the chain reaction flag is set)
+    m_levelVis->update();
 }
 //------------------------------------------------------------------------------
 
