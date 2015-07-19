@@ -85,52 +85,54 @@ namespace fg {
              */
             enum StateFlags {
                 /// No special scene state flags specified
-                NONE = 0x0000,
+                NONE = 0x00000,
                 /// Linear traverse forced - no spatial trees are used (octree/quadtree)
-                LINEAR_TRAVERSE = 0x0001,
+                LINEAR_TRAVERSE = 0x00001,
                 /// Ignore collisions between nodes (coarse and fine), no events thrown
-                IGNORE_COLLISIONS = 0x0002,
+                IGNORE_COLLISIONS = 0x00002,
                 /// Hide all nodes
-                HIDE_NODES = 0x0004,
+                HIDE_NODES = 0x00004,
                 /// Hide just the skybox
-                HIDE_SKYBOX = 0x0008,
+                HIDE_SKYBOX = 0x00008,
                 /// No additional shadows for scene objects
-                HIDE_SHADOWS = 0x0010, // 16 
+                HIDE_SHADOWS = 0x00010, // 16
                 /// Hide everything - nodes, skybox, additional drawcalls
-                HIDE_ALL = 0x001C, // 4 + 8 + 16 = 28
+                HIDE_ALL = 0x0001C, // 4 + 8 + 16 = 28
                 /// Frustum check will be performed (AABB)
-                FRUSTUM_CHECK = 0x0020, // 32
+                FRUSTUM_CHECK = 0x00020, // 32
                 /// Frustum check will be performed (AABB)
-                FRUSTUM_CHECK_BOX = 0x0020, // 32
+                FRUSTUM_CHECK_BOX = 0x00020, // 32
                 /// Frustum check will be performed based on bounding spheres
-                FRUSTUM_CHECK_SPHERE = 0x0040, // 64
+                FRUSTUM_CHECK_SPHERE = 0x00040, // 64
                 /// Occlusion check will be performed
-                OCCLUSION_CHECK = 0x0080, // 128
+                OCCLUSION_CHECK = 0x00080, // 128
                 /// single pick selection active (on click actions)
-                PICK_SELECTION_ON_CLICK = 0x0100, // 256
+                PICK_SELECTION_ON_CLICK = 0x00100, // 256
                 /// Continuous pick selection active (mouse movement / hover)
-                PICK_SELECTION_ON_HOVER = 0x0200, // 512
+                PICK_SELECTION_ON_HOVER = 0x00200, // 512
                 /// Should pick selection be more accurate
-                PICK_SELECTION_AABB_TRIANGLES = 0x0400, // 1024
+                PICK_SELECTION_AABB_TRIANGLES = 0x00400, // 1024
                 /// The state of pick selection (mouse/picker state)
                 /// When active the picker is currently selecting, used only
                 /// when pick selection is in click mode
                 /// Pick selection does not care what mouse button (or anything)
                 /// is used, picker state is reported from outside
-                PICK_SELECTION_PICKER_ACTIVE = 0x0800, // 2048
+                PICK_SELECTION_PICKER_ACTIVE = 0x00800, // 2048
                 /// Is group selection active? If yes, then multiple nodes can
                 /// be selected by clicking or holding mouse button down and
                 /// drawing a selection rectangle, ignored in hover mode
-                PICK_SELECTION_GROUP = 0x1000, // 4096
+                PICK_SELECTION_GROUP = 0x01000, // 4096
                 /// Pick selection toggle mode?
                 /// The second click deselects the node (if already selected)
                 /// Ignored in hover mode; Works also with rectangle selection
-                PICK_SELECTION_TOGGLE = 0x2000, // 8192
+                PICK_SELECTION_TOGGLE = 0x02000, // 8192
                 /// Whether or not the group selection uses selection box
                 /// valid only with on click selection
-                PICK_SELECTION_BOX = 0x4000, // 16384
+                PICK_SELECTION_BOX = 0x04000, // 16384
                 ///
-                SHOW_GROUND_GRID = 0x8000
+                SHOW_GROUND_GRID = 0x08000, // 32768
+                ///
+                SKYBOX_FOLLOWS_CAMERA = 0x10000 // 65536
             };
 
         protected:
@@ -445,6 +447,27 @@ namespace fg {
              */
             inline fgBool isShowGroundGrid(void) const {
                 return (fgBool)!!(m_stateFlags & SHOW_GROUND_GRID);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setSkyBoxFollowsCamera(const fgBool toggle = FG_TRUE) {
+                setFlag(SKYBOX_FOLLOWS_CAMERA, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isSkyBoxFollowsCamera(void) const {
+                return (fgBool)!!(m_stateFlags & SKYBOX_FOLLOWS_CAMERA);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool doesSkyBoxFollowCamera(void) const {
+                return (fgBool)!!(m_stateFlags & SKYBOX_FOLLOWS_CAMERA);
             }
 
             //------------------------------------------------------------------
