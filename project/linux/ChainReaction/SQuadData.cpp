@@ -76,10 +76,10 @@ void SQuadData::bind(game::CGrid::SCellHolder* _pCell) {
 }
 //------------------------------------------------------------------------------
 
-SQuadData* SQuadData::left(void) {
+SQuadData* SQuadData::left(fgBool rewind) {
     if(!pCellHolder)
         return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->left();
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->left(rewind);
     if(!pNeighbourCell)
         return NULL;
     if(!pNeighbourCell->pData)
@@ -88,8 +88,10 @@ SQuadData* SQuadData::left(void) {
 }
 //------------------------------------------------------------------------------
 
-SQuadData* SQuadData::right(void) {
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->right();
+SQuadData* SQuadData::right(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->right(rewind);
     if(!pNeighbourCell)
         return NULL;
     if(!pNeighbourCell->pData)
@@ -98,8 +100,10 @@ SQuadData* SQuadData::right(void) {
 }
 //------------------------------------------------------------------------------
 
-SQuadData* SQuadData::up(void) {
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(); // REVERSED
+SQuadData* SQuadData::up(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(rewind); // REVERSED
     if(!pNeighbourCell)
         return NULL;
     if(!pNeighbourCell->pData)
@@ -108,13 +112,75 @@ SQuadData* SQuadData::up(void) {
 }
 //------------------------------------------------------------------------------
 
-SQuadData* SQuadData::down(void) {
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(); // REVERSED
+SQuadData* SQuadData::down(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(rewind); // REVERSED
     if(!pNeighbourCell)
         return NULL;
     if(!pNeighbourCell->pData)
         return NULL;
     return (SQuadData*)pNeighbourCell->pData;
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::upLeft(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(rewind); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->left(rewind); // LEFT
+    if(!pCornerCell)
+        return NULL;
+    if(!pCornerCell->pData)
+        return NULL;
+    return (SQuadData*)pCornerCell->pData; // UP-LEFT
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::upRight(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(rewind); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->right(rewind); // RIGHT
+    if(!pCornerCell)
+        return NULL;
+    if(!pCornerCell->pData)
+        return NULL;
+    return (SQuadData*)pCornerCell->pData; // UP-RIGHT
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::downLeft(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(rewind); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->left(rewind); // LEFT
+    if(!pCornerCell)
+        return NULL;
+    if(!pCornerCell->pData)
+        return NULL;
+    return (SQuadData*)pCornerCell->pData; // DOWN-LEFT
+}
+//------------------------------------------------------------------------------
+
+SQuadData* SQuadData::downRight(fgBool rewind) {
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(rewind); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->right(rewind); // RIGHT
+    if(!pCornerCell)
+        return NULL;
+    if(!pCornerCell->pData)
+        return NULL;
+    return (SQuadData*)pCornerCell->pData; // DOWN-RIGHT
 }
 //------------------------------------------------------------------------------
 
@@ -343,6 +409,32 @@ void SQuadData::activate(fgBool shouldActivate) {
     if(pSceneNode) {
         pSceneNode->setActive(shouldActivate);
     }
+}
+//------------------------------------------------------------------------------
+
+fgBool SQuadData::isOrphan(void) {
+    fgBool status = FG_TRUE;
+    fgBool rewind = FG_FALSE; // ?
+    status = (status && this->left(rewind) == NULL);
+    status = (status && this->right(rewind) == NULL);
+    status = (status && this->up(rewind) == NULL);
+    status = (status && this->down(rewind) == NULL);
+
+    status = (status && this->upLeft(rewind) == NULL);
+    status = (status && this->upRight(rewind) == NULL);
+    status = (status && this->downLeft(rewind) == NULL);
+    status = (status && this->downRight(rewind) == NULL);
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool SQuadData::isBound(void) const {
+    if(!pCellHolder)
+        return FG_FALSE;
+    if(((SQuadData*)pCellHolder->pData) == this) {
+        return FG_TRUE;
+    }
+    return FG_FALSE;
 }
 //------------------------------------------------------------------------------
 

@@ -340,6 +340,20 @@ namespace fg {
         QuadDataVec const& getRotatingQuads(void) const {
             return m_rotatingQuads;
         }
+        /**
+         *
+         * @return
+         */
+        QuadDataVec& getOrphanQuads(void) {
+            return m_orphanQuads;
+        }
+        /**
+         * 
+         * @return
+         */
+        QuadDataVec const& getOrphanQuads(void) const {
+            return m_orphanQuads;
+        }
 
         //----------------------------------------------------------------------
     private:

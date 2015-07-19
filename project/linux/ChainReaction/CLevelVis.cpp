@@ -164,7 +164,16 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
     if(!m_pGrid || !original) {
         return NULL;
     }
+    if(!original->pCellHolder) {
+        FG_LOG_DEBUG("ChainReaction[CLevelVis]: Unable to move quad[%p] to new place[%dx%d]: cell holder is NULL - quad probably is not bound");
+        return NULL;
+    }
     if(!m_pGrid->isValidAddress(newX, newX)) {
+        FG_LOG_DEBUG("ChainReaction[CLevelVis]: Unable to move quad[%p@%dx%d] to new place[%dx%d]: address is not valid",
+                     original,
+                     original->pCellHolder->pos.x,
+                     original->pCellHolder->pos.y,
+                     newX, newY);
         return NULL;
     }
     // the quad moves to the new place
@@ -212,6 +221,7 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
         pNewPlace->isValid = FG_TRUE;
         pNewPlace->isDragged = FG_FALSE;
         pNewPlace->rotation = 0.0f;
+        pNewPlace->rotDir = SQuadData::STATIC;
         return pNewPlace; // return the quad pointer after move
     }
     // if there is nothing in the target location
@@ -235,6 +245,7 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
     original->isValid = FG_TRUE;
     original->isDragged = FG_FALSE;
     original->rotation = 0.0f;
+    original->rotDir = SQuadData::STATIC;
     original->show();
     original->activate();
     return original;
@@ -374,7 +385,8 @@ fgBool CLevelVis::restart(void) {
         //m_pSceneMgr->setShowGroundGrid(FG_TRUE); // TESTING
         m_pSceneMgr->setGroundLevel(0.0f);
         m_pSceneMgr->setGroundPlane(gfx::Planef::Z, 0.0f);
-
+        m_pSceneMgr->getSkyBox()->setScale(1250.0f);
+        m_pSceneMgr->setSkyBoxFollowsCamera(FG_FALSE);
         float zDistance = 250.0f; // this should change based on scale and size
 
         gfx::CCameraAnimation* pCamera = m_pSceneMgr->getCamera();
@@ -432,17 +444,17 @@ void CLevelVis::update(void) {
         // check neighbours for rule breaking (for now only by edge)
         SQuadData::QuadColor color = pQuadData->color;
         // has any neighbour (any color?)
-        fgBool hasNeighbours = FG_FALSE;
+        fgBool isOrphan = FG_TRUE;
         // left (should rewind?)
         pNeighbour = pQuadData->left();
         if(pNeighbour) {
-            hasNeighbours = FG_TRUE;
+            isOrphan = FG_FALSE;
             if(pNeighbour->color == color) {
                 // the color of the neighbour is the same
                 // need to select the rotation direction and add to special vec
                 pNeighbour->rotDir = SQuadData::LEFT;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
                 int index = m_rotatingQuads.find(pNeighbour);
                 if(index < 0) {
                     m_rotatingQuads.push_back(pNeighbour);
@@ -451,11 +463,11 @@ void CLevelVis::update(void) {
         }
         pNeighbour = pQuadData->right();
         if(pNeighbour) {
-            hasNeighbours = FG_TRUE;
+            isOrphan = FG_FALSE;
             if(pNeighbour->color == color) {
                 pNeighbour->rotDir = SQuadData::RIGHT;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
                 int index = m_rotatingQuads.find(pNeighbour);
                 if(index < 0) {
                     m_rotatingQuads.push_back(pNeighbour);
@@ -464,11 +476,11 @@ void CLevelVis::update(void) {
         }
         pNeighbour = pQuadData->up();
         if(pNeighbour) {
-            hasNeighbours = FG_TRUE;
+            isOrphan = FG_FALSE;
             if(pNeighbour->color == color) {
                 pNeighbour->rotDir = SQuadData::UP;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
                 int index = m_rotatingQuads.find(pNeighbour);
                 if(index < 0) {
                     m_rotatingQuads.push_back(pNeighbour);
@@ -477,19 +489,35 @@ void CLevelVis::update(void) {
         }
         pNeighbour = pQuadData->down();
         if(pNeighbour) {
-            hasNeighbours = FG_TRUE;
+            isOrphan = FG_FALSE;
             if(pNeighbour->color == color) {
                 pNeighbour->rotDir = SQuadData::DOWN;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale+0.05f, m_scale+0.05f, 1.5f);
+                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
                 int index = m_rotatingQuads.find(pNeighbour);
                 if(index < 0) {
                     m_rotatingQuads.push_back(pNeighbour);
                 }
             }
         }
+        pNeighbour = pQuadData->upLeft();
+        if(pNeighbour) {
+            isOrphan = FG_FALSE;
+        }
+        pNeighbour = pQuadData->upRight();
+        if(pNeighbour) {
+            isOrphan = FG_FALSE;
+        }
+        pNeighbour = pQuadData->downLeft();
+        if(pNeighbour) {
+            isOrphan = FG_FALSE;
+        }
+        pNeighbour = pQuadData->downRight();
+        if(pNeighbour) {
+            isOrphan = FG_FALSE;
+        }
 
-        if(!hasNeighbours) {
+        if(isOrphan) {
             // this finished quad is an orphan - will scale it down gradually
             // and then remove
             m_orphanQuads.push_back(pQuadData);
@@ -518,7 +546,7 @@ void CLevelVis::update(void) {
         float elapsed = timesys::elapsed(timesys::TICK_UPDATE);
         // the rotation speed in RADIANS/SECOND
         const float rotSpeed = 6.0f; // need to adjust externally
-        pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);        
+        pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);
         if(pQuadData->isRotationFinished()) {
             // rotation finished
             // need to move to the new position
@@ -526,8 +554,19 @@ void CLevelVis::update(void) {
             pQuadData->getCoveredNeighbourCoord(x, y);
             //int idxTest = m_finishedQuads.find(pQuadData->getCoveredNeighbourQuadData());
             SQuadData* pNewQuad = moveQuadToNewPlace(pQuadData, x, y);
-            // add the quad to finished vec
-            if(m_finishedQuads.find(pNewQuad) < 0) {
+            if(!pNewQuad) {
+                // adding new quad failed
+                if(m_finishedQuads.find(pQuadData) < 0) {
+                    // need to destroy this quad
+                    //if(pQuadData->pCellHolder) {
+                    //destroyQuad(pQuadData->pCellHolder->pos.x,
+                    //            pQuadData->pCellHolder->pos.y);
+                    //}
+                    m_orphanQuads.push_back(pQuadData);
+                }
+                
+            } else if(m_finishedQuads.find(pNewQuad) < 0) {
+                // add the quad to finished vec
                 m_finishedQuads.push_back(pNewQuad);
                 //printf("adding finished node: %p\n", pNewQuad);
             }
@@ -542,6 +581,7 @@ void CLevelVis::update(void) {
 
     // now check and animate orphans
     n = m_orphanQuads.size();
+    unsigned int nOrphansBefore = n;
     fgBool canDissolve = (fgBool)!!(m_rotatingQuads.empty() && m_finishedQuads.empty());
     for(unsigned int i = 0; i < n && canDissolve; i++) {
         SQuadData* pQuadData = m_orphanQuads[i];
@@ -560,7 +600,7 @@ void CLevelVis::update(void) {
         // elapsed is in seconds - 0.001f means one millisecond (0.01f - 10ms)
         float elapsed = timesys::elapsed(timesys::TICK_UPDATE);
         // the scale speed in UNITS/SECOND
-        const float scaleSpeed = m_scale*1.25f; // need to adjust externally
+        const float scaleSpeed = m_scale * 1.25f; // need to adjust externally
         //pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);        
         Vector3f scale = pQuadData->pSceneNode->getScale();
         scale.x -= scaleSpeed * elapsed;
@@ -577,6 +617,18 @@ void CLevelVis::update(void) {
             m_orphanQuads.resize(n);
         } else {
             pQuadData->pSceneNode->setScale(scale);
+        }
+    }
+    if(canDissolve && m_orphanQuads.empty()) {
+        //printf("NEXT SEARCH - checking for orphans - whole stage !! !! !!\n");
+        unsigned int nAllQuads = m_quadsData.size();
+        for(unsigned int i = 0; i < nAllQuads; i++) {
+            SQuadData* pQuadData = m_quadsData[i];
+            if(!pQuadData)
+                continue;
+            if(pQuadData->isOrphan() && !pQuadData->isDragged) {
+                m_orphanQuads.push_back(pQuadData);
+            }
         }
     }
     if(m_rotatingQuads.empty() && m_finishedQuads.empty() && m_orphanQuads.empty()) {

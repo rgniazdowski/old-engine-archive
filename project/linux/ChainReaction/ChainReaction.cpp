@@ -411,8 +411,13 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                     unsigned short x=0, y=0;
                     m_drag.pQuadData->getCoveredNeighbourCoord(x ,y);
                     SQuadData* pNewQuad = m_levelVis->moveQuadToNewPlace(m_drag.pQuadData, x, y);
-                    m_levelVis->setUserDisturbance(pNewQuad);
-                    m_levelVis->setChainReaction(); // now should animate
+                    if(!pNewQuad) {
+                        m_levelVis->getOrphanQuads().push_back(m_drag.pQuadData);
+                        m_levelVis->setChainReaction();
+                    } else {
+                        m_levelVis->setUserDisturbance(pNewQuad);
+                        m_levelVis->setChainReaction(); // now should animate
+                    }
                     m_drag.pNode = NULL;
                     m_drag.pQuadData = NULL;
                 } else {
@@ -508,8 +513,8 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 }
                 // some direction is determined
                 // now need to determine the difference
-                float angle = math::acos((scale - math::abs(lenDiff)) / scale);
-                float reverse = 1.0f;
+                //float angle = math::acos((scale - math::abs(lenDiff)) / scale);
+                //float reverse = 1.0f;
                 float rotationStep = 0.1f;
                 //if(m_drag.pQuadData->isOppositeRotation(propRotDir))
                     //reverse = -1.0f;
@@ -577,7 +582,8 @@ void CChainReaction::updateStep(void) {
     } else if(!isPickerDown) {
         if(m_drag.pNode) {
             float scale = m_levelVis->getScale();
-            m_drag.pNode->setScale(scale, scale, 1.0f);            
+            m_drag.pNode->setScale(scale, scale, 1.0f);
+            m_drag.pQuadData->isDragged = FG_FALSE;
         }
         m_levelVis->setDraggedNode(NULL);
         m_levelVis->setDraggedCoord(0, 0);

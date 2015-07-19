@@ -106,33 +106,64 @@ namespace fg {
 
         /**
          * Get the pointer to quad data of the LEFT neighbour if exists
+         * @param rewind
          * @return  Pointer to the valid quad data of the LEFT neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          */
-        SQuadData* left(void);
+        SQuadData* left(fgBool rewind = FG_FALSE);
         /**
          * Get the pointer to quad data of the RIGHT neighbour if exists
+         * @param rewind
          * @return  Pointer to the valid quad data of the RIGHT neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          */
-        SQuadData* right(void);
+        SQuadData* right(fgBool rewind = FG_FALSE);
         /**
          * Get the pointer to quad data of the UP neighbour
+         * @param rewind
          * @return  Pointer to the valid quad data of the UP neighbour. 
          *          NULL if there is no neighbour (the selected field is empty).
          *          The game grid coordinates for UP neighbour are reversed.
          *          Grid cell Y coordinate for UP neighbour is (this->Y - 1).
          *
          */
-        SQuadData* up(void);
+        SQuadData* up(fgBool rewind = FG_FALSE);
         /**
          * Get the pointer to quad data of the DOWN neighbour
+         * @param rewind
          * @return  Pointer to the valid quad data of the DOWN neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          *          The game grid coordinates for UP neighbour are reversed.
          *          Grid cell Y coordinate for DOWN neighbour is (this->Y + 1).
          */
-        SQuadData* down(void);
+        SQuadData* down(fgBool rewind = FG_FALSE);
+
+        //----------------------------------------------------------------------
+
+        /**
+         *
+         * @param rewind
+         * @return
+         */
+        SQuadData* upLeft(fgBool rewind = FG_FALSE);
+        /**
+         *
+         * @param rewind
+         * @return
+         */
+        SQuadData* upRight(fgBool rewind = FG_FALSE);
+        /**
+         *
+         * @param rewind
+         * @return
+         */
+        SQuadData* downLeft(fgBool rewind = FG_FALSE);
+        /**
+         *
+         * @param rewind
+         * @return
+         */
+        SQuadData* downRight(fgBool rewind = FG_FALSE);
 
         //----------------------------------------------------------------------
 
@@ -222,6 +253,16 @@ namespace fg {
          */
         void activate(fgBool shouldActivate = FG_TRUE);
 
+        /**
+         * 
+         * @return 
+         */
+        fgBool isOrphan(void);
+        /**
+         * 
+         * @return 
+         */
+        fgBool isBound(void) const;
         /**
          * Check if scene node associated with this quad/cell data is selected
          * @return  FG_TRUE if current scene node is selected (via pick selection)
