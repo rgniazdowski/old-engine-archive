@@ -424,6 +424,7 @@ fgBool SQuadData::isOrphan(void) {
     status = (status && this->upRight(rewind) == NULL);
     status = (status && this->downLeft(rewind) == NULL);
     status = (status && this->downRight(rewind) == NULL);
+    status = (status && this->isBound());
     return status;
 }
 //------------------------------------------------------------------------------
