@@ -87,9 +87,57 @@ namespace fg {
         /**
          * 
          */
-        void clear_optimised() {
+        void clear_optimised(void) {
             //std::vector<T, Alloc>::clear();
             this->clear();
+        }
+        /**
+         * 
+         * @param index
+         * @return
+         */
+        bool remove(typename base_type::size_type index) {
+            typename base_type::size_type n = this->size();
+            if(index >= n)
+                return false;
+            this->operator [](index) = this->operator [](n-1);
+            this->resize(n-1);
+            return true;
+        }
+        /**
+         * 
+         * @param index
+         * @param numElements
+         * @return 
+         */
+        bool remove(unsigned int& index, unsigned int& numElements) {
+            typename base_type::size_type n = this->size();
+            if(index >= n)
+                return false;
+            this->operator [](index) = this->operator [](n-1);
+            this->resize(n-1);
+            index = index - 1;
+            numElements = n - 1;
+            return true;
+        }
+        /**
+         *
+         * @param index
+         * @param numElements
+         * @return
+         */
+        bool remove(unsigned int* index, unsigned int* numElements) {
+            typename base_type::size_type n = this->size();
+            if(!index)
+                return false;
+            if(*index >= n)
+                return false;
+            this->operator [](*index) = this->operator [](n-1);
+            this->resize(n-1);
+            *index = *index - 1;
+            if(numElements)
+                *numElements = n - 1;
+            return true;
         }
         /**
          * 
@@ -115,13 +163,16 @@ namespace fg {
             this->clear();
             typename self_type::reverse_iterator b = rev.rbegin();
             typename self_type::reverse_iterator e = rev.rend();
-            for(; b != e; b++) {
-                //*this << (*b);
+            for(; b != e; b++) {                
                 this->push_back(*b);
             }
             rev.clear();
         }
-
+        /**
+         * 
+         * @param value
+         * @return
+         */
         typename base_type::const_iterator findItor(T const & value) const {
             for(typename base_type::const_iterator it = base_type::begin();
                     it != base_type::end();
@@ -132,6 +183,11 @@ namespace fg {
             }
             return base_type::end();
         }
+        /**
+         * 
+         * @param value
+         * @return
+         */
         typename base_type::iterator findItor(T const & value) {
             for(typename base_type::iterator it = base_type::begin();
                     it != base_type::end();
