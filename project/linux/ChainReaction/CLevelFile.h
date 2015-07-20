@@ -97,12 +97,40 @@ namespace fg {
                 pos.y = 0;
             }
             /**
+             * 
+             * @param x
+             * @param y
+             */
+            SQuadInfo(unsigned short x, unsigned short y) : color(QuadColor::EMPTY) {
+                pos.x = x;
+                pos.y = y;
+            }
+            /**
+             * 
+             * @param _x
+             * @param _y
+             * @param _color
+             */
+            SQuadInfo(unsigned short _x,
+                      unsigned short _y,
+                      QuadColor _color) :
+            color(_color) {
+                pos.x = _x;
+                pos.y = _y;
+            }
+            /**
              *
              */
             void zero(void) {
                 color = QuadColor::EMPTY;
                 pos.x = 0;
                 pos.y = 0;
+            }
+
+            inline bool operator==(const SQuadInfo& other) const {
+                return ((this->color == other.color) &&
+                        (this->pos.x == other.pos.x) &&
+                        (this->pos.y == other.pos.y));
             }
         };
 
@@ -206,7 +234,6 @@ namespace fg {
          * @param y
          */
         void getAreaMax(unsigned short* x = NULL, unsigned short* y = NULL);
-
         /**
          *
          * @return

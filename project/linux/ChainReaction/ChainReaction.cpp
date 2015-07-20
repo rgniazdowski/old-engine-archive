@@ -10,6 +10,7 @@
 
 #include "fgBuildConfig.h"
 #include "fgDebugConfig.h"
+#include "fgVector.h"
 #include "fgLog.h"
 
 #include "ChainReaction.h"
@@ -547,8 +548,8 @@ void CChainReaction::updateStep(void) {
     if(isPickerDown) {
 
     }
-    float zoomOut = 250.0f;
-    float zoomIn = 100.0f;
+    float zoomOut = 350.0f;
+    float zoomIn = 125.0f;
     m_drag.zoomProp = (zoomOut - zoomIn) / zoomOut;
     if(pPicked && isPickerDown && !m_drag.pNode && !m_levelVis->isChainReaction()) {
         m_drag.begin = m_pSceneMgr->getGroundIntersectionPoint(1);
@@ -599,11 +600,16 @@ void CChainReaction::updateStep(void) {
         //pCamera->setEye(Vec3f(intP1.x * 0.6f, intP1.y * 0.6f, 100.0f));
     }
     // this will animate the quads (if the chain reaction flag is set)
-    m_levelVis->update();
+    //m_levelVis->update();
 }
 //------------------------------------------------------------------------------
 
-void CChainReaction::preRenderStep(void) { }
+void CChainReaction::preRenderStep(void) {
+    if(!m_pSceneMgr) {
+        return;
+    }
+    m_levelVis->preRender();
+}
 //------------------------------------------------------------------------------
 
 void CChainReaction::renderStep(void) { }

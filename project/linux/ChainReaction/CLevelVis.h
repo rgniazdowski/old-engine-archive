@@ -130,7 +130,7 @@ namespace fg {
         /**
          * 
          */
-        void update(void);
+        void preRender(void);
 
         //----------------------------------------------------------------------
     public:
@@ -357,6 +357,14 @@ namespace fg {
 
         //----------------------------------------------------------------------
     private:
+        typedef CVector<CLevelFile::SQuadInfo> QuadInfoVec;
+        typedef QuadInfoVec::iterator QuadInfoVecItor;
+        typedef CLevelFile::SQuadInfo QuadInfo;
+
+        typedef CVector<Vector2i> DuplicateInfoVec;
+        typedef DuplicateInfoVec::iterator DuplicateInfoVecItor;
+        
+    private:
         /// Pointer to the main game grid 
         game::CGrid* m_pGrid;
         /// Pointer to the level file containing positions and colors of the quads
@@ -379,6 +387,12 @@ namespace fg {
         /// Stores all quads that are orphaned (have no neighbours)
         /// These are scaled down gradually (then removed)
         QuadDataVec m_orphanQuads;
+        /// Stores info on quads that need to be added later
+        QuadInfoVec m_additionalQuads;
+        /// Stores all quads that need to be animated as emerging (scaling up)
+        QuadDataVec m_emergeQuads;
+        ///
+        DuplicateInfoVec m_duplicates;
         /// Scale (size) of a single quad object
         float m_scale;
         /// Position on the game grid of the dragged (grabbed) quad (main action)
