@@ -354,6 +354,18 @@ namespace fg {
         QuadDataVec const& getOrphanQuads(void) const {
             return m_orphanQuads;
         }
+        /**
+         *
+         * @return
+         */
+        fgBool areAllReactionVectorsEmpty(void) const {
+            return (fgBool)(m_finishedQuads.empty() &&
+                    m_rotatingQuads.empty() &&
+                    m_orphanQuads.empty() &&
+                    m_additionalQuads.empty() &&
+                    m_emergeQuads.empty() &&
+                    m_duplicates.empty());
+        }
 
         //----------------------------------------------------------------------
     private:
@@ -363,7 +375,7 @@ namespace fg {
 
         typedef CVector<Vector2i> DuplicateInfoVec;
         typedef DuplicateInfoVec::iterator DuplicateInfoVecItor;
-        
+
     private:
         /// Pointer to the main game grid 
         game::CGrid* m_pGrid;
@@ -391,7 +403,7 @@ namespace fg {
         QuadInfoVec m_additionalQuads;
         /// Stores all quads that need to be animated as emerging (scaling up)
         QuadDataVec m_emergeQuads;
-        ///
+        /// Stores positions where more than one quad rotated into
         DuplicateInfoVec m_duplicates;
         /// Scale (size) of a single quad object
         float m_scale;
