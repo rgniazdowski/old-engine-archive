@@ -87,6 +87,7 @@ ${OBJECTDIR}/SQuadData.o: SQuadData.cpp
 
 # Subprojects
 .build-subprojects:
+	cd ../FlexiGame_NB && ${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_SDL2
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -95,6 +96,7 @@ ${OBJECTDIR}/SQuadData.o: SQuadData.cpp
 
 # Subprojects
 .clean-subprojects:
+	cd ../FlexiGame_NB && ${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_SDL2 clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

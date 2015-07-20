@@ -112,6 +112,18 @@
         <linkerTool>
           <commandLine>-rdynamic -Wl,--export-dynamic</commandLine>
         </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="../FlexiGame_NB"
+                        CT="1"
+                        CN="Debug_GLEW_SDL2"
+                        AC="true"
+                        BL="true"
+                        WD="../FlexiGame_NB"
+                        BC="${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_SDL2"
+                        CC="${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_SDL2 clean"
+                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb">
+          </makeArtifact>
+        </requiredProjects>
       </compileType>
       <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>

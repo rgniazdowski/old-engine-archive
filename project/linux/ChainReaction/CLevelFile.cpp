@@ -15,7 +15,6 @@
  */
 
 #include <climits>
-#include <limits.h>
 
 #include "CLevelFile.h"
 #include "GameLogic/fgGrid.h"
