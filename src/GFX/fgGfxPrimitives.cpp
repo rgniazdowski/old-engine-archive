@@ -100,6 +100,82 @@ const gfx::Vertex3v c_stripCube1x1[] = {
 };
 #endif
 
+#define a_f 0.5f
+#define h_f (0.5f * M_SQRT3F * 0.5f)
+
+// Hexagonal prism - H-1.0f, diameter-1.0f (long)
+// Triangle strip, need index table, CCW
+const gfx::Vertex3v c_stripHexagonalPrism1x1[] = {
+                                                  // Face data for face 0 // Front
+    {Vector3f(-a_f / 2.0f, -a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 1.0f)}, // v0
+    {Vector3f(a_f / 2.0f, -a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 1.0f)}, // v1
+    {Vector3f(-a_f / 2.0f, a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 0.0f)}, // v2
+    {Vector3f(a_f / 2.0f, a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 0.0f)}, // v3
+
+                                                  // Face data for face 1 // Front-right
+    {Vector3f(a_f / 2.0f, -a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 1.0f)}, // v4
+    {Vector3f(a_f, -a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 1.0f)}, // v5
+    {Vector3f(a_f / 2.0f, a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 0.0f)}, // v6
+    {Vector3f(a_f, a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 0.0f)}, // v7
+
+                                                  // Face data for face 2 // Back-right
+    {Vector3f(a_f, -a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 1.0f)}, // v8
+    {Vector3f(a_f / 2.0f, -a_f, -h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 1.0f)}, // v9
+    {Vector3f(a_f, a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 0.0f)}, // v10
+    {Vector3f(a_f / 2.0f, a_f, -h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 0.0f)}, // v11
+
+                                                  // Face data for face 3 // Back
+    {Vector3f(a_f / 2.0f, -a_f, -h_f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f)}, // v12
+    {Vector3f(-a_f / 2.0f, -a_f, -h_f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 1.0f)}, // v3
+    {Vector3f(a_f / 2.0f, a_f, -h_f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 0.0f)}, // v14
+    {Vector3f(-a_f / 2.0f, a_f, -h_f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 0.0f)}, // v15
+
+                                                  // Face data for face 4 // Back-left
+    {Vector3f(-a_f / 2.0f, -a_f, -h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 1.0f)}, // v16
+    {Vector3f(-a_f, -a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 1.0f)}, // v17
+    {Vector3f(-a_f / 2.0f, a_f, -h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 0.0f)}, // v18
+    {Vector3f(-a_f, a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 0.0f)}, //  v19
+
+                                                  // Face data for face 5 // Front-left
+    {Vector3f(-a_f, -a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 1.0f)}, //  v20
+    {Vector3f(-a_f / 2.0f, -a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 1.0f)}, //  v21
+    {Vector3f(-a_f, a_f, 0.0f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(0.0f, 0.0f)}, //  v22
+    {Vector3f(-a_f / 2.0f, a_f, h_f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f, 0.0f)}, //  v23
+
+                                                  // Face data for face 6 // Top hexagon // strip  {v1, v2, v0, v3, v5, v4}
+    {Vector3f(a_f / 2.0f, a_f, h_f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.75f, 1.0f)}, // v24/0
+    {Vector3f(a_f, a_f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f, 0.5f)}, // v25/1
+    {Vector3f(a_f / 2.0f, a_f, -h_f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.75f, 0.0f)}, // v26/2
+    {Vector3f(-a_f / 2.0f, a_f, -h_f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.25f, 0.0f)}, // v27/3
+    {Vector3f(-a_f, a_f, 0.0f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.0f, 0.5f)}, // v28/4
+    {Vector3f(-a_f / 2.0f, a_f, h_f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.25f, 1.0f)}, // v29/5
+
+                                                  // Face data for face 7 // Bottom hexagon
+    {Vector3f(-a_f / 2.0f, -a_f, h_f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.25f, 1.0f)}, //  v35/5/0
+    {Vector3f(-a_f, -a_f, 0.0f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.0f, 0.5f)}, //  v34/4/1
+    {Vector3f(-a_f / 2.0f, -a_f, -h_f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.25f, 0.0f)}, //  v33/3/2
+    {Vector3f(a_f / 2.0f, -a_f, -h_f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.75f, 0.0f)}, //  v32/2/3
+    {Vector3f(a_f, -a_f, 0.0f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f, 0.5f)}, //  v31/1/4
+    {Vector3f(a_f / 2.0f, -a_f, h_f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.75f, 1.0f)}, //  v30/0/5
+};
+
+#undef a_f
+#undef h_f
+
+const fgGFXushort c_stripHexagonalPrism1x1Idx[] = {
+                                                   0, 1, 2, 3, 3, // Face 0 strip(v0,v1,v2,v3)
+                                                   4, 4, 5, 6, 7, 7, // Face 1 strip(v4,v5,v6,v7)
+                                                   8, 8, 9, 10, 11, 11, // Face 2 strip(v8,v9,v10,v11)
+                                                   12, 12, 13, 14, 15, 15, // Face 3 strip(v12,v13,v14,v15)
+                                                   16, 16, 17, 18, 19, 19, // Face 4 strip(v16,v17,v18,v19)
+                                                   20, 20, 21, 22, 23, 23, // Face 5 strip(v20,v21,v22,v23)
+                                                   // Face 6 strip(v24,v25,v26,v27,v28,v29) - top hexagon
+                                                   25, 25, 26, 24, 27, 29, 28, 28,
+                                                   // Face 7 strip(v30,v31,v32,v33,v34,v35) - bottom hexagon
+                                                   31, 31, 32, 30, 33, 35, 34
+
+};
+
 const gfx::Vertex3v c_stripCube1x1[] = {
                                         // Vertex data for face 0 // Front?
     {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 1.0f)}, //  v0
@@ -126,25 +202,25 @@ const gfx::Vertex3v c_stripCube1x1[] = {
     {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(1.0f, 0.0f, 0.0f), Vector2f(1.0f, 0.0f)}, // v15
 
                                         // Vertex data for face 4 // Bottom?
-    {Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.0f, 1.0f)}, // v16
-    {Vector3f(0.5f, -0.5f, -0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f, 1.0f)}, // v17
-    {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.0f, 0.0f)}, // v18
-    {Vector3f(0.5f, -0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f, 0.0f)}, // v19
+    {Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.0f, 1.0f)}, // v16
+    {Vector3f(0.5f, -0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f, 1.0f)}, // v17
+    {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.0f, 0.0f)}, // v18
+    {Vector3f(0.5f, -0.5f, 0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f, 0.0f)}, // v19
 
                                         // Vertex data for face 5 // Top?
-    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.0f, 0.0f)}, // v20 
-    {Vector3f(0.5f, 0.5f, 0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f, 0.0f)}, // v21 
-    {Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(0.0f, 1.0f)}, // v22 
-    {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f, 1.0f)} // v23 
+    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.0f, 0.0f)}, // v20 
+    {Vector3f(0.5f, 0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f, 0.0f)}, // v21 
+    {Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(0.0f, 1.0f)}, // v22 
+    {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f, 1.0f)} // v23 
 };
 
 const fgGFXushort c_stripCube1x1Idx[] = {
-                                         0, 1, 2, 3, 3, // Face 0 - triangle strip ( v0,  v1,  v2,  v3)
-                                         4, 4, 5, 6, 7, 7, // Face 1 - triangle strip ( v4,  v5,  v6,  v7)
-                                         8, 8, 9, 10, 11, 11, // Face 2 - triangle strip ( v8,  v9, v10, v11)
-                                         12, 12, 13, 14, 15, 15, // Face 3 - triangle strip (v12, v13, v14, v15)
-                                         16, 16, 17, 18, 19, 19, // Face 4 - triangle strip (v16, v17, v18, v19)
-                                         20, 20, 21, 22, 23 // Face 5 - triangle strip (v20, v21, v22, v23)
+                                         0, 1, 2, 3, 3, // Face 0 - strip (v0,v1,v2,v3)
+                                         4, 4, 5, 6, 7, 7, // Face 1 - strip (v4,v5,v6,v7)
+                                         8, 8, 9, 10, 11, 11, // Face 2 - strip (v8,v9,v10,v11)
+                                         12, 12, 13, 14, 15, 15, // Face 3 - strip (v12,v13,v14,v15)
+                                         16, 16, 17, 18, 19, 19, // Face 4 - triangle strip (v16,v17,v18,v19)
+                                         20, 20, 21, 22, 23 // Face 5 - triangle strip (v20,v21,v22,v23)
 };
 //------------------------------------------------------------------------------
 
@@ -203,10 +279,10 @@ const gfx::Vertex3v c_stripSquare1x1[] = {
     {Vector3f(0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, -1.f), Vector2f(1.f, 1.f)},
     {Vector3f(-0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, -1.f), Vector2f(0.f, 1.f)},
 
-    //{Vector3f(-0.5f, -0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 1.0f)}, //  v0
-    //{Vector3f(-0.5f, 0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 0.0f)}, //  v2
-    //{Vector3f(0.5f, -0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f)}, //  v1
-    //{Vector3f(0.5f, 0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 0.0f)} //  v3
+                                          //{Vector3f(-0.5f, -0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 1.0f)}, //  v0
+                                          //{Vector3f(-0.5f, 0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(0.0f, 0.0f)}, //  v2
+                                          //{Vector3f(0.5f, -0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f)}, //  v1
+                                          //{Vector3f(0.5f, 0.5f, 0.0f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 0.0f)} //  v3
 };
 
 /*
@@ -309,6 +385,44 @@ void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
 }
 //------------------------------------------------------------------------------
 
+void gfx::primitives::createHexagonalPrismMesh(fg::gfx::SMeshBase *mesh,
+                                               float scale, fgBool shouldPreRotate,
+                                               float angle, const Vec3f& axis) {
+    if(!mesh)
+        return;
+    if(scale < 0.0f) {
+        scale = math::abs(scale);
+    }
+    if(scale <= FG_EPSILON) {
+        scale = 1.0f;
+    }
+
+    mesh->clear();
+    int n = sizeof (c_stripHexagonalPrism1x1) / sizeof (c_stripHexagonalPrism1x1[0]);
+    mesh->reserve(n);
+    Matrix4f meshMat = math::rotate(Matrix4f(), angle, axis);
+    for(int i = 0; i < n; i++) {
+        Vector3f position = c_stripHexagonalPrism1x1[i].position;
+        if(shouldPreRotate) {
+            Vector4f position4f = Vector4f(position, 0.0f);
+            position4f = meshMat * position4f;
+            position.x = position4f.x;
+            position.y = position4f.y;
+            position.z = position4f.z;
+        }
+        mesh->append(position*scale,
+                     c_stripHexagonalPrism1x1[i].normal,
+                     c_stripHexagonalPrism1x1[i].uv);
+    }
+    n = sizeof (c_stripHexagonalPrism1x1Idx) / sizeof (c_stripHexagonalPrism1x1Idx[0]);
+    for(int i = 0; i < n; i++) {
+        mesh->appendIndice(c_stripHexagonalPrism1x1Idx[i]);
+    }
+    mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+}
+
+//------------------------------------------------------------------------------
+
 void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
                                      float scale) {
     if(!mesh) {
@@ -338,7 +452,7 @@ void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* mesh,
-                    float scale) {
+                                     float scale) {
     if(!mesh) {
         return;
     }
@@ -349,7 +463,7 @@ void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* mesh,
         scale = 1.0f;
     }
     mesh->clear();
-    int n = sizeof(c_stripSquare1x1) / sizeof(c_stripSquare1x1[0]);
+    int n = sizeof (c_stripSquare1x1) / sizeof (c_stripSquare1x1[0]);
     mesh->reserve(n);
     for(int i = 0; i < n; i++) {
         mesh->append(c_stripSquare1x1[i].position*scale,

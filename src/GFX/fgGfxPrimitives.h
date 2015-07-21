@@ -44,7 +44,7 @@ namespace fg {
          */
         namespace primitives {
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -73,8 +73,18 @@ namespace fg {
              * @param mesh
              * @param scale
              */
+            void createHexagonalPrismMesh(fg::gfx::SMeshBase *mesh, float scale = 1.0f,
+                                          fgBool shouldPreRotate = FG_FALSE,
+                                          float angle = 0.0f,
+                                          const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
+
+            /**
+             * 
+             * @param mesh
+             * @param scale
+             */
             void createCubeMesh(SMeshBase *mesh, float scale = 1.0f);
-            
+
             /**
              * 
              * @param mesh
@@ -87,7 +97,7 @@ namespace fg {
                                        const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
                                        const PrimitiveMode mode = PrimitiveMode::TRIANGLES);*/
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             void drawSkyBoxOptimized(void);
 
@@ -102,7 +112,7 @@ namespace fg {
 
             void drawRect2D(void);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 

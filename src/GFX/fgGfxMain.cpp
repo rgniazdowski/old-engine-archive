@@ -303,6 +303,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         // ERROR
         return;
     }
+
     /// Will now create built in model shapes
     SMeshAoS *builtin_cube_mesh = new SMeshAoS();
     SShape *builtin_cube_shape = new SShape();
@@ -364,6 +365,27 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         delete quadModel;
     }
     static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");
+    //---------------------------------------------
+
+    SMeshAoS *builtin_hex_prism_mesh = new SMeshAoS();
+    SShape *builtin_hex_prism_shape = new SShape();
+    primitives::createHexagonalPrismMesh(builtin_hex_prism_mesh, 1.0f, FG_TRUE,
+                                         M_PIF/2.0f, Vec3f(1.0f, 0.0f, 0.0f));
+    CModel *hexPrismModel = new CModelResource();
+    hexPrismModel->setModelType(ModelType::MODEL_BUILTIN);
+    hexPrismModel->setName("builtinHexagonalPrism");
+    builtin_hex_prism_shape->name = "builtinHexagonalPrism";
+    builtin_hex_prism_shape->mesh = builtin_hex_prism_mesh;
+    builtin_hex_prism_shape->material = new SMaterial();
+    builtin_hex_prism_shape->material->diffuseTexName = "empty.tga";
+    builtin_hex_prism_shape->material->shaderName = "sPlainEasy";
+    hexPrismModel->addShape(builtin_hex_prism_shape);
+    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
+    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(hexPrismModel)) {
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(hexPrismModel);
+        delete hexPrismModel;
+    }
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinHexagonalPrism");
 }
 
 ////////////////////////////////////////////////////////////////////////////////

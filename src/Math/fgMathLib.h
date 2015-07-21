@@ -43,11 +43,19 @@
     #endif
 
     #ifndef M_PI
-        #define M_PI 3.14159265358979323846
+        #define M_PI        3.14159265358979323846 /* PI (double) */
     #endif
 
     #ifndef M_PIF
-        #define M_PIF 3.14159265358979323846f
+        #define M_PIF       3.14159265358979323846f /* PI (float) */
+    #endif
+
+    #ifndef M_SQRT3F
+        #define M_SQRT3F    1.73205080756887729352f /* sqrt(3)(float) */
+    #endif
+
+    #ifndef M_SQRT3
+        #define M_SQRT3    1.73205080756887729352 /* sqrt(3)(double) */
     #endif
 
     #ifndef FG_DEG2RAD
