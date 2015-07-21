@@ -255,7 +255,7 @@ namespace fg {
             ///
             float zoomProp;
             ///
-            SQuadData* pQuadData;
+            SQuadData* pBlockData;
             ///
             gfx::CSceneNode* pNode;
             /**

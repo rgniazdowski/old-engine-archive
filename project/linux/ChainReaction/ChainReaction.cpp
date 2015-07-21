@@ -384,9 +384,9 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
     if(released) {
         // reset the rotation - deactivate the drag flag for the node
         fgBool doReset = FG_TRUE;
-        if(m_drag.pNode && m_drag.pQuadData) {
+        if(m_drag.pNode && m_drag.pBlockData) {
 
-            switch(m_drag.pQuadData->rotDir) {
+            switch(m_drag.pBlockData->rotDir) {
                 case SQuadData::LEFT:
                     translationAxis.x = -QUAD_HALF_SIZE;
                     rotationAxis.y = -1.0f;
@@ -408,29 +408,29 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
             }            
             if(doReset) {
                 // need to check for finished rotation
-                if(m_drag.pQuadData->isRotationFinished()) {
+                if(m_drag.pBlockData->isRotationFinished()) {
                     unsigned short x=0, y=0;
-                    m_drag.pQuadData->getCoveredNeighbourCoord(x ,y);
-                    SQuadData* pNewQuad = m_levelVis->moveQuadToNewPlace(m_drag.pQuadData, x, y);
-                    if(!pNewQuad) {
-                        m_levelVis->getOrphanQuads().push_back(m_drag.pQuadData);
+                    m_drag.pBlockData->getCoveredNeighbourCoord(x ,y);
+                    SBlockData* pNewBlock = m_levelVis->moveBlockToNewPlace(m_drag.pBlockData, x, y);
+                    if(!pNewBlock) {
+                        m_levelVis->getOrphanBlocks().push_back(m_drag.pBlockData);
                         m_levelVis->setChainReaction();
                         m_levelVis->setStepOn(FG_TRUE);
                     } else {
-                        m_levelVis->setUserDisturbance(pNewQuad);
+                        m_levelVis->setUserDisturbance(pNewBlock);
                         m_levelVis->setChainReaction(); // now should animate
                         m_levelVis->setStepOn(FG_TRUE);
                     }
                     m_drag.pNode = NULL;
-                    m_drag.pQuadData = NULL;
+                    m_drag.pBlockData = NULL;
                 } else {
-                    float rotation = m_drag.pQuadData->rotation;
+                    float rotation = m_drag.pBlockData->rotation;
                     m_drag.pNode->translateMatrix(translationAxis);
                     m_drag.pNode->rotate(-rotation, rotationAxis);
                     m_drag.pNode->translateMatrix(-1.0f * translationAxis);
-                    m_drag.pQuadData->rotation = 0.0f;
-                    m_drag.pQuadData->isDragged = FG_FALSE;
-                    m_drag.pQuadData->rotDir = SQuadData::STATIC;
+                    m_drag.pBlockData->rotation = 0.0f;
+                    m_drag.pBlockData->isDragged = FG_FALSE;
+                    m_drag.pBlockData->rotDir = SQuadData::STATIC;
                 }                
             }
         }
@@ -441,7 +441,7 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
         return;
     }
 
-    if(m_drag.pNode && m_drag.pQuadData) {
+    if(m_drag.pNode && m_drag.pBlockData) {
         // now can rotate based on m_drag difference and length
         float scale = m_levelVis->getScale();
         Vec3f nodePos = m_drag.pNode->getPosition3f();
@@ -453,7 +453,7 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
         }
         // mouse/touch is hovering over the dragged node
         // need to detect drag direction and rotate accordingly
-        if(m_drag.pQuadData->rotDir == SQuadData::STATIC || 1) {
+        if(m_drag.pBlockData->rotDir == SQuadData::STATIC || 1) {
             // no current rotation - detect
             Vec3f posDiff = m_drag.current - nodePos;
             float lenDiff = 0.0f;
@@ -488,15 +488,15 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 dirStr = "DOWN\0";
             }
 
-            curRotDir = m_drag.pQuadData->rotDir;
+            curRotDir = m_drag.pBlockData->rotDir;
             if(curRotDir == SQuadData::STATIC) {
-                m_drag.pQuadData->rotDir = propRotDir;
+                m_drag.pBlockData->rotDir = propRotDir;
                 curRotDir = propRotDir;
             }
             if(propRotDir != SQuadData::STATIC &&
-               (propRotDir == curRotDir || m_drag.pQuadData->isOppositeRotation(propRotDir))) {
+               (propRotDir == curRotDir || m_drag.pBlockData->isOppositeRotation(propRotDir))) {
                 float rSteps = 1.0f;
-                switch(m_drag.pQuadData->rotDir) {
+                switch(m_drag.pBlockData->rotDir) {
                     case SQuadData::LEFT:
                         lenDiff = m_drag.current.x - (nodePos.x + scale / 2.0f);
                         rSteps = (float)math::abs(steps.x) * 2.3f;
@@ -521,7 +521,7 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 float rotationStep = 0.1f;
                 //if(m_drag.pQuadData->isOppositeRotation(propRotDir))
                     //reverse = -1.0f;
-                m_drag.pQuadData->rotate(propRotDir, rotationStep * rSteps);
+                m_drag.pBlockData->rotate(propRotDir, rotationStep * rSteps);
                 //m_drag.pNode->translateMatrix(reverse * translationAxis);
                 //m_drag.pNode->rotate(m_drag.pQuadData->rotation * -1.0f, rotationAxis);
                 //m_drag.pNode->rotate(angle, rotationAxis);
@@ -565,9 +565,9 @@ void CChainReaction::updateStep(void) {
         std::sscanf(nameStr, "cr_node_%dx%d", &x, &y);
         void *pCellData = m_grid->getCellData((unsigned short)x, (unsigned short)y);
         if(pCellData) {
-            m_drag.pQuadData = (SQuadData *)pCellData;
-            m_drag.quadCoord.x = m_drag.pQuadData->pCellHolder->pos.x;
-            m_drag.quadCoord.y = m_drag.pQuadData->pCellHolder->pos.y;
+            m_drag.pBlockData = (SQuadData *)pCellData;
+            m_drag.quadCoord.x = m_drag.pBlockData->pCellHolder->pos.x;
+            m_drag.quadCoord.y = m_drag.pBlockData->pCellHolder->pos.y;
             m_levelVis->setDraggedNode(m_drag.pNode);
             m_levelVis->setDraggedCoord(m_drag.quadCoord);
             // mouse / touch handler manages the rotation
@@ -580,13 +580,13 @@ void CChainReaction::updateStep(void) {
             float scale = m_levelVis->getScale();
             m_drag.pNode->setScale(scale+0.05f, scale+0.05f, 1.5f);
         } else {
-            m_drag.pQuadData = NULL;
+            m_drag.pBlockData = NULL;
         }
     } else if(!isPickerDown) {
         if(m_drag.pNode) {
             float scale = m_levelVis->getScale();
             m_drag.pNode->setScale(scale, scale, 1.0f);
-            m_drag.pQuadData->isDragged = FG_FALSE;
+            m_drag.pBlockData->isDragged = FG_FALSE;
         }
         m_levelVis->setDraggedNode(NULL);
         m_levelVis->setDraggedCoord(0, 0);
@@ -669,7 +669,7 @@ length(0.0f),
 quadCoord(),
 isValid(FG_FALSE),
 zoomProp(1.0f),
-pQuadData(NULL),
+pBlockData(NULL),
 pNode(NULL) { }
 //------------------------------------------------------------------------------
 
@@ -686,7 +686,7 @@ void CChainReaction::SDragging::invalidate(void) {
     quadCoord = Vec2i();
     isValid = FG_FALSE;
     zoomProp = 1.0f;
-    pQuadData = NULL;
+    pBlockData = NULL;
     pNode = NULL;
 }
 //------------------------------------------------------------------------------

@@ -7,6 +7,8 @@
       <itemPath>CLevelFile.h</itemPath>
       <itemPath>CLevelVis.h</itemPath>
       <itemPath>ChainReaction.h</itemPath>
+      <itemPath>SBlockData.h</itemPath>
+      <itemPath>SHexData.h</itemPath>
       <itemPath>SQuadData.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -19,6 +21,8 @@
       <itemPath>CLevelFile.cpp</itemPath>
       <itemPath>CLevelVis.cpp</itemPath>
       <itemPath>ChainReaction.cpp</itemPath>
+      <itemPath>SBlockData.cpp</itemPath>
+      <itemPath>SHexData.cpp</itemPath>
       <itemPath>SQuadData.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -137,6 +141,14 @@
       </item>
       <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SBlockData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SBlockData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SHexData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SHexData.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SQuadData.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
@@ -229,6 +241,14 @@
       <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SBlockData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SBlockData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SHexData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SHexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SQuadData.cpp" ex="false" tool="1" flavor2="0">
       </item>

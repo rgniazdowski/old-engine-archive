@@ -46,6 +46,9 @@ namespace fg {
         typedef CVector<SQuadData*> QuadDataVec;
         typedef QuadDataVec::iterator QuadDataVecItor;
 
+        typedef CVector<SBlockData*> BlockDataVec;
+        typedef BlockDataVec::iterator BlockDataVecItor;
+
     public:
         /**
          *
@@ -78,7 +81,7 @@ namespace fg {
          */
         SQuadData* insertNewQuad(unsigned short x,
                                  unsigned short y,
-                                 SQuadData::QuadColor color);
+                                 SQuadData::VColor color);
 
         /**
          *
@@ -86,7 +89,7 @@ namespace fg {
          * @param y
          * @return
          */
-        int destroyQuad(unsigned short x, unsigned short y);
+        int destroyBlock(unsigned short x, unsigned short y);
 
         /**
          * This function will move the selected quad to the new position
@@ -96,9 +99,9 @@ namespace fg {
          * @param newY
          * @return
          */
-        SQuadData* moveQuadToNewPlace(SQuadData* original,
-                                      unsigned short newX,
-                                      unsigned short newY);
+        SBlockData* moveBlockToNewPlace(SBlockData* original,
+                                        unsigned short newX,
+                                        unsigned short newY);
 
         /**
          * Creates the new scene node with proper size, scale, position and material.
@@ -110,7 +113,7 @@ namespace fg {
          */
         gfx::CSceneNode* prepareSceneNode(unsigned short x,
                                           unsigned short y,
-                                          SQuadData::QuadColor color);
+                                          SQuadData::VColor color);
         /**
          *
          */
@@ -140,14 +143,14 @@ namespace fg {
          * @param y
          * @return
          */
-        SQuadData* getQuadData(unsigned short x, unsigned short y);
+        SQuadData* getBlockData(unsigned short x, unsigned short y);
         /**
          *
          * @param x
          * @param y
          * @return
          */
-        int getQuadDataIndex(unsigned short x, unsigned short y);
+        int getBlockDataIndex(unsigned short x, unsigned short y);
         /**
          *
          * @param pLvlFile
@@ -204,6 +207,25 @@ namespace fg {
          */
         float getScale(void) const {
             return m_scale;
+        }
+        /**
+         * 
+         * @param speed
+         */
+        void setSpeed(float speed) {
+            if(speed < 0.0f)
+                speed = 1.0f;
+            if(speed > 10.0f)
+                speed = 10.0f;
+            m_speed = speed;
+        }
+        /**
+         *
+         * @param x
+         * @param y
+         */
+        float getSpeed(void) const {
+            return m_speed;
         }
 
         /**
@@ -297,7 +319,7 @@ namespace fg {
          *
          * @param pQuadData
          */
-        void setUserDisturbance(SQuadData* pQuadData);
+        void setUserDisturbance(SBlockData* pBlockData);
         /**
          *
          * @param toggle
@@ -346,54 +368,54 @@ namespace fg {
          *
          * @return
          */
-        QuadDataVec& getFinishedQuads(void) {
-            return m_finishedQuads;
+        BlockDataVec& getFinishedBlocks(void) {
+            return m_finishedBlocks;
         }
         /**
          *
          * @return
          */
-        QuadDataVec const& getFinishedQuads(void) const {
-            return m_finishedQuads;
+        BlockDataVec const& getFinishedBlocks(void) const {
+            return m_finishedBlocks;
         }
         /**
          *
          * @return
          */
-        QuadDataVec& getRotatingQuads(void) {
-            return m_rotatingQuads;
+        BlockDataVec& getRotatingBlocks(void) {
+            return m_rotatingBlocks;
         }
         /**
          * 
          * @return
          */
-        QuadDataVec const& getRotatingQuads(void) const {
-            return m_rotatingQuads;
+        BlockDataVec const& getRotatingBlocks(void) const {
+            return m_rotatingBlocks;
         }
         /**
          *
          * @return
          */
-        QuadDataVec& getOrphanQuads(void) {
-            return m_orphanQuads;
+        BlockDataVec& getOrphanBlocks(void) {
+            return m_orphanBlocks;
         }
         /**
          * 
          * @return
          */
-        QuadDataVec const& getOrphanQuads(void) const {
-            return m_orphanQuads;
+        BlockDataVec const& getOrphanBlocks(void) const {
+            return m_orphanBlocks;
         }
         /**
          *
          * @return
          */
         fgBool areAllReactionVectorsEmpty(void) const {
-            return (fgBool)(m_finishedQuads.empty() &&
-                    m_rotatingQuads.empty() &&
-                    m_orphanQuads.empty() &&
-                    m_additionalQuads.empty() &&
-                    m_emergeQuads.empty() &&
+            return (fgBool)(m_finishedBlocks.empty() &&
+                    m_rotatingBlocks.empty() &&
+                    m_orphanBlocks.empty() &&
+                    m_additionalBlocks.empty() &&
+                    m_emergeBlocks.empty() &&
                     m_duplicates.empty());
         }
 
@@ -405,12 +427,12 @@ namespace fg {
 
         typedef CVector<Vector2i> DuplicateInfoVec;
         typedef DuplicateInfoVec::iterator DuplicateInfoVecItor;
-        
+
         /**
          *
          */
         struct SCoverInfo {
-            typedef SQuadData::QuadColor QuadColor;
+            typedef SQuadData::VColor QuadColor;
             typedef SQuadData::RotationDirection RotationDirection;
 
             /// X grid coordinate
@@ -523,22 +545,24 @@ namespace fg {
         QuadDataVec m_quadsData;
         /// Stores all quads that finished rotating (cover any neighbour)
         /// Need to check if those quads cause any rule breaking (disturbance)
-        QuadDataVec m_finishedQuads;
+        BlockDataVec m_finishedBlocks;
         /// Stores all quads that are currently being rotated
-        QuadDataVec m_rotatingQuads;
+        BlockDataVec m_rotatingBlocks;
         /// Stores all quads that are orphaned (have no neighbours)
         /// These are scaled down gradually (then removed)
-        QuadDataVec m_orphanQuads;
+        BlockDataVec m_orphanBlocks;
         /// Stores info on quads that need to be added later
-        QuadInfoVec m_additionalQuads;
+        QuadInfoVec m_additionalBlocks;
         /// Stores all quads that need to be animated as emerging (scaling up)
-        QuadDataVec m_emergeQuads;
+        BlockDataVec m_emergeBlocks;
         /// Stores positions where more than one quad rotated into
         DuplicateInfoVec m_duplicates;
         /// Stores positions and other info (like color & direction) of covered quads
-        CoverInfoVec m_coveredQuads;
+        CoverInfoVec m_coveredBlocks;
         /// Scale (size) of a single quad object
         float m_scale;
+        /// Animation speed (1.0f - 100%/normal)
+        float m_speed;
         /// Position on the game grid of the dragged (grabbed) quad (main action)
         Vector2i m_draggedCoord;
         /// Special flag - if TRUE the chain reaction begun and quads are rotating

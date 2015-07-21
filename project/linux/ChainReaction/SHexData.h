@@ -8,68 +8,67 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 /* 
- * File:   SQuadData.h
+ * File:   SHexData.h
  * Author: vigilant
  *
- * Created on July 16, 2015, 11:28 AM
+ * Created on July 21, 2015, 9:28 AM
  */
 
-#ifndef FG_INC_QUAD_DATA
-    #define FG_INC_QUAD_DATA
-    #define FG_INC_QUAD_DATA_BLOCK
-    
+#ifndef FG_INC_HEX_DATA
+    #define FG_INC_HEX_DATA
+    #define FG_INC_HEX_DATA_BLOCK
+
     #include "SBlockData.h"
 
 namespace fg {
 
     /**
-     * 
+     *
      */
-    struct SQuadData : public SBlockData {
-        typedef SQuadData self_type;
-        typedef SQuadData type;
+    struct SHexData : public SBlockData {
+        typedef SHexData self_type;
+        typedef SHexData type;
         typedef SBlockData base_type;
-        constexpr static const float QUAD_HALF_SIZE = 0.5f;
-        
+        constexpr static const float HEX_HALF_SIZE = 0.5f;
+
         /**
          *
          */
-        SQuadData();
-        
+        SHexData();
         /**
-         *
+         * 
          */
-        virtual ~SQuadData();
+        virtual ~SHexData();
 
         //----------------------------------------------------------------------
 
         /**
-         * Get the pointer to quad data of the LEFT neighbour if exists
+         * Get the pointer to hexagon data of the LEFT neighbour if exists
          * @param rewind
-         * @return  Pointer to the valid quad data of the LEFT neighbour.
+         * @return  Pointer to the valid hexagon data of the LEFT neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          */
         virtual SBlockData* left(fgBool rewind = FG_FALSE);
         /**
-         * Get the pointer to quad data of the RIGHT neighbour if exists
+         * Get the pointer to hexagon data of the RIGHT neighbour if exists
          * @param rewind
-         * @return  Pointer to the valid quad data of the RIGHT neighbour.
+         * @return  Pointer to the valid hexagon data of the RIGHT neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          */
         virtual SBlockData* right(fgBool rewind = FG_FALSE);
         /**
-         * Get the pointer to quad data of the UP neighbour
+         * Get the pointer to hexagon data of the UP neighbour
          * @param rewind
-         * @return  Pointer to the valid quad data of the UP neighbour. 
+         * @return  Pointer to the valid hexagon data of the UP neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          *          The game grid coordinates for UP neighbour are reversed.
          *          Grid cell Y coordinate for UP neighbour is (this->Y - 1).
          */
         virtual SBlockData* up(fgBool rewind = FG_FALSE);
         /**
-         * Get the pointer to quad data of the DOWN neighbour
+         * Get the pointer to hexagon data of the DOWN neighbour
          * @param rewind
-         * @return  Pointer to the valid quad data of the DOWN neighbour.
+         * @return  Pointer to the valid hexagon data of the DOWN neighbour.
          *          NULL if there is no neighbour (the selected field is empty).
          *          The game grid coordinates for UP neighbour are reversed.
          *          Grid cell Y coordinate for DOWN neighbour is (this->Y + 1).
@@ -121,7 +120,7 @@ namespace fg {
          * @param y Coordinate Y in game::CGrid
          */
         virtual void getCoveredNeighbourCoord(unsigned short& x, unsigned short& y);
-        
+
         /**
          * Get the CellHolder structure for the covered(overlay) neighbour
          * @return  Pointer to valid cell holder data of covered neighbour cell -
@@ -130,23 +129,23 @@ namespace fg {
         virtual game::CGrid::SCellHolder* getCoveredNeighbourCellHolder(void);
 
         /**
-         * 
+         *
          * @param direction
          * @return
          */
         virtual fgBool isRotationValid(RotationDirection direction) const;
 
         /**
-         * 
+         *
          * @return
          */
-        SQuadData* getCoveredNeighbourQuadData(void);
-        
+        SHexData* getCoveredNeighbourHexData(void);
+
         //----------------------------------------------------------------------
 
-    }; // struct SQuadData
+    }; // struct SHexData
 
 } // namespace fg
 
-    #undef FG_INC_QUAD_DATA_BLOCK
-#endif	/* FG_INC_QUAD_DATA */
+    #undef FG_INC_HEX_DATA_BLOCK
+#endif	/* FG_INC_HEX_DATA */

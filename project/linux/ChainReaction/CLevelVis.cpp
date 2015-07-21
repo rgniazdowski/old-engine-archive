@@ -33,14 +33,15 @@ m_pDraggedNode(NULL),
 m_pMaterialBlack(NULL),
 m_pMaterialWhite(NULL),
 m_quadsData(),
-m_finishedQuads(),
-m_rotatingQuads(),
-m_orphanQuads(),
-m_additionalQuads(),
-m_emergeQuads(),
+m_finishedBlocks(),
+m_rotatingBlocks(),
+m_orphanBlocks(),
+m_additionalBlocks(),
+m_emergeBlocks(),
 m_duplicates(),
-m_coveredQuads(),
+m_coveredBlocks(),
 m_scale(1.0f),
+m_speed(1.0f),
 m_draggedCoord(),
 m_isChainReaction(FG_FALSE),
 m_isStepping(FG_FALSE),
@@ -62,13 +63,13 @@ m_isStepOn(FG_FALSE) {
         }
     }
     // Should level visualization have access to SceneManager?
-    m_finishedQuads.reserve(8);
-    m_rotatingQuads.reserve(8);
-    m_orphanQuads.reserve(8);
-    m_additionalQuads.reserve(8);
-    m_emergeQuads.reserve(8);
+    m_finishedBlocks.reserve(8);
+    m_rotatingBlocks.reserve(8);
+    m_orphanBlocks.reserve(8);
+    m_additionalBlocks.reserve(8);
+    m_emergeBlocks.reserve(8);
     m_duplicates.reserve(8);
-    m_coveredQuads.reserve(8);
+    m_coveredBlocks.reserve(8);
 }
 //------------------------------------------------------------------------------
 
@@ -91,14 +92,14 @@ CLevelVis::~CLevelVis() {
 
 SQuadData* CLevelVis::insertNewQuad(unsigned short x,
                                     unsigned short y,
-                                    SQuadData::QuadColor color) {
+                                    SQuadData::VColor color) {
     if(!m_pGrid) {
         return NULL;
     }
     if(!m_pGrid->isValidAddress(x, y)) {
         return NULL;
     }
-    int index = destroyQuad(x, y); // this destroy any original in that place
+    int index = destroyBlock(x, y); // this destroy any original in that place
     gfx::CSceneNode* pRootNode = m_pSceneMgr->getActiveRootNode();
     // now need to insert new quad in that place
     // allocate new quad data
@@ -134,7 +135,7 @@ SQuadData* CLevelVis::insertNewQuad(unsigned short x,
 }
 //------------------------------------------------------------------------------
 
-int CLevelVis::destroyQuad(unsigned short x, unsigned short y) {
+int CLevelVis::destroyBlock(unsigned short x, unsigned short y) {
     if(!m_pGrid) {
         return -1;
     }
@@ -143,7 +144,7 @@ int CLevelVis::destroyQuad(unsigned short x, unsigned short y) {
     }
     SQuadData* pQuadData = NULL;
     // need also to find SQuadData that already resides on this address
-    int index = getQuadDataIndex(x, y);
+    int index = getBlockDataIndex(x, y);
     if(index != -1) {
         unsigned int nQuads = m_quadsData.size();
         // there already is a quad data in that place
@@ -169,9 +170,9 @@ int CLevelVis::destroyQuad(unsigned short x, unsigned short y) {
 }
 //------------------------------------------------------------------------------
 
-SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
-                                         unsigned short newX,
-                                         unsigned short newY) {
+SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
+                                           unsigned short newX,
+                                           unsigned short newY) {
     if(!m_pGrid || !original) {
         return NULL;
     }
@@ -197,7 +198,7 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
         return original; // nothing to do
     }
     // determine if there is something in that place
-    SQuadData* pNewPlace = getQuadData(newX, newY);
+    SQuadData* pNewPlace = getBlockData(newX, newY);
     if(pNewPlace == original) {
         return original; // nothing to do
     }
@@ -227,7 +228,7 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
         }
         // now need to remove the original
         // this will also destroy the original scene node and unbind
-        destroyQuad(original->pCellHolder->pos.x, original->pCellHolder->pos.y);
+        destroyBlock(original->pCellHolder->pos.x, original->pCellHolder->pos.y);
         original = NULL;
         pNewPlace->isValid = FG_TRUE;
         pNewPlace->isDragged = FG_FALSE;
@@ -266,7 +267,7 @@ SQuadData* CLevelVis::moveQuadToNewPlace(SQuadData* original,
 
 gfx::CSceneNode* CLevelVis::prepareSceneNode(unsigned short x,
                                              unsigned short y,
-                                             SQuadData::QuadColor color) {
+                                             SBlockData::VColor color) {
     if(!m_pLevelFile) {
         return NULL;
     }
@@ -361,7 +362,7 @@ fgBool CLevelVis::prepareQuads(void) {
     for(unsigned int i = 0; i < n; i++) {
         insertNewQuad(quads[i].pos.x,
                       quads[i].pos.y,
-                      (SQuadData::QuadColor)quads[i].color);
+                      (SQuadData::VColor)quads[i].color);
     }
     m_pSceneMgr->refreshGfxInternals();
     return FG_TRUE;
@@ -417,13 +418,13 @@ void CLevelVis::clear(void) {
     setChainReaction(FG_FALSE);
     setStepping(FG_FALSE);
     setStepOn(FG_FALSE);
-    m_rotatingQuads.clear();
-    m_finishedQuads.clear();
-    m_orphanQuads.clear();
-    m_additionalQuads.clear();
-    m_emergeQuads.clear();
+    m_rotatingBlocks.clear();
+    m_finishedBlocks.clear();
+    m_orphanBlocks.clear();
+    m_additionalBlocks.clear();
+    m_emergeBlocks.clear();
     m_duplicates.clear();
-    m_coveredQuads.clear();
+    m_coveredBlocks.clear();
     unsigned int n = m_quadsData.size();
     for(unsigned int i = 0; i < n; i++) {
         SQuadData* pQuadData = m_quadsData[i];
@@ -459,19 +460,26 @@ void CLevelVis::preRender(void) {
         return;
     }
     // elapsed is in seconds - 0.001f means one millisecond (0.01f - 10ms)
-    const float elapsed = timesys::elapsed(timesys::TICK_PRERENDER);
-    SQuadData* pNeighbour = NULL;
+    const float elapsed = timesys::elapsed(timesys::TICK_PRERENDER) * m_speed;
+    // the rotation speed in RADIANS/SECOND
+    const float rotSpeed = M_PIF * 2.01f; // need to adjust externally
+    // the scale speed in UNITS/SECOND
+    const float scaleSpeed = m_scale * 0.75f; // need to adjust externally
+    // the scale speed in UNITS/SECOND
+    const float scaleUpSpeed = m_scale * 0.75f; // need to adjust externally
+    
+    SBlockData* pNeighbour = NULL;
     fgBool canStep = (fgBool)((isStepOn() && isStepping()) || !isStepping());
     // checking the finished quads - adding quads to chain reaction
-    while(!m_finishedQuads.empty() && canStep) {
-        SQuadData* pQuadData = m_finishedQuads.back();
-        m_finishedQuads.pop_back();
-        if(!pQuadData)
+    while(!m_finishedBlocks.empty() && canStep) {
+        SBlockData* pBlockData = m_finishedBlocks.back();
+        m_finishedBlocks.pop_back();
+        if(!pBlockData)
             continue;
         // check neighbours for rule breaking (for now only by edge)
-        SQuadData::QuadColor color = pQuadData->color;
+        SQuadData::VColor color = pBlockData->color;
         // left (should rewind?)
-        pNeighbour = pQuadData->left();
+        pNeighbour = pBlockData->left();
         if(pNeighbour) {
             if(pNeighbour->color == color) {
                 // the color of the neighbour is the same
@@ -479,99 +487,97 @@ void CLevelVis::preRender(void) {
                 pNeighbour->rotDir = SQuadData::LEFT;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
                 pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingQuads.find(pNeighbour);
+                int index = m_rotatingBlocks.find(pNeighbour);
                 if(index < 0) {
-                    m_rotatingQuads.push_back(pNeighbour);
+                    m_rotatingBlocks.push_back(pNeighbour);
                 }
             }
         }
-        pNeighbour = pQuadData->right();
+        pNeighbour = pBlockData->right();
         if(pNeighbour) {
             if(pNeighbour->color == color) {
                 pNeighbour->rotDir = SQuadData::RIGHT;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
                 pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingQuads.find(pNeighbour);
+                int index = m_rotatingBlocks.find(pNeighbour);
                 if(index < 0) {
-                    m_rotatingQuads.push_back(pNeighbour);
+                    m_rotatingBlocks.push_back(pNeighbour);
                 }
             }
         }
-        pNeighbour = pQuadData->up();
+        pNeighbour = pBlockData->up();
         if(pNeighbour) {
             if(pNeighbour->color == color) {
                 pNeighbour->rotDir = SQuadData::UP;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
                 pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingQuads.find(pNeighbour);
+                int index = m_rotatingBlocks.find(pNeighbour);
                 if(index < 0) {
-                    m_rotatingQuads.push_back(pNeighbour);
+                    m_rotatingBlocks.push_back(pNeighbour);
                 }
             }
         }
-        pNeighbour = pQuadData->down();
+        pNeighbour = pBlockData->down();
         if(pNeighbour) {
             if(pNeighbour->color == color) {
                 pNeighbour->rotDir = SQuadData::DOWN;
                 pNeighbour->rotate(SQuadData::AUTO, 0.001f);
                 pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingQuads.find(pNeighbour);
+                int index = m_rotatingBlocks.find(pNeighbour);
                 if(index < 0) {
-                    m_rotatingQuads.push_back(pNeighbour);
+                    m_rotatingBlocks.push_back(pNeighbour);
                 }
             }
         }
     }
     pNeighbour = NULL;
     // now check and animate rotating quads
-    unsigned int n = m_rotatingQuads.size();
+    unsigned int n = m_rotatingBlocks.size();
     //--------------------------------------------------------------------------
     // Rotating quads - rotate and add to finished vec
     for(unsigned int i = 0; i < n; i++) {
-        SQuadData* pQuadData = m_rotatingQuads[i];
-        if(!pQuadData) {
+        SBlockData* pBlockData = m_rotatingBlocks[i];
+        if(!pBlockData) {
             // This should not occur - however for safety...
             // if the NULL entry would not be removed
             // the chain reaction would not end automatically:
             // the flag will remain TRUE
-            m_rotatingQuads.remove(i, n); // notice that 'i' and 'n' will update
+            m_rotatingBlocks.remove(i, n); // notice that 'i' and 'n' will update
             continue;
         }
-        // the rotation speed in RADIANS/SECOND
-        const float rotSpeed = 8.0f; // need to adjust externally
-        pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);
-        if(pQuadData->isRotationFinished()) {
+        pBlockData->rotate(SQuadData::AUTO, rotSpeed * elapsed);
+        if(pBlockData->isRotationFinished()) {
             // rotation finished
             // need to move to the new position
-            SQuadData::RotationDirection rotDir = pQuadData->rotDir;
+            SBlockData::RotationDirection rotDir = pBlockData->rotDir;
             unsigned short x = 0, y = 0;
-            pQuadData->getCoveredNeighbourCoord(x, y);
-            int idxTest = m_finishedQuads.find(pQuadData->getCoveredNeighbourQuadData());
+            pBlockData->getCoveredNeighbourCoord(x, y);
+            int idxTest = m_finishedBlocks.find(pBlockData->getCoveredNeighbourBlockData());
             {
-                SQuadData* pNewQuad = moveQuadToNewPlace(pQuadData, x, y);
-                if(!pNewQuad) {
+                SBlockData* pNewBlock = moveBlockToNewPlace(pBlockData, x, y);
+                if(!pNewBlock) {
                     // adding new quad failed
-                    if(m_finishedQuads.find(pQuadData) < 0) {
+                    if(m_finishedBlocks.find(pBlockData) < 0) {
                         // need to destroy this quad - gradually
-                        if(m_orphanQuads.find(pQuadData) < 0) {
-                            m_orphanQuads.push_back(pQuadData);
+                        if(m_orphanBlocks.find(pBlockData) < 0) {
+                            m_orphanBlocks.push_back(pBlockData);
                             FG_LOG_DEBUG("ChainReaction: Unable to move: Adding Orphan[%p]@[%dx%d]",
-                                         pQuadData,
-                                         pQuadData->pCellHolder->pos.x,
-                                         pQuadData->pCellHolder->pos.y);
+                                         pBlockData,
+                                         pBlockData->pCellHolder->pos.x,
+                                         pBlockData->pCellHolder->pos.y);
                         }
                     }
                 } else {
-                    if(m_finishedQuads.find(pNewQuad) < 0) {
+                    if(m_finishedBlocks.find(pNewBlock) < 0) {
                         // add the quad to finished vec
-                        m_finishedQuads.push_back(pNewQuad);
+                        m_finishedBlocks.push_back(pNewBlock);
                     }
                     SCoverInfo coverInfo;
                     coverInfo.x = x;
                     coverInfo.y = y;
-                    coverInfo.color = pNewQuad->color;
+                    coverInfo.color = pNewBlock->color;
                     coverInfo.direction = rotDir;
-                    m_coveredQuads.push_back(coverInfo);
+                    m_coveredBlocks.push_back(coverInfo);
                 }
             }
             if(idxTest >= 0) {
@@ -587,11 +593,11 @@ void CLevelVis::preRender(void) {
                 // Well this is some kind of special case -
                 // maybe can create some kind of chain reaction
                 // add additional blocks ?
-                unsigned int nCovered = m_coveredQuads.size();
+                unsigned int nCovered = m_coveredBlocks.size();
                 for(unsigned int k = 0; k < nCovered; k++) {
-                    SCoverInfo& coverInfo = m_coveredQuads[k];
+                    SCoverInfo& coverInfo = m_coveredBlocks[k];
                     if(!coverInfo.isValid()) {
-                        m_coveredQuads.remove(k, nCovered);
+                        m_coveredBlocks.remove(k, nCovered);
                         continue;
                     }
                     if(coverInfo.x == x && coverInfo.y == y) {
@@ -599,72 +605,70 @@ void CLevelVis::preRender(void) {
                         QuadInfo qInfo = QuadInfo(x - 1, y, qColor);
                         // found proper cover
                         if(coverInfo.direction == SQuadData::LEFT)
-                            if(m_additionalQuads.find(qInfo) < 0)
-                                m_additionalQuads.push_back(qInfo); // left
+                            if(m_additionalBlocks.find(qInfo) < 0)
+                                m_additionalBlocks.push_back(qInfo); // left
                         qInfo = QuadInfo(x + 1, y, qColor);
                         if(coverInfo.direction == SQuadData::RIGHT)
-                            if(m_additionalQuads.find(qInfo) < 0)
-                                m_additionalQuads.push_back(qInfo); // right
+                            if(m_additionalBlocks.find(qInfo) < 0)
+                                m_additionalBlocks.push_back(qInfo); // right
                         qInfo = QuadInfo(x, y - 1, qColor);
                         if(coverInfo.direction == SQuadData::UP)
-                            if(m_additionalQuads.find(qInfo) < 0)
-                                m_additionalQuads.push_back(qInfo); // up
+                            if(m_additionalBlocks.find(qInfo) < 0)
+                                m_additionalBlocks.push_back(qInfo); // up
                         qInfo = QuadInfo(x, y + 1, qColor);
                         if(coverInfo.direction == SQuadData::DOWN)
-                            if(m_additionalQuads.find(qInfo) < 0)
-                                m_additionalQuads.push_back(qInfo); // down
+                            if(m_additionalBlocks.find(qInfo) < 0)
+                                m_additionalBlocks.push_back(qInfo); // down
 
-                        m_coveredQuads.remove(k, nCovered);
+                        m_coveredBlocks.remove(k, nCovered);
                     }
                 }
             }
             // remove the quad from rotation vec
-            m_rotatingQuads.remove(i, n); // 'i' and 'n' will update            
+            m_rotatingBlocks.remove(i, n); // 'i' and 'n' will update
         } // isRotationFinished()
     }
     //--------------------------------------------------------------------------
     // Check and animate orphans (scaling down and removal)
-    n = m_orphanQuads.size();
+    n = m_orphanBlocks.size();
     //unsigned int nOrphansBefore = n;
-    fgBool canDissolve = (fgBool)!!(m_rotatingQuads.empty() && m_finishedQuads.empty());
+    fgBool canDissolve = (fgBool)!!(m_rotatingBlocks.empty() && m_finishedBlocks.empty());
     for(unsigned int i = 0; i < n && canDissolve; i++) {
-        SQuadData* pQuadData = m_orphanQuads[i];
-        if(!pQuadData) {
+        SBlockData* pBlockData = m_orphanBlocks[i];
+        if(!pBlockData) {
             // This should not occur - however for safety...
             // if the NULL entry would not be removed
             // the chain reaction would not end automatically:
             // the flag will remain TRUE            
-            m_orphanQuads.remove(i, n); // 'i' and 'n' will update
+            m_orphanBlocks.remove(i, n); // 'i' and 'n' will update
             continue;
         }
-        // the scale speed in UNITS/SECOND
-        const float scaleSpeed = m_scale * 1.25f; // need to adjust externally
         //pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);        
-        Vector3f scale = pQuadData->pSceneNode->getScale();
+        Vector3f scale = pBlockData->pSceneNode->getScale();
         scale.x -= scaleSpeed * elapsed;
         scale.y -= scaleSpeed * elapsed;
         if(scale.x < 0.0f || scale.y < 0.0f) {
-            this->destroyQuad(pQuadData->pCellHolder->pos.x,
-                              pQuadData->pCellHolder->pos.y);
+            this->destroyBlock(pBlockData->pCellHolder->pos.x,
+                               pBlockData->pCellHolder->pos.y);
             // remove the quad from orphan vec | func will decrease 'i' and 'n'
-            m_orphanQuads.remove(i, n);
+            m_orphanBlocks.remove(i, n);
         } else {
-            pQuadData->pSceneNode->setScale(scale);
+            pBlockData->pSceneNode->setScale(scale);
         }
     }
     //--------------------------------------------------------------------------
     // Checking for additional quads (insertion)
-    if(canDissolve && m_orphanQuads.empty()) {
-        unsigned int nAdditional = m_additionalQuads.size();
+    if(canDissolve && m_orphanBlocks.empty()) {
+        unsigned int nAdditional = m_additionalBlocks.size();
         unsigned int nConflicts = 0;
         for(unsigned int i = 0; i < nAdditional; i++) {
-            unsigned short x = m_additionalQuads[i].pos.x;
-            unsigned short y = m_additionalQuads[i].pos.y;
+            unsigned short x = m_additionalBlocks[i].pos.x;
+            unsigned short y = m_additionalBlocks[i].pos.y;
             // need to check whether or not this position is empty            
-            SQuadData* pQuadData = getQuadData(x, y);
+            SQuadData* pQuadData = getBlockData(x, y);
             if(pQuadData) {
                 nConflicts++;
-                m_orphanQuads.push_back(pQuadData);
+                m_orphanBlocks.push_back(pQuadData);
                 FG_LOG_DEBUG("ChainReaction: Conflict: Adding Orphan[%p]@[%dx%d]",
                              pQuadData,
                              pQuadData->pCellHolder->pos.x,
@@ -672,9 +676,9 @@ void CLevelVis::preRender(void) {
             }
         }
         for(unsigned int i = 0; i < nAdditional && !nConflicts; i++) {
-            unsigned short x = m_additionalQuads[i].pos.x;
-            unsigned short y = m_additionalQuads[i].pos.y;
-            SQuadData::QuadColor color = (SQuadData::QuadColor)m_additionalQuads[i].color;
+            unsigned short x = m_additionalBlocks[i].pos.x;
+            unsigned short y = m_additionalBlocks[i].pos.y;
+            SQuadData::VColor color = (SQuadData::VColor)m_additionalBlocks[i].color;
             // reverse the color
             if(color == SQuadData::WHITE) {
                 color = SQuadData::BLACK;
@@ -684,26 +688,22 @@ void CLevelVis::preRender(void) {
             SQuadData* pQuadData = insertNewQuad(x, y, color);
             if(pQuadData) {
                 pQuadData->pSceneNode->setScale(0.001f, 0.001f, 1.0f);
-                m_emergeQuads.push_back(pQuadData);
+                m_emergeBlocks.push_back(pQuadData);
             }
         }
         if(!nConflicts) {
-            m_additionalQuads.clear();
+            m_additionalBlocks.clear();
         }
-        if(m_orphanQuads.empty() && !m_emergeQuads.empty()) {
-            unsigned int nEmerge = m_emergeQuads.size();
+        if(m_orphanBlocks.empty() && !m_emergeBlocks.empty()) {
+            unsigned int nEmerge = m_emergeBlocks.size();
             for(unsigned int i = 0; i < nEmerge; i++) {
-                SQuadData* pQuadData = m_emergeQuads[i];
-                if(!pQuadData) {
+                SBlockData* pBlockData = m_emergeBlocks[i];
+                if(!pBlockData) {
                     // remove from emerge
-                    m_emergeQuads.remove(i, nEmerge); // 'i' and 'nEmerge' -> -1
+                    m_emergeBlocks.remove(i, nEmerge); // 'i' and 'nEmerge' -> -1
                     continue;
                 }
-                // elapsed is in seconds - 0.001f means one millisecond (0.01f - 10ms)
-                const float elapsed = timesys::elapsed(timesys::TICK_PRERENDER);
-                // the scale speed in UNITS/SECOND
-                const float scaleUpSpeed = m_scale * 1.50f; // need to adjust externally
-                Vector3f scale = pQuadData->pSceneNode->getScale();
+                Vector3f scale = pBlockData->pSceneNode->getScale();
                 scale.x += scaleUpSpeed * elapsed;
                 scale.y += scaleUpSpeed * elapsed;
                 if(scale.x > m_scale || scale.y > m_scale) {
@@ -712,20 +712,20 @@ void CLevelVis::preRender(void) {
                     scale.z = 1.0f;
                     // remove from emerge | this function will also decrease
                     // the index 'i' and 'nEmerge'
-                    m_emergeQuads.remove(i, nEmerge);
+                    m_emergeBlocks.remove(i, nEmerge);
                     // add to finished
-                    m_finishedQuads.push_back(pQuadData);
+                    m_finishedBlocks.push_back(pBlockData);
                 }
-                pQuadData->pSceneNode->setScale(scale);
+                pBlockData->pSceneNode->setScale(scale);
             }
         }
-        if(m_orphanQuads.empty() && m_emergeQuads.empty()) {
+        if(m_orphanBlocks.empty() && m_emergeBlocks.empty()) {
             unsigned int nDups = m_duplicates.size();
             for(unsigned int i = 0; i < nDups; i++) {
                 Vector2i& pos = m_duplicates[i];
-                SQuadData* pQuadData = getQuadData(pos.x, pos.y);
-                if(m_finishedQuads.find(pQuadData) < 0 && pQuadData)
-                    m_finishedQuads.push_back(pQuadData);
+                SQuadData* pQuadData = getBlockData(pos.x, pos.y);
+                if(m_finishedBlocks.find(pQuadData) < 0 && pQuadData)
+                    m_finishedBlocks.push_back(pQuadData);
             }
             m_duplicates.clear();
         }
@@ -740,7 +740,7 @@ void CLevelVis::preRender(void) {
             if(!pQuadData)
                 continue;
             if(pQuadData->isOrphan() && !pQuadData->isDragged) {
-                m_orphanQuads.push_back(pQuadData);
+                m_orphanBlocks.push_back(pQuadData);
                 FG_LOG_DEBUG("ChainReaction: Stage wide: Adding Orphan[%p]@[%dx%d]",
                              pQuadData,
                              pQuadData->pCellHolder->pos.x,
@@ -751,13 +751,13 @@ void CLevelVis::preRender(void) {
     // End the chain reaction
     if(areAllReactionVectorsEmpty()) {
         setChainReaction(FG_FALSE);
-        m_coveredQuads.clear();
+        m_coveredBlocks.clear();
     }
     setStepOn(FG_FALSE);
 }
 //------------------------------------------------------------------------------
 
-SQuadData* CLevelVis::getQuadData(unsigned short x, unsigned short y) {
+SQuadData* CLevelVis::getBlockData(unsigned short x, unsigned short y) {
     if(m_pGrid) {
         void *cellData = m_pGrid->getCellData(x, y);
         if(!cellData) {
@@ -786,7 +786,7 @@ SQuadData* CLevelVis::getQuadData(unsigned short x, unsigned short y) {
 }
 //------------------------------------------------------------------------------
 
-int CLevelVis::getQuadDataIndex(unsigned short x, unsigned short y) {
+int CLevelVis::getBlockDataIndex(unsigned short x, unsigned short y) {
     unsigned int n = m_quadsData.size();
     for(unsigned int i = 0; i < n; i++) {
         SQuadData *pQuadData = m_quadsData[i];
@@ -826,9 +826,9 @@ void CLevelVis::getSize(unsigned short* x, unsigned short* y) {
 }
 //------------------------------------------------------------------------------
 
-void CLevelVis::setUserDisturbance(SQuadData* pQuadData) {
+void CLevelVis::setUserDisturbance(SBlockData* pBlockData) {
     if(!isChainReaction()) {
-        m_finishedQuads.push_back(pQuadData);
+        m_finishedBlocks.push_back(pBlockData);
         setChainReaction();
     }
 }
