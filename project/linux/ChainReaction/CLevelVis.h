@@ -313,6 +313,36 @@ namespace fg {
             return m_isChainReaction;
         }
         /**
+         * 
+         * @param toggle
+         */
+        void setStepping(fgBool toggle = FG_TRUE) {
+            m_isStepping = toggle;
+            if(!toggle)
+                m_isStepOn = FG_FALSE;
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isStepping(void) const {
+            return m_isStepping;
+        }
+        /**
+         *
+         * @param toggle
+         */
+        void setStepOn(fgBool toggle = FG_TRUE) {
+            m_isStepOn = toggle;
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isStepOn(void) const {
+            return m_isStepOn;
+        }
+        /**
          *
          * @return
          */
@@ -375,6 +405,106 @@ namespace fg {
 
         typedef CVector<Vector2i> DuplicateInfoVec;
         typedef DuplicateInfoVec::iterator DuplicateInfoVecItor;
+        
+        /**
+         *
+         */
+        struct SCoverInfo {
+            typedef SQuadData::QuadColor QuadColor;
+            typedef SQuadData::RotationDirection RotationDirection;
+
+            /// X grid coordinate
+            unsigned short x;
+            /// Y grid coordinate
+            unsigned short y;
+            /// by which color this position was covered
+            QuadColor color;
+            /// the covering quad was rotating in this direction
+            RotationDirection direction;
+            /**
+             *
+             */
+            SCoverInfo() : x(0), y(0),
+            color(QuadColor::EMPTY), direction(RotationDirection::STATIC) { }
+            /**
+             *
+             * @param _x
+             * @param _y
+             */
+            SCoverInfo(unsigned short _x, unsigned short _y) : x(_x), y(_y),
+            color(QuadColor::EMPTY), direction(RotationDirection::STATIC) { }
+            /**
+             *
+             * @param _x
+             * @param _y
+             * @param _color
+             */
+            SCoverInfo(unsigned short _x,
+                       unsigned short _y,
+                       QuadColor _color) : x(_x), y(_y), color(_color),
+            direction(RotationDirection::STATIC) { }
+            /**
+             *
+             * @param _x
+             * @param _y
+             * @param _color
+             * @param _direction
+             */
+            SCoverInfo(unsigned short _x,
+                       unsigned short _y,
+                       QuadColor _color,
+                       RotationDirection _direction) : x(_x), y(_y), color(_color),
+            direction(_direction) { }
+            /**
+             *
+             */
+            virtual ~SCoverInfo() {
+                zero();
+            }
+            /**
+             *
+             */
+            void zero(void) {
+                x = 0;
+                y = 0;
+                color = QuadColor::EMPTY;
+                direction = RotationDirection::STATIC;
+            }
+            /**
+             * 
+             */
+            inline void clear(void) {
+                zero();
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgBool isValid(void) const {
+                if(color == QuadColor::EMPTY)
+                    return FG_FALSE;
+                if(direction == RotationDirection::STATIC ||
+                        direction == RotationDirection::OPPOSITE ||
+                        direction == RotationDirection::AUTO)
+                    return FG_FALSE;
+
+                return FG_TRUE;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            inline bool operator ==(const SCoverInfo& other) const {
+                bool result = (this->x == other.x);
+                result = (result && this->y == other.y);
+                result = (result && this->color == other.color);
+                return (result && this->direction == other.direction);
+            }
+        }; // struct SCoverInfo
+
+        typedef CVector<SCoverInfo> CoverInfoVec;
+        typedef CoverInfoVec::iterator CoverInfoVecItor;
 
     private:
         /// Pointer to the main game grid 
@@ -405,12 +535,18 @@ namespace fg {
         QuadDataVec m_emergeQuads;
         /// Stores positions where more than one quad rotated into
         DuplicateInfoVec m_duplicates;
+        /// Stores positions and other info (like color & direction) of covered quads
+        CoverInfoVec m_coveredQuads;
         /// Scale (size) of a single quad object
         float m_scale;
         /// Position on the game grid of the dragged (grabbed) quad (main action)
         Vector2i m_draggedCoord;
         /// Special flag - if TRUE the chain reaction begun and quads are rotating
         fgBool m_isChainReaction;
+        /// Special flag - chain reaction will perform one rotation per step
+        fgBool m_isStepping;
+        /// Should perform one step now? - this will be set to false automatically
+        fgBool m_isStepOn;
     }; // class CLevelVis
 
 } // namespace fg

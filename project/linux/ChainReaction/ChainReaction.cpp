@@ -415,9 +415,11 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                     if(!pNewQuad) {
                         m_levelVis->getOrphanQuads().push_back(m_drag.pQuadData);
                         m_levelVis->setChainReaction();
+                        m_levelVis->setStepOn(FG_TRUE);
                     } else {
                         m_levelVis->setUserDisturbance(pNewQuad);
                         m_levelVis->setChainReaction(); // now should animate
+                        m_levelVis->setStepOn(FG_TRUE);
                     }
                     m_drag.pNode = NULL;
                     m_drag.pQuadData = NULL;
@@ -598,9 +600,7 @@ void CChainReaction::updateStep(void) {
         //Vec3f intP1 = m_pSceneMgr->getGroundIntersectionPoint(1);
         //pCamera->setCenter(intP1 * 0.6f);
         //pCamera->setEye(Vec3f(intP1.x * 0.6f, intP1.y * 0.6f, 100.0f));
-    }
-    // this will animate the quads (if the chain reaction flag is set)
-    //m_levelVis->update();
+    }        
 }
 //------------------------------------------------------------------------------
 
@@ -608,6 +608,7 @@ void CChainReaction::preRenderStep(void) {
     if(!m_pSceneMgr) {
         return;
     }
+    // this will animate the quads (if the chain reaction flag is set)
     m_levelVis->preRender();
 }
 //------------------------------------------------------------------------------

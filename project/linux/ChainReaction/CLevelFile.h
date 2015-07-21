@@ -55,12 +55,25 @@ namespace fg {
          *
          */
         struct SSize {
+            ///
             unsigned short x;
+            ///
             unsigned short y;
+            /**
+             *
+             * @param _x
+             * @param _y
+             */
             SSize(unsigned short _x = 0, unsigned short _y = 0) : x(_x), y(_y) { }
+            /**
+             *
+             */
             virtual ~SSize() {
                 zero();
             }
+            /**
+             *
+             */
             void zero(void) {
                 x = 0;
                 y = 0;
@@ -126,8 +139,12 @@ namespace fg {
                 pos.x = 0;
                 pos.y = 0;
             }
-
-            inline bool operator==(const SQuadInfo& other) const {
+            /**
+             *
+             * @param other
+             * @return
+             */
+            inline bool operator ==(const SQuadInfo& other) const {
                 return ((this->color == other.color) &&
                         (this->pos.x == other.pos.x) &&
                         (this->pos.y == other.pos.y));
