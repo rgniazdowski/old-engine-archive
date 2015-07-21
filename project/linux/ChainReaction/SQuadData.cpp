@@ -204,20 +204,17 @@ void SQuadData::rotate(RotationDirection direction, float amount) {
 }
 //------------------------------------------------------------------------------
 
-void SQuadData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
+void SQuadData::getCoveringCoord(RotationDirection direction, 
+                                 unsigned short x,
+                                 unsigned short y, 
+                                 unsigned short& newX, 
+                                 unsigned short& newY) {
+    if(direction == STATIC || direction == AUTO || direction == OPPOSITE) {
+        return;
+    }
     // this function always returns something - even if the rotation is not complete
-    if(rotDir == STATIC || rotDir == AUTO || rotDir == OPPOSITE) {
-        // those are not valid directions
-        return;
-    }
-    if(!pCellHolder) {
-        // no cell holder pointer available - no way to determine the neighbour
-        return;
-    }
-    unsigned short _x, _y;
-    _x = pCellHolder->pos.x;
-    _y = pCellHolder->pos.y;
-    switch(rotDir) {
+    unsigned short _x = x, _y = y;
+    switch(direction) {
         case LEFT:
             _x--;
             break;
@@ -232,8 +229,17 @@ void SQuadData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
             _y++;
             break;
     }
-    x = _x;
-    y = _y;
+    newX = _x;
+    newY = _y;
+}
+//------------------------------------------------------------------------------
+
+void SQuadData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {    
+    if(!pCellHolder) {
+        // no cell holder pointer available - no way to determine the neighbour
+        return;
+    }    
+    getCoveringCoord(rotDir, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
 }
 //------------------------------------------------------------------------------
 
@@ -279,7 +285,7 @@ game::CGrid::SCellHolder* SQuadData::getCoveredNeighbourCellHolder(void) {
 
 fgBool SQuadData::isRotationValid(RotationDirection direction) const {
     if(direction == AUTO || direction == OPPOSITE)
-        return FG_FALSE;
+        return FG_FALSE;    
     // These are not valid rotation directions for quad
     if(direction == UP_LEFT || direction == UP_RIGHT)
         return FG_FALSE;

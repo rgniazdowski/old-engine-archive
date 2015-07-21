@@ -238,6 +238,17 @@ fgBool SBlockData::isOppositeRotation(RotationDirection direction) const {
        (this->rotDir == DOWN && direction == UP)) {
         return FG_TRUE;
     }
+    
+    if((this->rotDir == UP_RIGHT && direction == DOWN_LEFT) ||
+       (this->rotDir == DOWN_LEFT && direction == UP_RIGHT)) {
+        return FG_TRUE;
+    }
+    
+    if((this->rotDir == UP_LEFT && direction == DOWN_RIGHT) ||
+       (this->rotDir == DOWN_RIGHT && direction == UP_LEFT)) {
+        return FG_TRUE;
+    }
+
     return FG_FALSE;
 }
 //------------------------------------------------------------------------------
@@ -265,6 +276,18 @@ SBlockData::RotationDirection SBlockData::getOppositeRotation(RotationDirection 
             break;
         case DOWN:
             result = UP;
+            break;
+        case UP_LEFT:
+            result = DOWN_RIGHT;
+            break;
+        case UP_RIGHT:
+            result = DOWN_LEFT;
+            break;
+        case DOWN_LEFT:
+            result = UP_RIGHT;
+            break;
+        case DOWN_RIGHT:
+            result = UP_LEFT;
             break;
     };
 

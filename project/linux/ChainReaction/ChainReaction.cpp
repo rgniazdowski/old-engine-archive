@@ -103,6 +103,7 @@ m_touchCallback(NULL),
 m_mouseCallback(NULL),
 m_materialBlack(NULL),
 m_materialWhite(NULL),
+m_materialGray(NULL),
 m_drag() {
     this->setEngineMain(pEngineMain);
     m_managerType = FG_MANAGER_CHAIN_REACTION;
@@ -161,6 +162,10 @@ fgBool CChainReaction::destroy(void) {
         delete m_materialWhite;
         m_materialWhite = NULL;
     }
+    if(m_materialGray) {
+        delete m_materialGray;
+        m_materialGray = NULL;
+    }
     m_pEngineMain = NULL;
     m_pGfxMain = NULL;
     m_pGameMain = NULL;
@@ -188,10 +193,13 @@ fgBool CChainReaction::initialize(void) {
         delete m_materialWhite;
     if(m_materialBlack)
         delete m_materialBlack;
+    if(m_materialGray)
+        delete m_materialGray;
     m_materialWhite = new gfx::SMaterial();
     m_materialBlack = new gfx::SMaterial();
+    m_materialGray = new gfx::SMaterial();
 
-    m_materialBlack->diffuseTexName = "qWhite.jpg"; // qBlack.jpg ?
+    m_materialBlack->diffuseTexName = "hexWhite.jpg"; // qBlack.jpg ?
     m_materialBlack->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialBlack->diffuseTexName);
     m_materialBlack->shaderName = "sPlainEasy";
     m_materialBlack->diffuse = Color4f(0.15f, 0.15f, 0.15f, 1.0f);
@@ -199,20 +207,29 @@ fgBool CChainReaction::initialize(void) {
     m_materialBlack->setFrontFace(gfx::FrontFace::FACE_CCW);
     //m_materialBlack->setDepthTest(FG_FALSE);
     //m_materialBlack->setCullFace(FG_FALSE);
-    //m_materialBlack->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+    m_materialBlack->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
 
-    m_materialWhite->diffuseTexName = "qWhite.jpg";
+    m_materialWhite->diffuseTexName = "hexWhite.jpg";
     m_materialWhite->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialWhite->diffuseTexName);
     m_materialWhite->shaderName = "sPlainEasy";
     m_materialWhite->diffuse = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
     m_materialWhite->customColor = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
     m_materialWhite->setFrontFace(gfx::FrontFace::FACE_CCW);
+    //m_materialWhite->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+
+    m_materialGray->diffuseTexName = "hexWhite.jpg";
+    m_materialGray->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialGray->diffuseTexName);
+    m_materialGray->shaderName = "sPlainEasy";
+    m_materialGray->diffuse = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+    m_materialGray->customColor = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
+    m_materialGray->setFrontFace(gfx::FrontFace::FACE_CCW);
     //m_materialWhite->setDepthTest(FG_FALSE);
     //m_materialWhite->setCullFace(FG_FALSE);
-    //m_materialWhite->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+    //m_materialGray->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
 
     m_levelVis->setMaterialBlack(m_materialBlack);
     m_levelVis->setMaterialWhite(m_materialWhite);
+    m_levelVis->setMaterial(m_materialGray, SBlockData::GRAY);
 
     //    m_pEngineMain->getGfxMain()->get3DSceneCamera()->setEye(Vector3f(0.0f, 0.0f, -200.0f));
     m_init = FG_TRUE;
@@ -379,38 +396,19 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                                  fgBool released, unsigned int id) {
     if(!m_pEngineMain)
         return;
-    Vec3f translationAxis;
-    Vec3f rotationAxis;
     if(released) {
         // reset the rotation - deactivate the drag flag for the node
         fgBool doReset = FG_TRUE;
         if(m_drag.pNode && m_drag.pBlockData) {
 
-            switch(m_drag.pBlockData->rotDir) {
-                case SQuadData::LEFT:
-                    translationAxis.x = -QUAD_HALF_SIZE;
-                    rotationAxis.y = -1.0f;
-                    break;
-                case SQuadData::RIGHT:
-                    translationAxis.x = QUAD_HALF_SIZE;
-                    rotationAxis.y = 1.0f;
-                    break;
-                case SQuadData::UP:
-                    translationAxis.y = QUAD_HALF_SIZE;
-                    rotationAxis.x = -1.0f;
-                    break;
-                case SQuadData::DOWN:
-                    translationAxis.y = -QUAD_HALF_SIZE;
-                    rotationAxis.x = 1.0f;
-                    break;
-                default:
-                    doReset = FG_FALSE;
-            }            
+            if(m_drag.pBlockData->rotDir == SBlockData::STATIC)
+                doReset = FG_FALSE;
+
             if(doReset) {
                 // need to check for finished rotation
                 if(m_drag.pBlockData->isRotationFinished()) {
-                    unsigned short x=0, y=0;
-                    m_drag.pBlockData->getCoveredNeighbourCoord(x ,y);
+                    unsigned short x = 0, y = 0;
+                    m_drag.pBlockData->getCoveredNeighbourCoord(x, y);
                     SBlockData* pNewBlock = m_levelVis->moveBlockToNewPlace(m_drag.pBlockData, x, y);
                     if(!pNewBlock) {
                         m_levelVis->getOrphanBlocks().push_back(m_drag.pBlockData);
@@ -425,13 +423,11 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                     m_drag.pBlockData = NULL;
                 } else {
                     float rotation = m_drag.pBlockData->rotation;
-                    m_drag.pNode->translateMatrix(translationAxis);
-                    m_drag.pNode->rotate(-rotation, rotationAxis);
-                    m_drag.pNode->translateMatrix(-1.0f * translationAxis);
+                    m_drag.pBlockData->rotate(SBlockData::OPPOSITE, rotation);
                     m_drag.pBlockData->rotation = 0.0f;
                     m_drag.pBlockData->isDragged = FG_FALSE;
                     m_drag.pBlockData->rotDir = SQuadData::STATIC;
-                }                
+                }
             }
         }
     }
@@ -464,27 +460,19 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
             const char *dirStr = NULL;
             if(swipeDir == event::SSwipe::LEFT) {
                 // X bigger (more minus) -> LEFT
-                propRotDir = SQuadData::LEFT;
-                translationAxis.x = -QUAD_HALF_SIZE;
-                rotationAxis.y = -1.0f;
+                propRotDir = SQuadData::DOWN_LEFT;
                 dirStr = "LEFT\0";
             } else if(swipeDir == event::SSwipe::RIGHT) {
                 // X bigger -> RIGHT
-                propRotDir = SQuadData::RIGHT;
-                translationAxis.x = QUAD_HALF_SIZE;
-                rotationAxis.y = 1.0f;
+                propRotDir = SQuadData::UP_RIGHT;
                 dirStr = "RIGHT\0";
             } else if(swipeDir == event::SSwipe::UP) {
                 // Y bigger (more minus) -> UP
-                propRotDir = SQuadData::UP;
-                translationAxis.y = QUAD_HALF_SIZE;
-                rotationAxis.x = -1.0f;
+                propRotDir = SQuadData::UP_LEFT;
                 dirStr = "UP\0";
             } else if(swipeDir == event::SSwipe::DOWN) {
                 // Y bigger -> DOWN
-                propRotDir = SQuadData::DOWN;
-                translationAxis.y = -QUAD_HALF_SIZE;
-                rotationAxis.x = 1.0f;
+                propRotDir = SQuadData::DOWN_RIGHT;
                 dirStr = "DOWN\0";
             }
 
@@ -518,16 +506,8 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 // now need to determine the difference
                 //float angle = math::acos((scale - math::abs(lenDiff)) / scale);
                 //float reverse = 1.0f;
-                float rotationStep = 0.1f;
-                //if(m_drag.pQuadData->isOppositeRotation(propRotDir))
-                    //reverse = -1.0f;
+                float rotationStep = 0.3f;
                 m_drag.pBlockData->rotate(propRotDir, rotationStep * rSteps);
-                //m_drag.pNode->translateMatrix(reverse * translationAxis);
-                //m_drag.pNode->rotate(m_drag.pQuadData->rotation * -1.0f, rotationAxis);
-                //m_drag.pNode->rotate(angle, rotationAxis);
-                //m_drag.pNode->rotate(rotationStep * reverse * rSteps, reverse * rotationAxis);
-                //m_drag.pNode->translateMatrix(-1.0f * translationAxis * reverse);
-                //m_drag.pQuadData->rotation += rotationStep * reverse * rSteps;
             }
         }
     }
@@ -565,9 +545,10 @@ void CChainReaction::updateStep(void) {
         std::sscanf(nameStr, "cr_node_%dx%d", &x, &y);
         void *pCellData = m_grid->getCellData((unsigned short)x, (unsigned short)y);
         if(pCellData) {
-            m_drag.pBlockData = (SQuadData *)pCellData;
+            m_drag.pBlockData = (SBlockData *)pCellData;
             m_drag.quadCoord.x = m_drag.pBlockData->pCellHolder->pos.x;
             m_drag.quadCoord.y = m_drag.pBlockData->pCellHolder->pos.y;
+            FG_LOG_DEBUG("ChainReaction: Will drag node[%s][%dx%d]", nameStr, m_drag.quadCoord.x, m_drag.quadCoord.y);
             m_levelVis->setDraggedNode(m_drag.pNode);
             m_levelVis->setDraggedCoord(m_drag.quadCoord);
             // mouse / touch handler manages the rotation
@@ -577,14 +558,14 @@ void CChainReaction::updateStep(void) {
                                   m_drag.begin.y * m_drag.zoomProp,
                                   zoomIn));
             m_drag.isValid = FG_TRUE;
-            float scale = m_levelVis->getScale();
-            m_drag.pNode->setScale(scale+0.05f, scale+0.05f, 1.5f);
+            const float scale = m_levelVis->getScale();
+            m_drag.pNode->setScale(scale + 0.05f, scale + 0.05f, 1.5f);
         } else {
             m_drag.pBlockData = NULL;
         }
     } else if(!isPickerDown) {
         if(m_drag.pNode) {
-            float scale = m_levelVis->getScale();
+            const float scale = m_levelVis->getScale();
             m_drag.pNode->setScale(scale, scale, 1.0f);
             m_drag.pBlockData->isDragged = FG_FALSE;
         }
@@ -600,7 +581,7 @@ void CChainReaction::updateStep(void) {
         //Vec3f intP1 = m_pSceneMgr->getGroundIntersectionPoint(1);
         //pCamera->setCenter(intP1 * 0.6f);
         //pCamera->setEye(Vec3f(intP1.x * 0.6f, intP1.y * 0.6f, 100.0f));
-    }        
+    }
 }
 //------------------------------------------------------------------------------
 

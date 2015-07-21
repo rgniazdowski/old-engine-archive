@@ -63,6 +63,7 @@ namespace fg {
             ///
             BLUE = 6,
             ///
+            NUM_COLORS = 7
         };
 
         /**

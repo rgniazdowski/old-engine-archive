@@ -29,26 +29,12 @@ SHexData::~SHexData() { }
 //------------------------------------------------------------------------------
 
 SBlockData* SHexData::left(fgBool rewind) {
-    if(!pCellHolder)
-        return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->left(rewind);
-    if(!pNeighbourCell)
-        return NULL;
-    if(!pNeighbourCell->pData)
-        return NULL;
-    return (SBlockData*)pNeighbourCell->pData;
+    return NULL;
 }
 //------------------------------------------------------------------------------
 
 SBlockData* SHexData::right(fgBool rewind) {
-    if(!pCellHolder)
-        return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->right(rewind);
-    if(!pNeighbourCell)
-        return NULL;
-    if(!pNeighbourCell->pData)
-        return NULL;
-    return (SBlockData*)pNeighbourCell->pData;
+    return NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -79,9 +65,17 @@ SBlockData* SHexData::down(fgBool rewind) {
 SBlockData* SHexData::upLeft(fgBool rewind) {
     if(!pCellHolder)
         return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(rewind); // REVERSED
-    if(!pNeighbourCell)
-        return NULL;
+    unsigned short _x;
+    _x = pCellHolder->pos.x;
+    fgBool isEven = FG_FALSE;
+    if(_x % 2 == 0)
+        isEven = FG_TRUE;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder;
+    if(isEven) {
+        pNeighbourCell = pCellHolder->down(rewind); // REVERSED
+        if(!pNeighbourCell)
+            return NULL;
+    }
     game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->left(rewind); // LEFT
     if(!pCornerCell)
         return NULL;
@@ -94,9 +88,17 @@ SBlockData* SHexData::upLeft(fgBool rewind) {
 SBlockData* SHexData::upRight(fgBool rewind) {
     if(!pCellHolder)
         return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(rewind); // REVERSED
-    if(!pNeighbourCell)
-        return NULL;
+    unsigned short _x;
+    _x = pCellHolder->pos.x;
+    fgBool isEven = FG_FALSE;
+    if(_x % 2 == 0)
+        isEven = FG_TRUE;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder;
+    if(isEven) {
+        pNeighbourCell = pCellHolder->down(rewind); // REVERSED        
+        if(!pNeighbourCell)
+            return NULL;
+    }
     game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->right(rewind); // RIGHT
     if(!pCornerCell)
         return NULL;
@@ -109,9 +111,17 @@ SBlockData* SHexData::upRight(fgBool rewind) {
 SBlockData* SHexData::downLeft(fgBool rewind) {
     if(!pCellHolder)
         return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(rewind); // REVERSED
-    if(!pNeighbourCell)
-        return NULL;
+    unsigned short _x;
+    _x = pCellHolder->pos.x;
+    fgBool isEven = FG_FALSE;
+    if(_x % 2 == 0)
+        isEven = FG_TRUE;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder;
+    if(!isEven) {
+        pNeighbourCell = pCellHolder->up(rewind); // REVERSED
+        if(!pNeighbourCell)
+            return NULL;
+    }
     game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->left(rewind); // LEFT
     if(!pCornerCell)
         return NULL;
@@ -124,9 +134,17 @@ SBlockData* SHexData::downLeft(fgBool rewind) {
 SBlockData* SHexData::downRight(fgBool rewind) {
     if(!pCellHolder)
         return NULL;
-    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(rewind); // REVERSED
-    if(!pNeighbourCell)
-        return NULL;
+    unsigned short _x;
+    _x = pCellHolder->pos.x;
+    fgBool isEven = FG_FALSE;
+    if(_x % 2 == 0)
+        isEven = FG_TRUE;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder;
+    if(!isEven) {
+        pNeighbourCell = pCellHolder->up(rewind); // REVERSED
+        if(!pNeighbourCell)
+            return NULL;
+    }
     game::CGrid::SCellHolder* pCornerCell = pNeighbourCell->right(rewind); // RIGHT
     if(!pCornerCell)
         return NULL;
@@ -152,12 +170,13 @@ void SHexData::rotate(RotationDirection direction, float amount) {
         if(isRotationValid(direction)) {
             rotDir = direction;
         } else {
-            return; // not a valid direction - probably left/right
+            //return; // not a valid direction - probably left/right
+            rotDir = direction;
         }
     }
     fgBool isOpposite = isOppositeRotation(direction);
     if(!isOpposite && direction != rotDir) {
-        return;
+        //return;
     }
 
     Vec3f translationAxis;
@@ -166,43 +185,51 @@ void SHexData::rotate(RotationDirection direction, float amount) {
     if(isOpposite) {
         reverse = -1.0f;
     }
-
-    if(direction == UP) {
+    Matrix4f rotMat;
+    if(direction == LEFT) {
+        // X bigger (more minus) -> LEFT
+        translationAxis.x = -HEX_HALF_SIZE * 0.75f;
+        rotationAxis.y = -1.0f;
+    } else if(direction == RIGHT) {
+        // X bigger -> RIGHT
+        translationAxis.x = HEX_HALF_SIZE * 0.75f;
+        rotationAxis.y = 1.0f;
+    } else if(direction == UP) {
         // Y bigger (more minus) -> UP
-        translationAxis.y = HEX_HALF_SIZE;
+        translationAxis.y = HEX_HALF_SIZE * M_SQRT3F * 0.5f;
         rotationAxis.x = -1.0f;
     } else if(direction == DOWN) {
         // Y bigger -> DOWN
-        translationAxis.y = -HEX_HALF_SIZE;
+        translationAxis.y = -HEX_HALF_SIZE * M_SQRT3F * 0.5f;
         rotationAxis.x = 1.0f;
     } else if(direction == UP_LEFT) {
         // Y bigger (more minus) -> UP
-        translationAxis.y = HEX_HALF_SIZE;
+        translationAxis.y = HEX_HALF_SIZE * M_SQRT3F * 0.25f;
         rotationAxis.x = -1.0f;
         // X bigger (more minus) -> LEFT
-        translationAxis.x = -HEX_HALF_SIZE;
-        rotationAxis.y = -1.0f;
+        translationAxis.x = -HEX_HALF_SIZE * 0.75f;
+        rotationAxis.y = -M_SQRT3F;
     } else if(direction == UP_RIGHT) {
         // Y bigger (more minus) -> UP
-        translationAxis.y = HEX_HALF_SIZE;
+        translationAxis.y = HEX_HALF_SIZE * M_SQRT3F * 0.25f;
         rotationAxis.x = -1.0f;
         // X bigger -> RIGHT
-        translationAxis.x = HEX_HALF_SIZE;
-        rotationAxis.y = 1.0f;
+        translationAxis.x = HEX_HALF_SIZE * 0.75f;
+        rotationAxis.y = M_SQRT3F;
     } else if(direction == DOWN_LEFT) {
         // Y bigger -> DOWN
-        translationAxis.y = -HEX_HALF_SIZE;
+        translationAxis.y = -HEX_HALF_SIZE * M_SQRT3F * 0.25f;
         rotationAxis.x = 1.0f;
         // X bigger (more minus) -> LEFT
-        translationAxis.x = -HEX_HALF_SIZE;
-        rotationAxis.y = -1.0f;
+        translationAxis.x = -HEX_HALF_SIZE * 0.75f;
+        rotationAxis.y = -M_SQRT3F;
     } else if(direction == DOWN_RIGHT) {
         // Y bigger -> DOWN
-        translationAxis.y = -HEX_HALF_SIZE;
-        rotationAxis.x = 1.0f;
+        translationAxis.y = -HEX_HALF_SIZE * M_SQRT3F * 0.25f;        
+        rotationAxis.x = 1.0f;        
         // X bigger -> RIGHT
-        translationAxis.x = HEX_HALF_SIZE;
-        rotationAxis.y = 1.0f;
+        translationAxis.x = HEX_HALF_SIZE * 0.75f;
+        rotationAxis.y = M_SQRT3F;
     } else {
         shouldRotate = FG_FALSE;
     }
@@ -218,32 +245,40 @@ void SHexData::rotate(RotationDirection direction, float amount) {
         // exceed
         amount -= newRotation * reverse;
     }
-    if(shouldRotate) {
+    if(shouldRotate || 1) {
+
         this->pSceneNode->translateMatrix(reverse * translationAxis);
-        this->pSceneNode->rotate(amount * reverse, reverse * rotationAxis);
+        //Matrix4f& refModMatrix = this->pSceneNode->getModelMatrix();
+        //Vec3f oldScale = this->pSceneNode->getScale();
+        //this->pSceneNode->setScale(1.0f, 1.0f, 1.0f);
+        //refModMatrix = refModMatrix * rotMat;
+        //this->pSceneNode->setScale(oldScale);
+        //this->pSceneNode->rotate(-M_PIF / 2.0f, 1.0f, 0.0f, 0.0f);
+        this->pSceneNode->rotate(amount, rotationAxis);
+        //this->pSceneNode->rotate(amount * reverse, reverse * Vec3f(0.5f, 0.0f, 0.0f));
+        //this->pSceneNode->rotate(amount * reverse, reverse * Vec3f(0.0f, 0.5f, 0.0f));
+        //this->pSceneNode->rotate(M_PIF / 2.0f, 1.0f, 0.0f, 0.0f);
         this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
+
         this->rotation += amount * reverse;
     }
 }
 //------------------------------------------------------------------------------
 
-void SHexData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
+void SHexData::getCoveringCoord(RotationDirection direction,
+                                unsigned short x,
+                                unsigned short y,
+                                unsigned short& newX,
+                                unsigned short& newY) {
     // this function always returns something - even if the rotation is not complete
-    if(rotDir == STATIC || rotDir == AUTO || rotDir == OPPOSITE) {
-        // those are not valid directions
+    if(direction == STATIC || direction == AUTO || direction == OPPOSITE) {
         return;
     }
-    if(!pCellHolder) {
-        // no cell holder pointer available - no way to determine the neighbour
-        return;
-    }
-    unsigned short _x, _y;
-    _x = pCellHolder->pos.x;
-    _y = pCellHolder->pos.y;
+    unsigned short _x = x, _y = y;
     fgBool isEven = FG_FALSE;
     if(_x % 2 == 0)
         isEven = FG_TRUE;
-    switch(rotDir) {        
+    switch(direction) {
         case UP:
             // up so the grid Y coords go down
             _y--;
@@ -286,8 +321,17 @@ void SHexData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
         default:
             break;
     }
-    x = _x;
-    y = _y;
+    newX = _x;
+    newY = _y;
+}
+//------------------------------------------------------------------------------
+
+void SHexData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
+    if(!pCellHolder) {
+        // no cell holder pointer available - no way to determine the neighbour
+        return;
+    }
+    getCoveringCoord(rotDir, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
 }
 //------------------------------------------------------------------------------
 
@@ -317,7 +361,7 @@ game::CGrid::SCellHolder* SHexData::getCoveredNeighbourCellHolder(void) {
     if(_x % 2 == 0)
         isEven = FG_TRUE;
     // rotation has finished
-    switch(rotDir) {        
+    switch(rotDir) {
         case UP:
             // up so the grid Y coords go down
             return pCellHolder->down(); // REVERSE
@@ -325,7 +369,7 @@ game::CGrid::SCellHolder* SHexData::getCoveredNeighbourCellHolder(void) {
         case DOWN:
             return pCellHolder->up(); // REVERSE
             break;
-         case UP_LEFT:
+        case UP_LEFT:
             if(isEven) {
                 game::CGrid::SCellHolder* pCell = pCellHolder->up(); // REVERSE
                 if(pCell)

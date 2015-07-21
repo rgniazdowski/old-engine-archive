@@ -237,6 +237,8 @@ namespace fg {
         gfx::SMaterial* m_materialBlack;
         /// Material designed for the white quads
         gfx::SMaterial* m_materialWhite;
+        /// Material designed for the gray quads
+        gfx::SMaterial* m_materialGray;
 
         /**
          *
@@ -255,7 +257,7 @@ namespace fg {
             ///
             float zoomProp;
             ///
-            SQuadData* pBlockData;
+            SBlockData* pBlockData;
             ///
             gfx::CSceneNode* pNode;
             /**

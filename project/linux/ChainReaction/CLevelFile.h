@@ -54,6 +54,16 @@ namespace fg {
         /**
          *
          */
+        enum LevelType {
+            INVALID_LEVEL = 0,
+            LEVEL_QUADS = 1,
+            LEVEL_HEXAGONS = 2,
+            LEVEL_OCTAGONS = 3
+        };
+
+        /**
+         *
+         */
         struct SSize {
             ///
             unsigned short x;
@@ -83,7 +93,7 @@ namespace fg {
         /**
          *
          */
-        enum QuadColor {
+        enum BlockColor {
             EMPTY = 0,
             NONE = 0,
             BLACK = 1,
@@ -94,9 +104,9 @@ namespace fg {
         /**
          *
          */
-        struct SQuadInfo {
+        struct SBlockInfo {
             ///
-            QuadColor color;
+            BlockColor color;
 
             /**
              *
@@ -105,7 +115,7 @@ namespace fg {
             /**
              *
              */
-            SQuadInfo() : color(QuadColor::EMPTY) {
+            SBlockInfo() : color(BlockColor::EMPTY) {
                 pos.x = 0;
                 pos.y = 0;
             }
@@ -114,7 +124,7 @@ namespace fg {
              * @param x
              * @param y
              */
-            SQuadInfo(unsigned short x, unsigned short y) : color(QuadColor::EMPTY) {
+            SBlockInfo(unsigned short x, unsigned short y) : color(BlockColor::EMPTY) {
                 pos.x = x;
                 pos.y = y;
             }
@@ -124,9 +134,9 @@ namespace fg {
              * @param _y
              * @param _color
              */
-            SQuadInfo(unsigned short _x,
+            SBlockInfo(unsigned short _x,
                       unsigned short _y,
-                      QuadColor _color) :
+                      BlockColor _color) :
             color(_color) {
                 pos.x = _x;
                 pos.y = _y;
@@ -135,7 +145,7 @@ namespace fg {
              *
              */
             void zero(void) {
-                color = QuadColor::EMPTY;
+                color = BlockColor::EMPTY;
                 pos.x = 0;
                 pos.y = 0;
             }
@@ -144,17 +154,17 @@ namespace fg {
              * @param other
              * @return
              */
-            inline bool operator ==(const SQuadInfo& other) const {
+            inline bool operator ==(const SBlockInfo& other) const {
                 return ((this->color == other.color) &&
                         (this->pos.x == other.pos.x) &&
                         (this->pos.y == other.pos.y));
             }
-        };
+        }; // struct SBlockInfo
 
         ///
-        typedef CVector<SQuadInfo> QuadVec;
+        typedef CVector<SBlockInfo> BlockVec;
         ///
-        typedef QuadVec::iterator QuadVecItor;
+        typedef BlockVec::iterator BlockVecItor;
 
     public:
         /**
@@ -257,7 +267,7 @@ namespace fg {
          */
         fgBool isValid(void) {
             fgBool valid = (fgBool)!!((m_size.x != 0 && m_size.y != 0));
-            valid = (fgBool)!!(valid && !m_quads.empty());
+            valid = (fgBool)!!(valid && !m_blocks.empty());
             return valid;
         }
         /**
@@ -265,14 +275,14 @@ namespace fg {
          * @return
          */
         fgBool isEmpty(void) {
-            return (fgBool)m_quads.empty();
+            return (fgBool)m_blocks.empty();
         }
         /**
          *
          * @return
          */
-        unsigned int getQuadsCount(void) const {
-            return (unsigned int)m_quads.size();
+        unsigned int getBlocksCount(void) const {
+            return (unsigned int)m_blocks.size();
         }
         /**
          *
@@ -289,15 +299,15 @@ namespace fg {
          *
          * @return
          */
-        QuadVec& getQuads(void) {
-            return m_quads;
+        BlockVec& getBlocks(void) {
+            return m_blocks;
         }
         /**
          *
          * @return
          */
-        QuadVec const& getQuads(void) const {
-            return m_quads;
+        BlockVec const& getBlocks(void) const {
+            return m_blocks;
         }
         /**
          *
@@ -330,7 +340,21 @@ namespace fg {
         inline int getLevelIndex(void) const {
             return m_levelIdx;
         }
-
+        /**
+         *
+         * @param levelType
+         */
+        void setLevelType(LevelType levelType) {
+            m_type = levelType;
+        }
+        /**
+         * 
+         * @return
+         */
+        inline LevelType getLevelType(void) const {
+            return m_type;
+        }
+        
     protected:
         /**
          *
@@ -343,6 +367,8 @@ namespace fg {
     private:
         ///
         int m_levelIdx;
+        ///
+        LevelType m_type;
         ///
         std::string m_filePath;
         ///
@@ -357,7 +383,7 @@ namespace fg {
             SSize size;
         } m_area;
         ///
-        QuadVec m_quads;
+        BlockVec m_blocks;
     }; // class CLevel
 } // namespace fg
 

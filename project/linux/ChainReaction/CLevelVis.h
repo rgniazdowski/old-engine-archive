@@ -43,9 +43,6 @@ namespace fg {
         typedef CLevelVis type;
 
     public:
-        typedef CVector<SQuadData*> QuadDataVec;
-        typedef QuadDataVec::iterator QuadDataVecItor;
-
         typedef CVector<SBlockData*> BlockDataVec;
         typedef BlockDataVec::iterator BlockDataVecItor;
 
@@ -69,7 +66,7 @@ namespace fg {
          * 
          * @return 
          */
-        fgBool prepareQuads(void);
+        fgBool prepareBlocks(void);
 
     public:
         /**
@@ -79,9 +76,9 @@ namespace fg {
          * @param color
          * @return
          */
-        SQuadData* insertNewQuad(unsigned short x,
-                                 unsigned short y,
-                                 SQuadData::VColor color);
+        SBlockData* insertNewBlock(unsigned short x,
+                                   unsigned short y,
+                                   SBlockData::VColor color);
 
         /**
          *
@@ -113,7 +110,7 @@ namespace fg {
          */
         gfx::CSceneNode* prepareSceneNode(unsigned short x,
                                           unsigned short y,
-                                          SQuadData::VColor color);
+                                          SBlockData::VColor color);
         /**
          *
          */
@@ -143,7 +140,7 @@ namespace fg {
          * @param y
          * @return
          */
-        SQuadData* getBlockData(unsigned short x, unsigned short y);
+        SBlockData* getBlockData(unsigned short x, unsigned short y);
         /**
          *
          * @param x
@@ -240,33 +237,56 @@ namespace fg {
          * @param y
          */
         void getSize(unsigned short* x, unsigned short* y);
+
+        /**
+         * 
+         * @param pMaterial
+         * @param color
+         */
+        void setMaterial(gfx::SMaterial* pMaterial, SBlockData::VColor color) {
+            unsigned int index = (unsigned int)color;
+            if(index >= (unsigned int)SBlockData::NUM_COLORS)
+                return;
+            m_pMaterials[index] = pMaterial;
+        }
+        /**
+         * 
+         * @param color
+         * @return 
+         */
+        gfx::SMaterial* getMaterial(SBlockData::VColor color = SBlockData::BLACK) {
+            unsigned int index = (unsigned int)color;
+            if(index >= (unsigned int)SBlockData::NUM_COLORS)
+                return NULL;
+            return m_pMaterials[index];
+        }
         /**
          * 
          * @param pMaterialBlack
          */
         void setMaterialBlack(gfx::SMaterial* pMaterialBlack) {
-            m_pMaterialBlack = pMaterialBlack;
+            m_pMaterial.black = pMaterialBlack;
         }
         /**
          *
          * @return
          */
         gfx::SMaterial* getMaterialBlack(void) const {
-            return m_pMaterialBlack;
+            return m_pMaterial.black;
         }
         /**
          *
          * @param pMaterialWhite
          */
         void setMaterialWhite(gfx::SMaterial* pMaterialWhite) {
-            m_pMaterialWhite = pMaterialWhite;
+            m_pMaterial.white = pMaterialWhite;
         }
         /**
          *
          * @return
          */
         gfx::SMaterial* getMaterialWhite(void) const {
-            return m_pMaterialWhite;
+            return m_pMaterial.white;
         }
         /**
          *
@@ -421,9 +441,9 @@ namespace fg {
 
         //----------------------------------------------------------------------
     private:
-        typedef CVector<CLevelFile::SQuadInfo> QuadInfoVec;
-        typedef QuadInfoVec::iterator QuadInfoVecItor;
-        typedef CLevelFile::SQuadInfo QuadInfo;
+        typedef CVector<CLevelFile::SBlockInfo> BlockInfoVec;
+        typedef BlockInfoVec::iterator BlockInfoVecItor;
+        typedef CLevelFile::SBlockInfo BlockInfo;
 
         typedef CVector<Vector2i> DuplicateInfoVec;
         typedef DuplicateInfoVec::iterator DuplicateInfoVecItor;
@@ -432,29 +452,29 @@ namespace fg {
          *
          */
         struct SCoverInfo {
-            typedef SQuadData::VColor QuadColor;
-            typedef SQuadData::RotationDirection RotationDirection;
+            typedef SBlockData::VColor BlockColor;
+            typedef SBlockData::RotationDirection RotationDirection;
 
             /// X grid coordinate
             unsigned short x;
             /// Y grid coordinate
             unsigned short y;
             /// by which color this position was covered
-            QuadColor color;
+            BlockColor color;
             /// the covering quad was rotating in this direction
             RotationDirection direction;
             /**
              *
              */
             SCoverInfo() : x(0), y(0),
-            color(QuadColor::EMPTY), direction(RotationDirection::STATIC) { }
+            color(BlockColor::EMPTY), direction(RotationDirection::STATIC) { }
             /**
              *
              * @param _x
              * @param _y
              */
             SCoverInfo(unsigned short _x, unsigned short _y) : x(_x), y(_y),
-            color(QuadColor::EMPTY), direction(RotationDirection::STATIC) { }
+            color(BlockColor::EMPTY), direction(RotationDirection::STATIC) { }
             /**
              *
              * @param _x
@@ -463,7 +483,7 @@ namespace fg {
              */
             SCoverInfo(unsigned short _x,
                        unsigned short _y,
-                       QuadColor _color) : x(_x), y(_y), color(_color),
+                       BlockColor _color) : x(_x), y(_y), color(_color),
             direction(RotationDirection::STATIC) { }
             /**
              *
@@ -474,7 +494,7 @@ namespace fg {
              */
             SCoverInfo(unsigned short _x,
                        unsigned short _y,
-                       QuadColor _color,
+                       BlockColor _color,
                        RotationDirection _direction) : x(_x), y(_y), color(_color),
             direction(_direction) { }
             /**
@@ -489,7 +509,7 @@ namespace fg {
             void zero(void) {
                 x = 0;
                 y = 0;
-                color = QuadColor::EMPTY;
+                color = BlockColor::EMPTY;
                 direction = RotationDirection::STATIC;
             }
             /**
@@ -503,7 +523,7 @@ namespace fg {
              * @return 
              */
             fgBool isValid(void) const {
-                if(color == QuadColor::EMPTY)
+                if(color == BlockColor::EMPTY)
                     return FG_FALSE;
                 if(direction == RotationDirection::STATIC ||
                         direction == RotationDirection::OPPOSITE ||
@@ -528,6 +548,90 @@ namespace fg {
         typedef CVector<SCoverInfo> CoverInfoVec;
         typedef CoverInfoVec::iterator CoverInfoVecItor;
 
+        /**
+         *
+         */
+        struct SNeighbourInfo {
+            ///
+            SBlockData* ptr;
+            ///
+            SBlockData::RotationDirection direction;
+            /**
+             *
+             */
+            SNeighbourInfo() : ptr(NULL), direction(SBlockData::STATIC) { }
+            /**
+             *
+             * @param _ptr
+             * @param _direction
+             */
+            SNeighbourInfo(SBlockData* _ptr,
+                           SBlockData::RotationDirection _direction = SBlockData::STATIC) :
+            ptr(_ptr), direction(_direction) { }
+            /**
+             *
+             */
+            ~SNeighbourInfo() {
+                clear();
+            }
+            /**
+             *
+             */
+            void clear(void) {
+                ptr = NULL;
+                direction = SBlockData::STATIC;
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgBool isValid(void) const {
+                fgBool status = (fgBool)!!(ptr != NULL);
+                status = (fgBool)!!(status && direction != SBlockData::STATIC);
+                status = (fgBool)!!(status && direction != SBlockData::AUTO);
+                status = (fgBool)!!(status && direction != SBlockData::OPPOSITE);
+                return status;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            inline bool operator ==(const SNeighbourInfo& other) const {
+                return (bool)(this->ptr == other.ptr && this->direction == other.direction);
+            }
+        }; // SNeighbourInfo
+
+        typedef CVector<SNeighbourInfo> NeighbourInfoVec;
+        typedef NeighbourInfoVec::iterator NeighbourInfoVecItor;
+
+    private:
+        /**
+         * 
+         * @param blockType
+         * @param x
+         * @param y
+         * @param newX
+         * @param newY
+         */
+        static void getCoveringCoord(SBlockData::BlockType blockType,
+                                     SBlockData::RotationDirection direction,
+                                     unsigned int x, unsigned int y,
+                                     unsigned short& newX, unsigned short& newY);
+
+        /**
+         * 
+         * @param levelType
+         * @return
+         */
+        static SBlockData::BlockType getBlockTypeFromLevelType(CLevelFile::LevelType levelType) {
+            if(levelType == CLevelFile::LEVEL_QUADS)
+                return SBlockData::BlockType::QUAD;
+            if(levelType == CLevelFile::LEVEL_HEXAGONS)
+                return SBlockData::BlockType::HEXAGON;
+            return SBlockData::BlockType::INVALID_BLOCK;
+        }
+
     private:
         /// Pointer to the main game grid 
         game::CGrid* m_pGrid;
@@ -537,12 +641,30 @@ namespace fg {
         gfx::CSceneManager* m_pSceneMgr;
         /// Pointer to the node that is selected and dragged (main animation)
         gfx::CSceneNode* m_pDraggedNode;
-        /// External pointer to the black material (designed for black quads)
-        gfx::SMaterial* m_pMaterialBlack;
-        /// External pointer to the white material
-        gfx::SMaterial* m_pMaterialWhite;
+        union {
+            /**
+             *
+             */
+            struct {
+                ///
+                gfx::SMaterial* none;
+                /// External pointer to the black material (designed for black quads)
+                gfx::SMaterial* black;
+                /// External pointer to the white material
+                gfx::SMaterial* white;
+                /// External pointer to the gray material
+                gfx::SMaterial* gray;
+                ///
+                gfx::SMaterial* red;
+                ///
+                gfx::SMaterial* green;
+                ///
+                gfx::SMaterial* blue;
+            }m_pMaterial;
+            gfx::SMaterial* m_pMaterials[SBlockData::NUM_COLORS];
+        };
         /// Quads info/data special vector - stores all required information
-        QuadDataVec m_quadsData;
+        BlockDataVec m_blocksData;
         /// Stores all quads that finished rotating (cover any neighbour)
         /// Need to check if those quads cause any rule breaking (disturbance)
         BlockDataVec m_finishedBlocks;
@@ -552,7 +674,7 @@ namespace fg {
         /// These are scaled down gradually (then removed)
         BlockDataVec m_orphanBlocks;
         /// Stores info on quads that need to be added later
-        QuadInfoVec m_additionalBlocks;
+        BlockInfoVec m_additionalBlocks;
         /// Stores all quads that need to be animated as emerging (scaling up)
         BlockDataVec m_emergeBlocks;
         /// Stores positions where more than one quad rotated into

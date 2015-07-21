@@ -141,6 +141,20 @@ namespace fg {
          * @return
          */
         SQuadData* getCoveredNeighbourQuadData(void);
+
+        /**
+         *
+         * @param direction
+         * @param x
+         * @param y
+         * @param newX
+         * @param newY
+         */
+        static void getCoveringCoord(RotationDirection direction,
+                                    unsigned short x,
+                                    unsigned short y,
+                                    unsigned short& newX,
+                                    unsigned short& newY);
         
         //----------------------------------------------------------------------
 

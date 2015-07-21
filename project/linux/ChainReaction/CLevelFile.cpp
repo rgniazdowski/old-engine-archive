@@ -26,11 +26,12 @@ using namespace fg;
 
 CLevelFile::CLevelFile(const char* filePath) :
 m_levelIdx(-1),
+m_type(LEVEL_QUADS),
 m_filePath(),
 m_size(),
-m_quads() {
+m_blocks() {
     setFilePath(filePath);
-    m_quads.reserve(48);
+    m_blocks.reserve(48);
     m_size.x = 0;
     m_size.y = 0;
     m_area.min.x = USHRT_MAX;
@@ -45,9 +46,9 @@ m_quads() {
 CLevelFile::CLevelFile(const std::string& filePath) :
 m_levelIdx(-1),
 m_filePath(),
-m_quads() {
+m_blocks() {
     setFilePath(filePath);
-    m_quads.reserve(48);
+    m_blocks.reserve(48);
     m_size.x = 0;
     m_size.y = 0;
     m_area.min.x = USHRT_MAX;
@@ -60,15 +61,15 @@ m_quads() {
 //------------------------------------------------------------------------------
 
 CLevelFile::CLevelFile(const CLevelFile& orig) {
-    this->m_quads.reserve(48);
+    this->m_blocks.reserve(48);
     this->m_size.x = orig.m_size.x;
     this->m_size.y = orig.m_size.y;
     this->m_area = orig.m_area;
     this->m_levelIdx = orig.m_levelIdx;
     this->setFilePath(orig.m_filePath);
-    unsigned int n = orig.m_quads.size();
+    unsigned int n = orig.m_blocks.size();
     for(unsigned int i = 0; i < n; i++) {
-        this->m_quads.push_back(orig.m_quads[i]);
+        this->m_blocks.push_back(orig.m_blocks[i]);
     }
 }
 //------------------------------------------------------------------------------
@@ -95,7 +96,7 @@ fgBool CLevelFile::load(void) {
     CStringVector lines;
     strings::split(std::string(fileData), '\n', lines);
     unsigned int n = lines.size();
-    int xPos=0, yPos=0;
+    int xPos = 0, yPos = 0;
     if(!n) {
         status = FG_FALSE;
     } else {
@@ -118,21 +119,21 @@ fgBool CLevelFile::load(void) {
         if(line.length() < m_size.x) {
             continue;
         }
-        for(xPos=0;xPos<m_size.x;xPos++) {
-            int color = (int)line[xPos]-48;
+        for(xPos = 0; xPos < m_size.x; xPos++) {
+            int color = (int)line[xPos] - 48;
             if(color <= MIN_COLOR_ID || color > MAX_COLOR_ID) {
                 // skip everything - except 1 and 2
                 continue; // ?
             }
-            SQuadInfo quadInfo;
-            quadInfo.color = (QuadColor)color;
+            SBlockInfo quadInfo;
+            quadInfo.color = (BlockColor)color;
             quadInfo.pos.x = xPos;
             quadInfo.pos.y = yPos;
             m_area.max.x = MAX(m_area.max.x, xPos);
             m_area.max.y = MAX(m_area.max.y, yPos);
             m_area.min.x = MIN(m_area.min.x, xPos);
             m_area.min.y = MIN(m_area.min.y, yPos);
-            m_quads.push_back(quadInfo);
+            m_blocks.push_back(quadInfo);
         }
         yPos++;
     }
@@ -175,10 +176,10 @@ fgBool CLevelFile::applyToGrid(game::CGrid* pGrid) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
-    unsigned int n = getQuadsCount();
+    unsigned int n = getBlocksCount();
     pGrid->resize(m_size.x, m_size.y);
     for(unsigned int i = 0; i < n && status; i++) {
-        SQuadInfo& quadInfo = m_quads[i];
+        SBlockInfo& quadInfo = m_blocks[i];
         status = pGrid->setCellValue((unsigned short)quadInfo.color,
                                      quadInfo.pos.x,
                                      quadInfo.pos.y);
@@ -254,7 +255,7 @@ void CLevelFile::clear(void) {
     m_area.max.y = 0;
     m_area.size.x = 0;
     m_area.size.y = 0;
-    m_quads.clear();
+    m_blocks.clear();
 }
 //------------------------------------------------------------------------------
 

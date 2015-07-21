@@ -141,6 +141,20 @@ namespace fg {
          */
         SHexData* getCoveredNeighbourHexData(void);
 
+        /**
+         * 
+         * @param direction
+         * @param x
+         * @param y
+         * @param newX
+         * @param newY
+         */
+        static void getCoveringCoord(RotationDirection direction,
+                                     unsigned short x,
+                                     unsigned short y,
+                                     unsigned short& newX,
+                                     unsigned short& newY);
+
         //----------------------------------------------------------------------
 
     }; // struct SHexData

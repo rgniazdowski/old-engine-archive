@@ -15,6 +15,8 @@
  */
 
 #include "CLevelVis.h"
+
+#include "SHexData.h"
 #include "fgVector.h"
 #include "GameLogic/fgGrid.h"
 #include "GFX/Scene/fgGfxSceneManager.h"
@@ -30,9 +32,7 @@ m_pGrid(pGrid),
 m_pLevelFile(pLvlFile),
 m_pSceneMgr(NULL),
 m_pDraggedNode(NULL),
-m_pMaterialBlack(NULL),
-m_pMaterialWhite(NULL),
-m_quadsData(),
+m_blocksData(),
 m_finishedBlocks(),
 m_rotatingBlocks(),
 m_orphanBlocks(),
@@ -47,19 +47,19 @@ m_isChainReaction(FG_FALSE),
 m_isStepping(FG_FALSE),
 m_isStepOn(FG_FALSE) {
     if(m_pLevelFile) {
-        unsigned int n = m_pLevelFile->getQuadsCount();
+        unsigned int n = m_pLevelFile->getBlocksCount();
         if(n) {
             unsigned int nReserve = (unsigned int)(n * 1.5f);
-            m_quadsData.reserve(nReserve);
+            m_blocksData.reserve(nReserve);
             for(unsigned int i = 0; i < nReserve; i++) {
-                m_quadsData[i] = NULL;
+                m_blocksData[i] = NULL;
             }
         }
     } else {
         unsigned int nReserve = 48;
-        m_quadsData.reserve(nReserve);
+        m_blocksData.reserve(nReserve);
         for(unsigned int i = 0; i < nReserve; i++) {
-            m_quadsData[i] = NULL;
+            m_blocksData[i] = NULL;
         }
     }
     // Should level visualization have access to SceneManager?
@@ -77,22 +77,22 @@ CLevelVis::CLevelVis(const CLevelVis& orig) {
     // do not copy all data?
     this->m_pGrid = orig.m_pGrid;
     this->m_pLevelFile = orig.m_pLevelFile;
-    this->m_quadsData.reserve(orig.m_quadsData.capacity());
+    this->m_blocksData.reserve(orig.m_blocksData.capacity());
 }
 //------------------------------------------------------------------------------
 
 CLevelVis::~CLevelVis() {
     clear();
-    m_quadsData.clear_optimised();
+    m_blocksData.clear_optimised();
     m_pGrid->clear();
     m_pGrid = NULL;
     m_pLevelFile = NULL;
 }
 //------------------------------------------------------------------------------
 
-SQuadData* CLevelVis::insertNewQuad(unsigned short x,
-                                    unsigned short y,
-                                    SQuadData::VColor color) {
+SBlockData* CLevelVis::insertNewBlock(unsigned short x,
+                                      unsigned short y,
+                                      SBlockData::VColor color) {
     if(!m_pGrid) {
         return NULL;
     }
@@ -103,35 +103,42 @@ SQuadData* CLevelVis::insertNewQuad(unsigned short x,
     gfx::CSceneNode* pRootNode = m_pSceneMgr->getActiveRootNode();
     // now need to insert new quad in that place
     // allocate new quad data
-    SQuadData* pQuadData = new SQuadData();
-    pQuadData->color = color;
-    pQuadData->pSceneNode = prepareSceneNode(x, y, pQuadData->color);
-    if(!m_pSceneMgr->addNode(pQuadData->pSceneNode->getRefHandle(), pQuadData->pSceneNode,
+    SBlockData* pBlockData = NULL;
+    if(m_pLevelFile->getLevelType() == CLevelFile::LEVEL_QUADS) {
+        pBlockData = new SQuadData();
+    } else if(m_pLevelFile->getLevelType() == CLevelFile::LEVEL_HEXAGONS) {
+        pBlockData = new SHexData();
+    } else {
+        pBlockData = new SQuadData();
+    }
+    pBlockData->color = color;
+    pBlockData->pSceneNode = prepareSceneNode(x, y, pBlockData->color);
+    if(!m_pSceneMgr->addNode(pBlockData->pSceneNode->getRefHandle(), pBlockData->pSceneNode,
                              pRootNode)) {
         // adding of the node failed?
-        delete pQuadData->pSceneNode;
-        pQuadData->pSceneNode = NULL;
-        delete pQuadData;
-        pQuadData = NULL;
+        delete pBlockData->pSceneNode;
+        pBlockData->pSceneNode = NULL;
+        delete pBlockData;
+        pBlockData = NULL;
         return NULL;
     }
     game::CGrid::SCellHolder* pCellHolder = m_pGrid->atPtr(x, y);
     if(!pCellHolder) {
         // probably game::CGrid is not prepared - should call applyToGrid
         // destroy the scene node
-        m_pSceneMgr->destroyNode(pQuadData->pSceneNode);
-        pQuadData->pSceneNode = NULL;
-        delete pQuadData;
-        pQuadData = NULL;
+        m_pSceneMgr->destroyNode(pBlockData->pSceneNode);
+        pBlockData->pSceneNode = NULL;
+        delete pBlockData;
+        pBlockData = NULL;
         return NULL;
     }
-    pQuadData->bind(pCellHolder);
-    pQuadData->isValid = FG_TRUE;
-    pQuadData->isDragged = FG_FALSE;
-    pQuadData->activate();
-    pQuadData->show();
-    m_quadsData.push_back(pQuadData);
-    return pQuadData;
+    pBlockData->bind(pCellHolder);
+    pBlockData->isValid = FG_TRUE;
+    pBlockData->isDragged = FG_FALSE;
+    pBlockData->activate();
+    pBlockData->show();
+    m_blocksData.push_back(pBlockData);
+    return pBlockData;
 }
 //------------------------------------------------------------------------------
 
@@ -142,28 +149,28 @@ int CLevelVis::destroyBlock(unsigned short x, unsigned short y) {
     if(!m_pGrid->isValidAddress(x, y)) {
         return -1;
     }
-    SQuadData* pQuadData = NULL;
+    SBlockData* pBlockData = NULL;
     // need also to find SQuadData that already resides on this address
     int index = getBlockDataIndex(x, y);
     if(index != -1) {
-        unsigned int nQuads = m_quadsData.size();
+        unsigned int nBlocks = m_blocksData.size();
         // there already is a quad data in that place
         // need to destroy it completely
-        pQuadData = m_quadsData[index];
-        pQuadData->deactivate();
-        pQuadData->unbind();
+        pBlockData = m_blocksData[index];
+        pBlockData->deactivate();
+        pBlockData->unbind();
         if(m_pSceneMgr) {
-            gfx::CSceneNode* pDelNode = pQuadData->pSceneNode;
-            m_pSceneMgr->destroyNode(pQuadData->pSceneNode);
+            gfx::CSceneNode* pDelNode = pBlockData->pSceneNode;
+            m_pSceneMgr->destroyNode(pBlockData->pSceneNode);
             pDelNode = NULL;
-            pQuadData->pSceneNode = NULL;
+            pBlockData->pSceneNode = NULL;
         }
-        delete pQuadData;
-        pQuadData = NULL;
+        delete pBlockData;
+        pBlockData = NULL;
         //m_quadsData[index] = NULL;
-        m_quadsData[index] = m_quadsData[nQuads - 1];
-        m_quadsData[nQuads - 1] = NULL;
-        m_quadsData.resize(nQuads - 1);
+        m_blocksData[index] = m_blocksData[nBlocks - 1];
+        m_blocksData[nBlocks - 1] = NULL;
+        m_blocksData.resize(nBlocks - 1);
         // previous quad is now completely removed
     }
     return index; // return the index from which the quad was destroyed
@@ -198,7 +205,7 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
         return original; // nothing to do
     }
     // determine if there is something in that place
-    SQuadData* pNewPlace = getBlockData(newX, newY);
+    SBlockData* pNewPlace = getBlockData(newX, newY);
     if(pNewPlace == original) {
         return original; // nothing to do
     }
@@ -213,16 +220,9 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
             gfx::CSceneNodeObject* pNodeObj = (gfx::CSceneNodeObject*)pNewPlace->pSceneNode;
             gfx::CDrawCall* pDrawCall = pNewPlace->pSceneNode->getDrawCall();
             if(pDrawCall) {
-                if(pNewPlace->color == SQuadData::BLACK) {
-                    if(m_pMaterialBlack) {
-                        ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialBlack);
-                        pDrawCall->setupMaterial(m_pMaterialBlack);
-                    }
-                } else if(pNewPlace->color == SQuadData::WHITE) {
-                    if(m_pMaterialWhite) {
-                        ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialWhite);
-                        pDrawCall->setupMaterial(m_pMaterialWhite);
-                    }
+                if(getMaterial(pNewPlace->color) != NULL) {
+                    ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(getMaterial(pNewPlace->color));
+                    pDrawCall->setupMaterial(getMaterial(pNewPlace->color));
                 }
             }
         }
@@ -233,7 +233,7 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
         pNewPlace->isValid = FG_TRUE;
         pNewPlace->isDragged = FG_FALSE;
         pNewPlace->rotation = 0.0f;
-        pNewPlace->rotDir = SQuadData::STATIC;
+        pNewPlace->rotDir = SBlockData::STATIC;
         return pNewPlace; // return the quad pointer after move
     }
     // if there is nothing in the target location
@@ -257,7 +257,7 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
     original->isValid = FG_TRUE;
     original->isDragged = FG_FALSE;
     original->rotation = 0.0f;
-    original->rotDir = SQuadData::STATIC;
+    original->rotDir = SBlockData::STATIC;
     original->show();
     original->activate();
     return original;
@@ -271,18 +271,31 @@ gfx::CSceneNode* CLevelVis::prepareSceneNode(unsigned short x,
     if(!m_pLevelFile) {
         return NULL;
     }
-    Vec2f startPos;
+    Vec2f startPos, nodePos;
+    fgBool isEven = FG_FALSE;
+    const char* modelNameStr = "builtinCube1x1";
     unsigned short areaSX, areaSY;
     m_pLevelFile->getAreaSize(areaSX, areaSY);
     unsigned short areaMinX, areaMaxX;
     unsigned short areaMinY, areaMaxY;
     m_pLevelFile->getAreaMin(areaMinX, areaMinY);
     m_pLevelFile->getAreaMax(areaMaxX, areaMaxY);
-    startPos.x = -1.0f * (float)areaSX / 2.0f * m_scale + m_scale / 2.0f;
-    startPos.y = (float)areaSY / 2.0f * m_scale - m_scale / 2.0f;
+    float scaleX = m_scale;
+    float scaleY = m_scale;
+    const fgBool isHex = m_pLevelFile->getLevelType() == CLevelFile::LEVEL_HEXAGONS;
+    if(isHex) {
+        scaleX = m_scale * 0.75f;
+        scaleY = m_scale * M_SQRT3F * 0.5f;
+        isEven = (fgBool)!!(x % 2 == 0);
+        modelNameStr = "builtinHexagonalPrism";
+    }
+    startPos.x = -1.0f * (float)areaSX / 2.0f * scaleX + scaleX / 2.0f;
+    startPos.y = (float)areaSY / 2.0f * scaleY - scaleY / 2.0f;
+    nodePos.x = startPos.x + (float)(x - areaMinX) * (scaleX);
+    nodePos.y = startPos.y - 1.0f * (float)(y - areaMinY) * (scaleY);
+    if(!isEven)
+        nodePos.y -= m_scale * 0.5f * M_SQRT3F * 0.5f;
     char quadNodeName[64];
-    //const char* modelNameStr = "builtinQuad1x1";
-    const char* modelNameStr = "builtinCube1x1";
 
     std::sprintf(quadNodeName, "cr_node_%dx%d", x, y);
     gfx::CModelResource* pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
@@ -292,21 +305,12 @@ gfx::CSceneNode* CLevelVis::prepareSceneNode(unsigned short x,
     gfx::CSceneNodeObject* pNodeObj = new gfx::CSceneNodeObject(pModelRes, NULL);
     pNodeObj->setName(quadNodeName);
     pNodeObj->setScale(m_scale, m_scale, 1.0f);
-    pNodeObj->setPosition(startPos.x + (float)(x - areaMinX) * (m_scale),
-                          startPos.y - 1.0f * (float)(y - areaMinY) * (m_scale),
-                          0.0f);
+    pNodeObj->setPosition(nodePos.x, nodePos.y, 0.0f);
     gfx::CDrawCall* pDrawCall = pNodeObj->getDrawCall();
     if(pDrawCall) {
-        if(color == SQuadData::BLACK) {
-            if(m_pMaterialBlack) {
-                ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialBlack);
-                pDrawCall->setupMaterial(m_pMaterialBlack);
-            }
-        } else if(color == SQuadData::WHITE) {
-            if(m_pMaterialWhite) {
-                ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterialWhite);
-                pDrawCall->setupMaterial(m_pMaterialWhite);
-            }
+        if(getMaterial(color) != NULL) {
+            ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterials[(unsigned int)color]);
+            pDrawCall->setupMaterial(m_pMaterials[(unsigned int)color]);
         }
     }
     pNodeObj->refreshGfxInternals();
@@ -314,7 +318,7 @@ gfx::CSceneNode* CLevelVis::prepareSceneNode(unsigned short x,
 }
 //------------------------------------------------------------------------------
 
-fgBool CLevelVis::prepareQuads(void) {
+fgBool CLevelVis::prepareBlocks(void) {
     // this will reset the main root node children
     // also prepare the quadData
     if(!m_pGrid || !m_pLevelFile || !m_pSceneMgr) {
@@ -345,14 +349,14 @@ fgBool CLevelVis::prepareQuads(void) {
     // better to start over >> #FIXME - maybe some optimization, without so many
     // reallocs
     clear();
-    CLevelFile::QuadVec& quads = m_pLevelFile->getQuads();
-    unsigned int n = quads.size();
+    CLevelFile::BlockVec& blocks = m_pLevelFile->getBlocks();
+    unsigned int n = blocks.size();
     if(!n) {
         return FG_FALSE;
     }
     // need to reserve proper size
     unsigned int nReserve = (unsigned int)(n * 1.5f);
-    m_quadsData.reserve(nReserve);
+    m_blocksData.reserve(nReserve);
     //m_quadsData.resize(n); // no need to resize now
     // Quad vector from level file contains just info about position and color.
     // Quad data vector is more detailed, contains scene node, draw call, and
@@ -360,9 +364,9 @@ fgBool CLevelVis::prepareQuads(void) {
 
     // Prepare new number of quads
     for(unsigned int i = 0; i < n; i++) {
-        insertNewQuad(quads[i].pos.x,
-                      quads[i].pos.y,
-                      (SQuadData::VColor)quads[i].color);
+        insertNewBlock(blocks[i].pos.x,
+                       blocks[i].pos.y,
+                       (SBlockData::VColor)blocks[i].color);
     }
     m_pSceneMgr->refreshGfxInternals();
     return FG_TRUE;
@@ -383,7 +387,7 @@ fgBool CLevelVis::restart(void) {
         return FG_FALSE;
     }
     m_pLevelFile->applyToGrid(m_pGrid);
-    if(!prepareQuads()) {
+    if(!prepareBlocks()) {
         return FG_FALSE;
     }
     if(m_pSceneMgr) {
@@ -425,30 +429,30 @@ void CLevelVis::clear(void) {
     m_emergeBlocks.clear();
     m_duplicates.clear();
     m_coveredBlocks.clear();
-    unsigned int n = m_quadsData.size();
+    unsigned int n = m_blocksData.size();
     for(unsigned int i = 0; i < n; i++) {
-        SQuadData* pQuadData = m_quadsData[i];
-        if(!pQuadData) {
+        SBlockData* pBlockData = m_blocksData[i];
+        if(!pBlockData) {
             continue;
         }
-        pQuadData->deactivate();
-        pQuadData->unbind();
+        pBlockData->deactivate();
+        pBlockData->unbind();
         if(m_pSceneMgr) {
-            m_pSceneMgr->destroyNode(pQuadData->pSceneNode);
-            pQuadData->pSceneNode = NULL;
+            m_pSceneMgr->destroyNode(pBlockData->pSceneNode);
+            pBlockData->pSceneNode = NULL;
         }
-        delete pQuadData;
-        pQuadData = NULL;
-        m_quadsData[i] = NULL;
+        delete pBlockData;
+        pBlockData = NULL;
+        m_blocksData[i] = NULL;
     }
-    n = m_quadsData.capacity();
+    n = m_blocksData.capacity();
     for(unsigned int i = 0; i < n; i++) {
-        m_quadsData[i] = NULL;
+        m_blocksData[i] = NULL;
     }
     if(m_pGrid) {
         m_pGrid->clear();
     }
-    m_quadsData.clear_optimised();
+    m_blocksData.clear_optimised();
     m_draggedCoord = Vec2i();
     m_pDraggedNode = NULL;
 }
@@ -467,7 +471,8 @@ void CLevelVis::preRender(void) {
     const float scaleSpeed = m_scale * 0.75f; // need to adjust externally
     // the scale speed in UNITS/SECOND
     const float scaleUpSpeed = m_scale * 0.75f; // need to adjust externally
-    
+
+    NeighbourInfoVec neighbours;
     SBlockData* pNeighbour = NULL;
     fgBool canStep = (fgBool)((isStepOn() && isStepping()) || !isStepping());
     // checking the finished quads - adding quads to chain reaction
@@ -476,56 +481,35 @@ void CLevelVis::preRender(void) {
         m_finishedBlocks.pop_back();
         if(!pBlockData)
             continue;
+        // should rewind?
+        fgBool shouldRewind = FG_FALSE;
         // check neighbours for rule breaking (for now only by edge)
-        SQuadData::VColor color = pBlockData->color;
-        // left (should rewind?)
-        pNeighbour = pBlockData->left();
-        if(pNeighbour) {
-            if(pNeighbour->color == color) {
-                // the color of the neighbour is the same
-                // need to select the rotation direction and add to special vec
-                pNeighbour->rotDir = SQuadData::LEFT;
-                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingBlocks.find(pNeighbour);
-                if(index < 0) {
-                    m_rotatingBlocks.push_back(pNeighbour);
-                }
-            }
+        neighbours.clear();
+        neighbours.push_back(SNeighbourInfo(pBlockData->left(shouldRewind), SBlockData::LEFT));
+        neighbours.push_back(SNeighbourInfo(pBlockData->right(shouldRewind), SBlockData::RIGHT));
+        neighbours.push_back(SNeighbourInfo(pBlockData->up(shouldRewind), SBlockData::UP));
+        neighbours.push_back(SNeighbourInfo(pBlockData->down(shouldRewind), SBlockData::DOWN));
+        if(pBlockData->getType() == SBlockData::HEXAGON) {
+            neighbours.push_back(SNeighbourInfo(pBlockData->upLeft(shouldRewind), SBlockData::UP_LEFT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->upRight(shouldRewind), SBlockData::UP_RIGHT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->downLeft(shouldRewind), SBlockData::DOWN_LEFT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->downRight(shouldRewind), SBlockData::DOWN_RIGHT));
         }
-        pNeighbour = pBlockData->right();
-        if(pNeighbour) {
-            if(pNeighbour->color == color) {
-                pNeighbour->rotDir = SQuadData::RIGHT;
-                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingBlocks.find(pNeighbour);
-                if(index < 0) {
-                    m_rotatingBlocks.push_back(pNeighbour);
-                }
-            }
-        }
-        pNeighbour = pBlockData->up();
-        if(pNeighbour) {
-            if(pNeighbour->color == color) {
-                pNeighbour->rotDir = SQuadData::UP;
-                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingBlocks.find(pNeighbour);
-                if(index < 0) {
-                    m_rotatingBlocks.push_back(pNeighbour);
-                }
-            }
-        }
-        pNeighbour = pBlockData->down();
-        if(pNeighbour) {
-            if(pNeighbour->color == color) {
-                pNeighbour->rotDir = SQuadData::DOWN;
-                pNeighbour->rotate(SQuadData::AUTO, 0.001f);
-                pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                int index = m_rotatingBlocks.find(pNeighbour);
-                if(index < 0) {
-                    m_rotatingBlocks.push_back(pNeighbour);
+
+        for(unsigned int iN = 0; iN < neighbours.size(); iN++) {
+            SNeighbourInfo& nInfo = neighbours[iN];
+            if(!nInfo.isValid())
+                continue;
+            if(pBlockData->isRotationValid(nInfo.direction)) {
+                pNeighbour = nInfo.ptr;
+                if(pNeighbour->color == pBlockData->color) {
+                    // the color of the neighbour is the same
+                    // need to select the rotation direction and add to special vec
+                    pNeighbour->rotDir = nInfo.direction;
+                    pNeighbour->rotate(SBlockData::AUTO, 0.001f);
+                    pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
+                    if(!m_rotatingBlocks.contains(pNeighbour))
+                        m_rotatingBlocks.push_back(pNeighbour);
                 }
             }
         }
@@ -545,13 +529,15 @@ void CLevelVis::preRender(void) {
             m_rotatingBlocks.remove(i, n); // notice that 'i' and 'n' will update
             continue;
         }
-        pBlockData->rotate(SQuadData::AUTO, rotSpeed * elapsed);
+        pBlockData->rotate(SBlockData::AUTO, rotSpeed * elapsed);
         if(pBlockData->isRotationFinished()) {
             // rotation finished
             // need to move to the new position
             SBlockData::RotationDirection rotDir = pBlockData->rotDir;
             unsigned short x = 0, y = 0;
             pBlockData->getCoveredNeighbourCoord(x, y);
+            FG_LOG_DEBUG("ChainReaction: Moving block %dx%d -> %dx%d", pBlockData->pCellHolder->pos.x,
+                         pBlockData->pCellHolder->pos.y, x, y);
             int idxTest = m_finishedBlocks.find(pBlockData->getCoveredNeighbourBlockData());
             {
                 SBlockData* pNewBlock = moveBlockToNewPlace(pBlockData, x, y);
@@ -601,25 +587,14 @@ void CLevelVis::preRender(void) {
                         continue;
                     }
                     if(coverInfo.x == x && coverInfo.y == y) {
-                        CLevelFile::QuadColor qColor = (CLevelFile::QuadColor)coverInfo.color;
-                        QuadInfo qInfo = QuadInfo(x - 1, y, qColor);
-                        // found proper cover
-                        if(coverInfo.direction == SQuadData::LEFT)
-                            if(m_additionalBlocks.find(qInfo) < 0)
-                                m_additionalBlocks.push_back(qInfo); // left
-                        qInfo = QuadInfo(x + 1, y, qColor);
-                        if(coverInfo.direction == SQuadData::RIGHT)
-                            if(m_additionalBlocks.find(qInfo) < 0)
-                                m_additionalBlocks.push_back(qInfo); // right
-                        qInfo = QuadInfo(x, y - 1, qColor);
-                        if(coverInfo.direction == SQuadData::UP)
-                            if(m_additionalBlocks.find(qInfo) < 0)
-                                m_additionalBlocks.push_back(qInfo); // up
-                        qInfo = QuadInfo(x, y + 1, qColor);
-                        if(coverInfo.direction == SQuadData::DOWN)
-                            if(m_additionalBlocks.find(qInfo) < 0)
-                                m_additionalBlocks.push_back(qInfo); // down
-
+                        unsigned short newX, newY;
+                        CLevelFile::BlockColor qColor = (CLevelFile::BlockColor)coverInfo.color;
+                        BlockInfo qInfo = BlockInfo(x, y, qColor);
+                        getCoveringCoord(getBlockTypeFromLevelType(m_pLevelFile->getLevelType()),
+                                         coverInfo.direction,
+                                         x, y, qInfo.pos.x, qInfo.pos.y);
+                        if(m_additionalBlocks.find(qInfo) < 0)
+                            m_additionalBlocks.push_back(qInfo);
                         m_coveredBlocks.remove(k, nCovered);
                     }
                 }
@@ -643,7 +618,7 @@ void CLevelVis::preRender(void) {
             m_orphanBlocks.remove(i, n); // 'i' and 'n' will update
             continue;
         }
-        //pQuadData->rotate(SQuadData::AUTO, rotSpeed * elapsed);        
+        //pQuadData->rotate(SBlockData::AUTO, rotSpeed * elapsed);
         Vector3f scale = pBlockData->pSceneNode->getScale();
         scale.x -= scaleSpeed * elapsed;
         scale.y -= scaleSpeed * elapsed;
@@ -665,30 +640,30 @@ void CLevelVis::preRender(void) {
             unsigned short x = m_additionalBlocks[i].pos.x;
             unsigned short y = m_additionalBlocks[i].pos.y;
             // need to check whether or not this position is empty            
-            SQuadData* pQuadData = getBlockData(x, y);
-            if(pQuadData) {
+            SBlockData* pBlockData = getBlockData(x, y);
+            if(pBlockData) {
                 nConflicts++;
-                m_orphanBlocks.push_back(pQuadData);
+                m_orphanBlocks.push_back(pBlockData);
                 FG_LOG_DEBUG("ChainReaction: Conflict: Adding Orphan[%p]@[%dx%d]",
-                             pQuadData,
-                             pQuadData->pCellHolder->pos.x,
-                             pQuadData->pCellHolder->pos.y);
+                             pBlockData,
+                             pBlockData->pCellHolder->pos.x,
+                             pBlockData->pCellHolder->pos.y);
             }
         }
         for(unsigned int i = 0; i < nAdditional && !nConflicts; i++) {
             unsigned short x = m_additionalBlocks[i].pos.x;
             unsigned short y = m_additionalBlocks[i].pos.y;
-            SQuadData::VColor color = (SQuadData::VColor)m_additionalBlocks[i].color;
+            SBlockData::VColor color = (SBlockData::VColor)m_additionalBlocks[i].color;
             // reverse the color
-            if(color == SQuadData::WHITE) {
-                color = SQuadData::BLACK;
+            if(color == SBlockData::WHITE) {
+                color = SBlockData::BLACK;
             } else {
-                color = SQuadData::WHITE;
+                color = SBlockData::WHITE;
             }
-            SQuadData* pQuadData = insertNewQuad(x, y, color);
-            if(pQuadData) {
-                pQuadData->pSceneNode->setScale(0.001f, 0.001f, 1.0f);
-                m_emergeBlocks.push_back(pQuadData);
+            SBlockData* pBlockData = insertNewBlock(x, y, color);
+            if(pBlockData) {
+                pBlockData->pSceneNode->setScale(0.001f, 0.001f, 1.0f);
+                m_emergeBlocks.push_back(pBlockData);
             }
         }
         if(!nConflicts) {
@@ -704,12 +679,23 @@ void CLevelVis::preRender(void) {
                     continue;
                 }
                 Vector3f scale = pBlockData->pSceneNode->getScale();
+                const fgBool isHex = (fgBool)!!(pBlockData->getType() == SBlockData::HEXAGON);
+                const float scaleDiff = scaleUpSpeed * elapsed;
                 scale.x += scaleUpSpeed * elapsed;
-                scale.y += scaleUpSpeed * elapsed;
-                if(scale.x > m_scale || scale.y > m_scale) {
+                if(isHex) {
+                    scale.z += scaleUpSpeed * elapsed;
+                } else {
+                    scale.y += scaleUpSpeed * elapsed;
+                }
+                if(scale.x > m_scale) {
                     scale.x = m_scale;
-                    scale.y = m_scale;
-                    scale.z = 1.0f;
+                    if(isHex) {
+                        scale.y = 1.0f;
+                        scale.z = m_scale;
+                    } else {
+                        scale.y = m_scale;
+                        scale.z = 1.0f;
+                    }
                     // remove from emerge | this function will also decrease
                     // the index 'i' and 'nEmerge'
                     m_emergeBlocks.remove(i, nEmerge);
@@ -723,9 +709,9 @@ void CLevelVis::preRender(void) {
             unsigned int nDups = m_duplicates.size();
             for(unsigned int i = 0; i < nDups; i++) {
                 Vector2i& pos = m_duplicates[i];
-                SQuadData* pQuadData = getBlockData(pos.x, pos.y);
-                if(m_finishedBlocks.find(pQuadData) < 0 && pQuadData)
-                    m_finishedBlocks.push_back(pQuadData);
+                SBlockData* pBlockData = getBlockData(pos.x, pos.y);
+                if(m_finishedBlocks.find(pBlockData) < 0 && pBlockData)
+                    m_finishedBlocks.push_back(pBlockData);
             }
             m_duplicates.clear();
         }
@@ -734,17 +720,17 @@ void CLevelVis::preRender(void) {
     // Checking for the orphans stage-wide
     if(areAllReactionVectorsEmpty()) {
         //printf("NEXT SEARCH - checking for orphans - whole stage !! !! !!\n");
-        unsigned int nAllQuads = m_quadsData.size();
+        unsigned int nAllQuads = m_blocksData.size();
         for(unsigned int i = 0; i < nAllQuads; i++) {
-            SQuadData* pQuadData = m_quadsData[i];
-            if(!pQuadData)
+            SBlockData* pBlockData = m_blocksData[i];
+            if(!pBlockData)
                 continue;
-            if(pQuadData->isOrphan() && !pQuadData->isDragged) {
-                m_orphanBlocks.push_back(pQuadData);
+            if(pBlockData->isOrphan() && !pBlockData->isDragged) {
+                m_orphanBlocks.push_back(pBlockData);
                 FG_LOG_DEBUG("ChainReaction: Stage wide: Adding Orphan[%p]@[%dx%d]",
-                             pQuadData,
-                             pQuadData->pCellHolder->pos.x,
-                             pQuadData->pCellHolder->pos.y);
+                             pBlockData,
+                             pBlockData->pCellHolder->pos.x,
+                             pBlockData->pCellHolder->pos.y);
             }
         }
     }
@@ -757,27 +743,27 @@ void CLevelVis::preRender(void) {
 }
 //------------------------------------------------------------------------------
 
-SQuadData* CLevelVis::getBlockData(unsigned short x, unsigned short y) {
+SBlockData* CLevelVis::getBlockData(unsigned short x, unsigned short y) {
     if(m_pGrid) {
         void *cellData = m_pGrid->getCellData(x, y);
         if(!cellData) {
             return NULL;
         }
-        return (SQuadData*)cellData;
+        return (SBlockData*)cellData;
     } else {
-        unsigned int n = m_quadsData.size();
+        unsigned int n = m_blocksData.size();
         for(unsigned int i = 0; i < n; i++) {
-            SQuadData *pQuadData = m_quadsData[i];
-            if(!pQuadData) {
+            SBlockData* pBlockData = m_blocksData[i];
+            if(!pBlockData) {
                 continue;
             }
-            if(!pQuadData->pCellHolder) {
+            if(!pBlockData->pCellHolder) {
                 continue;
             }
-            if(pQuadData->pCellHolder->pos.x == x &&
-               pQuadData->pCellHolder->pos.y == y) {
-                if(((SQuadData*)pQuadData->pCellHolder->pData) == pQuadData) {
-                    return pQuadData;
+            if(pBlockData->pCellHolder->pos.x == x &&
+               pBlockData->pCellHolder->pos.y == y) {
+                if(((SBlockData*)pBlockData->pCellHolder->pData) == pBlockData) {
+                    return pBlockData;
                 }
             }
         }
@@ -787,18 +773,18 @@ SQuadData* CLevelVis::getBlockData(unsigned short x, unsigned short y) {
 //------------------------------------------------------------------------------
 
 int CLevelVis::getBlockDataIndex(unsigned short x, unsigned short y) {
-    unsigned int n = m_quadsData.size();
+    unsigned int n = m_blocksData.size();
     for(unsigned int i = 0; i < n; i++) {
-        SQuadData *pQuadData = m_quadsData[i];
-        if(!pQuadData) {
+        SBlockData *pBlockData = m_blocksData[i];
+        if(!pBlockData) {
             continue;
         }
-        if(!pQuadData->pCellHolder) {
+        if(!pBlockData->pCellHolder) {
             continue;
         }
-        if(pQuadData->pCellHolder->pos.x == x &&
-           pQuadData->pCellHolder->pos.y == y) {
-            if(((SQuadData*)pQuadData->pCellHolder->pData) == pQuadData) {
+        if(pBlockData->pCellHolder->pos.x == x &&
+           pBlockData->pCellHolder->pos.y == y) {
+            if(((SBlockData*)pBlockData->pCellHolder->pData) == pBlockData) {
                 return i;
             }
         }
@@ -830,6 +816,25 @@ void CLevelVis::setUserDisturbance(SBlockData* pBlockData) {
     if(!isChainReaction()) {
         m_finishedBlocks.push_back(pBlockData);
         setChainReaction();
+    }
+}
+//------------------------------------------------------------------------------
+
+void CLevelVis::getCoveringCoord(SBlockData::BlockType blockType,
+                                 SBlockData::RotationDirection direction,
+                                 unsigned int x,
+                                 unsigned int y,
+                                 unsigned short& newX,
+                                 unsigned short& newY) {
+    if(blockType == SBlockData::INVALID_BLOCK)
+        return;
+    if(direction == SBlockData::STATIC || direction == SBlockData::AUTO ||
+       direction == SBlockData::OPPOSITE)
+        return;
+    if(blockType == SBlockData::QUAD) {
+        SQuadData::getCoveringCoord(direction, x, y, newX, newY);
+    } else if(blockType == SBlockData::HEXAGON) {
+        SHexData::getCoveringCoord(direction, x, y, newX, newY);
     }
 }
 //------------------------------------------------------------------------------
