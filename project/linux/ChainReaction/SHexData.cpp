@@ -155,28 +155,27 @@ SBlockData* SHexData::downRight(fgBool rewind) {
 //------------------------------------------------------------------------------
 
 void SHexData::rotate(RotationDirection direction, float amount) {
-    if(direction == STATIC && rotDir == STATIC || !pSceneNode)
+    if(direction == NO_ROTATION && rotDir == NO_ROTATION || !pSceneNode)
         return;
-    if(rotDir == OPPOSITE) // ?
+    if(rotDir == OPPOSITE_ROTATION) // ?
         return;
     fgBool shouldRotate = FG_TRUE;
-    if(rotDir != STATIC && direction == AUTO) {
+    if(rotDir != NO_ROTATION && direction == AUTO_ROTATION) {
         direction = rotDir;
     }
-    if(rotDir != STATIC && direction == OPPOSITE) {
+    if(rotDir != NO_ROTATION && direction == OPPOSITE_ROTATION) {
         direction = getOppositeRotation(rotDir);
     }
-    if(rotDir == STATIC && direction != OPPOSITE && direction != AUTO) {
+    if(rotDir == NO_ROTATION && direction != OPPOSITE_ROTATION && direction != AUTO_ROTATION) {
         if(isRotationValid(direction)) {
             rotDir = direction;
         } else {
-            //return; // not a valid direction - probably left/right
-            rotDir = direction;
+            return; // not a valid direction - probably left/right            
         }
     }
     fgBool isOpposite = isOppositeRotation(direction);
     if(!isOpposite && direction != rotDir) {
-        //return;
+        return;
     }
 
     Vec3f translationAxis;
@@ -185,16 +184,7 @@ void SHexData::rotate(RotationDirection direction, float amount) {
     if(isOpposite) {
         reverse = -1.0f;
     }
-    Matrix4f rotMat;
-    if(direction == LEFT) {
-        // X bigger (more minus) -> LEFT
-        translationAxis.x = -HEX_HALF_SIZE * 0.75f;
-        rotationAxis.y = -1.0f;
-    } else if(direction == RIGHT) {
-        // X bigger -> RIGHT
-        translationAxis.x = HEX_HALF_SIZE * 0.75f;
-        rotationAxis.y = 1.0f;
-    } else if(direction == UP) {
+    if(direction == UP) {
         // Y bigger (more minus) -> UP
         translationAxis.y = HEX_HALF_SIZE * M_SQRT3F * 0.5f;
         rotationAxis.x = -1.0f;
@@ -245,21 +235,10 @@ void SHexData::rotate(RotationDirection direction, float amount) {
         // exceed
         amount -= newRotation * reverse;
     }
-    if(shouldRotate || 1) {
-
-        this->pSceneNode->translateMatrix(reverse * translationAxis);
-        //Matrix4f& refModMatrix = this->pSceneNode->getModelMatrix();
-        //Vec3f oldScale = this->pSceneNode->getScale();
-        //this->pSceneNode->setScale(1.0f, 1.0f, 1.0f);
-        //refModMatrix = refModMatrix * rotMat;
-        //this->pSceneNode->setScale(oldScale);
-        //this->pSceneNode->rotate(-M_PIF / 2.0f, 1.0f, 0.0f, 0.0f);
-        this->pSceneNode->rotate(amount, rotationAxis);
-        //this->pSceneNode->rotate(amount * reverse, reverse * Vec3f(0.5f, 0.0f, 0.0f));
-        //this->pSceneNode->rotate(amount * reverse, reverse * Vec3f(0.0f, 0.5f, 0.0f));
-        //this->pSceneNode->rotate(M_PIF / 2.0f, 1.0f, 0.0f, 0.0f);
+    if(shouldRotate) {
+        this->pSceneNode->translateMatrix(reverse * translationAxis);        
+        this->pSceneNode->rotate(amount, rotationAxis);        
         this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
-
         this->rotation += amount * reverse;
     }
 }
@@ -271,7 +250,7 @@ void SHexData::getCoveringCoord(RotationDirection direction,
                                 unsigned short& newX,
                                 unsigned short& newY) {
     // this function always returns something - even if the rotation is not complete
-    if(direction == STATIC || direction == AUTO || direction == OPPOSITE) {
+    if(direction == NO_ROTATION || direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION) {
         return;
     }
     unsigned short _x = x, _y = y;
@@ -414,7 +393,7 @@ game::CGrid::SCellHolder* SHexData::getCoveredNeighbourCellHolder(void) {
 //------------------------------------------------------------------------------
 
 fgBool SHexData::isRotationValid(RotationDirection direction) const {
-    if(direction == AUTO || direction == OPPOSITE)
+    if(direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION)
         return FG_FALSE;
     // These are not valid rotation directions for quad
     if(direction == LEFT || direction == RIGHT)

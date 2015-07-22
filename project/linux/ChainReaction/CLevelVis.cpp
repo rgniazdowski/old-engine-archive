@@ -92,7 +92,7 @@ CLevelVis::~CLevelVis() {
 
 SBlockData* CLevelVis::insertNewBlock(unsigned short x,
                                       unsigned short y,
-                                      SBlockData::VColor color) {
+                                      VColor color) {
     if(!m_pGrid) {
         return NULL;
     }
@@ -233,7 +233,7 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
         pNewPlace->isValid = FG_TRUE;
         pNewPlace->isDragged = FG_FALSE;
         pNewPlace->rotation = 0.0f;
-        pNewPlace->rotDir = SBlockData::STATIC;
+        pNewPlace->rotDir = NO_ROTATION;
         return pNewPlace; // return the quad pointer after move
     }
     // if there is nothing in the target location
@@ -257,7 +257,7 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
     original->isValid = FG_TRUE;
     original->isDragged = FG_FALSE;
     original->rotation = 0.0f;
-    original->rotDir = SBlockData::STATIC;
+    original->rotDir = NO_ROTATION;
     original->show();
     original->activate();
     return original;
@@ -267,7 +267,7 @@ SBlockData* CLevelVis::moveBlockToNewPlace(SBlockData* original,
 
 gfx::CSceneNode* CLevelVis::prepareSceneNode(unsigned short x,
                                              unsigned short y,
-                                             SBlockData::VColor color) {
+                                             VColor color) {
     if(!m_pLevelFile) {
         return NULL;
     }
@@ -366,7 +366,7 @@ fgBool CLevelVis::prepareBlocks(void) {
     for(unsigned int i = 0; i < n; i++) {
         insertNewBlock(blocks[i].pos.x,
                        blocks[i].pos.y,
-                       (SBlockData::VColor)blocks[i].color);
+                       (VColor)blocks[i].color);
     }
     m_pSceneMgr->refreshGfxInternals();
     return FG_TRUE;
@@ -485,15 +485,15 @@ void CLevelVis::preRender(void) {
         fgBool shouldRewind = FG_FALSE;
         // check neighbours for rule breaking (for now only by edge)
         neighbours.clear();
-        neighbours.push_back(SNeighbourInfo(pBlockData->left(shouldRewind), SBlockData::LEFT));
-        neighbours.push_back(SNeighbourInfo(pBlockData->right(shouldRewind), SBlockData::RIGHT));
-        neighbours.push_back(SNeighbourInfo(pBlockData->up(shouldRewind), SBlockData::UP));
-        neighbours.push_back(SNeighbourInfo(pBlockData->down(shouldRewind), SBlockData::DOWN));
+        neighbours.push_back(SNeighbourInfo(pBlockData->left(shouldRewind), LEFT));
+        neighbours.push_back(SNeighbourInfo(pBlockData->right(shouldRewind), RIGHT));
+        neighbours.push_back(SNeighbourInfo(pBlockData->up(shouldRewind), UP));
+        neighbours.push_back(SNeighbourInfo(pBlockData->down(shouldRewind), DOWN));
         if(pBlockData->getType() == SBlockData::HEXAGON) {
-            neighbours.push_back(SNeighbourInfo(pBlockData->upLeft(shouldRewind), SBlockData::UP_LEFT));
-            neighbours.push_back(SNeighbourInfo(pBlockData->upRight(shouldRewind), SBlockData::UP_RIGHT));
-            neighbours.push_back(SNeighbourInfo(pBlockData->downLeft(shouldRewind), SBlockData::DOWN_LEFT));
-            neighbours.push_back(SNeighbourInfo(pBlockData->downRight(shouldRewind), SBlockData::DOWN_RIGHT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->upLeft(shouldRewind), UP_LEFT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->upRight(shouldRewind), UP_RIGHT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->downLeft(shouldRewind), DOWN_LEFT));
+            neighbours.push_back(SNeighbourInfo(pBlockData->downRight(shouldRewind), DOWN_RIGHT));
         }
 
         for(unsigned int iN = 0; iN < neighbours.size(); iN++) {
@@ -506,7 +506,7 @@ void CLevelVis::preRender(void) {
                     // the color of the neighbour is the same
                     // need to select the rotation direction and add to special vec
                     pNeighbour->rotDir = nInfo.direction;
-                    pNeighbour->rotate(SBlockData::AUTO, 0.001f);
+                    pNeighbour->rotate(RotationDirection::AUTO_ROTATION, 0.001f);
                     pNeighbour->pSceneNode->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
                     if(!m_rotatingBlocks.contains(pNeighbour))
                         m_rotatingBlocks.push_back(pNeighbour);
@@ -529,11 +529,11 @@ void CLevelVis::preRender(void) {
             m_rotatingBlocks.remove(i, n); // notice that 'i' and 'n' will update
             continue;
         }
-        pBlockData->rotate(SBlockData::AUTO, rotSpeed * elapsed);
+        pBlockData->rotate(AUTO_ROTATION, rotSpeed * elapsed);
         if(pBlockData->isRotationFinished()) {
             // rotation finished
             // need to move to the new position
-            SBlockData::RotationDirection rotDir = pBlockData->rotDir;
+            RotationDirection rotDir = pBlockData->rotDir;
             unsigned short x = 0, y = 0;
             pBlockData->getCoveredNeighbourCoord(x, y);
             FG_LOG_DEBUG("ChainReaction: Moving block %dx%d -> %dx%d", pBlockData->pCellHolder->pos.x,
@@ -588,7 +588,7 @@ void CLevelVis::preRender(void) {
                     }
                     if(coverInfo.x == x && coverInfo.y == y) {
                         unsigned short newX, newY;
-                        CLevelFile::BlockColor qColor = (CLevelFile::BlockColor)coverInfo.color;
+                        VColor qColor = coverInfo.color;
                         BlockInfo qInfo = BlockInfo(x, y, qColor);
                         getCoveringCoord(getBlockTypeFromLevelType(m_pLevelFile->getLevelType()),
                                          coverInfo.direction,
@@ -653,12 +653,12 @@ void CLevelVis::preRender(void) {
         for(unsigned int i = 0; i < nAdditional && !nConflicts; i++) {
             unsigned short x = m_additionalBlocks[i].pos.x;
             unsigned short y = m_additionalBlocks[i].pos.y;
-            SBlockData::VColor color = (SBlockData::VColor)m_additionalBlocks[i].color;
+            VColor color = m_additionalBlocks[i].color;
             // reverse the color
-            if(color == SBlockData::WHITE) {
-                color = SBlockData::BLACK;
+            if(color == VColor::WHITE) {
+                color = VColor::BLACK;
             } else {
-                color = SBlockData::WHITE;
+                color = VColor::WHITE;
             }
             SBlockData* pBlockData = insertNewBlock(x, y, color);
             if(pBlockData) {
@@ -821,15 +821,15 @@ void CLevelVis::setUserDisturbance(SBlockData* pBlockData) {
 //------------------------------------------------------------------------------
 
 void CLevelVis::getCoveringCoord(SBlockData::BlockType blockType,
-                                 SBlockData::RotationDirection direction,
+                                 RotationDirection direction,
                                  unsigned int x,
                                  unsigned int y,
                                  unsigned short& newX,
                                  unsigned short& newY) {
     if(blockType == SBlockData::INVALID_BLOCK)
         return;
-    if(direction == SBlockData::STATIC || direction == SBlockData::AUTO ||
-       direction == SBlockData::OPPOSITE)
+    if(direction == NO_ROTATION || direction == AUTO_ROTATION ||
+       direction == OPPOSITE_ROTATION)
         return;
     if(blockType == SBlockData::QUAD) {
         SQuadData::getCoveringCoord(direction, x, y, newX, newY);

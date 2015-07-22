@@ -18,6 +18,7 @@
 
 #include "fgPluginResource.h"
 #include "fgEngineMain.h"
+#include "fgColors.h"
 
 #include "Event/fgCallback.h"
 #include "Event/fgEventManager.h"
@@ -101,13 +102,15 @@ m_preRenderCallback(NULL),
 m_renderCallback(NULL),
 m_touchCallback(NULL),
 m_mouseCallback(NULL),
-m_materialBlack(NULL),
-m_materialWhite(NULL),
-m_materialGray(NULL),
 m_drag() {
     this->setEngineMain(pEngineMain);
     m_managerType = FG_MANAGER_CHAIN_REACTION;
     m_drag.invalidate();
+    //memset(m_materials, 0, sizeof(m_materials));
+    for(unsigned int i = 0;i<VColor::NUM_COLORS;i++) {
+        m_materials[0][i] = NULL;
+        m_materials[1][i] = NULL;
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -154,17 +157,14 @@ fgBool CChainReaction::destroy(void) {
         delete m_mouseCallback;
         m_mouseCallback = NULL;
     }
-    if(m_materialBlack) {
-        delete m_materialBlack;
-        m_materialBlack = NULL;
-    }
-    if(m_materialWhite) {
-        delete m_materialWhite;
-        m_materialWhite = NULL;
-    }
-    if(m_materialGray) {
-        delete m_materialGray;
-        m_materialGray = NULL;
+    unsigned int n = VColor::NUM_COLORS;
+    for(unsigned int j = 0; j < 2; j++) {
+        for(unsigned int i = 0; i < n; i++) {
+            if(m_materials[j][i] != NULL) {
+                delete m_materials[j][i];
+            }
+            m_materials[j][i] = NULL;
+        }
     }
     m_pEngineMain = NULL;
     m_pGfxMain = NULL;
@@ -189,51 +189,66 @@ fgBool CChainReaction::initialize(void) {
     m_levelVis = new CLevelVis(m_grid);
     m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
 
-    if(m_materialWhite)
-        delete m_materialWhite;
-    if(m_materialBlack)
-        delete m_materialBlack;
-    if(m_materialGray)
-        delete m_materialGray;
-    m_materialWhite = new gfx::SMaterial();
-    m_materialBlack = new gfx::SMaterial();
-    m_materialGray = new gfx::SMaterial();
-
-    m_materialBlack->diffuseTexName = "hexWhite.jpg"; // qBlack.jpg ?
-    m_materialBlack->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialBlack->diffuseTexName);
-    m_materialBlack->shaderName = "sPlainEasy";
-    m_materialBlack->diffuse = Color4f(0.15f, 0.15f, 0.15f, 1.0f);
-    m_materialBlack->customColor = Color4f(0.15f, 0.15f, 0.15f, 1.0f);
-    m_materialBlack->setFrontFace(gfx::FrontFace::FACE_CCW);
-    //m_materialBlack->setDepthTest(FG_FALSE);
-    //m_materialBlack->setCullFace(FG_FALSE);
-    m_materialBlack->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
-
-    m_materialWhite->diffuseTexName = "hexWhite.jpg";
-    m_materialWhite->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialWhite->diffuseTexName);
-    m_materialWhite->shaderName = "sPlainEasy";
-    m_materialWhite->diffuse = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
-    m_materialWhite->customColor = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
-    m_materialWhite->setFrontFace(gfx::FrontFace::FACE_CCW);
-    //m_materialWhite->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
-
-    m_materialGray->diffuseTexName = "hexWhite.jpg";
-    m_materialGray->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materialGray->diffuseTexName);
-    m_materialGray->shaderName = "sPlainEasy";
-    m_materialGray->diffuse = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
-    m_materialGray->customColor = Color4f(0.5f, 0.5f, 0.5f, 1.0f);
-    m_materialGray->setFrontFace(gfx::FrontFace::FACE_CCW);
-    //m_materialWhite->setDepthTest(FG_FALSE);
-    //m_materialWhite->setCullFace(FG_FALSE);
-    //m_materialGray->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
-
-    m_levelVis->setMaterialBlack(m_materialBlack);
-    m_levelVis->setMaterialWhite(m_materialWhite);
-    m_levelVis->setMaterial(m_materialGray, SBlockData::GRAY);
-
-    //    m_pEngineMain->getGfxMain()->get3DSceneCamera()->setEye(Vector3f(0.0f, 0.0f, -200.0f));
+    unsigned int n = VColor::NUM_COLORS;
+    for(unsigned int j = 0; j < 2; j++) {
+        for(unsigned int i = 0; i < n; i++) {
+            if(m_materials[j][i] != NULL) {
+                delete m_materials[j][i];
+            }
+            m_materials[j][i] = NULL;
+        }
+    }
+    // #FIXME
+    const char *texNames[2] = { "quadWhite.jpg", "hexWhite.jpg" };
+    const char *colorNames[VColor::NUM_COLORS];
+    colorNames[VColor::INVALID_COLOR] = NULL;
+    colorNames[VColor::BLACK] = "Black";
+    colorNames[VColor::WHITE] = "White";
+    colorNames[VColor::GRAY] = "Gray";
+    colorNames[VColor::RED] = "Red";
+    colorNames[VColor::GREEN] = "Green";
+    colorNames[VColor::BLUE] = "Blue";
+    colorNames[VColor::CYAN] = "Cyan";
+    colorNames[VColor::YELLOW] = "Yellow";
+    colorNames[VColor::MAGENTA] = "Magenta";
+    
+    // 0 - quad / 1 - hexagon
+    for(unsigned int j = 0; j < 2; j++) {
+        for(unsigned int i = VColor::BLACK; i < n; i++) {
+            float blackOffset = 0.0f;
+            if(i == VColor::BLACK)
+                blackOffset = 0.15f;
+            m_materials[j][i] = new gfx::SMaterial();
+            m_materials[j][i]->diffuseTexName = texNames[j];
+            m_materials[j][i]->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materials[j][i]->diffuseTexName);
+            m_materials[j][i]->shaderName = "sPlainEasy";
+            m_materials[j][i]->diffuse = colors::getColor(colorNames[i]) + blackOffset;
+            m_materials[j][i]->customColor = m_materials[j][i]->diffuse;
+            m_materials[j][i]->setFrontFace(gfx::FrontFace::FACE_CCW);
+            m_materials[j][i]->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+        }
+    }    
     m_init = FG_TRUE;
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+void CChainReaction::refreshLevelMaterials(void) {
+    if(!m_levelVis)
+        return;
+    if(!m_levelVis->getLevelFile())
+        return;
+    const CLevelFile::LevelType levelType = m_levelVis->getLevelFile()->getLevelType();
+    SBlockData::BlockType blockType = CLevelVis::getBlockTypeFromLevelType(levelType);
+    // 0 - quads / 1 - hexagons
+    if(blockType != SBlockData::QUAD && blockType != SBlockData::HEXAGON)
+        return;
+    const unsigned int index = (unsigned int)blockType;
+    const unsigned int n = VColor::NUM_COLORS;
+    for(unsigned int i = (unsigned int)VColor::BLACK; i < n; i++) {
+        if(m_materials[index][i])
+            m_levelVis->setMaterial(m_materials[index][i], (VColor)i);
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -401,7 +416,7 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
         fgBool doReset = FG_TRUE;
         if(m_drag.pNode && m_drag.pBlockData) {
 
-            if(m_drag.pBlockData->rotDir == SBlockData::STATIC)
+            if(m_drag.pBlockData->rotDir == NO_ROTATION)
                 doReset = FG_FALSE;
 
             if(doReset) {
@@ -423,10 +438,10 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                     m_drag.pBlockData = NULL;
                 } else {
                     float rotation = m_drag.pBlockData->rotation;
-                    m_drag.pBlockData->rotate(SBlockData::OPPOSITE, rotation);
+                    m_drag.pBlockData->rotate(OPPOSITE_ROTATION, rotation);
                     m_drag.pBlockData->rotation = 0.0f;
                     m_drag.pBlockData->isDragged = FG_FALSE;
-                    m_drag.pBlockData->rotDir = SQuadData::STATIC;
+                    m_drag.pBlockData->rotDir = NO_ROTATION;
                 }
             }
         }
@@ -449,55 +464,55 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
         }
         // mouse/touch is hovering over the dragged node
         // need to detect drag direction and rotate accordingly
-        if(m_drag.pBlockData->rotDir == SQuadData::STATIC || 1) {
+        if(m_drag.pBlockData->rotDir == NO_ROTATION || 1) {
             // no current rotation - detect
             Vec3f posDiff = m_drag.current - nodePos;
             float lenDiff = 0.0f;
-            SQuadData::RotationDirection propRotDir = SQuadData::STATIC;
-            SQuadData::RotationDirection curRotDir = propRotDir;
+            RotationDirection propRotDir = NO_ROTATION;
+            RotationDirection curRotDir = propRotDir;
             //if(posDiff.x > 0.0f && posDiff.y > 0.0f) {}
             // check the relative mouse position ?
             const char *dirStr = NULL;
             if(swipeDir == event::SSwipe::LEFT) {
                 // X bigger (more minus) -> LEFT
-                propRotDir = SQuadData::DOWN_LEFT;
+                propRotDir = DOWN_LEFT;
                 dirStr = "LEFT\0";
             } else if(swipeDir == event::SSwipe::RIGHT) {
                 // X bigger -> RIGHT
-                propRotDir = SQuadData::UP_RIGHT;
+                propRotDir = UP_RIGHT;
                 dirStr = "RIGHT\0";
             } else if(swipeDir == event::SSwipe::UP) {
                 // Y bigger (more minus) -> UP
-                propRotDir = SQuadData::UP_LEFT;
+                propRotDir = UP_LEFT;
                 dirStr = "UP\0";
             } else if(swipeDir == event::SSwipe::DOWN) {
                 // Y bigger -> DOWN
-                propRotDir = SQuadData::DOWN_RIGHT;
+                propRotDir = DOWN_RIGHT;
                 dirStr = "DOWN\0";
             }
 
             curRotDir = m_drag.pBlockData->rotDir;
-            if(curRotDir == SQuadData::STATIC) {
+            if(curRotDir == NO_ROTATION) {
                 m_drag.pBlockData->rotDir = propRotDir;
                 curRotDir = propRotDir;
             }
-            if(propRotDir != SQuadData::STATIC &&
+            if(propRotDir != NO_ROTATION &&
                (propRotDir == curRotDir || m_drag.pBlockData->isOppositeRotation(propRotDir))) {
                 float rSteps = 1.0f;
                 switch(m_drag.pBlockData->rotDir) {
-                    case SQuadData::LEFT:
+                    case LEFT:
                         lenDiff = m_drag.current.x - (nodePos.x + scale / 2.0f);
                         rSteps = (float)math::abs(steps.x) * 2.3f;
                         break;
-                    case SQuadData::RIGHT:
+                    case RIGHT:
                         lenDiff = m_drag.current.x - (nodePos.x - scale / 2.0f);
                         rSteps = (float)math::abs(steps.x) * 2.3f; // #FIXME - X res fubar
                         break;
-                    case SQuadData::UP:
+                    case UP:
                         lenDiff = m_drag.current.y - (nodePos.y - scale / 2.0f);
                         rSteps = (float)math::abs(steps.y);
                         break;
-                    case SQuadData::DOWN:
+                    case DOWN:
                         lenDiff = m_drag.current.y - (nodePos.y + scale / 2.0f);
                         rSteps = (float)math::abs(steps.y);
                         break;

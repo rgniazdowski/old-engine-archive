@@ -20,6 +20,7 @@
 
     #include "fgVector.h"
     #include "fgBool.h"
+    #include "AdditionalTypes.h"
 
     #ifndef MAX
         #define MAX(a,b) (((a) > (b)) ? (a) : (b))
@@ -47,7 +48,7 @@ namespace fg {
     public:
 
         static const unsigned int MIN_COLOR_ID = 0;
-        static const unsigned int MAX_COLOR_ID = 3;
+        static const unsigned int MAX_COLOR_ID = (VColor::NUM_COLORS-1);
 
     public:
 
@@ -93,20 +94,9 @@ namespace fg {
         /**
          *
          */
-        enum BlockColor {
-            EMPTY = 0,
-            NONE = 0,
-            BLACK = 1,
-            WHITE = 2,
-            GRAY = 3,
-        };
-
-        /**
-         *
-         */
         struct SBlockInfo {
             ///
-            BlockColor color;
+            VColor color;
 
             /**
              *
@@ -115,7 +105,7 @@ namespace fg {
             /**
              *
              */
-            SBlockInfo() : color(BlockColor::EMPTY) {
+            SBlockInfo() : color(VColor::INVALID_COLOR) {
                 pos.x = 0;
                 pos.y = 0;
             }
@@ -124,7 +114,7 @@ namespace fg {
              * @param x
              * @param y
              */
-            SBlockInfo(unsigned short x, unsigned short y) : color(BlockColor::EMPTY) {
+            SBlockInfo(unsigned short x, unsigned short y) : color(VColor::INVALID_COLOR) {
                 pos.x = x;
                 pos.y = y;
             }
@@ -136,7 +126,7 @@ namespace fg {
              */
             SBlockInfo(unsigned short _x,
                       unsigned short _y,
-                      BlockColor _color) :
+                      VColor _color) :
             color(_color) {
                 pos.x = _x;
                 pos.y = _y;
@@ -145,7 +135,7 @@ namespace fg {
              *
              */
             void zero(void) {
-                color = BlockColor::EMPTY;
+                color = VColor::INVALID_COLOR;
                 pos.x = 0;
                 pos.y = 0;
             }

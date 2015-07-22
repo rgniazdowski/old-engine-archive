@@ -78,7 +78,7 @@ namespace fg {
          */
         SBlockData* insertNewBlock(unsigned short x,
                                    unsigned short y,
-                                   SBlockData::VColor color);
+                                   VColor color);
 
         /**
          *
@@ -110,7 +110,7 @@ namespace fg {
          */
         gfx::CSceneNode* prepareSceneNode(unsigned short x,
                                           unsigned short y,
-                                          SBlockData::VColor color);
+                                          VColor color);
         /**
          *
          */
@@ -237,15 +237,14 @@ namespace fg {
          * @param y
          */
         void getSize(unsigned short* x, unsigned short* y);
-
         /**
          * 
          * @param pMaterial
          * @param color
          */
-        void setMaterial(gfx::SMaterial* pMaterial, SBlockData::VColor color) {
+        void setMaterial(gfx::SMaterial* pMaterial, VColor color) {
             unsigned int index = (unsigned int)color;
-            if(index >= (unsigned int)SBlockData::NUM_COLORS)
+            if(index >= (unsigned int)VColor::NUM_COLORS)
                 return;
             m_pMaterials[index] = pMaterial;
         }
@@ -254,9 +253,9 @@ namespace fg {
          * @param color
          * @return 
          */
-        gfx::SMaterial* getMaterial(SBlockData::VColor color = SBlockData::BLACK) {
+        gfx::SMaterial* getMaterial(VColor color = VColor::BLACK) {
             unsigned int index = (unsigned int)color;
-            if(index >= (unsigned int)SBlockData::NUM_COLORS)
+            if(index >= (unsigned int)VColor::NUM_COLORS)
                 return NULL;
             return m_pMaterials[index];
         }
@@ -452,29 +451,26 @@ namespace fg {
          *
          */
         struct SCoverInfo {
-            typedef SBlockData::VColor BlockColor;
-            typedef SBlockData::RotationDirection RotationDirection;
-
             /// X grid coordinate
             unsigned short x;
             /// Y grid coordinate
             unsigned short y;
             /// by which color this position was covered
-            BlockColor color;
+            VColor color;
             /// the covering quad was rotating in this direction
             RotationDirection direction;
             /**
              *
              */
             SCoverInfo() : x(0), y(0),
-            color(BlockColor::EMPTY), direction(RotationDirection::STATIC) { }
+            color(VColor::INVALID_COLOR), direction(RotationDirection::NO_ROTATION) { }
             /**
              *
              * @param _x
              * @param _y
              */
             SCoverInfo(unsigned short _x, unsigned short _y) : x(_x), y(_y),
-            color(BlockColor::EMPTY), direction(RotationDirection::STATIC) { }
+            color(VColor::INVALID_COLOR), direction(RotationDirection::NO_ROTATION) { }
             /**
              *
              * @param _x
@@ -483,8 +479,8 @@ namespace fg {
              */
             SCoverInfo(unsigned short _x,
                        unsigned short _y,
-                       BlockColor _color) : x(_x), y(_y), color(_color),
-            direction(RotationDirection::STATIC) { }
+                       VColor _color) : x(_x), y(_y), color(_color),
+            direction(RotationDirection::NO_ROTATION) { }
             /**
              *
              * @param _x
@@ -494,7 +490,7 @@ namespace fg {
              */
             SCoverInfo(unsigned short _x,
                        unsigned short _y,
-                       BlockColor _color,
+                       VColor _color,
                        RotationDirection _direction) : x(_x), y(_y), color(_color),
             direction(_direction) { }
             /**
@@ -509,8 +505,8 @@ namespace fg {
             void zero(void) {
                 x = 0;
                 y = 0;
-                color = BlockColor::EMPTY;
-                direction = RotationDirection::STATIC;
+                color = VColor::INVALID_COLOR;
+                direction = RotationDirection::NO_ROTATION;
             }
             /**
              * 
@@ -523,11 +519,11 @@ namespace fg {
              * @return 
              */
             fgBool isValid(void) const {
-                if(color == BlockColor::EMPTY)
+                if(color == VColor::INVALID_COLOR)
                     return FG_FALSE;
-                if(direction == RotationDirection::STATIC ||
-                        direction == RotationDirection::OPPOSITE ||
-                        direction == RotationDirection::AUTO)
+                if(direction == RotationDirection::NO_ROTATION ||
+                        direction == RotationDirection::OPPOSITE_ROTATION ||
+                        direction == RotationDirection::AUTO_ROTATION)
                     return FG_FALSE;
 
                 return FG_TRUE;
@@ -555,18 +551,18 @@ namespace fg {
             ///
             SBlockData* ptr;
             ///
-            SBlockData::RotationDirection direction;
+            RotationDirection direction;
             /**
              *
              */
-            SNeighbourInfo() : ptr(NULL), direction(SBlockData::STATIC) { }
+            SNeighbourInfo() : ptr(NULL), direction(NO_ROTATION) { }
             /**
              *
              * @param _ptr
              * @param _direction
              */
             SNeighbourInfo(SBlockData* _ptr,
-                           SBlockData::RotationDirection _direction = SBlockData::STATIC) :
+                           RotationDirection _direction = NO_ROTATION) :
             ptr(_ptr), direction(_direction) { }
             /**
              *
@@ -579,7 +575,7 @@ namespace fg {
              */
             void clear(void) {
                 ptr = NULL;
-                direction = SBlockData::STATIC;
+                direction = NO_ROTATION;
             }
             /**
              * 
@@ -587,9 +583,9 @@ namespace fg {
              */
             fgBool isValid(void) const {
                 fgBool status = (fgBool)!!(ptr != NULL);
-                status = (fgBool)!!(status && direction != SBlockData::STATIC);
-                status = (fgBool)!!(status && direction != SBlockData::AUTO);
-                status = (fgBool)!!(status && direction != SBlockData::OPPOSITE);
+                status = (fgBool)!!(status && direction != NO_ROTATION);
+                status = (fgBool)!!(status && direction != AUTO_ROTATION);
+                status = (fgBool)!!(status && direction != OPPOSITE_ROTATION);
                 return status;
             }
             /**
@@ -615,10 +611,10 @@ namespace fg {
          * @param newY
          */
         static void getCoveringCoord(SBlockData::BlockType blockType,
-                                     SBlockData::RotationDirection direction,
+                                     RotationDirection direction,
                                      unsigned int x, unsigned int y,
                                      unsigned short& newX, unsigned short& newY);
-
+    public:
         /**
          * 
          * @param levelType
@@ -641,27 +637,35 @@ namespace fg {
         gfx::CSceneManager* m_pSceneMgr;
         /// Pointer to the node that is selected and dragged (main animation)
         gfx::CSceneNode* m_pDraggedNode;
+
         union {
+
             /**
              *
              */
             struct {
                 ///
-                gfx::SMaterial* none;
+                gfx::SMaterial* none; // 0
                 /// External pointer to the black material (designed for black quads)
-                gfx::SMaterial* black;
+                gfx::SMaterial* black; // 1
                 /// External pointer to the white material
-                gfx::SMaterial* white;
+                gfx::SMaterial* white; // 2
                 /// External pointer to the gray material
-                gfx::SMaterial* gray;
+                gfx::SMaterial* gray; // 3
                 ///
-                gfx::SMaterial* red;
+                gfx::SMaterial* red; // 4
                 ///
-                gfx::SMaterial* green;
+                gfx::SMaterial* green; // 5
                 ///
-                gfx::SMaterial* blue;
-            }m_pMaterial;
-            gfx::SMaterial* m_pMaterials[SBlockData::NUM_COLORS];
+                gfx::SMaterial* blue; // 6
+				///
+                gfx::SMaterial* cyan; // 7
+				///
+                gfx::SMaterial* yellow; // 8
+				///
+                gfx::SMaterial* magenta; // 9
+            } m_pMaterial;
+            gfx::SMaterial* m_pMaterials[VColor::NUM_COLORS];
         };
         /// Quads info/data special vector - stores all required information
         BlockDataVec m_blocksData;

@@ -20,6 +20,7 @@
 
     #include "fgBool.h"    
     #include "GameLogic/fgGrid.h"
+    #include "AdditionalTypes.h"
 
 namespace fg {
 
@@ -36,63 +37,12 @@ namespace fg {
          *
          */
         enum BlockType {
-            INVALID_BLOCK = 0,
-            QUAD = 1,
-            HEXAGON = 2,
-            OCTAGON = 3
+            QUAD = 0,
+            HEXAGON = 1,
+            OCTAGON = 2,
+            INVALID_BLOCK = 100
         };
 
-        /**
-         *
-         */
-        enum VColor {
-            /// No color, empty block/cell
-            EMPTY = 0,
-            /// No color, empty block/cell
-            NONE = 0,
-            /// Black color
-            BLACK = 1,
-            /// White color
-            WHITE = 2,
-            /// Gray color
-            GRAY = 3,
-            ///
-            RED = 4,
-            ///
-            GREEN = 5,
-            ///
-            BLUE = 6,
-            ///
-            NUM_COLORS = 7
-        };
-
-        /**
-         *
-         */
-        enum RotationDirection {
-            /// The block does not rotate (it's static)
-            STATIC = 0,
-            /// The block is rotating left (-x)
-            LEFT = 1,
-            /// The block is rotating right(+x)
-            RIGHT = 2,
-            /// The block is rotating up (-y)
-            UP = 3,
-            /// The block is rotating down (+y)
-            DOWN = 4,
-            /// The block is rotating up and left (-x-y)
-            UP_LEFT = 5,
-            /// The block is rotating up and right (+x-y)
-            UP_RIGHT = 6,
-            /// The block is rotating down and left (-x+y)
-            DOWN_LEFT = 7,
-            /// The block is rotating down and right (+x+y)
-            DOWN_RIGHT = 8,
-            /// Automatic rotation (detect)
-            AUTO = 9,
-            /// Opposite rotation
-            OPPOSITE = 10
-        };
         ///
         gfx::CSceneNode* pSceneNode;
         ///
@@ -111,7 +61,7 @@ namespace fg {
     protected:
         ///
         BlockType blockType;
-        
+
     public:
 
         //----------------------------------------------------------------------
@@ -130,7 +80,6 @@ namespace fg {
         virtual ~SBlockData();
 
         //----------------------------------------------------------------------
-
         BlockType getType(void) const {
             return blockType;
         }
@@ -151,7 +100,7 @@ namespace fg {
 
         //----------------------------------------------------------------------
 
-         /**
+        /**
          * Get the pointer to block data of the LEFT neighbour if exists
          * @param rewind
          * @return  Pointer to the valid block data of the LEFT neighbour.
@@ -348,7 +297,7 @@ namespace fg {
          * @param direction
          * @return
          */
-        RotationDirection getOppositeRotation(RotationDirection direction = AUTO);
+        RotationDirection getOppositeRotation(RotationDirection direction = AUTO_ROTATION);
 
     }; // struct SBlockData
 

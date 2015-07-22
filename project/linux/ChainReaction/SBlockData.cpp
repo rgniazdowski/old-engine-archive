@@ -23,11 +23,11 @@ using namespace fg;
 SBlockData::SBlockData() :
 pSceneNode(NULL),
 pCellHolder(NULL),
-color(NONE),
+color(INVALID_COLOR),
 isDragged(FG_FALSE),
 isValid(FG_FALSE),
 rotation(0.0f),
-rotDir(STATIC),
+rotDir(NO_ROTATION),
 blockType(INVALID_BLOCK) { }
 //------------------------------------------------------------------------------
 
@@ -50,12 +50,12 @@ SBlockData::~SBlockData() {
 void SBlockData::invalidate(void) {
     unbind();
     pSceneNode = NULL;
-    color = NONE;
+    color = INVALID_COLOR;
     pCellHolder = NULL;
     isDragged = FG_FALSE;
     isValid = FG_FALSE;
     rotation = 0.0f;
-    rotDir = STATIC;
+    rotDir = NO_ROTATION;
 }
 //------------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ void SBlockData::bind(game::CGrid::SCellHolder* _pCell) {
 //------------------------------------------------------------------------------
 
 fgBool SBlockData::isRotationFinished(void) const {
-    if(rotDir != STATIC) {
+    if(rotDir != NO_ROTATION) {
         if(rotation <= M_PIF && rotation >= (M_PIF - FG_EPSILON)) {
             return FG_TRUE;
         }
@@ -227,7 +227,7 @@ fgBool SBlockData::isVisible(void) const {
 //------------------------------------------------------------------------------
 
 fgBool SBlockData::isOppositeRotation(RotationDirection direction) const {
-    if(this->rotDir == STATIC) {
+    if(this->rotDir == NO_ROTATION) {
         return FG_FALSE;
     }
     if((this->rotDir == LEFT && direction == RIGHT) ||
@@ -253,12 +253,12 @@ fgBool SBlockData::isOppositeRotation(RotationDirection direction) const {
 }
 //------------------------------------------------------------------------------
 
-SBlockData::RotationDirection SBlockData::getOppositeRotation(RotationDirection direction) {
-    RotationDirection test, result = STATIC;
-    if(this->rotDir == STATIC) {
-        return STATIC;
+RotationDirection SBlockData::getOppositeRotation(RotationDirection direction) {
+    RotationDirection test, result = NO_ROTATION;
+    if(this->rotDir == NO_ROTATION) {
+        return NO_ROTATION;
     }
-    if(direction == AUTO) {
+    if(direction == AUTO_ROTATION) {
         test = this->rotDir;
     } else {
         test = direction;

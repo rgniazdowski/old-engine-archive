@@ -29,6 +29,7 @@ namespace fg {
         typedef SHexData self_type;
         typedef SHexData type;
         typedef SBlockData base_type;
+        
         constexpr static const float HEX_HALF_SIZE = 0.5f;
 
         /**

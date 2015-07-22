@@ -126,7 +126,7 @@ fgBool CLevelFile::load(void) {
                 continue; // ?
             }
             SBlockInfo quadInfo;
-            quadInfo.color = (BlockColor)color;
+            quadInfo.color = (VColor)color;
             quadInfo.pos.x = xPos;
             quadInfo.pos.y = yPos;
             m_area.max.x = MAX(m_area.max.x, xPos);

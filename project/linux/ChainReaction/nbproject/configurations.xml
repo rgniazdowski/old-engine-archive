@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>AdditionalTypes.h</itemPath>
       <itemPath>CLevelFile.h</itemPath>
       <itemPath>CLevelVis.h</itemPath>
       <itemPath>ChainReaction.h</itemPath>
@@ -129,6 +130,8 @@
           </makeArtifact>
         </requiredProjects>
       </compileType>
+      <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
@@ -230,6 +233,8 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">

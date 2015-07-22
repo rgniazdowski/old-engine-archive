@@ -138,18 +138,18 @@ SBlockData* SQuadData::downRight(fgBool rewind) {
 //------------------------------------------------------------------------------
 
 void SQuadData::rotate(RotationDirection direction, float amount) {
-    if(direction == STATIC && rotDir == STATIC || !pSceneNode)
+    if(direction == NO_ROTATION && rotDir == NO_ROTATION || !pSceneNode)
         return;
-    if(rotDir == OPPOSITE) // ?
+    if(rotDir == OPPOSITE_ROTATION) // ?
         return;
     fgBool shouldRotate = FG_TRUE;
-    if(rotDir != STATIC && direction == AUTO) {
+    if(rotDir != NO_ROTATION && direction == AUTO_ROTATION) {
         direction = rotDir;
     }
-    if(rotDir != STATIC && direction == OPPOSITE) {
+    if(rotDir != NO_ROTATION && direction == OPPOSITE_ROTATION) {
         direction = getOppositeRotation(rotDir);
     }
-    if(rotDir == STATIC && direction != OPPOSITE && direction != AUTO) {
+    if(rotDir == NO_ROTATION && direction != OPPOSITE_ROTATION && direction != AUTO_ROTATION) {
         rotDir = direction;
     }
     fgBool isOpposite = isOppositeRotation(direction);
@@ -209,7 +209,7 @@ void SQuadData::getCoveringCoord(RotationDirection direction,
                                  unsigned short y, 
                                  unsigned short& newX, 
                                  unsigned short& newY) {
-    if(direction == STATIC || direction == AUTO || direction == OPPOSITE) {
+    if(direction == NO_ROTATION || direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION) {
         return;
     }
     // this function always returns something - even if the rotation is not complete
@@ -284,7 +284,7 @@ game::CGrid::SCellHolder* SQuadData::getCoveredNeighbourCellHolder(void) {
 //------------------------------------------------------------------------------
 
 fgBool SQuadData::isRotationValid(RotationDirection direction) const {
-    if(direction == AUTO || direction == OPPOSITE)
+    if(direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION)
         return FG_FALSE;    
     // These are not valid rotation directions for quad
     if(direction == UP_LEFT || direction == UP_RIGHT)

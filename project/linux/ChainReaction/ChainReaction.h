@@ -102,6 +102,10 @@ namespace fg {
         /**
          *
          */
+        void refreshLevelMaterials(void);
+        /**
+         *
+         */
         void registerCallbacks(void);
         /**
          *
@@ -233,12 +237,8 @@ namespace fg {
         event::CFunctionCallback* m_touchCallback;
         /// Mouse callback object
         event::CFunctionCallback* m_mouseCallback;
-        /// Material designed for the black quads
-        gfx::SMaterial* m_materialBlack;
-        /// Material designed for the white quads
-        gfx::SMaterial* m_materialWhite;
-        /// Material designed for the gray quads
-        gfx::SMaterial* m_materialGray;
+        /// Materials designed for different blocks and colors
+        gfx::SMaterial* m_materials[2][VColor::NUM_COLORS];
 
         /**
          *
