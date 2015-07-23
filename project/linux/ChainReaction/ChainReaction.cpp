@@ -666,7 +666,7 @@ fgBool CChainReaction::updateHandler(void* system, void* user) {
     fg::CEngineMain* pEngineMain = info->pEngineMain;
     fg::gfx::CCameraAnimation* pCamera = pEngineMain->getGfxMain()->get3DSceneCamera();
     fg::event::CInputHandler* pInputHandler = pEngineMain->getInputHandler();
-    fg::gfx::CSceneNode* pRoot = pEngineMain->getGfxMain()->get3DScene()->get("cr_root_n_-1");
+    fg::gfx::CSceneNode* pRoot = pEngineMain->getGfxMain()->get3DScene()->getActiveRootNode();
     fg::gfx::CSceneNode::ChildrenVec& children = pRoot->getChildren();
     unsigned int n = pRoot->getChildrenCount();
     float direction = 0.0f;

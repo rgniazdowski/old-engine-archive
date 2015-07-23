@@ -268,12 +268,7 @@ void CLevelSolver::update(float elapsed) {
             unsigned short x = m_additionalBlocks[i].pos.x;
             unsigned short y = m_additionalBlocks[i].pos.y;
             VColor color = m_additionalBlocks[i].color;
-            // reverse the color
-            if(color == VColor::WHITE) {
-                color = VColor::BLACK;
-            } else {
-                color = VColor::WHITE;
-            }
+            color = SBlockData::getOppositeColor(color);            
             SBlockData* pBlockData = m_pLevelData->insertNewBlock(x, y, color);
             if(pBlockData) {
                 pBlockData->setScale(0.001f, 0.001f, 1.0f);

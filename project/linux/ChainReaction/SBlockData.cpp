@@ -127,6 +127,11 @@ void SBlockData::getScale(float* xScale, float* yScale, float* zScale) {
 //------------------------------------------------------------------------------
 
 VColor SBlockData::getOppositeColor(void) const {
+    return self_type::getOppositeColor(color);
+}
+//------------------------------------------------------------------------------
+
+VColor SBlockData::getOppositeColor(VColor color) {
     VColor rColor = VColor::INVALID_COLOR;
     switch(color) {
         case VColor::BLACK:

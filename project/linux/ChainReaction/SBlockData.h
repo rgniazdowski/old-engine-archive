@@ -32,6 +32,8 @@ namespace fg {
      *
      */
     struct SBlockData {
+        typedef SBlockData self_type;
+        typedef SBlockData type;
 
         /**
          *
@@ -216,6 +218,12 @@ namespace fg {
          * @return 
          */
         VColor getOppositeColor(void) const;
+        /**
+         * 
+         * @param color
+         * @return 
+         */
+        static VColor getOppositeColor(VColor color);
         /**
          * Check whether or not this block is currently rotating
          * @return
