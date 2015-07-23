@@ -38,7 +38,7 @@ namespace fg {
             ///
             typedef CManagedObject<THandleType> self_type;
             // System data is always set to (void *)this
-            typedef fgBool(*CallbackFuncPtr)(void *systemData, void *userData);
+            typedef fgBool(*CallbackFuncPtr)(void* systemData, void* userData);
             ///
             typedef CallbackFuncPtr callback_type;
 
@@ -66,15 +66,14 @@ namespace fg {
                 // Now call the special destructor callbacks
                 int n = m_onDestructorCallbacks.size();
                 for(int i = 0; i < n; i++) {
-                    CallbackData &info = m_onDestructorCallbacks[i];
+                    SCallbackData& info = m_onDestructorCallbacks[i];
                     if(info.callback) {
                         info.callback((void *)this, (void *)info.userData);
                         info.callback = NULL;
                         info.userData = NULL;
                     }
                 }
-                m_onDestructorCallbacks.clear_optimised();
-                //m_onDestructorCallbacks.resize(0);
+                m_onDestructorCallbacks.clear_optimised();                
             }
 
         public:
@@ -87,7 +86,7 @@ namespace fg {
             fgBool registerOnDestruct(CallbackFuncPtr pCallback, void* pUserData = NULL) {
                 if(!pCallback || isRegistered(pCallback))
                     return FG_FALSE;
-                CallbackData callbackInfo(pCallback, pUserData);
+                SCallbackData callbackInfo(pCallback, pUserData);
                 m_onDestructorCallbacks.push_back(callbackInfo);
                 return FG_TRUE;
             }
@@ -102,7 +101,7 @@ namespace fg {
                 int n = m_onDestructorCallbacks.size();
                 // Check for duplicates
                 for(int i = 0; i < n; i++) {
-                    CallbackData &info = m_onDestructorCallbacks[i];
+                    SCallbackData &info = m_onDestructorCallbacks[i];
                     if(info.callback == pCallback)
                         return FG_TRUE;
                 }
@@ -191,20 +190,20 @@ namespace fg {
              * 
              * @return 
              */
-            inline fg::base::CManager *getManager(void) const {
+            inline fg::base::CManager* getManager(void) const {
                 return m_pManager;
             }
             /**
              * 
              * @param pManager
              */
-            inline void setManager(fg::base::CManager *pManager) {
+            inline void setManager(fg::base::CManager* pManager) {
                 m_pManager = pManager;
             }
 
         protected:
             /// Pointer to the managing class - can be NULL
-            fg::base::CManager *m_pManager;
+            fg::base::CManager* m_pManager;
             /// Name of the data, string ID
             util::CNamedHandle m_nameTag;
             /// Unique handle number
@@ -217,33 +216,33 @@ namespace fg {
             /**
              *
              */
-            struct CallbackData {
+            struct SCallbackData {
                 ///
                 CallbackFuncPtr callback;
                 ///
-                void *userData;
+                void* userData;
                 /**
                  * 
                  */
-                CallbackData() : userData(NULL), callback(NULL) { }
+                SCallbackData() : userData(NULL), callback(NULL) { }
                 /**
                  * 
                  * @param pUserData
                  * @param pCallback
                  */
-                CallbackData(CallbackFuncPtr pCallback, void *pUserData) :
+                SCallbackData(CallbackFuncPtr pCallback, void* pUserData) :
                 callback(pCallback),
                 userData(pUserData) { }
-            };
+            }; // struct SCallbackData
 
             ///
-            typedef fg::CVector<CallbackData> CallbacksVec;
+            typedef fg::CVector<SCallbackData> CallbacksVec;
             ///
             typedef typename CallbacksVec::iterator CallbacksVecItor;
             /// Callbacks to call when the destructor is called
             CallbacksVec m_onDestructorCallbacks;
-        };        
-    };
-};
+        }; // class CManagedObject
+    } // namespace resource
+} // namespace fg
     #undef FG_INC_MANAGED_OBJECT_BLOCK
 #endif /* FG_INC_MANAGED_OBJECT */
