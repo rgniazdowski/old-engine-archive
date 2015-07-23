@@ -142,9 +142,9 @@ namespace fg {
             static const char *getTagName(void) {
                 return TagType::name();
             }
-        };
-    };
-};
+        }; // class CHandle
+    } // namespace util
+} // namespace fg
 //------------------------------------------------------------------------------
 template <typename TagType>
 fgBool fg::util::CHandle<TagType>::init(fgRawIndex index) {

@@ -254,7 +254,7 @@ namespace fg {
                 ///
                 data_type_8 m_dataVec[DATA_MAX_RAW_PARTS];
             };
-        };
+        }; // class CFastCmp
     } // namespace util
 } // namespace fg
 

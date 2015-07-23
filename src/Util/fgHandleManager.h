@@ -118,7 +118,7 @@ namespace fg {
                     nameTag.setIndex(0);
                     nameTag.clear();
                 }
-            };
+            }; // struct SDataHolder
 
             // Type for vector storing Data pointers
             typedef CVector<SDataHolder> DataVec;
@@ -255,12 +255,11 @@ namespace fg {
              * @return 
              */
             fgBool isHandleValid(const THandleType& handle);
-        };
-    };
-};
-/**
- * 
- */
+        }; // class CHandleManager
+    } // namespace util
+} // namespace fg
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 void fg::util::CHandleManager<TDataType, THandleType>::clear(void) {
     m_managedData.clear_optimised();
@@ -268,12 +267,8 @@ void fg::util::CHandleManager<TDataType, THandleType>::clear(void) {
     m_nameMap.clear();
     m_hashMap.clear();
 }
-/**
- * 
- * @param rHandle
- * @param pResource
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 fgBool fg::util::CHandleManager<TDataType, THandleType>::acquireHandle(THandleType& rHandle, TDataType pResource) {
     // If free list is empty, add a new one otherwise use first one found
@@ -299,12 +294,8 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::acquireHandle(THandleTy
     }
     return FG_TRUE;
 }
-/**
- * 
- * @param name
- * @param rHandle
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const std::string& name, const THandleType& rHandle) {
     if(!isHandleValid(rHandle)) {
@@ -338,12 +329,8 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const std::st
                  index);
     return FG_TRUE;
 }
-/**
- * 
- * @param name
- * @param rHandle
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const char* name, const THandleType& rHandle) {
     if(!isHandleValid(rHandle)) {
@@ -379,11 +366,8 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const char* n
                  index);
     return FG_TRUE;
 }
-/**
- * 
- * @param handle
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 fgBool fg::util::CHandleManager<TDataType, THandleType>::releaseHandle(const THandleType& handle) {
     if(!isHandleValid(handle)) {
@@ -415,18 +399,14 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::releaseHandle(const THa
     }
     return FG_TRUE;
 }
-/**
- * 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 void fg::util::CHandleManager<TDataType, THandleType>::releaseAllHandles(void) {
     this->clear();
 }
-/**
- * 
- * @param handle
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const THandleType& handle) {
     #if defined(FG_DEBUG)
@@ -441,11 +421,8 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(c
     fgRawIndex index = handle.getIndex();
     return (*(m_managedData.begin() + index)).data;
 }
-/**
- * 
- * @param name
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const std::string& name) {
     if(name.empty()) {
@@ -484,11 +461,8 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(c
     }
     #endif
 }
-/**
- * 
- * @param name
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const char* name) {
     if(name == NULL) {
@@ -497,11 +471,8 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(c
     std::string key = name;
     return self_type::dereference(key);
 }
-/**
- * 
- * @param name
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(CNamedHandle& name) {
     if(name.empty()) {
@@ -532,11 +503,8 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(C
     }
     return NULL;
 }
-/**
- * 
- * @param pData
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isDataManaged(TDataType pData) {
     int n = m_managedData.size();
@@ -547,11 +515,8 @@ inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isDataManaged(TD
     }
     return FG_FALSE;
 }
-/**
- * 
- * @param handle
- * @return 
- */
+//------------------------------------------------------------------------------
+
 template <typename TDataType, typename THandleType>
 inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isHandleValid(const THandleType& handle) {
     if(handle.isNull()) {
@@ -573,6 +538,7 @@ inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isHandleValid(co
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
     #if 0
 template <typename DataType, typename HandleType>

@@ -259,9 +259,10 @@ namespace fg {
              * 
              */
             void dumpAllParameters(void);
-        };
-    };
-};
+
+        }; // class CConfig
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_CONFIG_BLOCK
 #endif /* FG_INC_CONFIG */

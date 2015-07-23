@@ -21,8 +21,8 @@
 namespace fg {
     namespace util {
         class CRegularFile;
-    };
-};
+    } // namespace util
+} // namespace fg
 //class fg::util::File;
 
     #define FG_TAG_FILE_NAME	"RegularFile"
@@ -277,9 +277,10 @@ namespace fg {
             FileHandleType *getFilePtr(void) const {
                 return m_file;
             }
-        };
-    };
-};
+
+        }; // class CRegularFile
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_REGULAR_FILE_BLOCK
 #endif /* FG_INC_REGULAR_FILE */

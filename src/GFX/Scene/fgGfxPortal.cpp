@@ -37,7 +37,7 @@ gfx::CPortal::~CPortal() {
 gfx::CPortal::CPortal(CPortalProcessor* pPortProc) :
 base_type(),
 m_planeIdx(-1),
-m_flags(NONE),
+m_flags(NO_FLAGS),
 m_pPortProc(pPortProc) { }
 //------------------------------------------------------------------------------
 

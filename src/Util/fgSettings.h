@@ -28,7 +28,7 @@ namespace fg {
         /**
          *
          */
-        struct settingsData {
+        struct SSettingsData {
             /// Installation root dir
             std::string installationPath;
             /// Path to the data folder
@@ -62,7 +62,7 @@ namespace fg {
             /**
              * 
              */
-            settingsData() :
+            SSettingsData() :
             defaultProfileName("default"),
             mainModPath("main"),
             currentModPath("mod"),
@@ -84,7 +84,7 @@ namespace fg {
         ///
         xml::CParser *m_parser;
         /// 
-        settingsData m_settings;
+        SSettingsData m_settings;
 
     public:
         /**
@@ -467,14 +467,15 @@ namespace fg {
         void setDebugMode(fgBool toggle) {
             m_settings.debugMode = toggle;
         }
-    };
 
-};
+    }; // class CSettings
+} // namespace fg
+
     #define FG_SETTINGS_XML_ROOT_NODE_NAME	"Settings"
 
-FG_XML_AUTO_TEMPLATE_ROOT(fg::CSettings::settingsData, FG_SETTINGS_XML_ROOT_NODE_NAME);
+FG_XML_AUTO_TEMPLATE_ROOT(fg::CSettings::SSettingsData, FG_SETTINGS_XML_ROOT_NODE_NAME);
 
-FG_XML_AUTO_TEMPLATE_ELEMENT_BEGIN(fg::CSettings::settingsData);
+FG_XML_AUTO_TEMPLATE_ELEMENT_BEGIN(fg::CSettings::SSettingsData);
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, installationPath, "installationPath");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, defaultDataPath, "defaultDataPath");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, defaultLogPath, "defaultLogPath");
@@ -494,11 +495,11 @@ FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool, useNetwork, "useNetwork");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool, debugMode, "debugMode");
 FG_XML_AUTO_TEMPLATE_ELEMENT_END();
 
-FG_XML_AUTO_TEMPLATE_CHARACTERS_BEGIN(fg::CSettings::settingsData);
+FG_XML_AUTO_TEMPLATE_CHARACTERS_BEGIN(fg::CSettings::SSettingsData);
 FG_XML_AUTO_TEMPLATE_CHARACTERS_EMPTY
 FG_XML_AUTO_TEMPLATE_CHARACTERS_END();
 
-FG_XML_AUTO_TEMPLATE_ATTRIBUTE_BEGIN(fg::CSettings::settingsData);
+FG_XML_AUTO_TEMPLATE_ATTRIBUTE_BEGIN(fg::CSettings::SSettingsData);
 FG_XML_AUTO_TEMPLATE_ATTRIBUTE_EMPTY
 FG_XML_AUTO_TEMPLATE_ATTRIBUTE_END();
 

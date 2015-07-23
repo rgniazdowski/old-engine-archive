@@ -27,9 +27,9 @@ namespace fg {
 
                 return hash;
             }
-        };
-    };
-};
+        } // namespace tag_helper
+    } // namespace util
+} // namespace fg
 
     #define FG_TAG_NAME_LEN_MAX	64
 
@@ -52,8 +52,8 @@ namespace fg {
 
         template<class _type> struct Tag : TagBase {
         };
-    };
-};
+    } // namespace util
+} // namespace fg
 
 /**
  * This is a special tag definition macro.
@@ -68,7 +68,7 @@ template <> struct Tag<_tag_type> : TagBase { \
 	FG_TAG_FUNCTION_NAME(_tag_name) \
 	FG_TAG_FUNCTION_ID(_tag_id) \
 	}; \
-        }; \
+        } \
         }
 
 /**
@@ -84,7 +84,7 @@ template <> struct Tag<_tag_type> : TagBase { \
 	FG_TAG_FUNCTION_NAME(_tag_name) \
 	FG_TAG_FUNCTION_ID_AUTO() \
 	}; \
-        }; \
+        } \
         }
 
 FG_TAG_TEMPLATE(TagVoid, FG_TAG_VOID_NAME, FG_TAG_VOID_ID);

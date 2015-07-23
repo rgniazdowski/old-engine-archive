@@ -38,9 +38,9 @@ fgBool CSettings::load(const char *filePath) {
         //m_parser->setReportToMsgSystem(FG_FALSE); !?!
     }
     fgBool status = FG_TRUE;
-    fgXMLAutoHandler<CSettings::settingsData> *content = NULL;
-    content = new fgXMLAutoHandler<CSettings::settingsData>();
-    settingsData data;
+    fgXMLAutoHandler<CSettings::SSettingsData> *content = NULL;
+    content = new fgXMLAutoHandler<CSettings::SSettingsData>();
+    SSettingsData data;
     content->setTarget(&data);
     m_parser->setContentHandler(content);
     if(!m_parser->loadXML(filePath)) {

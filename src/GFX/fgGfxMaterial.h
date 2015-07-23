@@ -39,7 +39,7 @@ namespace fg {
              */
             enum StateFlags {
                 /// 0
-                NONE = 0x0000,
+                NO_FLAGS = 0x0000,
                 /// 1
                 FRONT_FACE_CCW = 0x0001,
                 /// 2

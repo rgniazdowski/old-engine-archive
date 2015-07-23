@@ -86,7 +86,7 @@ namespace fg {
              */
             enum StateFlags {
                 /// Empty state flags - nothing activated
-                NONE = 0x0000,
+                NO_FLAGS = 0x0000,
                 /// Whether or not the shader program is pre-loaded (from config)
                 PRELOADED = 0x0001,
                 /// Is the shader program compiled?

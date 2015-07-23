@@ -41,9 +41,10 @@ namespace fg {
              * @return 
              */
             fgBool save(const char *filePath, config::SectionMap &sectionMap);
-        };
-    };
-};
+
+        }; // class CConfigWriter
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_CONFIG_WRITER_BLOCK
 #endif /* FG_INC_CONFIG_WRITER */

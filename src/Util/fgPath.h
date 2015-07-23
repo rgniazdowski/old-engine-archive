@@ -145,8 +145,8 @@ namespace fg {
 
         // Join the path from parts
         void join(std::string &path, CStringVector &parts);
-    };
-};
+    } // namespace path
+} // namespace fg
 
     #undef FG_INC_PATH_BLOCK
 #endif /* FG_INC_PATH */

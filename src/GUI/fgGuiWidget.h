@@ -139,7 +139,7 @@ namespace fg {
              */
             enum StateFlags {
                 /// Empty state flags - nothing activated
-                NONE = 0x0000,
+                NO_FLAGS = 0x0000,
                 /// Whether or not the widget is visible (will be displayed)
                 VISIBLE = 0x0001,
                 /// If widget is not active it cannot be clicked, activated,
@@ -218,6 +218,7 @@ namespace fg {
 
             /// Current event state of the widget
             EventState m_state;
+            ///
             StateFlags m_stateFlags;            
 
         protected:

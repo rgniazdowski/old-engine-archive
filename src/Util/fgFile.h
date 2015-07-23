@@ -321,8 +321,8 @@ namespace fg {
             FileHandleType *getFilePtr(void) const {
                 return m_regular.getFilePtr();
             }
-        };
 
+        }; // class CFile
         /// The higher file class alias - data file
         typedef CFile DataFile;
     } // namespace util

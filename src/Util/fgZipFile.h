@@ -520,9 +520,9 @@ namespace fg {
              */
             virtual int setPosition(long offset, int whence);
 
-        };
-    };
-};
+        }; // class CZipFile
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_ZIP_FILE_BLOCK
 #endif	/* FG_INC_ZIP_FILE */

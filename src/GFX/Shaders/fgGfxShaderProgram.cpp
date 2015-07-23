@@ -23,7 +23,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CShaderProgram::CShaderProgram() : base_type(),
-m_stateFlags(NONE),
+m_stateFlags(NO_FLAGS),
 m_shaders(),
 m_uniformBinds(),
 m_attrBinds(),
@@ -67,7 +67,7 @@ void gfx::CShaderProgram::clearAll(void) {
     m_uniformBinds.clear_optimised();
     m_attrBinds.clear_optimised();
     m_shaders.clear_optimised();
-    m_stateFlags = NONE;
+    m_stateFlags = NO_FLAGS;
     deleteProgram();
 }
 //------------------------------------------------------------------------------

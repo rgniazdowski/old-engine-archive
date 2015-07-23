@@ -58,7 +58,7 @@ namespace fg {
             };
 
             enum StateFlags {
-                NONE = 0x00,
+                NO_FLAGS = 0x00,
                 INITIAL = 0x01,
                 DUPLICATED = 0x02,
                 REVERSED = 0x04,

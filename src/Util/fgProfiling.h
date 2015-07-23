@@ -237,10 +237,10 @@ namespace fg {
                                      float* average,
                                      float* minimum,
                                      float* maximum);
-        };
+        }; // class CProfiling
 
-    };
-};
+    } // namespace profile
+} // namespace fg
 
 namespace fg {
     namespace profile {
@@ -249,8 +249,8 @@ namespace fg {
         ///
         extern CProfiling *g_debugProfiling;
     #endif
-    };
-};
+    } // namespace profile
+} // namespace fg
 
     #undef FG_INC_PROFILING_BLOCK
 #endif /* FG_INC_PROFILING */

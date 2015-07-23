@@ -192,9 +192,10 @@ namespace fg {
     #endif
             /// Was the directory read recursively?
             fgBool m_isRecursive;
-        };
-    };
-};
+
+        }; // class CDirent
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_DIRENT_BLOCK
 #endif /* FG_INC_DIRENT */

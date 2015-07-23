@@ -81,9 +81,9 @@ namespace fg {
          * @return 
          */
         long seconds(void);
-    };
 
-};
+    } // namespace timesys
+} // namespace fg
 
     #undef FG_INC_TIME_BLOCK
 #endif /* FG_INC_TIME */

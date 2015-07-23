@@ -120,7 +120,7 @@ namespace fg {
              */
             enum StateFlags {
                 /// No flags selected
-                NONE = 0x0000,
+                NO_FLAGS = 0x0000,
                 /// Is the scene node visible? Will be set to FALSE when the scene node
                 /// is not in the visible tree node (quadtree/octree/...)
                 VISIBLE = 0x0001,
@@ -945,7 +945,7 @@ namespace fg {
             inline void setNodeType(const SceneNodeType nodeType) {
                 m_nodeType = nodeType;
             }
-        };
+        }; // class CSceneNode
 
         FG_ENUM_FLAGS(CSceneNode::StateFlags);
         /**
@@ -961,8 +961,8 @@ namespace fg {
                 m_stateFlags ^= flags;
             }
         }
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SCENE_NODE_BLOCK
 #endif /* FG_INC_GFX_SCENE_NODE */

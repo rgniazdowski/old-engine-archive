@@ -291,7 +291,7 @@ void gfx::SMaterial::clear(void) {
     blendMode = BlendMode::BLEND_OFF;
 
     //stateFlags = FRONT_FACE_CCW | DEPTH_TEST | DEPTH_WRITE_MASK | CULL_FACE;
-    stateFlags = NONE;
+    stateFlags = NO_FLAGS;
 
     ambientTex = NULL;
     diffuseTex = NULL;

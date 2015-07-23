@@ -24,7 +24,7 @@ m_nodeType(nodeType), // Current node type
 m_pParent(pParent), // Pointer to the parent node
 m_collisionBody(NULL),
 m_children(), // Children set
-m_stateFlags(StateFlags::NONE),
+m_stateFlags(StateFlags::NO_FLAGS),
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
 m_aabb(), // axis-aligned bounding box - this one will be transformed

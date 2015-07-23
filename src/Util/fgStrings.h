@@ -331,7 +331,7 @@ namespace fg {
             strings::parseVector<VectorType>(retVector, std::string(value));
         }
         //----------------------------------------------------------------------
-    }
+    } // namespace strings
 } // namespace fg
 
     #undef FG_INC_STRINGS_BLOCK

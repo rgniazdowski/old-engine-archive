@@ -77,8 +77,8 @@ namespace fg {
          */
         Color4f parseHEX(unsigned long int value, const unsigned char comp = 4);
 
-    };
-};
+    } // namespace colors
+} // namespace fg
 
     #undef FG_INC_COLORS_BLOCK
 #endif	/* FG_INC_COLORS */

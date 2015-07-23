@@ -52,7 +52,8 @@ namespace fg {
             typedef std::pair<ParameterMapKey, SCfgParameter*> ParameterMapPair;
             ///
             typedef ParameterMap::iterator ParameterMapItor;
-        };
+            
+        } // namespace config
 
         ///
         const unsigned int PARAM_STRING_MAX = 512;
@@ -282,7 +283,7 @@ namespace fg {
                 snprintf(buf, nmax, "%s = %s", name.c_str(), tmp_val);
                 return buf;
             }
-        };
+        }; // struct SCfgParameter
 
         /*
          *
@@ -299,7 +300,7 @@ namespace fg {
             /**
              * Default empty constructor
              */
-            SCfgSection() { }
+            SCfgSection() : name(), subName(), parameters(), parametersMap() { }
             /**
              * Default destructor for config section
              */
@@ -376,9 +377,10 @@ namespace fg {
                 snprintf(buf, nmax, "[%s]", name.c_str());
                 return buf;
             }
-        };
-    };
-};
+            
+        }; // struct SCfgSection
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_CONFIG_STRUCT_BLOCK
 #endif /* FG_INC_CONFIG_STRUCT */

@@ -246,13 +246,13 @@ namespace fg {
                  */
                 virtual int setPosition(long offset, int whence) = 0;
 
-            };
+            }; // class CFile
 
             // Overload standard bitwise operator for enum type
             FG_ENUM_FLAGS(CFile::Mode);
-        };
-    };
-};
+        } // namespace base
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_FILE_BASE_BLOCK
 #endif	/* FG_INC_FILE_BASE */

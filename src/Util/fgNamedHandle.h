@@ -700,10 +700,9 @@ namespace fg {
             unsigned int m_stringHash;
             ///
             fgBool m_isIndexSet;
-        };
-    };
-};
+        }; // class CNamedHandle
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_NAMED_HANDLE_BLOCK
 #endif	/* FG_INC_NAMED_HANDLE */
-
