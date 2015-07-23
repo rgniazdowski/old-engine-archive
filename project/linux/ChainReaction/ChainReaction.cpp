@@ -58,7 +58,6 @@ fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
     }
 
     fg::CLevelFile* level = new fg::CLevelFile();
-    level->setLevelType(fg::CLevelFile::LEVEL_HEXAGONS);
     level->load("ChainReaction/level_hex2.cr");
     unsigned short xSize, ySize;
     unsigned short xAreaMin, yAreaMin;
@@ -72,23 +71,6 @@ fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
     FG_LOG_DEBUG("ChainReaction: Level: area size[%dx%d]", xAreaSize, yAreaSize);
     FG_LOG_DEBUG("ChainReaction: Level: area min[%dx%d]", xAreaMin, yAreaMin);
     FG_LOG_DEBUG("ChainReaction: Level: area max[%dx%d]", xAreaMax, yAreaMax);
-    unsigned int n = level->getBlocksCount();
-    fg::CLevelFile::BlockInfoVec& quads = level->getBlocks();
-    /*for(unsigned int i = 0; i < n; i++) {
-        const char* colorStr = NULL;
-        switch(quads[i].color) {
-            case fg::CLevelFile::NONE:
-                colorStr = "none\0";
-                break;
-            case fg::CLevelFile::BLACK:
-                colorStr = "black\0";
-                break;
-            case fg::CLevelFile::WHITE:
-                colorStr = "white\0";
-                break;
-        }
-        FG_LOG_DEBUG("ChainReaction: %dx%d: %s\n", quads[i].pos.x, quads[i].pos.y, colorStr);
-    }*/
     pChainReactionMgr->getLevelVis()->getLevelDataHolder()->setLevelFile(level);
     pChainReactionMgr->refreshLevelMaterials();
     pChainReactionMgr->getLevelVis()->setScale(20.0f);

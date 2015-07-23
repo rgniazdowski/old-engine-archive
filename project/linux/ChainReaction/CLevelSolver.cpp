@@ -32,10 +32,6 @@ m_additionalBlocks(),
 m_emergeBlocks(),
 m_duplicates(),
 m_coveredBlocks(),
-m_isChainReaction(FG_FALSE),
-m_isStepping(FG_FALSE),
-m_isStepOn(FG_FALSE),
-m_isSimulating(FG_FALSE),
 m_stateFlags(NO_FLAGS),
 m_scale(1.0f) {
     // Should level visualization have access to SceneManager?

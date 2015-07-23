@@ -40,15 +40,16 @@ namespace fg {
          *
          */
         enum StateFlags {
-            ///
+            /// No internal flags activated
             NO_FLAGS = 0x0000,
-            ///
+            /// Special flag - if TRUE the chain reaction begun and blocks are rotating
             CHAIN_REACTION = 0x0001,
-            ///
+            /// Special flag - chain reaction will perform one rotation wave per step
             STEPPING = 0x0002,
-            ///
+            /// Should perform one step now? - this will be set to false automatically
             STEP_ON = 0x0004,
-            ///
+            /// Is level solver currently simulating? This is used to find solution
+            /// by using brute-force algorithm (without visuals and with instant chain-reaction)
             SIMULATION = 0x0008,
             ///
             INSTANT_BALANCE = 0x0010
@@ -88,11 +89,18 @@ namespace fg {
             return FG_FALSE;
         }
 
+        /**
+         *
+         */
+        void clear(void);
+
     public:
         /**
          * 
+         * @param flags
+         * @param toggle
          */
-        void clear(void);
+        void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
         /**
          *
          * @param scale
@@ -117,44 +125,72 @@ namespace fg {
          * @param toggle
          */
         void setChainReaction(fgBool toggle = FG_TRUE) {
-            m_isChainReaction = toggle;
+            setFlag(CHAIN_REACTION, toggle);
         }
         /**
          *
          * @return
          */
         fgBool isChainReaction(void) const {
-            return m_isChainReaction;
+            return (fgBool)!!(m_stateFlags & CHAIN_REACTION);
         }
         /**
          * 
          * @param toggle
          */
         void setStepping(fgBool toggle = FG_TRUE) {
-            m_isStepping = toggle;
+            setFlag(STEPPING, toggle);
             if(!toggle)
-                m_isStepOn = FG_FALSE;
+                setFlag(STEP_ON, FG_FALSE);
         }
         /**
          *
          * @return
          */
         fgBool isStepping(void) const {
-            return m_isStepping;
+            return (fgBool)!!(m_stateFlags & STEPPING);
         }
         /**
          *
          * @param toggle
          */
         void setStepOn(fgBool toggle = FG_TRUE) {
-            m_isStepOn = toggle;
+            setFlag(STEP_ON, toggle);
         }
         /**
          *
          * @return
          */
         fgBool isStepOn(void) const {
-            return m_isStepOn;
+            return (fgBool)!!(m_stateFlags & STEP_ON);
+        }
+        /**
+         *
+         * @param toggle
+         */
+        void setSimulation(fgBool toggle = FG_TRUE) {
+            setFlag(SIMULATION, toggle);
+        }
+        /**
+         * 
+         * @return 
+         */
+        fgBool isSimulation(void) const {
+            return (fgBool)!!(m_stateFlags & INSTANT_BALANCE);
+        }
+        /**
+         * 
+         * @param toggle
+         */
+        void setInstantBalance(fgBool toggle = FG_TRUE) {
+            setFlag(INSTANT_BALANCE, toggle);
+        }
+        /**
+         * 
+         * @return
+         */
+        fgBool isInstantBalance(void) const {
+            return (fgBool)!!(m_stateFlags & INSTANT_BALANCE);
         }
         /**
          * 
@@ -189,7 +225,6 @@ namespace fg {
                 return LevelType::INVALID_LEVEL;
             return m_pLevelData->getLevelType();
         }
-
         /**
          *
          * @return
@@ -440,19 +475,26 @@ namespace fg {
         DuplicateInfoVec m_duplicates;
         /// Stores positions and other info (like color & direction) of covered quads
         CoverInfoVec m_coveredBlocks;
-        /// Special flag - if TRUE the chain reaction begun and quads are rotating
-        fgBool m_isChainReaction;
-        /// Special flag - chain reaction will perform one rotation per step
-        fgBool m_isStepping;
-        /// Should perform one step now? - this will be set to false automatically
-        fgBool m_isStepOn;
-        ///
-        fgBool m_isSimulating;
         ///
         StateFlags m_stateFlags;
         ///
         float m_scale;
     }; // class CLevelSolver
+
+    FG_ENUM_FLAGS(CLevelSolver::StateFlags);
+    /**
+     *
+     * @param flags
+     * @param toggle
+     */
+    inline void CLevelSolver::setFlag(const StateFlags flags, const fgBool toggle) {
+        if(toggle) {
+            m_stateFlags |= flags;
+        } else {
+            m_stateFlags |= flags;
+            m_stateFlags ^= flags;
+        }
+    }
 
 } // namespace fg
 

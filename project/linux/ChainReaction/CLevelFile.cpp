@@ -107,10 +107,19 @@ fgBool CLevelFile::load(void) {
         if(i == 0) {
             // the first line is supposed to contain full grid size
             int rx, ry;
-            std::sscanf(line.c_str(), "%dx%d", &rx, &ry);
+            char mapType[16];
+            memset(mapType, 0, 16);
+            std::sscanf(line.c_str(), "%dx%d %d %s", &rx, &ry, &m_levelIdx, mapType);
             if(rx >= USHRT_MAX || ry >= USHRT_MAX) {
                 status = FG_FALSE;
                 continue;
+            }
+            if(strings::startsWith(mapType, "hex\0", FG_FALSE)) {
+                m_type = LevelType::LEVEL_HEXAGONS;
+            } else if(strings::startsWith(mapType, "quad\0", FG_FALSE)) {
+                m_type = LevelType::LEVEL_QUADS;
+            } else {
+                m_type = LevelType::LEVEL_QUADS;
             }
             m_size.x = rx;
             m_size.y = ry;
