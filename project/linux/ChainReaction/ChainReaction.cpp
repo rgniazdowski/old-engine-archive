@@ -57,6 +57,43 @@ fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
         return FG_FALSE;
     }
 
+    fg::CLevelFile* level = new fg::CLevelFile();
+    level->setLevelType(fg::CLevelFile::LEVEL_HEXAGONS);
+    level->load("ChainReaction/level_hex2.cr");
+    unsigned short xSize, ySize;
+    unsigned short xAreaMin, yAreaMin;
+    unsigned short xAreaMax, yAreaMax;
+    unsigned short xAreaSize, yAreaSize;
+    level->getSize(xSize, ySize);
+    level->getAreaSize(xAreaSize, yAreaSize);
+    level->getAreaMin(xAreaMin, yAreaMin);
+    level->getAreaMax(xAreaMax, yAreaMax);
+    FG_LOG_DEBUG("ChainReaction: Level: size[%dx%d]", xSize, ySize);
+    FG_LOG_DEBUG("ChainReaction: Level: area size[%dx%d]", xAreaSize, yAreaSize);
+    FG_LOG_DEBUG("ChainReaction: Level: area min[%dx%d]", xAreaMin, yAreaMin);
+    FG_LOG_DEBUG("ChainReaction: Level: area max[%dx%d]", xAreaMax, yAreaMax);
+    unsigned int n = level->getBlocksCount();
+    fg::CLevelFile::BlockInfoVec& quads = level->getBlocks();
+    /*for(unsigned int i = 0; i < n; i++) {
+        const char* colorStr = NULL;
+        switch(quads[i].color) {
+            case fg::CLevelFile::NONE:
+                colorStr = "none\0";
+                break;
+            case fg::CLevelFile::BLACK:
+                colorStr = "black\0";
+                break;
+            case fg::CLevelFile::WHITE:
+                colorStr = "white\0";
+                break;
+        }
+        FG_LOG_DEBUG("ChainReaction: %dx%d: %s\n", quads[i].pos.x, quads[i].pos.y, colorStr);
+    }*/
+    pChainReactionMgr->getLevelVis()->getLevelDataHolder()->setLevelFile(level);
+    pChainReactionMgr->refreshLevelMaterials();
+    pChainReactionMgr->getLevelVis()->setScale(20.0f);
+    pChainReactionMgr->getLevelVis()->restart();
+
     FG_LOG_DEBUG("ChainReaction: Initialized successfully!");
     return FG_TRUE;
 }
@@ -75,6 +112,8 @@ fgBool fgExitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
     }
 
     fg::CChainReaction* pChainReactionMgr = (fg::CChainReaction*) info->pPluginData;
+    delete pChainReactionMgr->getLevelVis()->getLevelFile();
+    pChainReactionMgr->getLevelVis()->getLevelDataHolder()->setLevelFile(NULL);
     delete pChainReactionMgr;
     pChainReactionMgr = NULL;
     info->pPluginData = NULL;
@@ -97,6 +136,8 @@ m_pSceneMgr(NULL),
 m_pGameMain(NULL),
 m_grid(NULL),
 m_levelVis(NULL),
+m_levelSolver(NULL),
+m_levelDataHolder(NULL),
 m_updateCallback(NULL),
 m_preRenderCallback(NULL),
 m_renderCallback(NULL),
@@ -107,7 +148,7 @@ m_drag() {
     m_managerType = FG_MANAGER_CHAIN_REACTION;
     m_drag.invalidate();
     //memset(m_materials, 0, sizeof(m_materials));
-    for(unsigned int i = 0;i<VColor::NUM_COLORS;i++) {
+    for(unsigned int i = 0; i < VColor::NUM_COLORS; i++) {
         m_materials[0][i] = NULL;
         m_materials[1][i] = NULL;
     }
@@ -129,9 +170,18 @@ void CChainReaction::clear(void) {
 fgBool CChainReaction::destroy(void) {
     m_init = FG_FALSE;
     unregisterCallbacks();
+
     if(m_levelVis) {
         delete m_levelVis;
         m_levelVis = NULL;
+    }
+    if(m_levelSolver) {
+        delete m_levelSolver;
+        m_levelSolver = NULL;
+    }
+    if(m_levelDataHolder) {
+        delete m_levelDataHolder;
+        m_levelDataHolder = NULL;
     }
     if(m_grid) {
         delete m_grid;
@@ -186,7 +236,15 @@ fgBool CChainReaction::initialize(void) {
     m_grid = new game::CGrid(game::CGrid::TWO_DIMENSIONAL);
     m_grid->setMaxSize(48, 48);
     m_grid->reserve(48, 48);
-    m_levelVis = new CLevelVis(m_grid);
+    if(m_levelVis)
+        delete m_levelVis;
+    if(m_levelSolver)
+        delete m_levelSolver;
+    if(m_levelDataHolder)
+        delete m_levelDataHolder;
+    m_levelDataHolder = new CLevelDataHolder(m_grid);
+    m_levelSolver = new CLevelSolver(m_levelDataHolder);
+    m_levelVis = new CLevelVisualization(m_levelSolver);
     m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
 
     unsigned int n = VColor::NUM_COLORS;
@@ -199,7 +257,7 @@ fgBool CChainReaction::initialize(void) {
         }
     }
     // #FIXME
-    const char *texNames[2] = { "quadWhite.jpg", "hexWhite.jpg" };
+    const char *texNames[2] = {"quadWhite.jpg", "hexWhite.jpg"};
     const char *colorNames[VColor::NUM_COLORS];
     colorNames[VColor::INVALID_COLOR] = NULL;
     colorNames[VColor::BLACK] = "Black";
@@ -211,7 +269,7 @@ fgBool CChainReaction::initialize(void) {
     colorNames[VColor::CYAN] = "Cyan";
     colorNames[VColor::YELLOW] = "Yellow";
     colorNames[VColor::MAGENTA] = "Magenta";
-    
+
     // 0 - quad / 1 - hexagon
     for(unsigned int j = 0; j < 2; j++) {
         for(unsigned int i = VColor::BLACK; i < n; i++) {
@@ -227,7 +285,7 @@ fgBool CChainReaction::initialize(void) {
             m_materials[j][i]->setFrontFace(gfx::FrontFace::FACE_CCW);
             m_materials[j][i]->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
         }
-    }    
+    }
     m_init = FG_TRUE;
     return FG_TRUE;
 }
@@ -238,8 +296,8 @@ void CChainReaction::refreshLevelMaterials(void) {
         return;
     if(!m_levelVis->getLevelFile())
         return;
-    const CLevelFile::LevelType levelType = m_levelVis->getLevelFile()->getLevelType();
-    SBlockData::BlockType blockType = CLevelVis::getBlockTypeFromLevelType(levelType);
+    const CLevelFile::LevelType levelType = m_levelVis->getLevelType();
+    SBlockData::BlockType blockType = CLevelDataHolder::getBlockTypeFromLevelType(levelType);
     // 0 - quads / 1 - hexagons
     if(blockType != SBlockData::QUAD && blockType != SBlockData::HEXAGON)
         return;
@@ -424,15 +482,15 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
                 if(m_drag.pBlockData->isRotationFinished()) {
                     unsigned short x = 0, y = 0;
                     m_drag.pBlockData->getCoveredNeighbourCoord(x, y);
-                    SBlockData* pNewBlock = m_levelVis->moveBlockToNewPlace(m_drag.pBlockData, x, y);
+                    SBlockData* pNewBlock = m_levelDataHolder->moveBlockToNewPlace(m_drag.pBlockData, x, y);
                     if(!pNewBlock) {
-                        m_levelVis->getOrphanBlocks().push_back(m_drag.pBlockData);
-                        m_levelVis->setChainReaction();
-                        m_levelVis->setStepOn(FG_TRUE);
+                        m_levelSolver->getOrphanBlocks().push_back(m_drag.pBlockData);
+                        m_levelSolver->setChainReaction();
+                        m_levelSolver->setStepOn(FG_TRUE);
                     } else {
-                        m_levelVis->setUserDisturbance(pNewBlock);
-                        m_levelVis->setChainReaction(); // now should animate
-                        m_levelVis->setStepOn(FG_TRUE);
+                        m_levelSolver->setUserDisturbance(pNewBlock);
+                        m_levelSolver->setChainReaction(); // now should animate
+                        m_levelSolver->setStepOn(FG_TRUE);
                     }
                     m_drag.pNode = NULL;
                     m_drag.pBlockData = NULL;
@@ -447,7 +505,7 @@ void CChainReaction::dragHandler(event::SSwipe::Direction swipeDir,
         }
     }
 
-    if(!pressed || released || m_levelVis->isChainReaction()) {
+    if(!pressed || released || m_levelSolver->isChainReaction()) {
         // nothing to do - this is mouse motion without keys pressed
         return;
     }
@@ -545,10 +603,10 @@ void CChainReaction::updateStep(void) {
     if(isPickerDown) {
 
     }
-    float zoomOut = 350.0f;
-    float zoomIn = 125.0f;
+    float zoomOut = 250.0f;
+    float zoomIn = 120.0f;
     m_drag.zoomProp = (zoomOut - zoomIn) / zoomOut;
-    if(pPicked && isPickerDown && !m_drag.pNode && !m_levelVis->isChainReaction()) {
+    if(pPicked && isPickerDown && !m_drag.pNode && !m_levelSolver->isChainReaction()) {
         m_drag.begin = m_pSceneMgr->getGroundIntersectionPoint(1);
         //printf("BEGIN: %.2f %.2f %.2f | END: %.2f %.2f %.2f\n",
         //intP0.x, intP0.y, intP0.z,
@@ -623,6 +681,55 @@ fgBool CChainReaction::updateHandler(void* system, void* user) {
     } else {
         return FG_FALSE;
     }
+    fg::CEngineMain* pEngineMain = info->pEngineMain;
+    fg::gfx::CCameraAnimation* pCamera = pEngineMain->getGfxMain()->get3DSceneCamera();
+    fg::event::CInputHandler* pInputHandler = pEngineMain->getInputHandler();
+    fg::gfx::CSceneNode* pRoot = pEngineMain->getGfxMain()->get3DScene()->get("cr_root_n_-1");
+    fg::gfx::CSceneNode::ChildrenVec& children = pRoot->getChildren();
+    unsigned int n = pRoot->getChildrenCount();
+    float direction = 0.0f;
+    fgBool isDown = FG_FALSE;
+    fg::RotationDirection rotDir;
+    if(pInputHandler->isKeyDown(fg::event::FG_KEY_LEFT)) {
+        direction = -1.0f;
+        isDown = FG_TRUE;
+        rotDir = fg::LEFT;
+    } else if(pInputHandler->isKeyDown(fg::event::FG_KEY_RIGHT)) {
+        direction = 1.0f;
+        isDown = FG_TRUE;
+        rotDir = fg::RIGHT;
+    } else if(pInputHandler->isKeyDown(fg::event::FG_KEY_UP)) {
+        isDown = FG_TRUE;
+        rotDir = fg::UP;
+    } else if(pInputHandler->isKeyDown(fg::event::FG_KEY_DOWN)) {
+        isDown = FG_TRUE;
+        rotDir = fg::DOWN;
+    }
+    static int restart = 0;
+    if(!restart && pInputHandler->isKeyDown(fg::event::FG_KEY_R)) {
+        restart++;
+        pChainReaction->getLevelVis()->restart();
+    }
+    if(pInputHandler->isKeyUp(fg::event::FG_KEY_R)) {
+        restart = 0;
+    }
+
+    static int stepOn = 0;
+    if(!stepOn && pInputHandler->isKeyDown(fg::event::FG_KEY_SPACE)) {
+        stepOn++;
+        pChainReaction->getLevelSolver()->setStepOn(FG_TRUE);
+    }
+    if(pInputHandler->isKeyUp(fg::event::FG_KEY_SPACE)) {
+        stepOn = 0;
+        //pChainReaction->getLevelVis()->setStepping(FG_TRUE);
+    }
+
+    if(isDown) {
+        if(pChainReaction->m_drag.pBlockData) {
+            pChainReaction->m_drag.pBlockData->rotate(rotDir, 0.1f);
+        }
+    }
+    pChainReaction->getLevelVis()->setSpeed(2.0f);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

@@ -8,332 +8,105 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 /* 
- * File:   CLevelVis.h
+ * File:   CLevelSolver.h
  * Author: vigilant
  *
- * Created on July 16, 2015, 2:13 PM
+ * Created on July 23, 2015, 8:27 AM
  */
 
-#ifndef FG_INC_LEVEL_VIS
-    #define FG_INC_LEVEL_VIS
-    #define FG_INC_LEVEL_VIS_BLOCK
+#ifndef FG_INC_LEVEL_SOLVER
+    #define FG_INC_LEVEL_SOLVER
+    #define FG_INC_LEVEL_SOLVER_BLOCK
 
-    #include "CLevelFile.h"
-    #include "SQuadData.h"
-
-    #include "fgVector.h"
-
+    #include "CLevelDataHolder.h"
     #include "Math/fgMathLib.h"
 
 namespace fg {
 
-    namespace gfx {
-        class CSceneManager;
-        class CSceneNode;
-        class CSceneNodeMesh;
-        struct SMaterial;
-    }
-
     /**
-     * 
+     *
      */
-    class CLevelVis {
+    class CLevelSolver {
     public:
-        typedef CLevelVis self_type;
-        typedef CLevelVis type;
+        typedef CLevelSolver self_type;
+        typedef CLevelSolver type;
 
     public:
-        typedef CVector<SBlockData*> BlockDataVec;
+        typedef CLevelDataHolder::LevelType LevelType;
+        typedef CLevelDataHolder::BlockDataVec BlockDataVec;
         typedef BlockDataVec::iterator BlockDataVecItor;
+
+        /**
+         *
+         */
+        enum StateFlags {
+            ///
+            NO_FLAGS = 0x0000,
+            ///
+            CHAIN_REACTION = 0x0001,
+            ///
+            STEPPING = 0x0002,
+            ///
+            STEP_ON = 0x0004,
+            ///
+            SIMULATION = 0x0008,
+            ///
+            INSTANT_BALANCE = 0x0010
+        };
 
     public:
         /**
          *
          */
-        CLevelVis(game::CGrid* pGrid = NULL, CLevelFile* pLvlFile = NULL);
+        CLevelSolver(CLevelDataHolder* pLevelDataHolder = NULL);
         /**
          *
          * @param orig
          */
-        CLevelVis(const CLevelVis& orig);
-        /**
-         *
-         */
-        virtual ~CLevelVis();
-
-    protected:
+        CLevelSolver(const CLevelSolver& orig);
         /**
          * 
-         * @return 
          */
-        fgBool prepareBlocks(void);
+        virtual ~CLevelSolver();
 
     public:
         /**
          *
-         * @param x
-         * @param y
-         * @param color
-         * @return
          */
-        SBlockData* insertNewBlock(unsigned short x,
-                                   unsigned short y,
-                                   VColor color);
-
-        /**
-         *
-         * @param x
-         * @param y
-         * @return
-         */
-        int destroyBlock(unsigned short x, unsigned short y);
-
-        /**
-         * This function will move the selected quad to the new position
-         * If the target exists - it will be replaced
-         * @param original
-         * @param newX
-         * @param newY
-         * @return
-         */
-        SBlockData* moveBlockToNewPlace(SBlockData* original,
-                                        unsigned short newX,
-                                        unsigned short newY);
-
-        /**
-         * Creates the new scene node with proper size, scale, position and material.
-         * The node is NOT being inserted into the scene manager.
-         * @param x
-         * @param y
-         * @param color
-         * @return
-         */
-        gfx::CSceneNode* prepareSceneNode(unsigned short x,
-                                          unsigned short y,
-                                          VColor color);
-        /**
-         *
-         */
-        fgBool restart(void);
+        void update(float elapsed = 1.0f);
         /**
          * 
          */
-        inline fgBool setup(void) {
-            return restart();
+        inline void balance(float elapsed = 1.0f) {
+            update(elapsed);
         }
         /**
-         *
+         * 
+         * @return
+         */
+        fgBool solve(void) {
+            return FG_FALSE;
+        }
+
+    public:
+        /**
+         * 
          */
         void clear(void);
-
-    public:
-        /**
-         * 
-         */
-        void preRender(void);
-
-        //----------------------------------------------------------------------
-    public:
         /**
          *
-         * @param x
-         * @param y
-         * @return
-         */
-        SBlockData* getBlockData(unsigned short x, unsigned short y);
-        /**
-         *
-         * @param x
-         * @param y
-         * @return
-         */
-        int getBlockDataIndex(unsigned short x, unsigned short y);
-        /**
-         *
-         * @param pLvlFile
-         */
-        void setLevelFile(CLevelFile* pLvlFile);
-        /**
-         *
-         * @return
-         */
-        CLevelFile* getLevelFile(void) const {
-            return m_pLevelFile;
-        }
-        /**
-         * 
-         * @param pSceneMgr
-         */
-        void setSceneManager(gfx::CSceneManager* pSceneMgr) {
-            m_pSceneMgr = pSceneMgr;
-        }
-        /**
-         *
-         * @return
-         */
-        gfx::CSceneManager* getSceneManager(void) {
-            return m_pSceneMgr;
-        }
-        /**
-         *
-         * @param pGrid
-         */
-        void setGrid(game::CGrid* pGrid) {
-            m_pGrid = pGrid;
-        }
-        /**
-         *
-         * @return
-         */
-        game::CGrid* getGrid(void) const {
-            return m_pGrid;
-        }
-        /**
-         * 
          * @param scale
          */
         void setScale(float scale) {
-            if(scale < 0.0f)
-                scale = 1.0f;
             m_scale = scale;
         }
         /**
-         *
-         * @param x
-         * @param y
+         * 
+         * @return 
          */
         float getScale(void) const {
             return m_scale;
         }
-        /**
-         * 
-         * @param speed
-         */
-        void setSpeed(float speed) {
-            if(speed < 0.0f)
-                speed = 1.0f;
-            if(speed > 10.0f)
-                speed = 10.0f;
-            m_speed = speed;
-        }
-        /**
-         *
-         * @param x
-         * @param y
-         */
-        float getSpeed(void) const {
-            return m_speed;
-        }
-
-        /**
-         *
-         * @param x
-         * @param y
-         */
-        void getSize(unsigned short& x, unsigned short& y);
-        /**
-         *
-         * @param x
-         * @param y
-         */
-        void getSize(unsigned short* x, unsigned short* y);
-        /**
-         * 
-         * @param pMaterial
-         * @param color
-         */
-        void setMaterial(gfx::SMaterial* pMaterial, VColor color) {
-            unsigned int index = (unsigned int)color;
-            if(index >= (unsigned int)VColor::NUM_COLORS)
-                return;
-            m_pMaterials[index] = pMaterial;
-        }
-        /**
-         * 
-         * @param color
-         * @return 
-         */
-        gfx::SMaterial* getMaterial(VColor color = VColor::BLACK) {
-            unsigned int index = (unsigned int)color;
-            if(index >= (unsigned int)VColor::NUM_COLORS)
-                return NULL;
-            return m_pMaterials[index];
-        }
-        /**
-         * 
-         * @param pMaterialBlack
-         */
-        void setMaterialBlack(gfx::SMaterial* pMaterialBlack) {
-            m_pMaterial.black = pMaterialBlack;
-        }
-        /**
-         *
-         * @return
-         */
-        gfx::SMaterial* getMaterialBlack(void) const {
-            return m_pMaterial.black;
-        }
-        /**
-         *
-         * @param pMaterialWhite
-         */
-        void setMaterialWhite(gfx::SMaterial* pMaterialWhite) {
-            m_pMaterial.white = pMaterialWhite;
-        }
-        /**
-         *
-         * @return
-         */
-        gfx::SMaterial* getMaterialWhite(void) const {
-            return m_pMaterial.white;
-        }
-        /**
-         *
-         * @param position
-         */
-        void setDraggedCoord(const Vec2i& coord) {
-            m_draggedCoord = coord;
-        }
-        /**
-         *
-         * @param x
-         * @param y
-         */
-        void setDraggedCoord(int x, int y) {
-            m_draggedCoord.x = x;
-            m_draggedCoord.y = y;
-        }
-        /**
-         *
-         * @return
-         */
-        Vector2i& getDraggedCoord(void) {
-            return m_draggedCoord;
-        }
-        /**
-         *
-         * @return
-         */
-        Vector2i const& getDraggedCoord(void) const {
-            return m_draggedCoord;
-        }
-        /**
-         *
-         * @param pGrabbedNode
-         */
-        void setDraggedNode(gfx::CSceneNode* pDraggedNode) {
-            m_pDraggedNode = pDraggedNode;
-        }
-        /**
-         *
-         * @return
-         */
-        gfx::CSceneNode* getDraggedNode(void) const {
-            return m_pDraggedNode;
-        }
-        //----------------------------------------------------------------------
-    public:
-
         /**
          *
          * @param pQuadData
@@ -383,6 +156,40 @@ namespace fg {
         fgBool isStepOn(void) const {
             return m_isStepOn;
         }
+        /**
+         * 
+         * @param pDataHolder
+         */
+        void setLevelDataHolder(CLevelDataHolder* pDataHolder) {
+            this->clear();
+            m_pLevelData = pDataHolder;
+        }
+        /**
+         * 
+         * @return
+         */
+        CLevelDataHolder* getLevelDataHolder(void) const {
+            return m_pLevelData;
+        }
+        /**
+         *
+         * @return
+         */
+        CLevelFile* getLevelFile(void) const {
+            if(!m_pLevelData)
+                return NULL;
+            return m_pLevelData->getLevelFile();
+        }
+        /**
+         * 
+         * @return
+         */
+        LevelType getLevelType(void) const {
+            if(!m_pLevelData)
+                return LevelType::INVALID_LEVEL;
+            return m_pLevelData->getLevelType();
+        }
+
         /**
          *
          * @return
@@ -437,6 +244,19 @@ namespace fg {
                     m_emergeBlocks.empty() &&
                     m_duplicates.empty());
         }
+
+        /**
+         *
+         * @param blockType
+         * @param x
+         * @param y
+         * @param newX
+         * @param newY
+         */
+        static void getCoveringCoord(SBlockData::BlockType blockType,
+                                     RotationDirection direction,
+                                     unsigned int x, unsigned int y,
+                                     unsigned short& newX, unsigned short& newY);
 
         //----------------------------------------------------------------------
     private:
@@ -602,73 +422,8 @@ namespace fg {
         typedef NeighbourInfoVec::iterator NeighbourInfoVecItor;
 
     private:
-        /**
-         * 
-         * @param blockType
-         * @param x
-         * @param y
-         * @param newX
-         * @param newY
-         */
-        static void getCoveringCoord(SBlockData::BlockType blockType,
-                                     RotationDirection direction,
-                                     unsigned int x, unsigned int y,
-                                     unsigned short& newX, unsigned short& newY);
-    public:
-        /**
-         * 
-         * @param levelType
-         * @return
-         */
-        static SBlockData::BlockType getBlockTypeFromLevelType(CLevelFile::LevelType levelType) {
-            if(levelType == CLevelFile::LEVEL_QUADS)
-                return SBlockData::BlockType::QUAD;
-            if(levelType == CLevelFile::LEVEL_HEXAGONS)
-                return SBlockData::BlockType::HEXAGON;
-            return SBlockData::BlockType::INVALID_BLOCK;
-        }
-
-    private:
-        /// Pointer to the main game grid 
-        game::CGrid* m_pGrid;
-        /// Pointer to the level file containing positions and colors of the quads
-        CLevelFile* m_pLevelFile;
-        /// Pointer to the external Scene Manager
-        gfx::CSceneManager* m_pSceneMgr;
-        /// Pointer to the node that is selected and dragged (main animation)
-        gfx::CSceneNode* m_pDraggedNode;
-
-        union {
-
-            /**
-             *
-             */
-            struct {
-                ///
-                gfx::SMaterial* none; // 0
-                /// External pointer to the black material (designed for black quads)
-                gfx::SMaterial* black; // 1
-                /// External pointer to the white material
-                gfx::SMaterial* white; // 2
-                /// External pointer to the gray material
-                gfx::SMaterial* gray; // 3
-                ///
-                gfx::SMaterial* red; // 4
-                ///
-                gfx::SMaterial* green; // 5
-                ///
-                gfx::SMaterial* blue; // 6
-				///
-                gfx::SMaterial* cyan; // 7
-				///
-                gfx::SMaterial* yellow; // 8
-				///
-                gfx::SMaterial* magenta; // 9
-            } m_pMaterial;
-            gfx::SMaterial* m_pMaterials[VColor::NUM_COLORS];
-        };
-        /// Quads info/data special vector - stores all required information
-        BlockDataVec m_blocksData;
+        ///
+        CLevelDataHolder* m_pLevelData;
         /// Stores all quads that finished rotating (cover any neighbour)
         /// Need to check if those quads cause any rule breaking (disturbance)
         BlockDataVec m_finishedBlocks;
@@ -685,21 +440,21 @@ namespace fg {
         DuplicateInfoVec m_duplicates;
         /// Stores positions and other info (like color & direction) of covered quads
         CoverInfoVec m_coveredBlocks;
-        /// Scale (size) of a single quad object
-        float m_scale;
-        /// Animation speed (1.0f - 100%/normal)
-        float m_speed;
-        /// Position on the game grid of the dragged (grabbed) quad (main action)
-        Vector2i m_draggedCoord;
         /// Special flag - if TRUE the chain reaction begun and quads are rotating
         fgBool m_isChainReaction;
         /// Special flag - chain reaction will perform one rotation per step
         fgBool m_isStepping;
         /// Should perform one step now? - this will be set to false automatically
         fgBool m_isStepOn;
-    }; // class CLevelVis
+        ///
+        fgBool m_isSimulating;
+        ///
+        StateFlags m_stateFlags;
+        ///
+        float m_scale;
+    }; // class CLevelSolver
 
 } // namespace fg
 
-    #undef FG_INC_LEVEL_VIS_BLOCK
-#endif	/* FG_INC_LEVEL_VIS */
+    #undef FG_INC_LEVEL_SOLVER
+#endif	/* FG_INC_LEVEL_SOLVER */

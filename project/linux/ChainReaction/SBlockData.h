@@ -80,6 +80,10 @@ namespace fg {
         virtual ~SBlockData();
 
         //----------------------------------------------------------------------
+        /**
+         *
+         * @return
+         */
         BlockType getType(void) const {
             return blockType;
         }
@@ -97,6 +101,35 @@ namespace fg {
          * @param _pCell
          */
         void bind(game::CGrid::SCellHolder* _pCell);
+
+        //----------------------------------------------------------------------
+
+        /**
+         * 
+         * @param scale
+         */
+        void setScale(float scale);
+        /**
+         *
+         * @param xScale
+         * @param yScale
+         * @param zScale
+         */
+        void setScale(float xScale, float yScale, float zScale);
+        /**
+         *
+         * @param xScale
+         * @param yScale
+         * @param zScale
+         */
+        void getScale(float& xScale, float& yScale, float& zScale);
+        /**
+         *
+         * @param xScale
+         * @param yScale
+         * @param zScale
+         */
+        void getScale(float* xScale, float* yScale = NULL, float* zScale = NULL);
 
         //----------------------------------------------------------------------
 
@@ -178,7 +211,16 @@ namespace fg {
             x = 0;
             y = 0;
         }
-
+        /**
+         * 
+         * @return 
+         */
+        VColor getOppositeColor(void) const;
+        /**
+         * Check whether or not this block is currently rotating
+         * @return
+         */
+        fgBool isRotating(void) const;
         /**
          * Check if this block finished rotating (rot <= 180.0 (M_PI))
          * @return

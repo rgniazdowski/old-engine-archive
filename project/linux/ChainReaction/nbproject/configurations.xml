@@ -5,8 +5,10 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>AdditionalTypes.h</itemPath>
+      <itemPath>CLevelDataHolder.h</itemPath>
       <itemPath>CLevelFile.h</itemPath>
-      <itemPath>CLevelVis.h</itemPath>
+      <itemPath>CLevelSolver.h</itemPath>
+      <itemPath>CLevelVisualization.h</itemPath>
       <itemPath>ChainReaction.h</itemPath>
       <itemPath>SBlockData.h</itemPath>
       <itemPath>SHexData.h</itemPath>
@@ -19,8 +21,10 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>CLevelDataHolder.cpp</itemPath>
       <itemPath>CLevelFile.cpp</itemPath>
-      <itemPath>CLevelVis.cpp</itemPath>
+      <itemPath>CLevelSolver.cpp</itemPath>
+      <itemPath>CLevelVisualization.cpp</itemPath>
       <itemPath>ChainReaction.cpp</itemPath>
       <itemPath>SBlockData.cpp</itemPath>
       <itemPath>SHexData.cpp</itemPath>
@@ -132,13 +136,21 @@
       </compileType>
       <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="CLevelDataHolder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelDataHolder.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelVis.cpp" ex="false" tool="1" flavor2="0">
+      <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CLevelVis.h" ex="false" tool="3" flavor2="0">
+      <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelVisualization.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelVisualization.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -235,13 +247,21 @@
       </compileType>
       <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="CLevelDataHolder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelDataHolder.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelVis.cpp" ex="false" tool="1" flavor2="0">
+      <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="CLevelVis.h" ex="false" tool="3" flavor2="0">
+      <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelVisualization.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelVisualization.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="0">
       </item>

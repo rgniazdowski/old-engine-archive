@@ -78,6 +78,96 @@ void SBlockData::bind(game::CGrid::SCellHolder* _pCell) {
 }
 //------------------------------------------------------------------------------
 
+void SBlockData::setScale(float scale) {
+    if(!pSceneNode)
+        return;
+    pSceneNode->setScale(scale, scale, 1.0f);
+}
+//------------------------------------------------------------------------------
+
+void SBlockData::setScale(float xScale, float yScale, float zScale) {
+    if(!pSceneNode)
+        return;
+    pSceneNode->setScale(xScale, yScale, zScale);
+}
+//------------------------------------------------------------------------------
+
+void SBlockData::getScale(float& xScale, float& yScale, float& zScale) {
+    if(!pSceneNode) {
+        xScale = 0.0f;
+        yScale = 0.0f;
+        zScale = 0.0f;
+    } else {
+        const Vec3f& scale = pSceneNode->getScale();
+        xScale = scale.x;
+        yScale = scale.y;
+        zScale = scale.z;
+    }
+}
+//------------------------------------------------------------------------------
+
+void SBlockData::getScale(float* xScale, float* yScale, float* zScale) {
+    if(!pSceneNode) {
+        if(xScale)
+            *xScale = 0.0f;
+        if(yScale)
+            *yScale = 0.0f;
+        if(zScale)
+            *zScale = 0.0f;
+    } else {
+        const Vec3f& scale = pSceneNode->getScale();
+        if(xScale)
+            *xScale = scale.x;
+        if(yScale)
+            *yScale = scale.y;
+        if(zScale)
+            *zScale = scale.z;
+    }
+}
+//------------------------------------------------------------------------------
+
+VColor SBlockData::getOppositeColor(void) const {
+    VColor rColor = VColor::INVALID_COLOR;
+    switch(color) {
+        case VColor::BLACK:
+            rColor = VColor::WHITE;
+            break;
+        case VColor::WHITE:
+            rColor = VColor::BLACK;
+            break;
+        case VColor::GRAY:
+            rColor = VColor::GRAY;
+            break;
+        case VColor::RED:
+            rColor = VColor::CYAN;
+            break;
+        case VColor::BLUE:
+            rColor = VColor::YELLOW;
+            break;
+        case VColor::GREEN:
+            rColor = VColor::MAGENTA;
+            break;
+        case VColor::CYAN:
+            rColor = VColor::RED;
+            break;
+        case VColor::YELLOW:
+            rColor = VColor::BLUE;
+            break;
+        case VColor::MAGENTA:
+            rColor = VColor::GREEN;
+            break;
+        default:
+            break;
+    }
+    return rColor;
+}
+//------------------------------------------------------------------------------
+
+fgBool SBlockData::isRotating(void) const {
+    return (fgBool)!!(rotDir != NO_ROTATION);
+}
+//------------------------------------------------------------------------------
+
 fgBool SBlockData::isRotationFinished(void) const {
     if(rotDir != NO_ROTATION) {
         if(rotation <= M_PIF && rotation >= (M_PIF - FG_EPSILON)) {
@@ -238,12 +328,12 @@ fgBool SBlockData::isOppositeRotation(RotationDirection direction) const {
        (this->rotDir == DOWN && direction == UP)) {
         return FG_TRUE;
     }
-    
+
     if((this->rotDir == UP_RIGHT && direction == DOWN_LEFT) ||
        (this->rotDir == DOWN_LEFT && direction == UP_RIGHT)) {
         return FG_TRUE;
     }
-    
+
     if((this->rotDir == UP_LEFT && direction == DOWN_RIGHT) ||
        (this->rotDir == DOWN_RIGHT && direction == UP_LEFT)) {
         return FG_TRUE;

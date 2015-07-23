@@ -24,7 +24,8 @@
     #include "Event/fgEventDefinitions.h"
     #include "Event/fgCallback.h"
 
-    #include "CLevelVis.h"
+    #include "CLevelVisualization.h"
+    #include "SQuadData.h"
 
     #define FG_MANAGER_CHAIN_REACTION 0x01100000
 
@@ -131,8 +132,22 @@ namespace fg {
          *
          * @return
          */
-        CLevelVis* getLevelVis(void) const {
+        CLevelVisualization* getLevelVis(void) const {
             return m_levelVis;
+        }
+        /**
+         * 
+         * @return
+         */
+        CLevelDataHolder* getLevelDataHolder(void) const {
+            return m_levelDataHolder;
+        }
+        /**
+         *
+         * @return
+         */
+        CLevelSolver* getLevelSolver(void) const {
+            return m_levelSolver;
         }
 
     private:
@@ -226,7 +241,12 @@ namespace fg {
         /// Game logic abstract grid
         game::CGrid* m_grid;
         /// Level visualization class - hooks with SceneManager
-        CLevelVis* m_levelVis;
+        CLevelVisualization* m_levelVis;
+        /// Special solver object for the level
+        // it checks for rule breaking and manages chain reaction
+        CLevelSolver* m_levelSolver;
+        /// Current data holder (active scene display)
+        CLevelDataHolder* m_levelDataHolder;
         /// Update (shot) callback object
         event::CFunctionCallback* m_updateCallback;
         /// Pre-render callback object

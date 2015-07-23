@@ -152,9 +152,9 @@ namespace fg {
         }; // struct SBlockInfo
 
         ///
-        typedef CVector<SBlockInfo> BlockVec;
+        typedef CVector<SBlockInfo> BlockInfoVec;
         ///
-        typedef BlockVec::iterator BlockVecItor;
+        typedef BlockInfoVec::iterator BlockInfoVecItor;
 
     public:
         /**
@@ -264,7 +264,7 @@ namespace fg {
          *
          * @return
          */
-        fgBool isEmpty(void) {
+        fgBool isEmpty(void) const {
             return (fgBool)m_blocks.empty();
         }
         /**
@@ -289,14 +289,14 @@ namespace fg {
          *
          * @return
          */
-        BlockVec& getBlocks(void) {
+        BlockInfoVec& getBlocks(void) {
             return m_blocks;
         }
         /**
          *
          * @return
          */
-        BlockVec const& getBlocks(void) const {
+        BlockInfoVec const& getBlocks(void) const {
             return m_blocks;
         }
         /**
@@ -373,7 +373,7 @@ namespace fg {
             SSize size;
         } m_area;
         ///
-        BlockVec m_blocks;
+        BlockInfoVec m_blocks;
     }; // class CLevel
 } // namespace fg
 
