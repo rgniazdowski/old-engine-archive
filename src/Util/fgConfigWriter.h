@@ -23,7 +23,10 @@ namespace fg {
          * 
          */
         class CConfigWriter : protected DataFile {
-        protected:
+        public:
+            typedef DataFile base_type;
+            typedef CConfigWriter self_type;
+            typedef CConfigWriter type;
         public:
             /**
              * 

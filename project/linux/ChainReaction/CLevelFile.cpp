@@ -15,11 +15,13 @@
  */
 
 #include <climits>
-
 #include "CLevelFile.h"
+
 #include "GameLogic/fgGrid.h"
+#include "Util/fgMemory.h"
 #include "Util/fgFile.h"
 #include "Util/fgStrings.h"
+#include "fgLog.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -178,6 +180,92 @@ fgBool CLevelFile::load(const std::string& filePath) {
     setFilePath(filePath);
     return load();
 }
+
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::save(void) {
+    if(m_filePath.empty() || m_blocks.empty()) {
+        return FG_FALSE;
+    }
+    const unsigned short x = m_size.x;
+    const unsigned short y = m_size.y;
+    if(!x || !y) {
+        FG_LOG_DEBUG("ChainReaction: Failed to save level file: '%s'. Level size is not set.", m_filePath.c_str());
+        return FG_FALSE;
+    }
+    fgBool status = FG_TRUE;
+    util::CFile levelFile;
+    levelFile.setPath(m_filePath);
+    status = levelFile.open(util::CFile::Mode::WRITE);
+    if(!status) {
+        FG_LOG_DEBUG("ChainReaction: Failed to save level file: '%s'", m_filePath.c_str());
+        return status;
+    }
+    char** strData;
+    strData = (char **)fgMalloc<char*>(y);
+    if(strData) {
+        for(unsigned short i = 0;i<y;i++) {
+            strData[i] = (char*)fgMalloc<char>(x+1);
+            for(unsigned short c = 0;c<x;c++) {
+                strData[i][c] = '0';
+            }
+            strData[i][x] = '\0';
+        }
+    } else {
+        status = FG_FALSE;
+        levelFile.close();
+    }
+    const unsigned int n = m_blocks.size();
+    for(unsigned int i = 0;i<n;i++) {
+        self_type::SBlockInfo const& blockInfo = m_blocks[i];
+        if(blockInfo.pos.x >= x || blockInfo.pos.y >= y)
+            continue;
+        const char numC = '0' + (char)blockInfo.color;
+        strData[blockInfo.pos.y][blockInfo.pos.x] = numC;
+    }
+    const char* levelType = NULL;
+    if(m_type == LevelType::LEVEL_QUADS) {
+        levelType = "quads\0";
+    } else if(m_type == LevelType::LEVEL_HEXAGONS) {
+        levelType = "hexagons\0";
+    } else {
+        levelType = "quads\0"; // Force quads
+    }
+
+    levelFile.print("%dx%d %d %s\n", x, y, m_levelIdx, levelType);
+    for(unsigned short i = 0;i<y;i++) {
+        levelFile.print("%s\n",strData[i]);
+        memset(strData[i], 0, x+1);
+        fgFree<char>(strData[i]);
+        strData[i] = NULL;
+    }
+    fgFree<char *>(strData);
+    strData = NULL;
+    levelFile.flush();
+    levelFile.close();
+
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::save(const char* filePath) {
+    if(!filePath) {
+        return FG_FALSE;
+    }
+    if(!filePath[0])
+        return FG_FALSE;
+    setFilePath(filePath);
+    return save();
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::save(const std::string& filePath) {
+    if(filePath.empty()) {
+        return FG_FALSE;
+    }
+    setFilePath(filePath);
+    return save();
+}
 //------------------------------------------------------------------------------
 
 fgBool CLevelFile::applyToGrid(game::CGrid* pGrid) {
@@ -291,7 +379,7 @@ int CLevelFile::appendBlocks(BlockInfoVec const& inBlocks, fgBool shouldResize) 
     }
     int nAppend = 0;
     unsigned int n = inBlocks.size();
-    for(unsigned int i=0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         self_type::SBlockInfo const& blockInfo = inBlocks[i];
         if(blockInfo.pos.x < m_size.x &&
            blockInfo.pos.y < m_size.y) {
@@ -312,7 +400,7 @@ fgBool CLevelFile::contains(unsigned short x, unsigned short y) const {
     fgBool status = FG_FALSE;
     BlockInfoVecConstItor itor = m_blocks.begin();
     BlockInfoVecConstItor end = m_blocks.end();
-    for(;itor != end; itor++) {
+    for(; itor != end; itor++) {
         self_type::SBlockInfo const& blockInfo = *itor;
         if(blockInfo.pos.x == x && blockInfo.pos.y == y) {
             status = FG_TRUE;
@@ -329,7 +417,7 @@ fgBool CLevelFile::contains(const SSize& pos) const {
     fgBool status = FG_FALSE;
     BlockInfoVecConstItor itor = m_blocks.begin();
     BlockInfoVecConstItor end = m_blocks.end();
-    for(;itor != end; itor++) {
+    for(; itor != end; itor++) {
         self_type::SBlockInfo const& blockInfo = *itor;
         if(blockInfo.pos == pos) {
             status = FG_TRUE;

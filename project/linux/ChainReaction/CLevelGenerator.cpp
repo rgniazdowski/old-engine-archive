@@ -35,7 +35,18 @@ m_stateFlags(NO_FLAGS) {
 }
 //------------------------------------------------------------------------------
 
-CLevelGenerator::CLevelGenerator(const CLevelGenerator& orig) { }
+CLevelGenerator::CLevelGenerator(const CLevelGenerator& orig) {
+    this->m_pGrid = orig.m_pGrid;
+    this->m_pLevelData = orig.m_pLevelData;
+    this->m_internalGrid = NULL;
+    this->m_internalLevelData = NULL;
+    this->m_internalLevelFile = NULL;
+    this->m_genLevelType = orig.m_genLevelType;
+    this->m_genLevelIdx = orig.m_genLevelIdx;
+    this->m_gridCoverage = orig.m_gridCoverage;
+    this->m_stateFlags = orig.m_stateFlags;
+    this->checkInternals();
+}
 //------------------------------------------------------------------------------
 
 CLevelGenerator::~CLevelGenerator() {
@@ -52,7 +63,6 @@ CLevelGenerator::~CLevelGenerator() {
         delete m_internalLevelFile;
         m_internalLevelFile = NULL;
     }
-
 }
 //------------------------------------------------------------------------------
 

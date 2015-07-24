@@ -14,7 +14,7 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-util::CConfigWriter::CConfigWriter() { }
+util::CConfigWriter::CConfigWriter() : base_type() { }
 //------------------------------------------------------------------------------
 
 util::CConfigWriter::~CConfigWriter() { }
@@ -29,10 +29,10 @@ fgBool util::CConfigWriter::save(const char *filePath, config::SectionMap &secti
     if(sectionMap.empty())
         return FG_FALSE;
 
-    if(DataFile::isOpen())
+    if(base_type::isOpen())
         close();
 
-    if(!DataFile::open(filePath, DataFile::Mode::WRITE)) {
+    if(!base_type::open(filePath, DataFile::Mode::WRITE)) {
         return FG_FALSE;
     }
 
@@ -42,9 +42,9 @@ fgBool util::CConfigWriter::save(const char *filePath, config::SectionMap &secti
     for(; it != end; it++) {
         SCfgSection *section = it->second;
         if(!section) continue;
-        fg::util::DataFile::print("%s\n", section->toString(linebuf));
+        base_type::print("%s\n", section->toString(linebuf));
         for(unsigned int i = 0; i < section->parameters.size(); i++) {
-            fg::util::DataFile::print("%s\n", section->parameters[i]->toString(linebuf));
+            base_type::print("%s\n", section->parameters[i]->toString(linebuf));
         }
     }
 
