@@ -67,11 +67,11 @@ namespace fg {
         ///
         BLUE = 6,
         ///
-        CYAN = 7,
+        CYAN = 7,        
         ///
-        YELLOW = 8,
+        MAGENTA = 8,
         ///
-        MAGENTA = 9,
+        YELLOW = 9,
         ///
         NUM_COLORS = 10
     };
