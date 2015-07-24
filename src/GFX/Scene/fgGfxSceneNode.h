@@ -948,11 +948,8 @@ namespace fg {
         }; // class CSceneNode
 
         FG_ENUM_FLAGS(CSceneNode::StateFlags);
-        /**
-         * 
-         * @param flags
-         * @param toggle
-         */
+
+        //----------------------------------------------------------------------
         inline void CSceneNode::setFlag(const StateFlags flags, const fgBool toggle) {
             if(toggle) {
                 m_stateFlags |= flags;

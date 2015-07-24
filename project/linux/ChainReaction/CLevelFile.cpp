@@ -25,11 +25,11 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 CLevelFile::CLevelFile(const char* filePath) :
+m_filePath(),
+m_blocks(),
 m_levelIdx(-1),
 m_type(LEVEL_QUADS),
-m_filePath(),
-m_size(),
-m_blocks() {
+m_size() {
     setFilePath(filePath);
     m_blocks.reserve(48);
     m_size.x = 0;
@@ -198,6 +198,18 @@ fgBool CLevelFile::applyToGrid(game::CGrid* pGrid) {
 }
 //------------------------------------------------------------------------------
 
+void CLevelFile::setSize(unsigned short x, unsigned short y) {
+    m_size.x = x;
+    m_size.y = y;
+}
+//------------------------------------------------------------------------------
+
+void CLevelFile::setSize(const SSize& size) {
+    m_size.x = size.x;
+    m_size.y = size.y;
+}
+//------------------------------------------------------------------------------
+
 void CLevelFile::getSize(unsigned short& x, unsigned short& y) {
     x = m_size.x;
     y = m_size.y;
@@ -265,6 +277,66 @@ void CLevelFile::clear(void) {
     m_area.size.x = 0;
     m_area.size.y = 0;
     m_blocks.clear();
+}
+//------------------------------------------------------------------------------
+
+void CLevelFile::clearBlocks(void) {
+    m_blocks.clear();
+}
+//------------------------------------------------------------------------------
+
+int CLevelFile::appendBlocks(BlockInfoVec const& inBlocks, fgBool shouldResize) {
+    if(m_size.x == 0 | m_size.y == 0) {
+        return -1;
+    }
+    int nAppend = 0;
+    unsigned int n = inBlocks.size();
+    for(unsigned int i=0;i<n;i++) {
+        self_type::SBlockInfo const& blockInfo = inBlocks[i];
+        if(blockInfo.pos.x < m_size.x &&
+           blockInfo.pos.y < m_size.y) {
+            if(!contains(blockInfo.pos)) {
+                m_blocks.push_back(blockInfo);
+                nAppend++;
+            }
+        }
+    }
+
+    return nAppend;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::contains(unsigned short x, unsigned short y) const {
+    if(m_blocks.empty())
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    BlockInfoVecConstItor itor = m_blocks.begin();
+    BlockInfoVecConstItor end = m_blocks.end();
+    for(;itor != end; itor++) {
+        self_type::SBlockInfo const& blockInfo = *itor;
+        if(blockInfo.pos.x == x && blockInfo.pos.y == y) {
+            status = FG_TRUE;
+            break;
+        }
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::contains(const SSize& pos) const {
+    if(m_blocks.empty())
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    BlockInfoVecConstItor itor = m_blocks.begin();
+    BlockInfoVecConstItor end = m_blocks.end();
+    for(;itor != end; itor++) {
+        self_type::SBlockInfo const& blockInfo = *itor;
+        if(blockInfo.pos == pos) {
+            status = FG_TRUE;
+            break;
+        }
+    }
+    return status;
 }
 //------------------------------------------------------------------------------
 

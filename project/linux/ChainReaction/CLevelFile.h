@@ -48,7 +48,7 @@ namespace fg {
     public:
 
         static const unsigned int MIN_COLOR_ID = 0;
-        static const unsigned int MAX_COLOR_ID = (VColor::NUM_COLORS-1);
+        static const unsigned int MAX_COLOR_ID = (VColor::NUM_COLORS - 1);
 
     public:
 
@@ -89,6 +89,15 @@ namespace fg {
                 x = 0;
                 y = 0;
             }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            inline bool operator ==(const SSize& other) const {
+                return ((this->x == other.x) &&
+                        (this->y == other.y));
+            }
         }; // struct SSize
 
         /**
@@ -125,8 +134,8 @@ namespace fg {
              * @param _color
              */
             SBlockInfo(unsigned short _x,
-                      unsigned short _y,
-                      VColor _color) :
+                       unsigned short _y,
+                       VColor _color) :
             color(_color) {
                 pos.x = _x;
                 pos.y = _y;
@@ -155,6 +164,8 @@ namespace fg {
         typedef CVector<SBlockInfo> BlockInfoVec;
         ///
         typedef BlockInfoVec::iterator BlockInfoVecItor;
+        ///
+        typedef BlockInfoVec::const_iterator BlockInfoVecConstItor;
 
     public:
         /**
@@ -198,11 +209,37 @@ namespace fg {
 
         /**
          *
+         * @return
+         */
+        fgBool save(void);
+        /**
+         *
+         * @param filePath
+         * @return
+         */
+        fgBool save(const char* filePath);
+        /**
+         *
+         * @param filePath
+         * @return
+         */
+        fgBool save(const std::string& filePath);
+
+        /**
+         *
          * @param pGrid
          * @return
          */
         fgBool applyToGrid(::fg::game::CGrid* pGrid);
 
+        /**
+         *
+         */
+        void setSize(unsigned short x, unsigned short y);
+        /**
+         *
+         */
+        void setSize(const SSize& size);
         /**
          *
          * @param x
@@ -279,6 +316,29 @@ namespace fg {
          */
         void clear(void);
         /**
+         * 
+         */
+        void clearBlocks(void);
+        /**
+         * 
+         * @param shouldResize
+         * @return 
+         */
+        int appendBlocks(BlockInfoVec const& inBlocks, fgBool shouldResize = FG_FALSE);
+        /**
+         *
+         * @param x
+         * @param y
+         * @return
+         */
+        fgBool contains(unsigned short x, unsigned short y) const;
+        /**
+         *
+         * @param pos
+         * @return
+         */
+        fgBool contains(const SSize& pos) const;
+        /**
          *
          */
         inline void reset(void) {
@@ -325,6 +385,13 @@ namespace fg {
         void setFilePath(const std::string& filePath);
         /**
          *
+         * @param levelIdx
+         */
+        void setLevelIndex(int levelIdx) {
+            m_levelIdx = levelIdx;
+        }
+        /**
+         *
          * @return
          */
         inline int getLevelIndex(void) const {
@@ -344,26 +411,18 @@ namespace fg {
         inline LevelType getLevelType(void) const {
             return m_type;
         }
-        
-    protected:
-        /**
-         *
-         * @param levelIdx
-         */
-        void setLevelIndex(int levelIdx) {
-            m_levelIdx = levelIdx;
-        }
 
     private:
+        ///
+        std::string m_filePath;
+        ///
+        BlockInfoVec m_blocks;
         ///
         int m_levelIdx;
         ///
         LevelType m_type;
         ///
-        std::string m_filePath;
-        ///
         SSize m_size;
-
         /**
          *
          */
@@ -372,8 +431,7 @@ namespace fg {
             SSize max;
             SSize size;
         } m_area;
-        ///
-        BlockInfoVec m_blocks;
+        
     }; // class CLevel
 } // namespace fg
 

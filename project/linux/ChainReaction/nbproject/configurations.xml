@@ -7,6 +7,7 @@
       <itemPath>AdditionalTypes.h</itemPath>
       <itemPath>CLevelDataHolder.h</itemPath>
       <itemPath>CLevelFile.h</itemPath>
+      <itemPath>CLevelGenerator.h</itemPath>
       <itemPath>CLevelSolver.h</itemPath>
       <itemPath>CLevelVisualization.h</itemPath>
       <itemPath>ChainReaction.h</itemPath>
@@ -23,6 +24,7 @@
                    projectFiles="true">
       <itemPath>CLevelDataHolder.cpp</itemPath>
       <itemPath>CLevelFile.cpp</itemPath>
+      <itemPath>CLevelGenerator.cpp</itemPath>
       <itemPath>CLevelSolver.cpp</itemPath>
       <itemPath>CLevelVisualization.cpp</itemPath>
       <itemPath>ChainReaction.cpp</itemPath>
@@ -144,6 +146,10 @@
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="CLevelGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelGenerator.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
@@ -254,6 +260,10 @@
       <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CLevelGenerator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="0">
       </item>
