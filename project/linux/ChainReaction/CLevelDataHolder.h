@@ -39,6 +39,7 @@ namespace fg {
         typedef CLevelFile::LevelType LevelType;
         typedef CVector<SBlockData*> BlockDataVec;
         typedef BlockDataVec::iterator BlockDataVecItor;
+        typedef BlockDataVec::const_iterator BlockDataVecConstItor;
         // System data is always set to SActionInfo
         typedef fgBool(*CallbackFuncPtr)(void* systemData, void* userData);
         ///
@@ -254,6 +255,13 @@ namespace fg {
         unsigned int getBlocksCount(void) const {
             return m_blocksData.size();
         }
+        /**
+         * 
+         * @param blockInfoVec
+         * @return 
+         */
+        int appendTo(CLevelFile::BlockInfoVec& blockInfoVec);
+        //int copyTo(BlockDataVec& blockDataVec);
         /**
          *
          * @param x

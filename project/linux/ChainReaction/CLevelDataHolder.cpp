@@ -366,6 +366,33 @@ SBlockData* CLevelDataHolder::at(unsigned int index) {
 }
 //------------------------------------------------------------------------------
 
+int CLevelDataHolder::appendTo(CLevelFile::BlockInfoVec& blockInfoVec) {
+    if(m_blocksData.empty())
+        return -1;
+    int nAppend = 0;
+    BlockDataVecConstItor itor = m_blocksData.begin();
+    BlockDataVecConstItor end = m_blocksData.end();
+
+    for(;itor!=end;itor++) {
+        const SBlockData* pBlockData = *itor;
+        if(!pBlockData)
+            continue;
+        if(!pBlockData->pCellHolder)
+            continue;
+        CLevelFile::SBlockInfo blockInfo;
+        blockInfo.color = pBlockData->color;
+        blockInfo.pos.x = pBlockData->pCellHolder->pos.x;
+        blockInfo.pos.y = pBlockData->pCellHolder->pos.y;
+        if(!blockInfoVec.contains(blockInfo)) {
+            blockInfoVec.push_back(blockInfo);
+            nAppend++;
+        }
+    }
+
+    return nAppend;
+}
+//------------------------------------------------------------------------------
+
 SBlockData* CLevelDataHolder::getBlockData(unsigned short x, unsigned short y) {
     if(m_pGrid) {
         void *cellData = m_pGrid->getCellData(x, y);
