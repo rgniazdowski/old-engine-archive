@@ -76,14 +76,23 @@ namespace fg {
             /// The generator will create only one cluster of blocks
             NO_CLUSTERS = 0x0100,
             /// The same as NO_CLUSTERS
-            NO_GROUPS = 0x0100
+            NO_GROUPS = 0x0100,
+
+            /// If true, this will fix any occurring orphans on the level after
+            /// generation (in most cases used with fully random algorithm)
+            FIX_ORPHANS = 0x0200,
+            /// If true, this will remove every orphan on the stage after generation
+            REMOVE_ORPHANS = 0x0400,
+            /// Creating regular checkerboard will avoid conflicts where
+            /// color from outside the color-table has to be used
+            REGULAR_CHECKERBOARD = 0x0800
         }; // enum StateFlags
 
     public:
         /**
          *
          */
-        CLevelGenerator();
+        CLevelGenerator(StateFlags stateFlags = NO_FLAGS);
         /**
          *
          * @param orig
@@ -131,33 +140,40 @@ namespace fg {
         fgBool saveToFile(const char* filePath);
 
         //----------------------------------------------------------------------
-
         void setGrid(game::CGrid* pGrid) {
             m_pGrid = pGrid;
         }
-
-        game::CGrid* getGrid(void) const { 
+        game::CGrid* getGrid(void) const {
             if(isUsingInternalGameGrid())
                 return m_internalGrid;
             return m_pGrid;
         }
-
         game::CGrid* getInternalGrid(void) const {
             return m_internalGrid;
         }
-
         void setLevelData(CLevelDataHolder* pLevelData) {
             m_pLevelData = pLevelData;
         }
-
         CLevelDataHolder* getLevelData(void) const {
             if(isUsingInternalLevelData())
                 return m_internalLevelData;
             return m_pLevelData;
         }
-
+        /**
+         * 
+         * @return
+         */
         CLevelDataHolder* getInternalLevelData(void) const {
             return m_internalLevelData;
+        }
+        /**
+         *
+         * @return
+         */
+        CLevelFile* getLevelFile(void) const {
+            if(!getLevelData())
+                return NULL;
+            return getLevelData()->getLevelFile();
         }
 
         //----------------------------------------------------------------------
@@ -173,7 +189,6 @@ namespace fg {
          * @param size
          */
         void setSize(const CLevelFile::SSize& size);
-
         /**
          *
          * @return
@@ -193,13 +208,13 @@ namespace fg {
          * @return
          */
         VColor getRandomColor(void) const;
-
         /**
          *
          * @param levelType
          */
         void setLevelType(LevelType levelType) {
             m_genLevelType = levelType;
+            checkInternals();
         }
         /**
          *
@@ -214,6 +229,7 @@ namespace fg {
          */
         void setLevelIndex(int levelIndex) {
             m_genLevelIdx = levelIndex;
+            checkInternals();
         }
         /**
          *
@@ -232,17 +248,19 @@ namespace fg {
             if(coverage <= 0.01f)
                 coverage = 0.01f;
             m_gridCoverage = coverage;
+            checkInternals();
         }
         /**
          *
          * @param coverage
          */
-        void setGridCoverage(unsigned int coverage) {
+        void setGridCoverage(int coverage) {
             if(coverage > 100)
                 coverage = 100;
             if(coverage < 1)
                 coverage = 1;
-            m_gridCoverage = (float)coverage/100.0f;
+            m_gridCoverage = (float)coverage / 100.0f;
+            checkInternals();
         }
         /**
          *
@@ -379,6 +397,7 @@ namespace fg {
             if(toggle) {
                 setFlag(FORCE_CLUSTERS, FG_FALSE);
                 setFlag(NO_CLUSTERS, FG_FALSE);
+                setFlag(REGULAR_CHECKERBOARD, FG_FALSE);
             }
         }
         /**
@@ -424,12 +443,68 @@ namespace fg {
         fgBool isNoClusters(void) const {
             return (fgBool)!!(m_stateFlags & NO_CLUSTERS);
         }
+        /**
+         * 
+         * @param toggle
+         */
+        void setFixOrphans(fgBool toggle = FG_TRUE) {
+            setFlag(FIX_ORPHANS, toggle);
+            if(toggle) {
+                setFlag(REMOVE_ORPHANS, FG_FALSE);
+            }
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isFixOrphans(void) const {
+            return (fgBool)!!(m_stateFlags & FIX_ORPHANS);
+        }
+        /**
+         *
+         * @param toggle
+         */
+        void setRemoveOrphans(fgBool toggle = FG_TRUE) {
+            setFlag(REMOVE_ORPHANS, toggle);
+            if(toggle) {
+                setFlag(FIX_ORPHANS, FG_FALSE);
+            }
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isRemoveOrphans(void) const {
+            return (fgBool)!!(m_stateFlags & REMOVE_ORPHANS);
+        }
+        /**
+         * 
+         * @param toggle
+         */
+        void setRegularCheckerboard(fgBool toggle = FG_TRUE) {
+            setFlag(REGULAR_CHECKERBOARD, toggle);
+            if(toggle) {
+                setFlag(FULLY_RANDOM, FG_FALSE);
+            }
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isRegularCheckerboard(void) const {
+            return (fgBool)!!(m_stateFlags & REGULAR_CHECKERBOARD);
+        }
+
         //----------------------------------------------------------------------
     protected:
         /**
          *
          */
         void checkInternals(void);
+        /**
+         *
+         */
+        void refreshColorTable(void);
 
         //----------------------------------------------------------------------
     private:
@@ -441,9 +516,9 @@ namespace fg {
         CLevelDataHolder* m_pLevelData;
         /// Internal level data (only for generator use)
         CLevelDataHolder* m_internalLevelData;
-        ///
+        /// Internal object for saving generated map
         CLevelFile* m_internalLevelFile;
-        ///
+        /// Table with current list of usable (valid) colors
         CVector<VColor> m_colorTable;
         /// Which level type to generate?
         LevelType m_genLevelType;

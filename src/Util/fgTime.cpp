@@ -43,7 +43,7 @@ namespace fg {
 
 #if defined(FG_USING_SDL2)
 #include <SDL2/SDL_timer.h>
-#include <unistd.h>
+#include "fgUnistd.h"
 #endif
 
 using namespace fg;
