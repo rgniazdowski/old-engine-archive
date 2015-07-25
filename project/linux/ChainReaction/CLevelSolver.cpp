@@ -98,17 +98,7 @@ void CLevelSolver::update(float elapsed) {
         // should rewind?
         fgBool shouldRewind = FG_FALSE;
         // check neighbours for rule breaking (for now only by edge)
-        neighbours.clear();
-        neighbours.push_back(SNeighbourInfo(pBlockData->left(shouldRewind), LEFT));
-        neighbours.push_back(SNeighbourInfo(pBlockData->right(shouldRewind), RIGHT));
-        neighbours.push_back(SNeighbourInfo(pBlockData->up(shouldRewind), UP));
-        neighbours.push_back(SNeighbourInfo(pBlockData->down(shouldRewind), DOWN));
-        if(pBlockData->getType() == SBlockData::HEXAGON) {
-            neighbours.push_back(SNeighbourInfo(pBlockData->upLeft(shouldRewind), UP_LEFT));
-            neighbours.push_back(SNeighbourInfo(pBlockData->upRight(shouldRewind), UP_RIGHT));
-            neighbours.push_back(SNeighbourInfo(pBlockData->downLeft(shouldRewind), DOWN_LEFT));
-            neighbours.push_back(SNeighbourInfo(pBlockData->downRight(shouldRewind), DOWN_RIGHT));
-        }
+        pBlockData->getNeighbours(neighbours, shouldRewind);
 
         for(unsigned int iN = 0; iN < neighbours.size(); iN++) {
             SNeighbourInfo& nInfo = neighbours[iN];

@@ -89,13 +89,12 @@ namespace fg {
         BlockType getType(void) const {
             return blockType;
         }
-
         /**
          * 
          * @param newColor
          */
         void changeColor(VColor newColor) {
-            if(newColor == VColor::INVALID_COLOR || newColor >= VColor::NUM_COLORS)
+            if(/*newColor == VColor::INVALID_COLOR ||*/ newColor >= VColor::NUM_COLORS)
                 return;
             this->color = newColor;
             if(pCellHolder) {
@@ -210,6 +209,13 @@ namespace fg {
         //----------------------------------------------------------------------
 
         /**
+         *
+         * @param neighbours
+         * @return
+         */
+        virtual int getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind = FG_FALSE) = 0;
+
+        /**
          * 
          * @param direction
          * @param amount
@@ -226,6 +232,30 @@ namespace fg {
             x = 0;
             y = 0;
         }
+        /**
+         * 
+         * @param direction
+         * @param x
+         * @param y
+         * @return 
+         */
+        virtual fgBool getPotentialNeighbourCoord(RotationDirection direction,
+                                                  unsigned short& x,
+                                                  unsigned short& y) {
+            x = 0;
+            y = 0;
+            return FG_FALSE;
+        }
+        /**
+         * 
+         * @param rotations
+         */
+        virtual int getValidRotations(CVector<RotationDirection>& rotations) { return 0; }
+        /**
+         * 
+         * @return 
+         */
+        RotationDirection getRandomValidRotation(void);
         /**
          * 
          * @return 

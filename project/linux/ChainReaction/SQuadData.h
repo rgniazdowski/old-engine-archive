@@ -17,7 +17,7 @@
 #ifndef FG_INC_QUAD_DATA
     #define FG_INC_QUAD_DATA
     #define FG_INC_QUAD_DATA_BLOCK
-    
+
     #include "SBlockData.h"
 
 namespace fg {
@@ -30,12 +30,12 @@ namespace fg {
         typedef SQuadData type;
         typedef SBlockData base_type;
         constexpr static const float QUAD_HALF_SIZE = 0.5f;
-        
+
         /**
          *
          */
         SQuadData();
-        
+
         /**
          *
          */
@@ -106,6 +106,13 @@ namespace fg {
         //----------------------------------------------------------------------
 
         /**
+         *
+         * @param neighbours
+         * @return
+         */
+        virtual int getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind = FG_FALSE);
+
+        /**
          * Rotate the scene node based on the give direction and amount
          * @param direction
          * @param amount
@@ -121,7 +128,24 @@ namespace fg {
          * @param y Coordinate Y in game::CGrid
          */
         virtual void getCoveredNeighbourCoord(unsigned short& x, unsigned short& y);
-        
+
+        /**
+         * 
+         * @param direction
+         * @param x
+         * @param y
+         * @return
+         */
+        virtual fgBool getPotentialNeighbourCoord(RotationDirection direction,
+                                                  unsigned short& x,
+                                                  unsigned short& y);
+
+        /**
+         *
+         * @param rotations
+         */
+        virtual int getValidRotations(CVector<RotationDirection>& rotations);
+
         /**
          * Get the CellHolder structure for the covered(overlay) neighbour
          * @return  Pointer to valid cell holder data of covered neighbour cell -
@@ -151,11 +175,11 @@ namespace fg {
          * @param newY
          */
         static void getCoveringCoord(RotationDirection direction,
-                                    unsigned short x,
-                                    unsigned short y,
-                                    unsigned short& newX,
-                                    unsigned short& newY);
-        
+                                     unsigned short x,
+                                     unsigned short y,
+                                     unsigned short& newX,
+                                     unsigned short& newY);
+
         //----------------------------------------------------------------------
 
     }; // struct SQuadData

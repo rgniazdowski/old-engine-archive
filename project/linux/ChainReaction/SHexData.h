@@ -29,7 +29,7 @@ namespace fg {
         typedef SHexData self_type;
         typedef SHexData type;
         typedef SBlockData base_type;
-        
+
         constexpr static const float HEX_HALF_SIZE = 0.5f;
 
         /**
@@ -106,6 +106,13 @@ namespace fg {
         //----------------------------------------------------------------------
 
         /**
+         * 
+         * @param neighbours
+         * @return 
+         */
+        virtual int getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind = FG_FALSE);
+
+        /**
          * Rotate the scene node based on the give direction and amount
          * @param direction
          * @param amount
@@ -121,6 +128,22 @@ namespace fg {
          * @param y Coordinate Y in game::CGrid
          */
         virtual void getCoveredNeighbourCoord(unsigned short& x, unsigned short& y);
+
+        /**
+         * 
+         * @param direction
+         * @param x
+         * @param y
+         * @return
+         */
+        virtual fgBool getPotentialNeighbourCoord(RotationDirection direction,
+                                                  unsigned short& x,
+                                                  unsigned short& y);
+        /**
+         *
+         * @param rotations
+         */
+        virtual int getValidRotations(CVector<RotationDirection>& rotations);
 
         /**
          * Get the CellHolder structure for the covered(overlay) neighbour

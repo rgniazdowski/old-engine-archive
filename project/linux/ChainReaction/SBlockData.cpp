@@ -126,6 +126,18 @@ void SBlockData::getScale(float* xScale, float* yScale, float* zScale) {
 }
 //------------------------------------------------------------------------------
 
+RotationDirection SBlockData::getRandomValidRotation(void) {
+    CVector<RotationDirection> rotations;
+    RotationDirection rotationDir = NO_ROTATION;
+    getValidRotations(rotations);
+    if(!rotations.empty()) {
+        const unsigned int n = rotations.size() - 1;
+        const unsigned int nColor = FG_RAND(0, n);
+        rotationDir = rotations[nColor];
+    }
+    return rotationDir;
+}
+
 VColor SBlockData::getOppositeColor(void) const {
     return self_type::getOppositeColor(color);
 }

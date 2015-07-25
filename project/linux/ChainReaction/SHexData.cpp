@@ -154,6 +154,40 @@ SBlockData* SHexData::downRight(fgBool rewind) {
 }
 //------------------------------------------------------------------------------
 
+int SHexData::getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind) {
+    neighbours.clear();
+
+    //neighbours.push_back(SNeighbourInfo(this->left(shouldRewind), LEFT));
+    //neighbours.push_back(SNeighbourInfo(this->right(shouldRewind), RIGHT));
+    SBlockData* pNeighbour = NULL;
+
+    pNeighbour = this->up(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, UP));
+
+    pNeighbour = this->down(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, DOWN));
+
+    pNeighbour = this->upLeft(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, UP_LEFT));
+
+    pNeighbour = this->upRight(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, UP_RIGHT));
+
+    pNeighbour = this->downLeft(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, DOWN_LEFT));
+
+    pNeighbour = this->downRight(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, DOWN_RIGHT));
+    return neighbours.size();
+}
+//------------------------------------------------------------------------------
+
 void SHexData::rotate(RotationDirection direction, float amount) {
     if(direction == NO_ROTATION && rotDir == NO_ROTATION || !pSceneNode)
         return;
@@ -215,8 +249,8 @@ void SHexData::rotate(RotationDirection direction, float amount) {
         rotationAxis.y = -M_SQRT3F;
     } else if(direction == DOWN_RIGHT) {
         // Y bigger -> DOWN
-        translationAxis.y = -HEX_HALF_SIZE * M_SQRT3F * 0.25f;        
-        rotationAxis.x = 1.0f;        
+        translationAxis.y = -HEX_HALF_SIZE * M_SQRT3F * 0.25f;
+        rotationAxis.x = 1.0f;
         // X bigger -> RIGHT
         translationAxis.x = HEX_HALF_SIZE * 0.75f;
         rotationAxis.y = M_SQRT3F;
@@ -236,8 +270,8 @@ void SHexData::rotate(RotationDirection direction, float amount) {
         amount -= newRotation * reverse;
     }
     if(shouldRotate) {
-        this->pSceneNode->translateMatrix(reverse * translationAxis);        
-        this->pSceneNode->rotate(amount, rotationAxis);        
+        this->pSceneNode->translateMatrix(reverse * translationAxis);
+        this->pSceneNode->rotate(amount, rotationAxis);
         this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
         this->rotation += amount * reverse;
     }
@@ -311,6 +345,39 @@ void SHexData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
         return;
     }
     getCoveringCoord(rotDir, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
+}
+//------------------------------------------------------------------------------
+
+fgBool SHexData::getPotentialNeighbourCoord(RotationDirection direction,
+                                            unsigned short& x,
+                                            unsigned short& y) {
+    if(!pCellHolder) {
+        return FG_FALSE;
+    }
+    fgBool status = FG_TRUE;
+    getCoveringCoord(direction, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
+    if(pCellHolder->pParent) {
+        status = pCellHolder->pParent->isValidAddress(x, y);
+    } else {
+        status = FG_FALSE;
+        x = 0;
+        y = 0;
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+int SHexData::getValidRotations(CVector<RotationDirection>& rotations) {
+    rotations.clear();
+    //rotations.push_back(LEFT);
+    //rotations.push_back(RIGHT);
+    rotations.push_back(UP);
+    rotations.push_back(DOWN);
+    rotations.push_back(UP_LEFT);
+    rotations.push_back(UP_RIGHT);
+    rotations.push_back(DOWN_LEFT);
+    rotations.push_back(DOWN_RIGHT);
+    return rotations.size();
 }
 //------------------------------------------------------------------------------
 

@@ -18,6 +18,8 @@
     #define FG_INC_ADDITIONAL_TYPES
     #define FG_INC_ADDITIONAL_TYPES_BLOCK
 
+    #include "fgVector.h"
+
 namespace fg {
 
     /**
@@ -76,6 +78,40 @@ namespace fg {
         NUM_COLORS = 10
     };
 
+    inline const char* getColorName(VColor color) {
+        const char* returnValue = "invalid";
+        switch(color) {
+            case BLACK:
+                returnValue = "black";
+                break;
+            case WHITE:
+                returnValue = "white";
+                break;
+            case GRAY:
+                returnValue = "gray";
+                break;
+            case RED:
+                returnValue = "red";
+                break;
+            case GREEN:
+                returnValue = "green";
+                break;
+            case BLUE:
+                returnValue = "blue";
+                break;
+            case CYAN:
+                returnValue = "cyan";
+                break;
+            case MAGENTA:
+                returnValue = "magenta";
+                break;
+            case YELLOW:
+                returnValue = "yellow";
+                break;
+        };
+        return returnValue;
+    }
+
     struct SBlockData;
 
     /**
@@ -131,7 +167,12 @@ namespace fg {
             return (bool)(this->ptr == other.ptr && this->direction == other.direction);
         }
     }; // SNeighbourInfo
-}
+    
+    typedef CVector<SNeighbourInfo> NeighbourInfoVec;
+    typedef NeighbourInfoVec::iterator NeighbourInfoVecItor;
+    typedef NeighbourInfoVec::const_iterator NeighbourInfoVecConstItor;
+
+} // namespace fg
 
     #undef FG_INC_ADDITIONAL_TYPES_BLOCK
 #endif	/* FG_INC_ADDITIONAL_TYPES */

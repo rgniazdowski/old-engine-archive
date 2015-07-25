@@ -161,7 +161,7 @@ SBlockData* CLevelDataHolder::insertNewBlock(unsigned short x,
     } else {
         pBlockData = new SQuadData();
     }
-    pBlockData->color = color;
+    pBlockData->changeColor(color);
     game::CGrid::SCellHolder* pCellHolder = m_pGrid->atPtr(x, y);
     if(!pCellHolder) {
         // probably game::CGrid is not prepared - should call applyToGrid

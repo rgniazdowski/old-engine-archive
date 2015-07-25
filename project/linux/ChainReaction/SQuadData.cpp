@@ -25,8 +25,7 @@ SQuadData::SQuadData() : base_type() {
 }
 //------------------------------------------------------------------------------
 
-SQuadData::~SQuadData() {
-}
+SQuadData::~SQuadData() { }
 //------------------------------------------------------------------------------
 
 SBlockData* SQuadData::left(fgBool rewind) {
@@ -137,6 +136,30 @@ SBlockData* SQuadData::downRight(fgBool rewind) {
 }
 //------------------------------------------------------------------------------
 
+int SQuadData::getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind) {
+    neighbours.clear();
+    SBlockData* pNeighbour = NULL;
+    pNeighbour = this->left(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, LEFT));
+
+    pNeighbour = this->right(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, RIGHT));
+
+    pNeighbour = this->up(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, UP));
+
+    pNeighbour = this->down(shouldRewind);
+    if(pNeighbour)
+        neighbours.push_back(SNeighbourInfo(pNeighbour, DOWN));
+
+    return neighbours.size();
+}
+
+//------------------------------------------------------------------------------
+
 void SQuadData::rotate(RotationDirection direction, float amount) {
     if(direction == NO_ROTATION && rotDir == NO_ROTATION || !pSceneNode)
         return;
@@ -204,10 +227,10 @@ void SQuadData::rotate(RotationDirection direction, float amount) {
 }
 //------------------------------------------------------------------------------
 
-void SQuadData::getCoveringCoord(RotationDirection direction, 
+void SQuadData::getCoveringCoord(RotationDirection direction,
                                  unsigned short x,
-                                 unsigned short y, 
-                                 unsigned short& newX, 
+                                 unsigned short y,
+                                 unsigned short& newX,
                                  unsigned short& newY) {
     if(direction == NO_ROTATION || direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION) {
         return;
@@ -234,12 +257,41 @@ void SQuadData::getCoveringCoord(RotationDirection direction,
 }
 //------------------------------------------------------------------------------
 
-void SQuadData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {    
+void SQuadData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
     if(!pCellHolder) {
         // no cell holder pointer available - no way to determine the neighbour
         return;
-    }    
+    }
     getCoveringCoord(rotDir, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
+}
+//------------------------------------------------------------------------------
+
+fgBool SQuadData::getPotentialNeighbourCoord(RotationDirection direction,
+                                             unsigned short& x,
+                                             unsigned short& y) {
+    if(!pCellHolder) {
+        return FG_FALSE;
+    }
+    fgBool status = FG_TRUE;
+    getCoveringCoord(direction, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
+    if(pCellHolder->pParent) {
+        status = pCellHolder->pParent->isValidAddress(x, y);
+    } else {
+        status = FG_FALSE;
+        x = 0;
+        y = 0;
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+int SQuadData::getValidRotations(CVector<RotationDirection>& rotations) {
+    rotations.clear();
+    rotations.push_back(LEFT);
+    rotations.push_back(RIGHT);
+    rotations.push_back(UP);
+    rotations.push_back(DOWN);
+    return rotations.size();
 }
 //------------------------------------------------------------------------------
 
@@ -285,7 +337,7 @@ game::CGrid::SCellHolder* SQuadData::getCoveredNeighbourCellHolder(void) {
 
 fgBool SQuadData::isRotationValid(RotationDirection direction) const {
     if(direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION)
-        return FG_FALSE;    
+        return FG_FALSE;
     // These are not valid rotation directions for quad
     if(direction == UP_LEFT || direction == UP_RIGHT)
         return FG_FALSE;
