@@ -190,6 +190,11 @@ namespace fg {
 
     public:
         /**
+         *          
+         * @return 
+         */
+        void refreshArea(void);
+        /**
          * 
          * @return 
          */
@@ -251,7 +256,23 @@ namespace fg {
          * @param x
          * @param y
          */
-        void getSize(unsigned short* x = NULL, unsigned short* y = NULL);
+        void getSize(unsigned short* x, unsigned short* y = NULL);
+
+        /**
+         * 
+         * @return
+         */
+        SSize& getSize(void) {
+            return m_size;
+        }
+        /**
+         *
+         * @param x
+         * @param y
+         */
+        SSize const& getSize(void) const {
+            return m_size;
+        }
         /**
          *
          * @param x

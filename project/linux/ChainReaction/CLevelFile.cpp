@@ -162,6 +162,31 @@ fgBool CLevelFile::load(void) {
 }
 //------------------------------------------------------------------------------
 
+void CLevelFile::refreshArea(void) {
+    if(m_blocks.empty())
+        return;
+
+    m_area.min.x = USHRT_MAX;
+    m_area.min.y = USHRT_MAX;
+    m_area.max.x = 0;
+    m_area.max.y = 0;
+    m_area.size.x = 0;
+    m_area.size.y = 0;
+    const unsigned int n = m_blocks.size();
+    for(unsigned int i = 0; i < n; i++) {
+        const SBlockInfo& blockInfo = m_blocks[i];
+        const unsigned short xPos = blockInfo.pos.x;
+        const unsigned short yPos = blockInfo.pos.y;
+        m_area.max.x = MAX(m_area.max.x, xPos);
+        m_area.max.y = MAX(m_area.max.y, yPos);
+        m_area.min.x = MIN(m_area.min.x, xPos);
+        m_area.min.y = MIN(m_area.min.y, yPos);
+    }
+    m_area.size.x = m_area.max.x - m_area.min.x + 1;
+    m_area.size.y = m_area.max.y - m_area.min.y + 1;
+}
+//------------------------------------------------------------------------------
+
 fgBool CLevelFile::load(const char* filePath) {
     if(!filePath) {
         return FG_FALSE;
@@ -204,9 +229,9 @@ fgBool CLevelFile::save(void) {
     char** strData;
     strData = (char **)fgMalloc<char*>(y);
     if(strData) {
-        for(unsigned short i = 0;i<y;i++) {
-            strData[i] = (char*)fgMalloc<char>(x+1);
-            for(unsigned short c = 0;c<x;c++) {
+        for(unsigned short i = 0; i < y; i++) {
+            strData[i] = (char*)fgMalloc<char>(x + 1);
+            for(unsigned short c = 0; c < x; c++) {
                 strData[i][c] = '0';
             }
             strData[i][x] = '\0';
@@ -216,7 +241,7 @@ fgBool CLevelFile::save(void) {
         levelFile.close();
     }
     const unsigned int n = m_blocks.size();
-    for(unsigned int i = 0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         self_type::SBlockInfo const& blockInfo = m_blocks[i];
         if(blockInfo.pos.x >= x || blockInfo.pos.y >= y)
             continue;
@@ -233,9 +258,9 @@ fgBool CLevelFile::save(void) {
     }
 
     levelFile.print("%dx%d %d %s\n", x, y, m_levelIdx, levelType);
-    for(unsigned short i = 0;i<y;i++) {
-        levelFile.print("%s\n",strData[i]);
-        memset(strData[i], 0, x+1);
+    for(unsigned short i = 0; i < y; i++) {
+        levelFile.print("%s\n", strData[i]);
+        memset(strData[i], 0, x + 1);
         fgFree<char>(strData[i]);
         strData[i] = NULL;
     }
@@ -313,44 +338,89 @@ void CLevelFile::getSize(unsigned short* x, unsigned short* y) {
 //------------------------------------------------------------------------------
 
 void CLevelFile::getAreaSize(unsigned short& x, unsigned short& y) {
-    x = m_area.size.x;
-    y = m_area.size.y;
+    const fgBool dummy = (fgBool)!!(m_blocks.empty() && m_size.x != 0 && m_size.y != 0);
+    if(!dummy) {
+        x = m_area.size.x;
+        y = m_area.size.y;
+    } else {
+        x = m_size.x;
+        y = m_size.y;
+    }
 }
 //------------------------------------------------------------------------------
 
 void CLevelFile::getAreaSize(unsigned short* x, unsigned short* y) {
-    if(x)
-        *x = m_area.size.x;
-    if(y)
-        *y = m_area.size.y;
+    const fgBool dummy = (fgBool)!!(m_blocks.empty() && m_size.x != 0 && m_size.y != 0);
+    if(x) {
+        if(!dummy)
+            *x = m_area.size.x;
+        else
+            *x = m_size.x;
+    }
+    if(y) {
+        if(!dummy)
+            *y = m_area.size.y;
+        else
+            *y = m_size.y;
+    }
 }
 //------------------------------------------------------------------------------
 
 void CLevelFile::getAreaMin(unsigned short& x, unsigned short& y) {
-    x = m_area.min.x;
-    y = m_area.min.y;
+    const fgBool dummy = (fgBool)!!(m_blocks.empty() && m_size.x != 0 && m_size.y != 0);
+    if(!dummy) {
+        x = m_area.min.x;
+        y = m_area.min.y;
+    } else {
+        x = 0;
+        y = 0;
+    }
 }
 //------------------------------------------------------------------------------
 
 void CLevelFile::getAreaMin(unsigned short* x, unsigned short* y) {
-    if(x)
-        *x = m_area.min.x;
-    if(y)
-        *y = m_area.min.y;
+    const fgBool dummy = (fgBool)!!(m_blocks.empty() && m_size.x != 0 && m_size.y != 0);
+    if(x) {
+        if(!dummy)
+            *x = m_area.min.x;
+        else
+            *x = 0;
+    }
+    if(y) {
+        if(!dummy)
+            *y = m_area.min.y;
+        else
+            *y = 0;
+    }
 }
 //------------------------------------------------------------------------------
 
 void CLevelFile::getAreaMax(unsigned short& x, unsigned short& y) {
-    x = m_area.max.x;
-    y = m_area.max.y;
+    const fgBool dummy = (fgBool)!!(m_blocks.empty() && m_size.x != 0 && m_size.y != 0);
+    if(!dummy) {
+        x = m_area.max.x;
+        y = m_area.max.y;
+    } else {
+        x = m_size.x - 1;
+        y = m_size.y - 1;
+    }
 }
 //------------------------------------------------------------------------------
 
 void CLevelFile::getAreaMax(unsigned short* x, unsigned short* y) {
-    if(x)
-        *x = m_area.max.x;
-    if(y)
-        *y = m_area.max.y;
+    const fgBool dummy = (fgBool)!!(m_blocks.empty() && m_size.x != 0 && m_size.y != 0);
+    if(x) {
+        if(!dummy)
+            *x = m_area.max.x;
+        else
+            *x = m_size.y - 1;
+    }
+    if(y) {
+        if(!dummy)
+            *y = m_area.max.y;
+        else
+            *y = m_size.y - 1;
+    }
 }
 //------------------------------------------------------------------------------
 
