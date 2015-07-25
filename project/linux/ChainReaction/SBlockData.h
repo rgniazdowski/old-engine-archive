@@ -91,6 +91,19 @@ namespace fg {
         }
 
         /**
+         * 
+         * @param newColor
+         */
+        void changeColor(VColor newColor) {
+            if(newColor == VColor::INVALID_COLOR || newColor >= VColor::NUM_COLORS)
+                return;
+            this->color = newColor;
+            if(pCellHolder) {
+                pCellHolder->value = (unsigned short)newColor;
+            }
+        }
+
+        /**
          *
          */
         void invalidate(void);

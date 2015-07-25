@@ -416,5 +416,5 @@ namespace fg {
 
 } // namespace fg
 
-    #undef FG_INC_LEVEL_DATA_HOLDER
+    #undef FG_INC_LEVEL_DATA_HOLDER_BLOCK
 #endif	/* FG_INC_LEVEL_DATA_HOLDER */

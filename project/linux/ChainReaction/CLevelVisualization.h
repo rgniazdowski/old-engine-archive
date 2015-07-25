@@ -74,6 +74,10 @@ namespace fg {
         static fgBool actionLevelDataDestroyedCallback(void* systemData, void* userData);
 
     public:
+        void calculateNodePosition(unsigned short x, unsigned short y,
+                                   Vec2f& nodePos,
+                                   fgBool* isEven = NULL,
+                                   fgBool* isHex = NULL);
         /**
          * Creates the new scene node with proper size, scale, position and material.
          * The node is NOT being inserted into the scene manager.
@@ -103,12 +107,20 @@ namespace fg {
     public:
         /**
          * 
+         * @return
+         */
+        fgBool prepareSceneManager(void);
+        /**
+         * 
+         */
+        void refreshBlocks(void);
+        /**
+         * 
          */
         void preRender(void);
 
         //----------------------------------------------------------------------
     public:
-       
         /**
          * 
          * @param pSceneMgr
@@ -162,7 +174,6 @@ namespace fg {
                 return LevelType::INVALID_LEVEL;
             return m_pLevelSolver->getLevelType();
         }
-
         /**
          * 
          * @param scale
@@ -201,8 +212,6 @@ namespace fg {
         float getSpeed(void) const {
             return m_speed;
         }
-
-        
         /**
          * 
          * @param pMaterial
@@ -298,7 +307,14 @@ namespace fg {
             return m_pDraggedNode;
         }
         //----------------------------------------------------------------------
-        
+
+    protected:
+        /**
+         *
+         */
+        fgBool fixRootNode(void);
+
+        //----------------------------------------------------------------------
     private:
         ///
         CLevelSolver* m_pLevelSolver;
@@ -327,23 +343,23 @@ namespace fg {
                 gfx::SMaterial* green; // 5
                 ///
                 gfx::SMaterial* blue; // 6
-				///
+                ///
                 gfx::SMaterial* cyan; // 7
-				///
+                ///
                 gfx::SMaterial* yellow; // 8
-				///
+                ///
                 gfx::SMaterial* magenta; // 9
             } m_pMaterial;
             gfx::SMaterial* m_pMaterials[VColor::NUM_COLORS];
         };
-        
+
         /// Scale (size) of a single quad object
         float m_scale;
         /// Animation speed (1.0f - 100%/normal)
         float m_speed;
         /// Position on the game grid of the dragged (grabbed) quad (main action)
         Vector2i m_draggedCoord;
-        
+
     }; // class CLevelVis
 
 } // namespace fg

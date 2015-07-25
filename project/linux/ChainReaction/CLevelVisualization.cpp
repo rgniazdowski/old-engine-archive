@@ -60,7 +60,7 @@ void CLevelVisualization::registerCallbacks(void) {
     if(!m_pLevelSolver->getLevelDataHolder())
         return;
     CLevelDataHolder* pLevelData = m_pLevelSolver->getLevelDataHolder();
-    
+
     pLevelData->registerCallback(CLevelDataHolder::ACTION_BLOCK_ADDED,
                                  &self_type::actionBlockAddedCallback,
                                  (void*)this);
@@ -113,6 +113,7 @@ fgBool CLevelVisualization::actionBlockAddedCallback(void* systemData, void* use
         return FG_FALSE;
     }
 #define _this pThis
+    _this->fixRootNode();
     gfx::CSceneNode* pRootNode = _this->m_pSceneMgr->getActiveRootNode(); // #CALLBACK
     // #CALLBACK_INTERNAL
     unsigned short x, y;
@@ -152,6 +153,7 @@ fgBool CLevelVisualization::actionBlockMovedCallback(void* systemData, void* use
         return FG_FALSE;
     }
 #define _this pThis
+    _this->fixRootNode();
     if(pNewPlace) {
         // replace the color and material in the new location
         if(pNewPlace->pSceneNode && pNewPlace->pSceneNode->getNodeType() == gfx::SCENE_NODE_OBJECT) {
@@ -203,7 +205,8 @@ fgBool CLevelVisualization::actionBlockMovedCallback(void* systemData, void* use
         }
     }
     if(original == pNewPlace || original == NULL) {
-        status = FG_FALSE;;
+        status = FG_FALSE;
+        ;
     }
 #undef _this
     return status;
@@ -254,15 +257,14 @@ fgBool CLevelVisualization::actionLevelDataDestroyedCallback(void* systemData, v
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
-                                                       unsigned short y,
-                                                       VColor color) {
-    if(!m_pLevelSolver) {
-        return NULL;
-    }
-    Vec2f startPos, nodePos;
-    fgBool isEven = FG_FALSE;
-    const char* modelNameStr = "builtinCube1x1";
+
+void CLevelVisualization::calculateNodePosition(unsigned short x,
+                                                unsigned short y,
+                                                Vec2f& nodePos,
+                                                fgBool* isEven,
+                                                fgBool* isHex) {
+    Vec2f startPos;
+    fgBool internalIsEven = FG_FALSE;
     unsigned short areaSX, areaSY;
     getLevelFile()->getAreaSize(areaSX, areaSY);
     unsigned short areaMinX, areaMaxX;
@@ -271,31 +273,53 @@ gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
     getLevelFile()->getAreaMax(areaMaxX, areaMaxY);
     float scaleX = m_scale;
     float scaleY = m_scale;
-    const fgBool isHex = getLevelFile()->getLevelType() == CLevelFile::LEVEL_HEXAGONS;
-    if(isHex) {
+    const fgBool internalIsHex = getLevelFile()->getLevelType() == CLevelFile::LEVEL_HEXAGONS;
+    if(internalIsHex) {
         scaleX = m_scale * 0.75f;
         scaleY = m_scale * M_SQRT3F * 0.5f;
-        isEven = (fgBool)!!(x % 2 == 0);
-        modelNameStr = "builtinHexagonalPrism";
+        internalIsEven = (fgBool)!!(x % 2 == 0);
     }
     startPos.x = -1.0f * (float)areaSX / 2.0f * scaleX + scaleX / 2.0f;
     startPos.y = (float)areaSY / 2.0f * scaleY - scaleY / 2.0f;
     nodePos.x = startPos.x + (float)(x - areaMinX) * (scaleX);
     nodePos.y = startPos.y - 1.0f * (float)(y - areaMinY) * (scaleY);
-    if(!isEven)
+    if(!internalIsEven)
         nodePos.y -= m_scale * 0.5f * M_SQRT3F * 0.5f;
-    char quadNodeName[64];
+    if(isEven)
+        *isEven = internalIsEven;
+    if(isHex)
+        *isHex = internalIsHex;
+}
 
+
+gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
+                                                       unsigned short y,
+                                                       VColor color) {
+    if(!m_pLevelSolver) {
+        return NULL;
+    }
+    Vec2f nodePos;
+    fgBool isHex = FG_FALSE;
+    const char* modelNameStr = "builtinCube1x1";
+    char quadNodeName[64];
+    gfx::CModelResource* pModelRes = NULL;
+    gfx::CSceneNodeObject* pNodeObj = NULL;
+    gfx::CDrawCall* pDrawCall = NULL;
+    calculateNodePosition(x, y, nodePos, NULL, &isHex);
+    if(isHex) {
+        modelNameStr = "builtinHexagonalPrism";
+    }    
+    
     std::sprintf(quadNodeName, "cr_node_%dx%d", x, y);
-    gfx::CModelResource* pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
+    pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
     if(!pModelRes) {
         return NULL;
     }
-    gfx::CSceneNodeObject* pNodeObj = new gfx::CSceneNodeObject(pModelRes, NULL);
+    pNodeObj = new gfx::CSceneNodeObject(pModelRes, NULL);
     pNodeObj->setName(quadNodeName);
     pNodeObj->setScale(m_scale, m_scale, 1.0f);
     pNodeObj->setPosition(nodePos.x, nodePos.y, 0.0f);
-    gfx::CDrawCall* pDrawCall = pNodeObj->getDrawCall();
+    pDrawCall = pNodeObj->getDrawCall();
     if(pDrawCall) {
         if(getMaterial(color) != NULL) {
             ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterials[(unsigned int)color]);
@@ -304,6 +328,35 @@ gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
     }
     pNodeObj->refreshGfxInternals();
     return pNodeObj;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelVisualization::fixRootNode(void) {
+    if(!m_pSceneMgr || !getLevelFile()) {
+        return FG_FALSE;
+    }
+    // need to check for root node
+    char rootNodeName[64];
+    fgBool status = FG_TRUE;
+    std::sprintf(rootNodeName, "cr_root_n_%d", getLevelFile()->getLevelIndex());
+    gfx::CSceneNode* pRootNode = m_pSceneMgr->get(rootNodeName);
+    if(!pRootNode) {
+        pRootNode = new gfx::CSceneNode(gfx::SCENE_NODE_ROOT, NULL);
+        if(!pRootNode) {
+            return FG_FALSE;
+        }
+        pRootNode->setName(rootNodeName);
+        fgBool rootStatus = m_pSceneMgr->addNode(pRootNode->getRefHandle(),
+                                                 pRootNode,
+                                                 (gfx::CSceneNode*)NULL);
+        if(rootStatus) {
+            status = m_pSceneMgr->selectActiveRootNode(pRootNode);
+        }
+    } else {
+        // select as this root node
+        status = m_pSceneMgr->selectActiveRootNode(pRootNode);
+    }
+    return status;
 }
 //------------------------------------------------------------------------------
 
@@ -325,28 +378,30 @@ fgBool CLevelVisualization::restart(void) {
         m_pLevelSolver->clear();
         m_pLevelSolver->setScale(m_scale);
     }
-    // need to check for root node
-    char rootNodeName[64];
-
-    std::sprintf(rootNodeName, "cr_root_n_%d", getLevelFile()->getLevelIndex());
-    gfx::CSceneNode* pRootNode = m_pSceneMgr->get(rootNodeName);
-    if(!pRootNode) {
-        pRootNode = new gfx::CSceneNode(gfx::SCENE_NODE_ROOT, NULL);
-        if(!pRootNode) {
-            return FG_FALSE;
-        }
-        pRootNode->setName(rootNodeName);
-        fgBool rootStatus = m_pSceneMgr->addNode(pRootNode->getRefHandle(),
-                                                 pRootNode,
-                                                 (gfx::CSceneNode*)NULL);
-        if(rootStatus) {
-            m_pSceneMgr->selectActiveRootNode(pRootNode);
-        }
-    } else {
-        // select as this root node
-        m_pSceneMgr->selectActiveRootNode(pRootNode);
-    }
+    fixRootNode();
     getLevelDataHolder()->restart();
+    refreshBlocks();
+    prepareSceneManager();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+void CLevelVisualization::clear(void) {
+    // reset the game grid (to zero)
+    // zeroes binded pointers and
+    // releases the data in quad vector
+    if(getLevelSolver())
+        getLevelSolver()->clear();
+    if(getLevelDataHolder())
+        getLevelDataHolder()->clear();
+    m_draggedCoord = Vec2i();
+    m_pDraggedNode = NULL;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelVisualization::prepareSceneManager(void) {
+    if(!m_pSceneMgr)
+        return FG_FALSE;
     // set some initial state for the scene manager
     m_pSceneMgr->setPickSelectionGroup(FG_FALSE);
     m_pSceneMgr->setPickSelectionToggle(FG_FALSE);
@@ -368,20 +423,45 @@ fgBool CLevelVisualization::restart(void) {
     // moar?
 
     m_pSceneMgr->refreshGfxInternals();
+    
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
+void CLevelVisualization::refreshBlocks(void) {
+    if(!getLevelDataHolder())
+        return;
+    CLevelDataHolder* pHolder = getLevelDataHolder();
+    BlockDataVec& blocks = pHolder->getBlocks();
+    const unsigned int nBlocks = blocks.size();
+    Vec2f nodePos;
+    for(unsigned int i = 0; i < nBlocks; i++) {
+        SBlockData* pBlock = blocks[i];
+        if(!pBlock)
+            continue;
+        gfx::CSceneNodeObject* pNodeObj = (gfx::CSceneNodeObject*)pBlock->pSceneNode;
+        if(!pNodeObj)
+            continue;
+        calculateNodePosition(pBlock->pCellHolder->pos.x,
+                              pBlock->pCellHolder->pos.y,
+                              nodePos);
+        pNodeObj->setPosition(nodePos.x, nodePos.y, 0.0f);
+        gfx::CDrawCall* pDrawCall = pBlock->pSceneNode->getDrawCall();
+        gfx::SMaterial* pMaterial = this->getMaterial(pBlock->color);
+        if(!pMaterial)
+            continue;
 
-void CLevelVisualization::clear(void) {
-    // reset the game grid (to zero)
-    // zeroes binded pointers and
-    // releases the data in quad vector
-    if(getLevelSolver())
-        getLevelSolver()->clear();
-    if(getLevelDataHolder())
-        getLevelDataHolder()->clear();
-    m_draggedCoord = Vec2i();
-    m_pDraggedNode = NULL;
+        if(pDrawCall) {
+            if(pDrawCall->getMaterial() != pMaterial) {
+                pDrawCall->setupMaterial(pMaterial);
+            }
+        }
+        gfx::CSceneNodeMesh* pNodeMesh = (gfx::CSceneNodeMesh*)pNodeObj->getChild();
+        if(pNodeMesh) {
+            if(pNodeMesh->getMaterial() != pMaterial) {
+                pNodeMesh->setMaterial(pMaterial);
+            }
+        }
+    }
 }
 //------------------------------------------------------------------------------
 
