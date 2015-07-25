@@ -67,7 +67,7 @@ namespace fg {
         ///
         BLUE = 6,
         ///
-        CYAN = 7,        
+        CYAN = 7,
         ///
         MAGENTA = 8,
         ///
@@ -75,6 +75,62 @@ namespace fg {
         ///
         NUM_COLORS = 10
     };
+
+    struct SBlockData;
+
+    /**
+     *
+     */
+    struct SNeighbourInfo {
+        ///
+        SBlockData* ptr;
+        ///
+        RotationDirection direction;
+        /**
+         *
+         */
+        SNeighbourInfo() : ptr(NULL), direction(NO_ROTATION) { }
+        /**
+         *
+         * @param _ptr
+         * @param _direction
+         */
+        SNeighbourInfo(SBlockData* _ptr,
+                       RotationDirection _direction = NO_ROTATION) :
+        ptr(_ptr), direction(_direction) { }
+        /**
+         *
+         */
+        virtual ~SNeighbourInfo() {
+            clear();
+        }
+        /**
+         *
+         */
+        void clear(void) {
+            ptr = NULL;
+            direction = NO_ROTATION;
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isValid(void) const {
+            fgBool status = (fgBool)!!(ptr != NULL);
+            status = (fgBool)!!(status && direction != NO_ROTATION);
+            status = (fgBool)!!(status && direction != AUTO_ROTATION);
+            status = (fgBool)!!(status && direction != OPPOSITE_ROTATION);
+            return status;
+        }
+        /**
+         *
+         * @param other
+         * @return
+         */
+        inline bool operator ==(const SNeighbourInfo& other) const {
+            return (bool)(this->ptr == other.ptr && this->direction == other.direction);
+        }
+    }; // SNeighbourInfo
 }
 
     #undef FG_INC_ADDITIONAL_TYPES_BLOCK

@@ -399,60 +399,6 @@ namespace fg {
         typedef CVector<SCoverInfo> CoverInfoVec;
         typedef CoverInfoVec::iterator CoverInfoVecItor;
 
-        /**
-         *
-         */
-        struct SNeighbourInfo {
-            ///
-            SBlockData* ptr;
-            ///
-            RotationDirection direction;
-            /**
-             *
-             */
-            SNeighbourInfo() : ptr(NULL), direction(NO_ROTATION) { }
-            /**
-             *
-             * @param _ptr
-             * @param _direction
-             */
-            SNeighbourInfo(SBlockData* _ptr,
-                           RotationDirection _direction = NO_ROTATION) :
-            ptr(_ptr), direction(_direction) { }
-            /**
-             *
-             */
-            ~SNeighbourInfo() {
-                clear();
-            }
-            /**
-             *
-             */
-            void clear(void) {
-                ptr = NULL;
-                direction = NO_ROTATION;
-            }
-            /**
-             * 
-             * @return 
-             */
-            fgBool isValid(void) const {
-                fgBool status = (fgBool)!!(ptr != NULL);
-                status = (fgBool)!!(status && direction != NO_ROTATION);
-                status = (fgBool)!!(status && direction != AUTO_ROTATION);
-                status = (fgBool)!!(status && direction != OPPOSITE_ROTATION);
-                return status;
-            }
-            /**
-             *
-             * @param other
-             * @return
-             */
-            inline bool operator ==(const SNeighbourInfo& other) const {
-                return (bool)(this->ptr == other.ptr && this->direction == other.direction);
-            }
-        }; // SNeighbourInfo
-
         typedef CVector<SNeighbourInfo> NeighbourInfoVec;
         typedef NeighbourInfoVec::iterator NeighbourInfoVecItor;
 
