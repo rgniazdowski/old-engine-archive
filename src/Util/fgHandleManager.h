@@ -528,7 +528,7 @@ inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isHandleValid(co
 
     if((index >= m_managedData.size()) || (m_managedData[index].magic != handle.getMagic())) {
         // no good! invalid handle == client programming error
-        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match with index: index[%d], magic[%d], handle[%d], true_magic[%d]",
+        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match: index[%d], magic[%d], handle[%d], true_magic[%d]",
                      THandleType::getTagName(),
                      index,
                      handle.getMagic(),

@@ -132,9 +132,11 @@ void gfx::CSceneManager::clearScene(void) {
     if(m_sceneEventMgr) {
         event::SSceneEvent* clearEvent = (event::SSceneEvent*) m_sceneEventMgr->requestEventStruct();
         clearEvent->code = event::SCENE_CLEARED;
+        clearEvent->node.reset();
 
         event::CArgumentList *argList = m_sceneEventMgr->requestArgumentList();
         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)clearEvent);
+        argList->push(event::SArgument::Type::ARG_POINTER, (void *)this); // pointer to the manager
         m_sceneEventMgr->throwEvent(event::SCENE_CLEARED, argList);
     }
 }
@@ -756,8 +758,10 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
             event::CArgumentList *argList = pSceneMgr->getInternalEventManager()->requestArgumentList();
             event::SSceneNode* nodeEvent = (event::SSceneNode*) pSceneMgr->getInternalEventManager()->requestEventStruct();
             nodeEvent->eventType = event::SCENE_NODE_SELECTED;
-            nodeEvent->pNodeA = pNode;
+            nodeEvent->setFirstNode(pNode);
+            nodeEvent->setSecondNode(NULL);
             argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
+            argList->push(event::SArgument::Type::ARG_POINTER, (void *)this); // pointer to the manager
             pSceneMgr->getInternalEventManager()->throwEvent(event::SCENE_NODE_SELECTED, argList);
         }
     } else {
@@ -872,11 +876,12 @@ void gfx::CSceneManager::update(void) {
         if(info.isBegin && m_sceneEventMgr) {
             event::SSceneNodeTrigger* triggerEvent = (event::SSceneNodeTrigger*) m_sceneEventMgr->requestEventStruct();
             triggerEvent->eventType = event::SCENE_NODE_TRIGGER_FIRED;
-            triggerEvent->pNodeTrigger = info.pTrigger;
-            triggerEvent->pNodeB = info.pNodeB;
+            triggerEvent->setTriggerNode(info.pTrigger);
+            triggerEvent->setSecondNode(info.pNodeB);
 
             event::CArgumentList* argList = m_sceneEventMgr->requestArgumentList();
             argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)triggerEvent);
+            argList->push(event::SArgument::Type::ARG_POINTER, (void *)this); // pointer to the manager
             m_sceneEventMgr->throwEvent(event::SCENE_NODE_TRIGGER_FIRED, argList);
         }
         m_triggers.pop_back();
@@ -1441,11 +1446,12 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     if(m_sceneEventMgr) {
         event::SSceneNode* nodeEvent = (event::SSceneNode*) m_sceneEventMgr->requestEventStruct();
         nodeEvent->eventType = event::SCENE_NODE_INSERTED;
-        nodeEvent->pNodeA = pNode;
-        nodeEvent->pNodeB = NULL;
+        nodeEvent->setFirstNode(pNode);
+        nodeEvent->setSecondNode(NULL);
 
         event::CArgumentList *argList = m_sceneEventMgr->requestArgumentList();
         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
+        argList->push(event::SArgument::Type::ARG_POINTER, (void *)this); // pointer to the manager
         m_sceneEventMgr->throwEvent(event::SCENE_NODE_INSERTED, argList);
     }
     return FG_TRUE;
@@ -1745,7 +1751,7 @@ fgBool gfx::CSceneManager::isManaged(const CSceneNode* pObj) {
         return FG_FALSE;
     }
     // This last check is an overkill
-    //if(!fgHandleManager::isDataManaged(pObj)) {
+    //if(!handle_mgr_type::isDataManaged(pObj)) { }
     //    return FG_FALSE;
     //}
     return FG_TRUE;

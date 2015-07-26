@@ -947,20 +947,32 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(event::CArgumentList* argv) {
 fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SSceneEvent *event_struct = (event::SSceneEvent *)argv->getValueByID(0);
-    if(!event_struct)
+    event::SSceneEvent *pEventStruct = (event::SSceneEvent *)argv->getValueByID(0);
+    CSceneManager* pSceneManager = (CSceneManager *)argv->getValueByID(1);
+    if(!pEventStruct)
         return FG_FALSE;
-    event::EventType type = event_struct->code;
+    event::EventType type = pEventStruct->code;
     if(type != event::SCENE_NODE_INSERTED)
         return FG_FALSE;
+    if(!pSceneManager) {
+        // fail
+        FG_LOG_DEBUG("GFX: Scene handler: argument list did not contain valid pointer to SceneManager");
+        return FG_FALSE;
+    }
+    if(!pSceneManager->isManaged(pEventStruct->node.handleNodeA)) {
+        // the handle is no longer valid
+        // probably before this event was handled the node was removed/deleted
+        // the pointer wont be valid (50% chance)
+        return FG_FALSE;
+    }
 
-    if(event_struct->node.pNodeA) {
-        event_struct->node.pNodeA->refreshGfxInternals();
+    if(pEventStruct->node.pNodeA) {
+        pEventStruct->node.pNodeA->refreshGfxInternals();
 
-        if(event_struct->node.pNodeA->getNodeType() == gfx::SCENE_NODE_OBJECT) {
+        if(pEventStruct->node.pNodeA->getNodeType() == gfx::SCENE_NODE_OBJECT) {
             // need to externally refresh any used materials
             // #FIXME
-            CSceneNodeObject* pNodeObj = (CSceneNodeObject*)event_struct->node.pNodeA;
+            CSceneNodeObject* pNodeObj = (CSceneNodeObject*)pEventStruct->node.pNodeA;
             CSceneNode::ChildrenVec& children = pNodeObj->getChildren();
             unsigned int n = children.size();
             for(unsigned int i = 0; i < n; i++) {

@@ -105,6 +105,7 @@
           <itemPath>../../../src/GFX/Scene/fgGfxQuadtree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxQuadtree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneCallback.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneEvent.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneEvent.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneManager.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneManager.h</itemPath>
@@ -1001,6 +1002,11 @@
       <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
@@ -2676,6 +2682,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
@@ -4314,6 +4325,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
@@ -5928,6 +5944,11 @@
       <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
@@ -7575,6 +7596,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
@@ -9210,6 +9236,11 @@
       <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"

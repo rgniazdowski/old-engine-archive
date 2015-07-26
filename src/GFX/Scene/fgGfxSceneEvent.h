@@ -19,6 +19,7 @@
     #define FG_INC_GFX_SCENE_EVENT_BLOCK
 
     #include "Event/fgEventDefinitions.h"
+    #include "fgGfxSceneNode.h"
 
 namespace fg {
 
@@ -55,8 +56,38 @@ namespace fg {
          *
          */
         struct SSceneNode : SEventBase {
+            ///
+            unsigned int handleNodeA;
+            ///
+            unsigned int handleNodeB;
+            ///
             gfx::CSceneNode* pNodeA;
+            ///
             gfx::CSceneNode* pNodeB;
+            
+            /**
+             *
+             */
+            void reset(void);
+            /**
+             *
+             * @return
+             */
+            fgBool isValid(void) {
+                if(pNodeA == NULL)
+                    return FG_FALSE;
+                return FG_TRUE;
+            }
+            /**
+             *
+             * @param _pNodeA
+             */
+            void setFirstNode(gfx::CSceneNode* _pNodeA);
+            /**
+             *
+             * @param _pNodeB
+             */
+            void setSecondNode(gfx::CSceneNode* _pNodeB);
         };
 
         /*
@@ -71,12 +102,43 @@ namespace fg {
          *
          */
         struct SSceneNodeTrigger : SEventBase {
-
             union {
+                ///
+                unsigned int handleNodeTrigger;
+                ///
+                unsigned int handleNodeA;
+            };
+            ///
+            unsigned int handleNodeB;
+            union {
+                ///
                 gfx::CSceneNodeTrigger* pNodeTrigger;
+                ///
                 gfx::CSceneNodeTrigger* pNodeA;
             };
+            ///
             gfx::CSceneNode* pNodeB;
+
+            /**
+             *
+             */
+            void reset(void);
+
+            /**
+             *
+             * @param _pNodeA
+             */
+            void setFirstNode(gfx::CSceneNode* _pNodeA);
+            /**
+             */
+            inline void setTriggerNode(gfx::CSceneNode* _pNodeTrigger) {
+                setFirstNode(_pNodeTrigger);
+            }
+            /**
+             *
+             * @param _pNodeB
+             */
+            void setSecondNode(gfx::CSceneNode* _pNodeB);
         };
 
         /**

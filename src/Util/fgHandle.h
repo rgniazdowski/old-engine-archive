@@ -44,6 +44,9 @@ namespace fg {
         template <typename TagType>
         class CHandle {
         public:
+            typedef CHandle<TagType> self_type;
+            typedef CHandle<TagType> type;
+            typedef CHandle<TagType>& self_ref;
             typedef TagType tag_type;
         private:
 
@@ -75,14 +78,47 @@ namespace fg {
              * Default constructor for Handle object
              */
             CHandle() : m_handle(FG_INVALID_HANDLE) { }
+            /**
+             *
+             * @param handle
+             */
+            CHandle(fgRawHandle handle) : m_handle(handle) { }
+            /**
+             * 
+             * @param index
+             * @param magic
+             */
+            CHandle(fgRawIndex index, fgRawMagic magic) : m_index(index),
+            m_magic(magic) { }
+            /**
+             *
+             */
             virtual ~CHandle() {
-                m_handle = FG_INVALID_HANDLE;
+                this->m_handle = FG_INVALID_HANDLE;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            self_ref operator =(self_type other) {
+                this->m_handle = other.m_handle;
+                return *this;
+            }
+            /**
+             * 
+             * @param other_handle
+             * @return
+             */
+            self_ref operator =(fgRawHandle other_handle) {
+                this->m_handle = other_handle;
+                return *this;
             }
             /**
              * Reset the handle (becomes invalid)
              */
             void reset(void) {
-                m_handle = FG_INVALID_HANDLE;
+                this->m_handle = FG_INVALID_HANDLE;
             }
             /**
              * 
@@ -90,8 +126,6 @@ namespace fg {
              */
             void copyFrom(const CHandle<TagType>& source) {
                 this->m_handle = source.getHandle();
-                this->m_magic = source.getMagic();
-                this->m_index = source.getIndex();
             }
 
             /**
@@ -169,37 +203,37 @@ fgBool fg::util::CHandle<TagType>::init(fgRawIndex index) {
 
 //------------------------------------------------------------------------------
 template <typename TagType>
-inline bool operator !=(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
+inline bool operator !=(const fg::util::CHandle<TagType>& l, const fg::util::CHandle<TagType>& r) {
     return ( l.getHandle() != r.getHandle());
 }
 
 //------------------------------------------------------------------------------
 template <typename TagType>
-inline bool operator ==(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
+inline bool operator ==(const fg::util::CHandle<TagType>& l, const fg::util::CHandle<TagType>& r) {
     return ( l.getHandle() == r.getHandle());
 }
 
 //------------------------------------------------------------------------------
 template <typename TagType>
-inline bool operator >(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
+inline bool operator >(const fg::util::CHandle<TagType>& l, const fg::util::CHandle<TagType>& r) {
     return ( l.getHandle() > r.getHandle());
 }
 
 //------------------------------------------------------------------------------
 template <typename TagType>
-inline bool operator <(fg::util::CHandle <TagType> l, fg::util::CHandle<TagType> r) {
+inline bool operator <(const fg::util::CHandle<TagType>& l, const fg::util::CHandle<TagType>& r) {
     return ( l.getHandle() < r.getHandle());
 }
 
 //------------------------------------------------------------------------------
 template <typename TagType>
-inline bool operator >=(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
+inline bool operator >=(const fg::util::CHandle<TagType>& l, const fg::util::CHandle<TagType>& r) {
     return ( l.getHandle() >= r.getHandle());
 }
 
 //------------------------------------------------------------------------------
 template <typename TagType>
-inline bool operator <=(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
+inline bool operator <=(const fg::util::CHandle<TagType>& l, const fg::util::CHandle<TagType>& r) {
     return ( l.getHandle() <= r.getHandle());
 }
 //------------------------------------------------------------------------------

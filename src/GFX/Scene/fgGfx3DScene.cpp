@@ -297,11 +297,12 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                         FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
                         event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getInternalEventManager()->requestEventStruct();
                         collisionEvent->eventType = event::SCENE_NODE_COLLISION;
-                        collisionEvent->pNodeA = const_cast<CSceneNode*>(sceneNode);
-                        collisionEvent->pNodeB = const_cast<CSceneNode*>(childNode);
+                        collisionEvent->setFirstNode(const_cast<CSceneNode*>(sceneNode));
+                        collisionEvent->setSecondNode(const_cast<CSceneNode*>(childNode));
 
                         event::CArgumentList *argList = getInternalEventManager()->requestArgumentList();
                         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)collisionEvent);
+                        argList->push(event::SArgument::Type::ARG_POINTER, (void *)this); // pointer to the manager
                         getInternalEventManager()->throwEvent(event::SCENE_NODE_COLLISION, argList);
                     }
                 } else {
