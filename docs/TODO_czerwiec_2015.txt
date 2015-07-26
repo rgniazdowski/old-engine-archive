@@ -1,0 +1,93 @@
++------------------------------------------------------------------------------
+| Priorytety na teraz - czerwiec - poczatek lipca:
+| 13.06.2015 - zostalo 17 dni czerwca [2 tygodnie]
++------------------------------------------------------------------------------
+
+[ ] sprawdzic / naprawic - zbudowac apke i przetestowac na symulatorze/tel/ipad
+	[X] zhakowac root / users na macmini
+	[ ] konfiguracja / instalacja XCode
+	[X] autologin feature
+	[X] setup synergy
+	[X] setup ssh - internal
+	[X] instalcja distcc (MacPorts - poprawna wersja)
+	[X] konfiguracja vnc/zdalnego sterowania
+	[X] setup hosts
+	[X] setup distcc dla szybszej kompilacji (moze byc ze kompilacja tylko na i)
+	[ ] setup git
+	[X] kompilacja najnowszego gcc (5.1) na Mac OS X
+	[X] instalacja gcc (4.9) z MacPorts/Brew
+	->> ->> Nie idzie skompilowac gcc 5.1 host osx target linux ....
+			Tyle problemow to ja jeszcze nie mialem - 3 dni w plecy
+			Trzeba zainstalowac gcc 4.8.1 (May.31 2013)
+	[FAIL] kompilacja cross-compilatora gcc - target linux [FAIL !]
+	[X] konfiguracja distcc do uzywania poprawnego gcc (cross to linux from osx)
+	[X] instalacja gcc 4.8.1 na osx target linux i wersji 4.8.1 na linuxie
+	[X] test distcc na linuxie i osx -> target linux x86_64
+	[ ] odblokowanie distcc (firewall) - osx
+	[ ] konfiguracja projektu dla iOS pod OSX w XCode
+		[ ] kompilacja SDL2 i pobocznych zrodel
+			- ChainReaction plugin
+			- DarkMaze plugin
+			- FlexiGameEditor - test
+			- LuaPlusNextGen (5.2 LP)
+			- MiniZip - haxx
+			- SDL2
+			- SDL2_mixer
+			- SDL2_image
+
+[X] instalacja linux na asus eee pc
+	[X] spartycjonowanie pustego wd blue 500 pod arch
+	[X] wymiana dysku w eee pc + zachowanie starego
+	[X] instalacja archa - initial
+	[X] hard code IP address + MAC (WLAN/ETH)
+	[X] pelen update
+	[ ] podstawowa konfiguracja 
+		[ ] ssh
+		[ ] git
+		[X] synergy
+		[ ] ide tools [netbeans / gcc / codeblocks / cmake]
+		[ ] gui / conky / shortcuts / xterm
+		[ ] libs
+		[X] distcc
+	[X] konfiguracja node'a
+	[X] test kompilacji distcc
+
+[ ] zbudowanie i wgranie aplikacji na Androida
+	[ ] sprawdzenie czy mozna uzyc distcc dla budowania NDK
+	[ ] budowa pod NDK razem z pluginami i wgrywanie
+		[ ] pluginy (.so*) wgrywanie do assets
+    [X] prosta kompilacja i wrzucenie na tel
+    [ ] dodanie kodu do kopiowania plikow z apk na pamiec zewnetrzna (java)
+
+
+[ ] dokonczenie edycji bsp w flexi edytorze
+	[ ] wyswietlanie w 2D GUI jakiegos statusu / informacji
+	[ ] wybieranie aktualnego materialu
+	[ ] latwa edycja materialu
+	[ ] lewe menu (lewy notebook) - specjalny panel + update
+	[ ] dolne menu (dolny notebook) - specjalny dolny panel + update
+	[ ] latwe zaznaczanie polygonow i edycja grupowa
+	[ ] latwe przelaczanie trybow edycji (crysis like menu center)
+	[ ] przelaczanie rysowania polygonow prostopadle/rownolegle do GRID
+	[ ] fix with ground grid
+	[ ] opcja do ustawiania/rysowania grid
+	[ ] podstawowa implementacja UNDO/REDO + skroty klawiszowe
+	[ ] sposob na brak konfliktu miedzy skrotami z WX GUI a skrotami wewnatrz
+	[ ] zaprzestanie uzywania ground grid ze sceny 3D [code repeat/OK]
+
+[ ] Przy dzialajacym edytorze BSP - zbudowanie reprezentacji domu w Grajewie
+	[ ] szybki test czy w ogole kod z Gems (bsp) dziala (a moze syf?)
+	[ ] przygotowanie tekstur na podstawie zdjec
+	[ ] test renderowania
+
+[ ] Jesli drzewa bsp dzialaja : kod dla szybkiego sprawdzania kolizji pomiedzy
+	graczem (aabb/sphere + center camera) a poszczegolnymi scianami - polygon
+	- sprawdzanie miedzy polygonami a nie trojkatami
+
+[ ] dodanie zapisu/odczytu plikow obj 3d binarnie
+	[ ] opcjonalnie: regeneracja obiektu/modelu/shape&shit do triangle strip
+
+[ ] zaprojektowanie strony internetowej / bloga
+	[ ] napisac skrocone opisy dla niektorych artykulow, przygotowac liste
+
+

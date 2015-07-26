@@ -1,0 +1,76 @@
+[ ] zrobic by silnik nie zawieral zadnego kodu/funkcji ktore definiowalyby
+	dzialania dla konkretnego typu gry
+	[ ] - usunac nazwy dla shaderow
+	[ ] - wiecej wbudonych shaderow
+	[ ] - grafika/logo czy loading screen powinny byc wbudowane w kod (hex?)
+	[X] - bindingi dla klawiatury (usunac sprawdzanie klawiszy z gfx render)
+	[ ] - ustalanie nazw domyslnych shaderow z poziomu game pluginu
+	[X] - reload/regenerate dla shaderow nie powinno re-kompilowac wszystkich 
+		  shaderow - tylko te ostatnio uzyte - skompilowane
+	[X] - lepszy handling dla reuploadu tekstur
+	[X] - dzialajace (tak jakby) reupload VBOs
+	[ ] - lepszy handling dla skyboxa i skybox shadera (usunac hax z gfx-render)
+
+
+[ ] - ANDROID - dodanie kodu kopiujacego paczki data do sd card (internal)
+[ ] - czesciowo dzialajacy cache
+[ ] - generowanie wersji plikow raw (szczegolnie dla ladowania plikow obj)
+[ ] - poprawic wczytywanie plikow obj (zmniejszyc liczbe zdarzen read)
+
+[ ] - ustalic hierarchie/strukture dla wczytywania plikow lua
+
+[ ] - GUI - automatyczne line breaking/wrapping
+[ ] - GUI - lepszy handling dla zdarzen resize/layout/updateBounds
+	[ ] - updateBounds powinno byc wywolywane tylko gdy rozmiar zostal zmieniony
+			z zewnatrz (specjalna flaga?)
+[ ] - GUI - lepszy handling dla zdarzen z zewnatrz (w tym klawiatura)
+
+[ ] - GFX/Scene -	potrzebny w koncu fix jesli chodzi o hierarchie obiektow
+					- relacja miedzy object/mesh
+					- relatywna pozycja
+					- nakladanie macierzy model
+
+[ ] - GUI/script - poprawic dodawanie callbackow dla widgetow (aktualnie moga
+		byc memory leak'i)
+
+[ ] - GUI - poprawic scroll area i sprawdzanie zdarzen
+
+[ ] - GUI/sound - usunac niepotrzebne funkcje
+
+[ ] - namespace refactoring / enums etc
+
+
+[ ] - poprawki z message subsystem (to jest jakos wyjatkowo skopane)
+	[ ] - poprawki dla HandleManagera i DataManagera
+
+[ ] - GFX/GUI/Batch - poprawki dla GuiDrawer'a - chodzi o odpowiednie flush
+
+[ ] - Logic/Game - skonczenie podstawowej warstwy dla logiki gry + game grid
+	[X] - game grid - ogolna klasa do przechowywania w 2, 3 lub 4 wymiarach
+					danych na temat planszy gry
+
+[ ] - dodac jakies specjalne tryby do debugowania i nie tylko (free cam, noclip)
+
+[ ] - napisac poczatkowa wersje pluginu dla ChainReaction
+	[X] - game grid
+	[ ] - menu full
+	[ ] - procedura ladowania poziomow
+	[X] - mechanizm solvera gry (sprawdza lamanie zasad/podejmuje akcje)
+		[X] - wywolywanie reakcji lancuchowej
+		[ ] - podsystem do szukania optymalnego rozwiazania (brute-force)
+	[X] - podzial klas obslugi poziomow wg modelu MVC
+	[X] - podlaczenie sie pod SceneManager
+	[X] - podstawowa wersja materialow
+	[X] - rysowanie elementow gry
+	[X] - podstawowa wersja sterowania
+	[ ] - efekty particles
+	[ ] - efekty dzwiekowe
+	[ ] - game gui - zdarzenie touch
+	[ ] - sprawdzanie kolizji / sterowanie
+	[ ] - background
+	[ ] - game state handling
+	[ ] - ladowanie poziomow / lista / menu
+	[ ] - podstawowe shadery
+	[ ] - wydzielenie data packow
+
+

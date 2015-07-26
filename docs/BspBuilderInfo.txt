@@ -1,0 +1,107 @@
+| FLEXI GAME EDITOR
++-------------------------------------------------------------------------------
+| BSP BUILDER PREVIEW MODE
++--------------------+
+
+Bsp editor needs to hook up to the update/display and render frames;
+Needs also to get keyboard and mouse events.
+Hook with 3D scene and camera
+Toggle and control additional 3D scene pick selection options
+Change properties of the screen grid and debug config
+Be able to turn off and on on the fly
+
+BspBuilder holds the internal polygon list
+BspBuilder has the instances for BspFile and Compiler
+Options to save the tree
+Options to load the tree from file
+
++++ When editing the tree - in fact the tree is not being build
+	>> The list of polygons is being populated, simple linear traversion
+	>> Compilation + save needs to be explicit
+
+	>> List of materials is created and selected manually (from wx widgets editor level)
+	
+
++++ Ability to switch views - This also changes the grid normal
+> LEFT / RIGHT
+> TOP / BOTTOM
+> FRONT / BACK
+> FREE LOOK (GRID Y UP)
+
++++ Change grid normal manually (angles 0-360 X/Y/Z)
+
++++ Grid cell size regulation
++++ Snap to grid mode ON / OFF
+
++++ pick selection of polygons - this needs to be made manually
+
+
+
+
+
+
+
+
+[X] - snap to grid check on / off + working
+[ ] - snap to polygons
+[X] - camera movement (just eye)
+[X] - middle pan camera move
+[X] - drawing of polygons
+[X] - resize while drawing
+[X] - proportional resize
+[X] - draw calls for polygons
+[X] - texturing
+[X] - material apply
+[ ] - material adding/editing/storing + GUI
+	- [X] add new materials
+	- [X] special dialog for material
+	- [X] editing materials [this is just for BspTree materials]
+	- [X] delete selected
+	- [X] duplicate selected
+	- [ ] choose material for selected polygon
+[X] - view material list
+[ ] - internal gfx gui for editor
+[X] - view switching
+[ ] - grid settings GUI
+[ ] - left / bottom panel for bsp builder
+	-- bottom:
+		- [ ] edit grid plane (ground) properties
+		- [ ] info on default shader
+		- [ ] current material quick (small info)
+		- [ ] position of the light
+		- [ ] quick access for save/load
+	-- left:
+		- [ ] info on currently selected polygon
+		- [ ] options to change polygon internal color
+		- [ ] options for changing polygon material
+		- [ ] edit scale / rotation / normal
+		- [ ] change position
+
+[ ] - special gfx quick round menu (crisis like)
+
+[X] - polygon pick selection
+[ ] - editing selected polygon GUI (properties, size, normal, face cull, material, texture, color, UV - full)
+
+[ ] - drawing of polygons parallel to the grid (like floor/ceiling) with mod key pressed or with some shortcut setting (easier with shortcuts)
+
+[ ] merging of selected polygons (hard)
+
+[ ] drawing sim-like walls ? does that make sense?
+
+[ ] access to left / bottom notebook (main wx gui)
+[ ] custom panels/tabs for external notebooks (wx/frame)
+
+[ ] loading bsp / saving bsp from editor
+
+[ ] view portals
+[ ] view nodes
+[ ] preview modes edit
+
+[ ] Ctrl-Z / Ctrl-R
+
+[ ] Ctrl-C / Ctrl-V / Ctrl-X + when polygons pasted -> shift + click hold = polygon move pan
+
+[ ] support scroll like events (for zoom / fov switch)
+
+[ ] fix with texture repeat
+

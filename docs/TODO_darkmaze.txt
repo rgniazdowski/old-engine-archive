@@ -1,0 +1,67 @@
+
+----
+Co musi dzialac w silniku (minimum) zeby w ogole zrobic jakas gre,
+a dokladniej jakas prostsza ale w 3D (+Android+iOS+Linux...) ?
+
+Gra typu DarkMaze - mroczny labirynt - fps:
+
+[ ] podstawowa warstwa logiki - sterowanie glownym graczem
+	[ ] kamera fps + ruch
+
+[ ] wirtualne joysticki na ekranie (touch screen)
+
+[ ] szybkie renderowanie drzew bsp (sciany, korytarze, podlogi)
+	[ ] wsparcie dla materialow per sciana
+	[ ] materialy w shaderach
+	[ ] oswietlenie w shaderach / cieniowanie
+	[ ] mapy oswietlenia
+	[ ] punktowe swiatlo
+	[ ] renderowanie nieba jako sfery/polsfery
+
+	[ ] kolizje ze scianami / per polygon
+
+	[ ] szybki frustum culling
+
+[ ] skonczone wreszcze GUI / warstwa 2D
+
+[ ] w pelni dzialajacy scene manager + wsparcie dla scene node'ow BSP
+
+[ ] obsluga efektow dzwiekowych
+
+
+[ ] w przypadku dark maze - generowanie labiryntu i drzewa bsp
+
+[ ] string obfuscation
+
+
+[ ] kompilacja na Androida (SDL2)
+
+[ ] kompilacja na iOS (SDL2) na MacOSX
+
+
+[ ] poprawa masy bledow i niedociagniec, w tym:
+	[ ] texture refresh + texture reupload - reuploadowac tylko potrzebne tex
+	[ ] shader refresh - rekompilowac tylko potrzebne shadery
+		[ ] glownie w przypadku suspend event
+
+[ ] dzialajaca konfiguracja
+
+[ ] Android - kopiowanie z APK na karte pamieci, przenoszenie plikow zip [pk3]
+	[ ] wyszukiwanie plikow wewnatrz APK jest totalnie wolne - zamula aplikacje
+
+
+
+------------------------------------------------------------------------------
+
+[ ] strona internetowa dla gry
+[ ] strona internetowa dla silnika
+[ ] strona - osobisty blog / artykuly
+
+[ ] pelne opisy aplikacji
+	[ ] zrzuty ekranu
+	[ ] filmiki
+	[ ] logo
+	[ ] nazwa
+	[ ] tapety
+	[ ] ikona ! ! !
+

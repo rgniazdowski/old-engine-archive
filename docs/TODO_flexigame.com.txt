@@ -1,0 +1,18 @@
+
+[ ] skonfigurowac obrazy tla i naglowka
+
+[ ] stworzyc proste logo na strone
+
+[ ] ustawic kolory i czcionki
+
+[ ] skonfigurowac kategorie
+
+[ ] skonfigurowac bloga
+
+[ ] skonfigurawac komentarze z facebooka
+
+[ ] skonfigurawac podstrone dla bloga | jak wydzielic bloga i newsy?
+
+[ ] Sprawdzic czy przypadkiem nie trzeba oddzielnej strony [oddzielna baza, folder] dla bloga
+
+[ ] mozliwe ze lepiej miec oddzielny folder, oddzielna strone
