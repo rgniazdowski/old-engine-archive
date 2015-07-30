@@ -28,7 +28,7 @@ isDragged(FG_FALSE),
 isValid(FG_FALSE),
 rotation(0.0f),
 rotDir(NO_ROTATION),
-blockType(INVALID_BLOCK) { }
+blockType(BLOCK_INVALID),
 //------------------------------------------------------------------------------
 
 SBlockData::SBlockData(const SBlockData& orig) {
@@ -187,7 +187,7 @@ fgBool SBlockData::isRotating(void) const {
 
 fgBool SBlockData::isRotationFinished(void) const {
     if(rotDir != NO_ROTATION) {
-        if(rotation <= M_PIF && rotation >= (M_PIF - FG_EPSILON)) {
+        if(rotation <= (M_PIF + FG_EPSILON*2.0f) && rotation >= (M_PIF - FG_EPSILON)) {
             return FG_TRUE;
         }
     }

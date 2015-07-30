@@ -21,7 +21,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 SQuadData::SQuadData() : base_type() {
-    blockType = QUAD;
+    blockType = BLOCK_QUAD;
 }
 //------------------------------------------------------------------------------
 
@@ -161,7 +161,7 @@ int SQuadData::getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind) 
 //------------------------------------------------------------------------------
 
 void SQuadData::rotate(RotationDirection direction, float amount) {
-    if(direction == NO_ROTATION && rotDir == NO_ROTATION || !pSceneNode)
+    if(direction == NO_ROTATION && rotDir == NO_ROTATION)
         return;
     if(rotDir == OPPOSITE_ROTATION) // ?
         return;
@@ -219,9 +219,11 @@ void SQuadData::rotate(RotationDirection direction, float amount) {
         amount -= newRotation * reverse;
     }
     if(shouldRotate) {
-        this->pSceneNode->translateMatrix(reverse * translationAxis);
-        this->pSceneNode->rotate(amount * reverse, reverse * rotationAxis);
-        this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
+        if(this->pSceneNode) {
+            this->pSceneNode->translateMatrix(reverse * translationAxis);
+            this->pSceneNode->rotate(amount * reverse, reverse * rotationAxis);
+            this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
+        }
         this->rotation += amount * reverse;
     }
 }

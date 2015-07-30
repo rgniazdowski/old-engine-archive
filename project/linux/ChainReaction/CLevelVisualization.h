@@ -38,7 +38,6 @@ namespace fg {
         typedef CLevelVisualization type;
 
     public:
-        typedef CLevelFile::LevelType LevelType;
         typedef CLevelDataHolder::BlockDataVec BlockDataVec;
         typedef BlockDataVec::iterator BlockDataVecItor;
 
@@ -171,7 +170,7 @@ namespace fg {
          */
         LevelType getLevelType(void) const {
             if(!m_pLevelSolver)
-                return LevelType::INVALID_LEVEL;
+                return LevelType::LEVEL_INVALID;
             return m_pLevelSolver->getLevelType();
         }
         /**

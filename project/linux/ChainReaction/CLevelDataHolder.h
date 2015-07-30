@@ -36,7 +36,6 @@ namespace fg {
         typedef CLevelDataHolder type;
 
     public:
-        typedef CLevelFile::LevelType LevelType;
         typedef CVector<SBlockData*> BlockDataVec;
         typedef BlockDataVec::iterator BlockDataVecItor;
         typedef BlockDataVec::const_iterator BlockDataVecConstItor;
@@ -260,8 +259,8 @@ namespace fg {
          * @param blockInfoVec
          * @return 
          */
-        int appendTo(CLevelFile::BlockInfoVec& blockInfoVec);
-        //int copyTo(BlockDataVec& blockDataVec);
+        int appendTo(BlockInfoVec& blockInfoVec);
+
         /**
          *
          * @param x
@@ -294,9 +293,22 @@ namespace fg {
          */
         LevelType getLevelType(void) const {
             if(!m_pLevelFile)
-                return LevelType::INVALID_LEVEL;
+                return LevelType::LEVEL_INVALID;
             return m_pLevelFile->getLevelType();
 
+        }
+        /**
+         * 
+         * @return
+         */
+        BlockType getBlockType(void) const {
+            if(m_pLevelFile) {
+                return getBlockTypeFromLevelType(m_pLevelFile->getLevelType());
+            } else if(m_blocksData.size()) {
+                return m_blocksData[0]->getType();
+            } else {
+                return BlockType::BLOCK_INVALID;
+            }
         }
         /**
          *
@@ -339,12 +351,12 @@ namespace fg {
          * @param levelType
          * @return
          */
-        static SBlockData::BlockType getBlockTypeFromLevelType(CLevelFile::LevelType levelType) {
-            if(levelType == CLevelFile::LEVEL_QUADS)
-                return SBlockData::BlockType::QUAD;
-            if(levelType == CLevelFile::LEVEL_HEXAGONS)
-                return SBlockData::BlockType::HEXAGON;
-            return SBlockData::BlockType::INVALID_BLOCK;
+        static BlockType getBlockTypeFromLevelType(LevelType levelType) {
+            if(levelType == LEVEL_QUADS)
+                return BlockType::BLOCK_QUAD;
+            if(levelType == LEVEL_HEXAGONS)
+                return BlockType::BLOCK_HEXAGON;
+            return BlockType::BLOCK_INVALID;
         }
     private:
 

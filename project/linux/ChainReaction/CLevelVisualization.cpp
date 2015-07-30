@@ -257,7 +257,6 @@ fgBool CLevelVisualization::actionLevelDataDestroyedCallback(void* systemData, v
 }
 //------------------------------------------------------------------------------
 
-
 void CLevelVisualization::calculateNodePosition(unsigned short x,
                                                 unsigned short y,
                                                 Vec2f& nodePos,
@@ -273,7 +272,7 @@ void CLevelVisualization::calculateNodePosition(unsigned short x,
     getLevelFile()->getAreaMax(areaMaxX, areaMaxY);
     float scaleX = m_scale;
     float scaleY = m_scale;
-    const fgBool internalIsHex = getLevelFile()->getLevelType() == CLevelFile::LEVEL_HEXAGONS;
+    const fgBool internalIsHex = getLevelFile()->getLevelType() == LevelType::LEVEL_HEXAGONS;
     if(internalIsHex) {
         scaleX = m_scale * 0.75f;
         scaleY = m_scale * M_SQRT3F * 0.5f;
@@ -290,7 +289,7 @@ void CLevelVisualization::calculateNodePosition(unsigned short x,
     if(isHex)
         *isHex = internalIsHex;
 }
-
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
                                                        unsigned short y,

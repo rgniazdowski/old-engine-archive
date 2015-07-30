@@ -18,6 +18,10 @@
     #define FG_INC_BLOCK_DATA
     #define FG_INC_BLOCK_DATA_BLOCK
 
+    #ifdef FG_INC_ADDITIONAL_TYPES_BLOCK
+        #error "ERROR"
+    #endif
+
     #include "fgBool.h"    
     #include "GameLogic/fgGrid.h"
     #include "AdditionalTypes.h"
@@ -33,17 +37,7 @@ namespace fg {
      */
     struct SBlockData {
         typedef SBlockData self_type;
-        typedef SBlockData type;
-
-        /**
-         *
-         */
-        enum BlockType {
-            QUAD = 0,
-            HEXAGON = 1,
-            OCTAGON = 2,
-            INVALID_BLOCK = 100
-        };
+        typedef SBlockData type;        
 
         ///
         gfx::CSceneNode* pSceneNode;

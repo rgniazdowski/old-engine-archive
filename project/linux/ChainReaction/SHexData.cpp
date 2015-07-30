@@ -21,7 +21,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 SHexData::SHexData() : base_type() {
-    blockType = HEXAGON;
+    blockType = BLOCK_HEXAGON;
 }
 //------------------------------------------------------------------------------
 
@@ -189,7 +189,7 @@ int SHexData::getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind) {
 //------------------------------------------------------------------------------
 
 void SHexData::rotate(RotationDirection direction, float amount) {
-    if(direction == NO_ROTATION && rotDir == NO_ROTATION || !pSceneNode)
+    if(direction == NO_ROTATION && rotDir == NO_ROTATION)
         return;
     if(rotDir == OPPOSITE_ROTATION) // ?
         return;
@@ -270,9 +270,11 @@ void SHexData::rotate(RotationDirection direction, float amount) {
         amount -= newRotation * reverse;
     }
     if(shouldRotate) {
-        this->pSceneNode->translateMatrix(reverse * translationAxis);
-        this->pSceneNode->rotate(amount, rotationAxis);
-        this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
+        if(this->pSceneNode) {
+            this->pSceneNode->translateMatrix(reverse * translationAxis);
+            this->pSceneNode->rotate(amount, rotationAxis);
+            this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
+        }
         this->rotation += amount * reverse;
     }
 }

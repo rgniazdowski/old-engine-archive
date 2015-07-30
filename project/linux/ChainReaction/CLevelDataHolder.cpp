@@ -154,9 +154,9 @@ SBlockData* CLevelDataHolder::insertNewBlock(unsigned short x,
     // now need to insert new quad in that place
     // allocate new quad data
     SBlockData* pBlockData = NULL;
-    if(m_pLevelFile->getLevelType() == CLevelFile::LEVEL_QUADS) {
+    if(m_pLevelFile->getLevelType() == LevelType::LEVEL_QUADS) {
         pBlockData = new SQuadData();
-    } else if(m_pLevelFile->getLevelType() == CLevelFile::LEVEL_HEXAGONS) {
+    } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_HEXAGONS) {
         pBlockData = new SHexData();
     } else {
         pBlockData = new SQuadData();
@@ -333,11 +333,8 @@ void CLevelDataHolder::clear(void) {
 fgBool CLevelDataHolder::restart(void) {
     if(!m_pLevelFile || !m_pGrid)
         return FG_FALSE;
-    // delete all old nodes, quad data, unbind all and clear the grid
-    // better to start over >> #FIXME - maybe some optimization, without so many
-    // reallocs
-    clear();
-    CLevelFile::BlockInfoVec& blocks = m_pLevelFile->getBlocks();
+    clear(); // reset nodes/blocks
+    BlockInfoVec& blocks = m_pLevelFile->getBlocks();
     unsigned int n = blocks.size();
     if(!n) {
         return FG_FALSE;
@@ -345,11 +342,11 @@ fgBool CLevelDataHolder::restart(void) {
     // need to reserve proper size
     unsigned int nReserve = (unsigned int)(n * 1.5f);
     m_blocksData.reserve(nReserve);
-    // Quad vector from level file contains just info about position and color.
-    // Quad data vector is more detailed, contains scene node, draw call, and
+    // Block vector from level file contains just info about position and color.
+    // block data vector is more detailed, contains scene node, draw call, and
     // cell holder from game logical grid.
     m_pLevelFile->applyToGrid(m_pGrid);
-    // Prepare new number of quads
+    // Prepare new number of blocks
     for(unsigned int i = 0; i < n; i++) {
         insertNewBlock(blocks[i].pos.x,
                        blocks[i].pos.y,
@@ -366,20 +363,20 @@ SBlockData* CLevelDataHolder::at(unsigned int index) {
 }
 //------------------------------------------------------------------------------
 
-int CLevelDataHolder::appendTo(CLevelFile::BlockInfoVec& blockInfoVec) {
+int CLevelDataHolder::appendTo(BlockInfoVec& blockInfoVec) {
     if(m_blocksData.empty())
         return -1;
     int nAppend = 0;
     BlockDataVecConstItor itor = m_blocksData.begin();
     BlockDataVecConstItor end = m_blocksData.end();
 
-    for(;itor!=end;itor++) {
+    for(; itor != end; itor++) {
         const SBlockData* pBlockData = *itor;
         if(!pBlockData)
             continue;
         if(!pBlockData->pCellHolder)
             continue;
-        CLevelFile::SBlockInfo blockInfo;
+        SBlockInfo blockInfo;
         blockInfo.color = pBlockData->color;
         blockInfo.pos.x = pBlockData->pCellHolder->pos.x;
         blockInfo.pos.y = pBlockData->pCellHolder->pos.y;
@@ -450,13 +447,12 @@ void CLevelDataHolder::setLevelFile(CLevelFile* pLvlFile) {
 
 void CLevelDataHolder::getSize(unsigned short& x, unsigned short& y) {
     if(m_pLevelFile) {
-        m_pLevelFile->getSize(x, x);
+        m_pLevelFile->getSize(x, y);
     }
 }
 //------------------------------------------------------------------------------
 
 void CLevelDataHolder::getSize(unsigned short* x, unsigned short* y) {
     if(m_pLevelFile) {
-        m_pLevelFile->getSize(x, x);
+        m_pLevelFile->getSize(x, y);
     }
-}

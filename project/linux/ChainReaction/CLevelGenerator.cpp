@@ -81,7 +81,7 @@ CLevelGenerator::~CLevelGenerator() {
     }
 
     m_genLevelIdx = 0;
-    m_genLevelType = LevelType::INVALID_LEVEL;
+    m_genLevelType = LevelType::LEVEL_INVALID;
     m_colorTable.clear();
 }
 //------------------------------------------------------------------------------
@@ -112,24 +112,24 @@ fgBool CLevelGenerator::generate(void) {
     unsigned short sizeX = getLevelFile()->getSize().x;
     unsigned short sizeY = getLevelFile()->getSize().y;
     getLevelData()->getGrid()->resize(sizeX, sizeY);
-    const int gridCapacity = sizeX * sizeY;
-    unsigned int numTotalBlocks = (int)(((float)sizeX * sizeY) * m_gridCoverage);
+    const int gridCapacity = m_size.x * m_size.y;
+    unsigned int numTotalBlocks = (int)(((float)gridCapacity) * m_gridCoverage);
     unsigned int numOrphans = 0; // number of added orphans (fix)
     CLevelDataHolder::BlockDataVec orphans;
     int blocksDiff = (gridCapacity - numTotalBlocks);
     NeighbourInfoVec neighbours;
     CLevelDataHolder* pLevelData = getLevelData();
     CLevelDataHolder::BlockDataVec& refLevelBlocks = pLevelData->getBlocks();
-    CVector<CLevelFile::SBlockInfo> tPositions;
+    CVector<SBlockInfo> tPositions;
     CVector<VColor> usedColors;
-    tPositions.reserve(sizeX * sizeY + 1);
+    tPositions.reserve(gridCapacity + 1);
     usedColors.reserve(8);
     orphans.reserve(8);
 
     // Need to populate tPositions completely
     for(unsigned int y = 0; y < sizeY; y++) {
         for(unsigned int x = 0; x < sizeX; x++) {
-            CLevelFile::SBlockInfo blockInfo;
+            SBlockInfo blockInfo;
             blockInfo.pos.x = x;
             blockInfo.pos.y = y;
             if(isFullyRandom()) {
@@ -389,7 +389,7 @@ void CLevelGenerator::setSize(unsigned short x, unsigned short y) {
 }
 //------------------------------------------------------------------------------
 
-void CLevelGenerator::setSize(const CLevelFile::SSize& size) {
+void CLevelGenerator::setSize(const SSize& size) {
     if(m_internalLevelFile) {
         m_internalLevelFile->setSize(size);
     }

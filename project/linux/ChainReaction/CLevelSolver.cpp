@@ -326,20 +326,20 @@ void CLevelSolver::update(float elapsed) {
 }
 //------------------------------------------------------------------------------
 
-void CLevelSolver::getCoveringCoord(SBlockData::BlockType blockType,
+void CLevelSolver::getCoveringCoord(BlockType blockType,
                                     RotationDirection direction,
                                     unsigned int x,
                                     unsigned int y,
                                     unsigned short& newX,
                                     unsigned short& newY) {
-    if(blockType == SBlockData::INVALID_BLOCK)
+    if(blockType == BlockType::BLOCK_INVALID)
         return;
     if(direction == NO_ROTATION || direction == AUTO_ROTATION ||
        direction == OPPOSITE_ROTATION)
         return;
-    if(blockType == SBlockData::QUAD) {
+    if(blockType == BlockType::BLOCK_QUAD) {
         SQuadData::getCoveringCoord(direction, x, y, newX, newY);
-    } else if(blockType == SBlockData::HEXAGON) {
+    } else if(blockType == BlockType::BLOCK_HEXAGON) {
         SHexData::getCoveringCoord(direction, x, y, newX, newY);
     }
 }

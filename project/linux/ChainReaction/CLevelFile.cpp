@@ -242,7 +242,7 @@ fgBool CLevelFile::save(void) {
     }
     const unsigned int n = m_blocks.size();
     for(unsigned int i = 0; i < n; i++) {
-        self_type::SBlockInfo const& blockInfo = m_blocks[i];
+        SBlockInfo const& blockInfo = m_blocks[i];
         if(blockInfo.pos.x >= x || blockInfo.pos.y >= y)
             continue;
         const char numC = '0' + (char)blockInfo.color;
@@ -298,13 +298,13 @@ fgBool CLevelFile::applyToGrid(game::CGrid* pGrid) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
-    unsigned int n = getBlocksCount();
+    const unsigned int n = getBlocksCount();
     pGrid->resize(m_size.x, m_size.y);
     for(unsigned int i = 0; i < n && status; i++) {
-        SBlockInfo& quadInfo = m_blocks[i];
-        status = pGrid->setCellValue((unsigned short)quadInfo.color,
-                                     quadInfo.pos.x,
-                                     quadInfo.pos.y);
+        SBlockInfo& blockInfo = m_blocks[i];
+        status = pGrid->setCellValue((unsigned short)blockInfo.color,
+                                     blockInfo.pos.x,
+                                     blockInfo.pos.y);
         // cell additional data?
     }
     return status;
@@ -450,7 +450,7 @@ int CLevelFile::appendBlocks(BlockInfoVec const& inBlocks, fgBool shouldResize) 
     int nAppend = 0;
     unsigned int n = inBlocks.size();
     for(unsigned int i = 0; i < n; i++) {
-        self_type::SBlockInfo const& blockInfo = inBlocks[i];
+        SBlockInfo const& blockInfo = inBlocks[i];
         if(blockInfo.pos.x < m_size.x &&
            blockInfo.pos.y < m_size.y) {
             if(!contains(blockInfo.pos)) {
@@ -471,7 +471,7 @@ fgBool CLevelFile::contains(unsigned short x, unsigned short y) const {
     BlockInfoVecConstItor itor = m_blocks.begin();
     BlockInfoVecConstItor end = m_blocks.end();
     for(; itor != end; itor++) {
-        self_type::SBlockInfo const& blockInfo = *itor;
+        SBlockInfo const& blockInfo = *itor;
         if(blockInfo.pos.x == x && blockInfo.pos.y == y) {
             status = FG_TRUE;
             break;
@@ -488,7 +488,7 @@ fgBool CLevelFile::contains(const SSize& pos) const {
     BlockInfoVecConstItor itor = m_blocks.begin();
     BlockInfoVecConstItor end = m_blocks.end();
     for(; itor != end; itor++) {
-        self_type::SBlockInfo const& blockInfo = *itor;
+        SBlockInfo const& blockInfo = *itor;
         if(blockInfo.pos == pos) {
             status = FG_TRUE;
             break;

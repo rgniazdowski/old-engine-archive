@@ -32,7 +32,6 @@ namespace fg {
         typedef CLevelSolver type;
 
     public:
-        typedef CLevelDataHolder::LevelType LevelType;
         typedef CLevelDataHolder::BlockDataVec BlockDataVec;
         typedef BlockDataVec::iterator BlockDataVecItor;
 
@@ -222,7 +221,7 @@ namespace fg {
          */
         LevelType getLevelType(void) const {
             if(!m_pLevelData)
-                return LevelType::INVALID_LEVEL;
+                return LevelType::LEVEL_INVALID;
             return m_pLevelData->getLevelType();
         }
         /**
@@ -288,16 +287,14 @@ namespace fg {
          * @param newX
          * @param newY
          */
-        static void getCoveringCoord(SBlockData::BlockType blockType,
+        static void getCoveringCoord(BlockType blockType,
                                      RotationDirection direction,
                                      unsigned int x, unsigned int y,
                                      unsigned short& newX, unsigned short& newY);
 
         //----------------------------------------------------------------------
     private:
-        typedef CVector<CLevelFile::SBlockInfo> BlockInfoVec;
-        typedef BlockInfoVec::iterator BlockInfoVecItor;
-        typedef CLevelFile::SBlockInfo BlockInfo;
+        typedef SBlockInfo BlockInfo;
 
         typedef CVector<Vector2i> DuplicateInfoVec;
         typedef DuplicateInfoVec::iterator DuplicateInfoVecItor;
@@ -444,5 +441,5 @@ namespace fg {
 
 } // namespace fg
 
-    #undef FG_INC_LEVEL_SOLVER
+    #undef FG_INC_LEVEL_SOLVER_BLOCK
 #endif	/* FG_INC_LEVEL_SOLVER */

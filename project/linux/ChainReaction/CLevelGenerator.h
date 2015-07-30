@@ -33,7 +33,6 @@ namespace fg {
     public:
         typedef CLevelGenerator self_type;
         typedef CLevelGenerator type;
-        typedef CLevelFile::LevelType LevelType;
 
         typedef CVector<VColor> ColorTable;
         typedef ColorTable::iterator ColorTableItor;
@@ -188,7 +187,7 @@ namespace fg {
          * 
          * @param size
          */
-        void setSize(const CLevelFile::SSize& size);
+        void setSize(const SSize& size);
         /**
          *
          * @return
