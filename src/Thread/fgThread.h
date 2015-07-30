@@ -89,6 +89,16 @@ public:
      */
     CThread(ThreadStartFuncPtr startFunction, void *arg);
 
+    //------------------------------------------------------------------------------
+
+    /**
+     * 
+     * @param startFunction
+     * @param arg
+     * @return
+     */
+    fgBool setFunction(ThreadStartFuncPtr startFunction, void *arg);
+
     /**
      *
      */

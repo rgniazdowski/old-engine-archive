@@ -10,6 +10,8 @@
 
 #include "fgThread.h"
 #include "fgLog.h"
+#include "fgUnistd.h"
+
 #if defined(FG_USING_MARMALADE)
 #include "s3eDevice.h"
 #endif
@@ -17,6 +19,7 @@
 #if defined(FG_USING_THREADS)
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 CThread::CThread() :
 m_handle(0),
@@ -25,10 +28,12 @@ m_isValid(FG_FALSE)
 , m_win32ID(0)
 #endif
 { }
+//------------------------------------------------------------------------------
 
 CThread::~CThread() {
     if(isJoinable()) {
 #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+        //this->detach();
 #elif defined(FG_USING_PLATFORM_WINDOWS)
 
 #elif defined(FG_USING_MARMALADE)
@@ -38,8 +43,16 @@ CThread::~CThread() {
 #endif
     }
 }
+//------------------------------------------------------------------------------
 
 CThread::CThread(ThreadStartFuncPtr startFunction, void *arg) {
+    setFunction(startFunction, arg);
+}
+//------------------------------------------------------------------------------
+
+fgBool CThread::setFunction(ThreadStartFuncPtr startFunction, void* arg) {
+    if(!startFunction)
+        return FG_FALSE;
     // Serialize access to this thread structure
     CLockGuard<CThreadLock> guard(m_dataLock);
 
@@ -61,12 +74,13 @@ CThread::CThread(ThreadStartFuncPtr startFunction, void *arg) {
         m_handle = 0;
     }
 #endif
-
     if(!m_handle) {
         m_isValid = FG_FALSE;
         delete info;
     }
+    return m_isValid;
 }
+//------------------------------------------------------------------------------
 
 void CThread::join(void) {
     if(isJoinable()) {
@@ -81,6 +95,7 @@ void CThread::join(void) {
 #endif
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool CThread::isJoinable(void) const {
     m_dataLock.lock();
@@ -88,6 +103,7 @@ fgBool CThread::isJoinable(void) const {
     m_dataLock.unlock();
     return result;
 }
+//------------------------------------------------------------------------------
 
 void CThread::detach(void) {
     m_dataLock.lock();
@@ -103,8 +119,9 @@ void CThread::detach(void) {
     }
     m_dataLock.unlock();
 }
+//------------------------------------------------------------------------------
 
-unsigned int CThread::hwConcurrency() {
+unsigned int CThread::hwConcurrency(void) {
 #if defined(FG_USING_PLATFORM_WINDOWS)
     SYSTEM_INFO si;
     GetSystemInfo(&si);
@@ -119,6 +136,7 @@ unsigned int CThread::hwConcurrency() {
     return 0;
 #endif
 }
+//------------------------------------------------------------------------------
 
 #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
 int CThread::wrapperFunc(void *_arg)
@@ -143,5 +161,6 @@ void *CThread::wrapperFunc(void *_arg)
     delete info;
     return NULL;
 }
+//------------------------------------------------------------------------------
 
 #endif /* defined(FG_USING_THREADS) */ 
