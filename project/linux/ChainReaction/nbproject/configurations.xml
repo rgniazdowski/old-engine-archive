@@ -13,6 +13,7 @@
       <itemPath>ChainReaction.h</itemPath>
       <itemPath>SBlockData.h</itemPath>
       <itemPath>SHexData.h</itemPath>
+      <itemPath>SOctData.h</itemPath>
       <itemPath>SQuadData.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -31,6 +32,7 @@
       <itemPath>ChainReaction.cpp</itemPath>
       <itemPath>SBlockData.cpp</itemPath>
       <itemPath>SHexData.cpp</itemPath>
+      <itemPath>SOctData.cpp</itemPath>
       <itemPath>SQuadData.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -172,6 +174,10 @@
       <item path="SHexData.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SHexData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SOctData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SOctData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SQuadData.cpp" ex="false" tool="1" flavor2="0">
       </item>
