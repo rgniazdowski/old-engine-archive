@@ -1,0 +1,11 @@
+finished blocks   - bloki ktore skonczyly rotacje i sa juz w nowej pozycji
+rotating blocks   - bloki ktore aktualnie sie obracaja na nowa pozycje
+orphan blocks     - bloki ktore sa samotne i musza zostac usuniete
+				    rowniez bloki ktore sa do usuniecia bo przeszkadzaja
+				    lub zostaly obrocone na niepoprawna pozycje
+emerge blocks     - bloki ktore sa skalowane w gore - efekt pojawienia sie
+additional blocks - lista pozycji i kolorow w ktorych maja pojawic sie nowe bloki
+covered blocks    - informacje na temat przykrytych blokow (pozycja, kolor, kierunek)
+
+
+

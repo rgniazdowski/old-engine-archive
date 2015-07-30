@@ -1,8 +1,3 @@
-+------------------------------------------------------------------------------
-| Priorytety na teraz - czerwiec - poczatek lipca:
-| 13.06.2015 - zostalo 17 dni czerwca [2 tygodnie]
-+------------------------------------------------------------------------------
-
 [ ] sprawdzic / naprawic - zbudowac apke i przetestowac na symulatorze/tel/ipad
 	[X] zhakowac root / users na macmini
 	[ ] konfiguracja / instalacja XCode
@@ -34,23 +29,6 @@
 			- SDL2
 			- SDL2_mixer
 			- SDL2_image
-
-[X] instalacja linux na asus eee pc
-	[X] spartycjonowanie pustego wd blue 500 pod arch
-	[X] wymiana dysku w eee pc + zachowanie starego
-	[X] instalacja archa - initial
-	[X] hard code IP address + MAC (WLAN/ETH)
-	[X] pelen update
-	[ ] podstawowa konfiguracja 
-		[ ] ssh
-		[ ] git
-		[X] synergy
-		[ ] ide tools [netbeans / gcc / codeblocks / cmake]
-		[ ] gui / conky / shortcuts / xterm
-		[ ] libs
-		[X] distcc
-	[X] konfiguracja node'a
-	[X] test kompilacji distcc
 
 [ ] zbudowanie i wgranie aplikacji na Androida
 	[ ] sprawdzenie czy mozna uzyc distcc dla budowania NDK
@@ -89,5 +67,4 @@
 
 [ ] zaprojektowanie strony internetowej / bloga
 	[ ] napisac skrocone opisy dla niektorych artykulow, przygotowac liste
-
 
