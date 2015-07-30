@@ -93,6 +93,19 @@ namespace fg {
         }
         /**
          * 
+         * @param other
+         */
+        void append(const base_type& other) {
+            if(other.empty())
+                return;
+            this->reserve(this->size()+other.size()+1);
+            const unsigned int n = other.size();
+            for(unsigned int i =0;i<n;i++) {
+                this->push_back(other.at(i));
+            }
+        }
+        /**
+         * 
          * @param index
          * @return
          */
