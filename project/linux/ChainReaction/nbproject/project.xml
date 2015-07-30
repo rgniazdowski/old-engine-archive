@@ -9,7 +9,10 @@
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects>
+                <make-dep-project>/home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB</make-dep-project>
                 <make-dep-project>../FlexiGame_NB</make-dep-project>
+                <make-dep-project>/home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB</make-dep-project>
+                <make-dep-project>/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB</make-dep-project>
             </make-dep-projects>
             <sourceRootList/>
             <confList>
@@ -28,6 +31,14 @@
                 <confElem>
                     <name>Release_STATIC</name>
                     <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>Debug_SolutionFinder</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Release_SolutionFinder</name>
+                    <type>1</type>
                 </confElem>
             </confList>
             <formatting>

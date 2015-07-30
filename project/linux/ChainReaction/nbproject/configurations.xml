@@ -38,6 +38,7 @@
       <itemPath>SHexData.cpp</itemPath>
       <itemPath>SOctData.cpp</itemPath>
       <itemPath>SQuadData.cpp</itemPath>
+      <itemPath>main_SolutionFinder.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -351,6 +352,7 @@
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
+            <Elem>FG_CR_PLUGIN_STATIC</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
@@ -385,6 +387,7 @@
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
+            <Elem>FG_CR_PLUGIN_STATIC</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
@@ -494,6 +497,7 @@
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_CR_PLUGIN_STATIC</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
@@ -526,6 +530,7 @@
             <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_CR_PLUGIN_STATIC</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
@@ -598,6 +603,375 @@
       <item path="SQuadData.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_SolutionFinder" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <architecture>2</architecture>
+          <standard>10</standard>
+          <commandlineTool>/usr/bin/gcc-4.8.1</commandlineTool>
+          <incDir>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </cTool>
+        <ccTool>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>8</standard>
+          <commandlineTool>/usr/bin/g++-4.8.1</commandlineTool>
+          <incDir>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB"
+                            CT="3"
+                            CN="Debug_GLEW_StaticLib"
+                            AC="false"
+                            BL="false"
+                            WD="/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB"
+                            BC="${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_StaticLib"
+                            CC="${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_StaticLib clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB"
+                            CT="3"
+                            CN="Debug"
+                            AC="true"
+                            BL="false"
+                            WD="/home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB"
+                            BC="${MAKE} -j 20 -f Makefile CONF=Debug"
+                            CC="${MAKE} -j 20 -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB"
+                            CT="3"
+                            CN="Debug"
+                            AC="true"
+                            BL="false"
+                            WD="/home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB"
+                            BC="${MAKE} -j 20 -f Makefile CONF=Debug"
+                            CC="${MAKE} -j 20 -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerOptionItem>`pkg-config --libs glew`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs gl`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
+            <linkerLibLibItem>jpeg</linkerLibLibItem>
+            <linkerLibLibItem>dl</linkerLibLibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+          <commandLine>-rdynamic -Wl,--export-dynamic</commandLine>
+        </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="../FlexiGame_NB"
+                        CT="1"
+                        CN="Debug_GLEW_SDL2"
+                        AC="true"
+                        BL="false"
+                        WD="../FlexiGame_NB"
+                        BC="${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_SDL2"
+                        CC="${MAKE} -j 20 -f Makefile.nb CONF=Debug_GLEW_SDL2 clean"
+                        OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb">
+          </makeArtifact>
+        </requiredProjects>
+      </compileType>
+      <item path="AdditionalTypes.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelDataHolder.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelDataHolder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelGenerator.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelGenerator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelSolution.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelSolution.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelSolutionFinder.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelSolutionFinder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelVisualization.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelVisualization.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SBlockData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SBlockData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SHexData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SHexData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SOctData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SOctData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SQuadData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main_SolutionFinder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release_SolutionFinder" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>10</standard>
+          <commandlineTool>/usr/bin/gcc-4.8.1</commandlineTool>
+          <incDir>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+          </preprocessorList>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>8</standard>
+          <commandlineTool>/usr/bin/g++-4.8.1</commandlineTool>
+          <incDir>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+          </preprocessorList>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB"
+                            CT="3"
+                            CN="Release_GLEW_StaticLib"
+                            AC="false"
+                            BL="false"
+                            WD="/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB"
+                            BC="${MAKE} -j 20 -f Makefile.nb CONF=Release_GLEW_StaticLib"
+                            CC="${MAKE} -j 20 -f Makefile.nb CONF=Release_GLEW_StaticLib clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB"
+                            CT="3"
+                            CN="Release"
+                            AC="false"
+                            BL="false"
+                            WD="/home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB"
+                            BC="${MAKE} -j 20 -f Makefile CONF=Release"
+                            CC="${MAKE} -j 20 -f Makefile CONF=Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB"
+                            CT="3"
+                            CN="Release"
+                            AC="false"
+                            BL="false"
+                            WD="/home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB"
+                            BC="${MAKE} -j 20 -f Makefile CONF=Release"
+                            CC="${MAKE} -j 20 -f Makefile CONF=Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerOptionItem>`pkg-config --libs glew`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs gl`</linkerOptionItem>
+            <linkerLibLibItem>dl</linkerLibLibItem>
+            <linkerLibLibItem>jpeg</linkerLibLibItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="AdditionalTypes.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelDataHolder.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelDataHolder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelGenerator.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelGenerator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelSolution.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelSolution.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelSolutionFinder.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelSolutionFinder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CLevelVisualization.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="CLevelVisualization.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SBlockData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SBlockData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SHexData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SHexData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SOctData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SOctData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SQuadData.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main_SolutionFinder.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release Debug_STATIC Release_STATIC 
+ALLCONFS=Debug Release Debug_STATIC Release_STATIC Debug_SolutionFinder Release_SolutionFinder 
 
 
 # build

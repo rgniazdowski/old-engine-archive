@@ -109,6 +109,8 @@ void CLevelSolver::update(float elapsed) {
         m_finishedBlocks.pop_back();
         if(!pBlockData)
             continue;
+        if(pBlockData->isRotating())
+            continue;
         // should rewind?
         fgBool shouldRewind = FG_FALSE;
         // check neighbours for rule breaking (for now only by edge)
@@ -120,19 +122,34 @@ void CLevelSolver::update(float elapsed) {
                 continue;
             if(pBlockData->isRotationValid(nInfo.direction)) {
                 pNeighbour = nInfo.ptr;
-                if(pNeighbour->color == pBlockData->color) {
+                if(pNeighbour->color == pBlockData->color && !pNeighbour->isRotating()) {
                     // the color of the neighbour is the same
                     // need to select the rotation direction and add to special vec
                     pNeighbour->rotDir = nInfo.direction;
                     pNeighbour->rotate(RotationDirection::AUTO_ROTATION, 0.001f);
                     pNeighbour->setScale(m_scale + 0.05f, m_scale + 0.05f, 1.5f);
-                    if(!m_rotatingBlocks.contains(pNeighbour))
+                    {
+                        int orphanTest = m_orphanBlocks.find(pNeighbour);
+                        if(orphanTest >= 0)
+                            m_orphanBlocks.remove(orphanTest);
+                    }
+                    if(!m_rotatingBlocks.contains(pNeighbour) &&
+                       !m_orphanBlocks.contains(pNeighbour) /*&&
+                       !m_finishedBlocks.contains(pNeighbour)*/) {
                         m_rotatingBlocks.push_back(pNeighbour);
+                        if(isPrintMessages()) {
+                            FG_LOG_DEBUG("ChainReaction: Adding rotating block[%p]@[%dx%d]",
+                                         pNeighbour,
+                                         pNeighbour->pCellHolder->pos.x,
+                                         pNeighbour->pCellHolder->pos.y);
+                        }
+                    }
                 }
             }
         }
     }
     pNeighbour = NULL;
+    fgBool forceDissolve = FG_FALSE;
     // now check and animate rotating quads
     unsigned int n = m_rotatingBlocks.size();
     //--------------------------------------------------------------------------
@@ -157,6 +174,24 @@ void CLevelSolver::update(float elapsed) {
             if(isPrintMessages()) {
                 FG_LOG_DEBUG("ChainReaction: Moving block %dx%d -> %dx%d", pBlockData->pCellHolder->pos.x,
                              pBlockData->pCellHolder->pos.y, x, y);
+            }
+            SBlockData* pCoveredBlock = pBlockData->getCoveredNeighbourBlockData();
+            int orphanTest = m_orphanBlocks.find(pCoveredBlock);
+            if(orphanTest >= 0) {
+                if(isPrintMessages()) {
+                    FG_LOG_DEBUG("ChainReaction: The position to which this block rotated is occupied by an orphan. Skipping...");
+                }
+                //m_orphanBlocks.remove(orphanTest);
+                forceDissolve = FG_TRUE;
+                continue;
+            }
+            int rotationTest = m_rotatingBlocks.find(pCoveredBlock);
+            if(rotationTest >= 0) {
+                if(isPrintMessages()) {
+                    FG_LOG_DEBUG("ChainReaction: The position to which this block rotated is occupied by a rotating block. Skipping...");
+                }
+                //forceDissolve = FG_TRUE;
+                continue;
             }
             int idxTest = m_finishedBlocks.find(pCoveredBlock);
             {
@@ -233,8 +268,9 @@ void CLevelSolver::update(float elapsed) {
     // Check and animate orphans (scaling down and removal)
     n = m_orphanBlocks.size();
     //unsigned int nOrphansBefore = n;
+    //forceDissolve = FG_FALSE;
     fgBool canDissolve = (fgBool)!!(m_rotatingBlocks.empty() && m_finishedBlocks.empty());
-    for(unsigned int i = 0; i < n && canDissolve; i++) {
+    for(unsigned int i = 0; i < n && (canDissolve || forceDissolve); i++) {
         SBlockData* pBlockData = m_orphanBlocks[i];
         if(!pBlockData) {
             // This should not occur - however for safety...

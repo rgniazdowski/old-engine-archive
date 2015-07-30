@@ -38,6 +38,22 @@ CND_ARTIFACT_PATH_Release_STATIC=dist/Release_STATIC/GNU-Linux-x86/libchainreact
 CND_PACKAGE_DIR_Release_STATIC=dist/Release_STATIC/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release_STATIC=ChainReaction.tar
 CND_PACKAGE_PATH_Release_STATIC=dist/Release_STATIC/GNU-Linux-x86/package/ChainReaction.tar
+# Debug_SolutionFinder configuration
+CND_PLATFORM_Debug_SolutionFinder=GNU-Linux-x86
+CND_ARTIFACT_DIR_Debug_SolutionFinder=dist/Debug_SolutionFinder/GNU-Linux-x86
+CND_ARTIFACT_NAME_Debug_SolutionFinder=chainreaction
+CND_ARTIFACT_PATH_Debug_SolutionFinder=dist/Debug_SolutionFinder/GNU-Linux-x86/chainreaction
+CND_PACKAGE_DIR_Debug_SolutionFinder=dist/Debug_SolutionFinder/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Debug_SolutionFinder=chainreaction.tar
+CND_PACKAGE_PATH_Debug_SolutionFinder=dist/Debug_SolutionFinder/GNU-Linux-x86/package/chainreaction.tar
+# Release_SolutionFinder configuration
+CND_PLATFORM_Release_SolutionFinder=GNU-Linux-x86
+CND_ARTIFACT_DIR_Release_SolutionFinder=dist/Release_SolutionFinder/GNU-Linux-x86
+CND_ARTIFACT_NAME_Release_SolutionFinder=chainreaction
+CND_ARTIFACT_PATH_Release_SolutionFinder=dist/Release_SolutionFinder/GNU-Linux-x86/chainreaction
+CND_PACKAGE_DIR_Release_SolutionFinder=dist/Release_SolutionFinder/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Release_SolutionFinder=chainreaction.tar
+CND_PACKAGE_PATH_Release_SolutionFinder=dist/Release_SolutionFinder/GNU-Linux-x86/package/chainreaction.tar
 #
 # include compiler specific variables
 #
