@@ -53,6 +53,10 @@ namespace fg {
         float rotation;
         ///
         RotationDirection rotDir;
+        ///
+        int internalIdx;
+        ///
+        int externalIdx;
 
     protected:
         ///

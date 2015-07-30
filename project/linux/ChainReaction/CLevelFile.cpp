@@ -311,6 +311,23 @@ fgBool CLevelFile::applyToGrid(game::CGrid* pGrid) {
 }
 //------------------------------------------------------------------------------
 
+fgBool CLevelFile::applyToGrid(const BlockInfoVec& blocks, game::CGrid* pGrid) {
+    if(!pGrid || blocks.empty()) {
+        return FG_FALSE;
+    }
+    fgBool status = FG_TRUE;
+    const unsigned int n = blocks.size();
+    pGrid->resize(m_size.x, m_size.y);
+    for(unsigned int i = 0; i < n && status; i++) {
+        SBlockInfo const& blockInfo = blocks[i];
+        status = pGrid->setCellValue((unsigned short)blockInfo.color,
+                                     blockInfo.pos.x,
+                                     blockInfo.pos.y);
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
 void CLevelFile::setSize(unsigned short x, unsigned short y) {
     m_size.x = x;
     m_size.y = y;

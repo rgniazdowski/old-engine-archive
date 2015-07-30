@@ -51,7 +51,9 @@ namespace fg {
             /// by using brute-force algorithm (without visuals and with instant chain-reaction)
             SIMULATION = 0x0008,
             ///
-            INSTANT_BALANCE = 0x0010
+            INSTANT_BALANCE = 0x0010,
+            ///
+            PRINT_MESSAGES = 0x0020
         };
 
     public:
@@ -190,6 +192,20 @@ namespace fg {
          */
         fgBool isInstantBalance(void) const {
             return (fgBool)!!(m_stateFlags & INSTANT_BALANCE);
+        }
+        /**
+         * 
+         * @param toggle
+         */
+        void setPrintMessages(fgBool toggle = FG_TRUE) {
+            setFlag(PRINT_MESSAGES, toggle);
+        }
+        /**
+         *
+         * @return
+         */
+        fgBool isPrintMessages(void) const {
+            return (fgBool)!!(m_stateFlags & PRINT_MESSAGES);
         }
         /**
          * 

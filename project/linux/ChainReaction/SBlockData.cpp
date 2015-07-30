@@ -29,6 +29,8 @@ isValid(FG_FALSE),
 rotation(0.0f),
 rotDir(NO_ROTATION),
 blockType(BLOCK_INVALID),
+internalIdx(-1),
+externalIdx(-1) { }
 //------------------------------------------------------------------------------
 
 SBlockData::SBlockData(const SBlockData& orig) {
@@ -215,6 +217,7 @@ fgBool SBlockData::doesCoverEmpty(void) {
     }
     return !doesCoverNeighbour();
 }
+//------------------------------------------------------------------------------
 
 void SBlockData::getCoveredNeighbourCoord(unsigned short* x, unsigned short* y) {
     unsigned short _x = 0, _y = 0;

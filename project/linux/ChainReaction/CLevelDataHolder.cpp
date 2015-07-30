@@ -26,21 +26,19 @@ CLevelDataHolder::CLevelDataHolder(game::CGrid* pGrid, CLevelFile* pLvlFile) :
 m_actionCallbacks(),
 m_pGrid(pGrid),
 m_pLevelFile(pLvlFile),
-m_blocksData() {
+m_blocksData(),
+m_allBlocksData(),
+
+m_isPrintMessages(FG_FALSE) {
     if(m_pLevelFile) {
-        unsigned int n = m_pLevelFile->getBlocksCount();
-        if(n) {
-            unsigned int nReserve = (unsigned int)(n * 1.5f);
-            m_blocksData.reserve(nReserve);
-            for(unsigned int i = 0; i < nReserve; i++) {
-                m_blocksData[i] = NULL;
-            }
-        }
+        setLevelFile(m_pLevelFile);
     } else {
         unsigned int nReserve = 48;
         m_blocksData.reserve(nReserve);
+        m_allBlocksData.reserve(nReserve);
         for(unsigned int i = 0; i < nReserve; i++) {
             m_blocksData[i] = NULL;
+            m_allBlocksData[i] = NULL;
         }
     }
     for(unsigned int i = 0; i < NUM_ACTIONS; i++) {
@@ -59,6 +57,7 @@ CLevelDataHolder::~CLevelDataHolder() {
     m_pLevelFile = NULL;
     m_pGrid = NULL;
     m_blocksData.clear();
+    destroyAllBlocks();
 }
 //------------------------------------------------------------------------------
 
@@ -138,7 +137,90 @@ fgBool CLevelDataHolder::internalCall(InternalActionType actionType,
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
+unsigned int CLevelDataHolder::getMaximumBlocksCount(void) {
+    if(!m_pGrid)
+        return FG_FALSE;
+    if(!m_pLevelFile)
+        return FG_FALSE;
+    unsigned short x = 0, y = 0;
+    this->getSize(x, y);
+    unsigned int retValue = x * y;
+    return retValue;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelDataHolder::prepareAllBlocks(void) {
+    if(!m_pGrid || !m_pLevelFile)
+        return FG_FALSE;
+    unsigned int nMax = getMaximumBlocksCount();
+    m_allBlocksData.reserve(nMax + 1);
+    if(m_allBlocksData.size() < nMax) {
+        const unsigned int nDiff = nMax - m_allBlocksData.size();
+        for(unsigned int i = 0; i < nDiff; i++) {
+            SBlockData* pBlockData = NULL;
+            if(m_pLevelFile->getLevelType() == LevelType::LEVEL_QUADS) {
+                pBlockData = new SQuadData();
+            } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_HEXAGONS) {
+                pBlockData = new SHexData();
+            } else {
+                pBlockData = new SQuadData();
+            }
+            pBlockData->internalIdx = m_allBlocksData.size();
+            m_allBlocksData.push_back(pBlockData);
+        }
+    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelDataHolder::destroyAllBlocks(void) {
+    const unsigned int n = m_allBlocksData.size();
+    const fgBool shouldCall = (fgBool)!!(m_blocksData.size());
+    for(unsigned int i = 0; i < n; i++) {
+        SBlockData* pBlockData = m_allBlocksData[i];
+        if(!pBlockData) {
+            continue;
+        }
+        if(shouldCall) {
+            internalCall(ACTION_BLOCK_DESTROYED, pBlockData);
+        }
+        pBlockData->deactivate();
+        pBlockData->unbind();
+        delete pBlockData;
+        pBlockData = NULL;
+        m_allBlocksData[i] = NULL;
+    }
+    m_blocksData.clear();
+}
+//------------------------------------------------------------------------------
+
+SBlockData* CLevelDataHolder::requestBlockData(void) {
+    if(m_allBlocksData.empty()) {
+        return NULL;
+    }
+    SBlockData* pBlock = NULL;
+    unsigned int index = 0;
+    if(m_freeSlots.empty()) {
+        index = m_blocksData.size();
+    } else {
+        index = m_freeSlots.back();
+        m_freeSlots.pop_back();
+    }
+    pBlock = m_allBlocksData[index];
+    pBlock->internalIdx = index;
+    return pBlock;
+}
+//------------------------------------------------------------------------------
+
+void CLevelDataHolder::addToFree(SBlockData* pBlock) {
+    if(!pBlock)
+        return;
+    m_freeSlots.push_back(pBlock->internalIdx);
+    pBlock->externalIdx = -1;
+    pBlock->unbind();
+}
 //------------------------------------------------------------------------------
 
 SBlockData* CLevelDataHolder::insertNewBlock(unsigned short x,
@@ -150,10 +232,12 @@ SBlockData* CLevelDataHolder::insertNewBlock(unsigned short x,
     if(!m_pGrid->isValidAddress(x, y)) {
         return NULL;
     }
-    int index = destroyBlock(x, y); // this destroy any original in that place
+    destroyBlock(x, y); // this destroy any original in that place
     // now need to insert new quad in that place
     // allocate new quad data
-    SBlockData* pBlockData = NULL;
+    // // // //SBlockData* pBlockData = NULL;
+    SBlockData* pBlockData = requestBlockData();
+#if 0
     if(m_pLevelFile->getLevelType() == LevelType::LEVEL_QUADS) {
         pBlockData = new SQuadData();
     } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_HEXAGONS) {
@@ -161,14 +245,14 @@ SBlockData* CLevelDataHolder::insertNewBlock(unsigned short x,
     } else {
         pBlockData = new SQuadData();
     }
+#endif
     pBlockData->changeColor(color);
     game::CGrid::SCellHolder* pCellHolder = m_pGrid->atPtr(x, y);
     if(!pCellHolder) {
         // probably game::CGrid is not prepared - should call applyToGrid
         // destroy the scene node
         internalCall(ACTION_BLOCK_DESTROYED, pBlockData, NULL);
-        delete pBlockData;
-        pBlockData = NULL;
+        addToFree(pBlockData);
         return NULL;
     }
     pBlockData->bind(pCellHolder);
@@ -176,6 +260,7 @@ SBlockData* CLevelDataHolder::insertNewBlock(unsigned short x,
     pBlockData->isDragged = FG_FALSE;
     pBlockData->activate();
     pBlockData->show();
+    pBlockData->externalIdx = m_blocksData.size();
     m_blocksData.push_back(pBlockData);
     // should check the return value of the callback func?
     internalCall(ACTION_BLOCK_ADDED, pBlockData, NULL);
@@ -187,16 +272,19 @@ int CLevelDataHolder::destroyBlock(SBlockData* pBlockData) {
     if(!m_pGrid || !pBlockData) {
         return -1;
     }
-    int index = m_blocksData.find(pBlockData);
+    //int index = m_blocksData.find(pBlockData);
+    int index = pBlockData->externalIdx;
     if(index != -1) {
         m_blocksData[index] = NULL;
         pBlockData->deactivate();
         pBlockData->unbind();
         internalCall(ACTION_BLOCK_DESTROYED, pBlockData, NULL);
-        // need to destroy it completely
-        delete pBlockData;
-        pBlockData = NULL;
+        // need to destroy it (add to free)
+        addToFree(pBlockData);
         m_blocksData.remove(index);
+        if(m_blocksData[index]) {
+            m_blocksData[index]->externalIdx = index;
+        }
         // previous block is now completely removed
     }
     return index;
@@ -214,26 +302,31 @@ int CLevelDataHolder::destroyBlock(unsigned int index) {
     pBlockData->deactivate();
     pBlockData->unbind();
     internalCall(ACTION_BLOCK_DESTROYED, pBlockData, NULL);
-    // need to destroy it completely
-    delete pBlockData;
-    pBlockData = NULL;
+    // need to destroy it (add to free)
+    addToFree(pBlockData);
     m_blocksData.remove(index);
+    if(m_blocksData[index]) {
+        m_blocksData[index]->externalIdx = index;
+    }
     // previous block is now completely removed
     return (int)index;
 }
 //------------------------------------------------------------------------------
 
 int CLevelDataHolder::destroyBlock(unsigned short x, unsigned short y) {
+    int index = -1;
     if(!m_pGrid) {
-        return -1;
+        return index;
     }
     if(!m_pGrid->isValidAddress(x, y)) {
-        return -1;
+        return index;
     }
-    // need also to find SBlockData that already resides on this address
-    int index = getBlockDataIndex(x, y);
-    if(index != -1) {
-        destroyBlock((unsigned int)index);
+    SBlockData* pBlock = getBlockData(x, y);
+    if(pBlock) {
+        index = pBlock->externalIdx;
+        if(index != -1) {
+            destroyBlock((unsigned int)index);
+        }
     }
     return index; // return the index from which the quad was destroyed
 }
@@ -246,15 +339,19 @@ SBlockData* CLevelDataHolder::moveBlockToNewPlace(SBlockData* original,
         return NULL;
     }
     if(!original->pCellHolder) {
-        FG_LOG_DEBUG("ChainReaction[CLevelVis]: Unable to move quad[%p] to new place[%dx%d]: cell holder is NULL - quad probably is not bound");
+        if(m_isPrintMessages) {
+            FG_LOG_DEBUG("ChainReaction[CLevelVis]: Unable to move quad[%p] to new place[%dx%d]: cell holder is NULL - quad probably is not bound");
+        }
         return NULL;
     }
-    if(!m_pGrid->isValidAddress(newX, newX)) {
-        FG_LOG_DEBUG("ChainReaction[CLevelVis]: Unable to move quad[%p@%dx%d] to new place[%dx%d]: address is not valid",
-                     original,
-                     original->pCellHolder->pos.x,
-                     original->pCellHolder->pos.y,
-                     newX, newY);
+    if(!m_pGrid->isValidAddress(newX, newY)) {
+        if(m_isPrintMessages) {
+            FG_LOG_DEBUG("ChainReaction[CLevelVis]: Unable to move quad[%p@%dx%d] to new place[%dx%d]: address is not valid",
+                         original,
+                         original->pCellHolder->pos.x,
+                         original->pCellHolder->pos.y,
+                         newX, newY);
+        }
         return NULL;
     }
     // the quad moves to the new place
@@ -280,7 +377,6 @@ SBlockData* CLevelDataHolder::moveBlockToNewPlace(SBlockData* original,
         internalCall(ACTION_BLOCK_MOVED, original, pNewPlace);
         // now need to remove the original
         // this will also destroy the original scene node and unbind
-        //destroyBlock(original->pCellHolder->pos.x, original->pCellHolder->pos.y);
         destroyBlock(original);
         original = NULL;
         pNewPlace->isValid = FG_TRUE;
@@ -310,12 +406,11 @@ void CLevelDataHolder::clear(void) {
         SBlockData* pBlockData = m_blocksData[i];
         if(!pBlockData) {
             continue;
-        }        
+        }
         internalCall(ACTION_BLOCK_DESTROYED, pBlockData);
         pBlockData->deactivate();
         pBlockData->unbind();
-        delete pBlockData;
-        pBlockData = NULL;
+        addToFree(pBlockData);
         m_blocksData[i] = NULL;
     }
     n = m_blocksData.capacity();
@@ -339,6 +434,7 @@ fgBool CLevelDataHolder::restart(void) {
     if(!n) {
         return FG_FALSE;
     }
+    prepareAllBlocks();
     // need to reserve proper size
     unsigned int nReserve = (unsigned int)(n * 1.5f);
     m_blocksData.reserve(nReserve);
@@ -353,7 +449,26 @@ fgBool CLevelDataHolder::restart(void) {
                        (VColor)blocks[i].color);
     }
 }
+//------------------------------------------------------------------------------
 
+fgBool CLevelDataHolder::restartFrom(const BlockInfoVec& blocks) {
+    if(!m_pLevelFile || !m_pGrid) {
+        return FG_FALSE;
+    }
+    if(blocks.empty())
+        return FG_FALSE;
+    unsigned int n = blocks.size();
+    unsigned int nReserve = (unsigned int)(n * 1.5f);
+    m_blocksData.reserve(nReserve);
+    clear();
+    m_pLevelFile->applyToGrid(blocks, m_pGrid);
+    // Prepare new number of blocks
+    for(unsigned int i = 0; i < n; i++) {
+        insertNewBlock(blocks[i].pos.x,
+                       blocks[i].pos.y,
+                       (VColor)blocks[i].color);
+    }
+}
 //------------------------------------------------------------------------------
 
 SBlockData* CLevelDataHolder::at(unsigned int index) {
@@ -442,6 +557,20 @@ int CLevelDataHolder::getBlockDataIndex(unsigned short x, unsigned short y) {
 
 void CLevelDataHolder::setLevelFile(CLevelFile* pLvlFile) {
     m_pLevelFile = pLvlFile;
+    if(m_pLevelFile) {
+        unsigned int n = m_pLevelFile->getBlocksCount();
+        if(n) {
+            unsigned int nReserve = (unsigned int)(n * 1.5f);
+            m_blocksData.reserve(nReserve);
+            for(unsigned int i = 0; i < nReserve; i++) {
+                m_blocksData[i] = NULL;
+            }
+        }
+        n = getMaximumBlocksCount();
+        if(n) {
+            prepareAllBlocks();
+        }
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -456,3 +585,39 @@ void CLevelDataHolder::getSize(unsigned short* x, unsigned short* y) {
     if(m_pLevelFile) {
         m_pLevelFile->getSize(x, y);
     }
+}
+//------------------------------------------------------------------------------
+
+#if defined(DEBUG) || defined(FG_DEBUG)
+
+void CLevelDataHolder::dump(void) {
+    if(isEmpty()) {
+        return;
+    }
+    const unsigned int n = getBlocksCount();
+    for(unsigned int i = 0; i < n; i++) {
+        SBlockData* pBlock = m_blocksData[i];
+        if(!pBlock)
+            continue;
+        unsigned short x = 0, y = 0;
+        if(pBlock->pCellHolder) {
+            x = pBlock->pCellHolder->pos.x;
+            y = pBlock->pCellHolder->pos.y;
+        }
+        printf("[%d] block: %s [%dx%d] bound[%d] type[%d]\n", i,
+               getColorName(pBlock->color),
+               x,
+               y,
+               (int)pBlock->isBound(),
+               (int)pBlock->getType());
+    }
+}
+//------------------------------------------------------------------------------
+
+void CLevelDataHolder::dumpGrid(void) {
+    if(!m_pGrid)
+        return;
+    m_pGrid->dump();
+}
+//------------------------------------------------------------------------------
+#endif

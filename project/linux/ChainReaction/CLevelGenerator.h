@@ -525,6 +525,10 @@ namespace fg {
         int m_genLevelIdx;
         ///
         float m_gridCoverage;
+        ///
+        SSize m_border;
+        ///
+        SSize m_size;
         /// Current state flags of the generator
         StateFlags m_stateFlags;
 

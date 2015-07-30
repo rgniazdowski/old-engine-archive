@@ -157,6 +157,26 @@ namespace fg {
         fgBool internalCall(InternalActionType actionType,
                             SBlockData* pOriginal,
                             SBlockData* pNew = NULL);
+        /**
+         *
+         * @return
+         */
+        fgBool prepareAllBlocks(void);
+        /**
+         *
+         * @return
+         */
+        fgBool destroyAllBlocks(void);
+        /**
+         *
+         * @return
+         */
+        SBlockData* requestBlockData(void);
+        /**
+         *
+         * @param pBlock
+         */
+        void addToFree(SBlockData* pBlock);
 
     public:
         /**
@@ -213,6 +233,12 @@ namespace fg {
          */
         fgBool restart(void);
         /**
+         * 
+         * @param blocks
+         * @return 
+         */
+        fgBool restartFrom(const BlockInfoVec& blocks);
+        /**
          *
          * @return
          */
@@ -233,6 +259,11 @@ namespace fg {
         fgBool isEmpty(void) const {
             return (fgBool)!!(m_blocksData.empty());
         }
+        /**
+         * 
+         * @return 
+         */
+        unsigned int getMaximumBlocksCount(void);
         /**
          *
          * @return
@@ -358,6 +389,12 @@ namespace fg {
                 return BlockType::BLOCK_HEXAGON;
             return BlockType::BLOCK_INVALID;
         }
+
+    #if defined(DEBUG) || defined(FG_DEBUG)
+        void dump(void);
+        void dumpGrid(void);
+    #endif
+    
     private:
 
         /**
@@ -423,7 +460,12 @@ namespace fg {
         CLevelFile* m_pLevelFile;
         /// Quads info/data special vector - stores all required information
         BlockDataVec m_blocksData;
-
+        /// This is allocated based on current level file
+        BlockDataVec m_allBlocksData;
+        ///
+        CVector<int> m_freeSlots;
+        ///
+        fgBool m_isPrintMessages;
     }; // class CLevelDataHolder
 
 } // namespace fg

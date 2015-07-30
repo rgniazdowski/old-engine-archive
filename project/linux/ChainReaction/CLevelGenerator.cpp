@@ -31,11 +31,15 @@ m_colorTable(),
 m_genLevelType(LevelType::LEVEL_QUADS),
 m_genLevelIdx(1),
 m_gridCoverage(0.5f),
+m_border(),
+m_size(),
 m_stateFlags(stateFlags) {
     if(m_stateFlags == NO_FLAGS) {
         useBlackAndWhiteColors(); // enable black & white by default
         setFullyRandom(); // by default the generator is fully random
     }
+    m_border.x = 2; // default border
+    m_border.y = 2;
     this->checkInternals();
 }
 //------------------------------------------------------------------------------
@@ -109,6 +113,7 @@ fgBool CLevelGenerator::generate(void) {
         m_gridCoverage = 0.1f; // minimum 10%
     fgBool status = FG_TRUE;
     fgBool shouldRewind = FG_FALSE;
+    getLevelFile()->setSize(m_size.x + m_border.x * 2, m_size.y + m_border.y * 2);
     unsigned short sizeX = getLevelFile()->getSize().x;
     unsigned short sizeY = getLevelFile()->getSize().y;
     getLevelData()->getGrid()->resize(sizeX, sizeY);
@@ -127,8 +132,8 @@ fgBool CLevelGenerator::generate(void) {
     orphans.reserve(8);
 
     // Need to populate tPositions completely
-    for(unsigned int y = 0; y < sizeY; y++) {
-        for(unsigned int x = 0; x < sizeX; x++) {
+    for(unsigned int y = m_border.y; y < sizeY-m_border.y; y++) {
+        for(unsigned int x = m_border.x; x < sizeX-m_border.x; x++) {
             SBlockInfo blockInfo;
             blockInfo.pos.x = x;
             blockInfo.pos.y = y;
@@ -163,7 +168,7 @@ fgBool CLevelGenerator::generate(void) {
 
         for(unsigned int i = 0; i < numTotalBlocks; i++) {
             // first insert blocks, use invalid colour
-            CLevelFile::SSize const& pos = tPositions[i].pos;
+            SSize const& pos = tPositions[i].pos;
             VColor color = tPositions[i].color;
             SBlockData* pBlock = pLevelData->insertNewBlock(pos.x, pos.y, color);
             if(!pBlock) {
@@ -381,20 +386,24 @@ fgBool CLevelGenerator::saveToFile(const char* filePath) {
 //------------------------------------------------------------------------------
 
 void CLevelGenerator::setSize(unsigned short x, unsigned short y) {
+    m_size.x = x;
+    m_size.y = y;
     if(m_internalLevelFile) {
-        m_internalLevelFile->setSize(x, y);
+        m_internalLevelFile->setSize(x + m_border.x * 2, y + m_border.y * 2);
     }
     checkInternals();
-    getLevelFile()->setSize(x, y);
+    getLevelFile()->setSize(x + m_border.x * 2, y + m_border.y * 2);
 }
 //------------------------------------------------------------------------------
 
 void CLevelGenerator::setSize(const SSize& size) {
+    m_size.x = size.x;
+    m_size.y = size.y;
     if(m_internalLevelFile) {
-        m_internalLevelFile->setSize(size);
+        m_internalLevelFile->setSize(size.x + m_border.x * 2, size.y + m_border.y * 2);
     }
     checkInternals();
-    getLevelFile()->setSize(size);
+    getLevelFile()->setSize(size.x + m_border.x * 2, size.y + m_border.y * 2);
 }
 //------------------------------------------------------------------------------
 

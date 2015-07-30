@@ -119,6 +119,13 @@ namespace fg {
          * @return
          */
         fgBool applyToGrid(::fg::game::CGrid* pGrid);
+        /**
+         * 
+         * @param blocks
+         * @param pGrid
+         * @return
+         */
+        fgBool applyToGrid(const BlockInfoVec& blocks, ::fg::game::CGrid* pGrid);
 
         /**
          *
