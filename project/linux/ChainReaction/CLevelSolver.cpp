@@ -45,17 +45,31 @@ m_scale(1.0f) {
 }
 //------------------------------------------------------------------------------
 
-CLevelSolver::CLevelSolver(const CLevelSolver& orig) { }
+CLevelSolver::CLevelSolver(const CLevelSolver& orig) {
+    this->m_pLevelData = orig.m_pLevelData;
+    this->m_finishedBlocks.reserve(8);
+    this->m_rotatingBlocks.reserve(8);
+    this->m_orphanBlocks.reserve(8);
+    this->m_additionalBlocks.reserve(8);
+    this->m_emergeBlocks.reserve(8);
+    this->m_duplicates.reserve(8);
+    this->m_coveredBlocks.reserve(8);
+    this->m_stateFlags = orig.m_stateFlags;
+    this->m_scale = orig.m_scale;
+    this->clear();
+}
 //------------------------------------------------------------------------------
 
-CLevelSolver::~CLevelSolver() { }
+CLevelSolver::~CLevelSolver() {
+    this->clear();
+    m_pLevelData = NULL;
+}
 //------------------------------------------------------------------------------
 
 void CLevelSolver::clear(void) {
     setChainReaction(FG_FALSE);
     setStepping(FG_FALSE);
-    setStepOn(FG_FALSE);
-    //setSimulation(FG_FALSE);
+    setStepOn(FG_FALSE);    
     m_rotatingBlocks.clear();
     m_finishedBlocks.clear();
     m_orphanBlocks.clear();

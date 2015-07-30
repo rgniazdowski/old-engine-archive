@@ -28,7 +28,6 @@ m_pGrid(pGrid),
 m_pLevelFile(pLvlFile),
 m_blocksData(),
 m_allBlocksData(),
-
 m_isPrintMessages(FG_FALSE) {
     if(m_pLevelFile) {
         setLevelFile(m_pLevelFile);

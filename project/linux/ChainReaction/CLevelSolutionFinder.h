@@ -27,7 +27,7 @@ namespace fg {
     /**
      *
      */
-    class CLevelSolutionFinder : public CLevelSolver {
+    class CLevelSolutionFinder : protected CLevelSolver {
     public:
         typedef CLevelSolver base_type;
         typedef CLevelSolutionFinder self_type;
@@ -42,7 +42,7 @@ namespace fg {
         typedef CVector<CLevelSolution*> SolutionsVec;
         typedef SolutionsVec::iterator SolutionsVecItor;
         typedef SolutionsVec::const_iterator SolutionsVecConstItor;
-        
+
     public:
         /**
          *
@@ -116,17 +116,16 @@ namespace fg {
     public:
 
         //----------------------------------------------------------------------
-
         /**
          *
          * @param pDataHolder
          */
         void setLevelDataHolder(CLevelDataHolder* pDataHolder) {
-            m_pLevelData = pDataHolder;
-            if(m_pLevelData) {
-                m_root->blockType = m_pLevelData->getBlockType();
+            base_type::setLevelDataHolder(pDataHolder);
+            if(base_type::getLevelDataHolder()) {
+                m_root->blockType = base_type::getLevelDataHolder()->getBlockType();
             }
-            m_levelSolver->setLevelDataHolder(pDataHolder);
+
         }
         /**
          *
@@ -156,7 +155,6 @@ namespace fg {
          * @param end
          */
         void getSearchRange(unsigned int* begin, unsigned int* end) const;
-
         /**
          *
          * @return
@@ -178,7 +176,6 @@ namespace fg {
         StepsVec const& getInitialSteps(void) const {
             return m_root->steps;
         }
-
         /**
          * 
          * @return
@@ -200,15 +197,37 @@ namespace fg {
         SolutionsVec const& getSolutions(void) const {
             return m_solutions;
         }
+        /**
+         * 
+         * @return 
+         */
+        CLevelSolution* getCurrentBestSolution(void) const {
+            return m_currentBestSolution;
+        }
+        /**
+         * 
+         * @param solutions
+         * @return 
+         */
+        unsigned int appendTo(SolutionsVec& solutions);
+        /**
+         * 
+         * @param solutions
+         * @return 
+         */
+        unsigned int copyTo(SolutionsVec& solutions);
+        /**
+         * 
+         * @param solutions
+         * @return
+         */
+        static CLevelSolution* getBestSolutionFrom(const SolutionsVec& solutions,
+                                                   CLevelSolution* pOtherBest = NULL);
 
     public:
-        static const unsigned int MAX_NUMBER_DEPTH = UINT_MAX-1;
+        static const unsigned int MAX_NUMBER_DEPTH = UINT_MAX - 1;
 
     private:
-        ///
-        CLevelDataHolder* m_pLevelData;
-        ///
-        CLevelSolver* m_levelSolver;
         ///
         CLevelSolution* m_currentSolution;
         ///
@@ -224,9 +243,8 @@ namespace fg {
         ///
         unsigned int m_numAllPossibleSteps;
         ///
-        fgBool m_isPrintMessages;
-        ///
         CVector<unsigned int> m_stepsIndexes;
+
         /**
          *
          */

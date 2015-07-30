@@ -21,8 +21,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 CLevelSolutionFinder::CLevelSolutionFinder(CLevelDataHolder* pDataHolder) :
-m_pLevelData(pDataHolder),
-m_levelSolver(NULL),
+base_type(pDataHolder),
 m_currentSolution(NULL),
 m_currentBestSolution(NULL),
 m_solutions(),
@@ -30,24 +29,27 @@ m_root(NULL),
 m_reachedDepth(0),
 m_minimalDepth(MAX_NUMBER_DEPTH),
 m_numAllPossibleSteps(0),
-m_isPrintMessages(FG_FALSE),
 m_stepsIndexes(),
 m_searchRange() {
-    m_levelSolver = new CLevelSolver(m_pLevelData);
     //m_currentSolution = new CLevelSolution();
     m_solutions.reserve(16);
     m_root = new SBlockMoveStep();
     m_root->prepareAsRoot();
-    if(m_pLevelData) {
-        m_root->blockType = m_pLevelData->getBlockType();
+    if(getLevelDataHolder()) {
+        m_root->blockType = getLevelDataHolder()->getBlockType();
     }
     m_searchRange.begin = 0;
     m_searchRange.end = 0;
-    m_levelSolver->setSimulation(FG_TRUE);
+    base_type::setSimulation(FG_TRUE);
 }
 //------------------------------------------------------------------------------
 
-CLevelSolutionFinder::CLevelSolutionFinder(const CLevelSolutionFinder& orig) { }
+CLevelSolutionFinder::CLevelSolutionFinder(const CLevelSolutionFinder& orig) : base_type(orig) {
+    this->m_searchRange.begin = orig.m_searchRange.begin;
+    this->m_searchRange.end = orig.m_searchRange.end;
+    this->m_numAllPossibleSteps = orig.m_numAllPossibleSteps;
+    this->m_minimalDepth = orig.m_minimalDepth;
+}
 //------------------------------------------------------------------------------
 
 CLevelSolutionFinder::~CLevelSolutionFinder() {
@@ -56,14 +58,9 @@ CLevelSolutionFinder::~CLevelSolutionFinder() {
         delete m_root;
         m_root = NULL;
     }
-    if(m_levelSolver) {
-        m_levelSolver->setLevelDataHolder(NULL);
-        delete m_levelSolver;
-        m_levelSolver = NULL;
-    }
     m_currentSolution = NULL;
     m_currentBestSolution = NULL;
-    m_pLevelData = NULL;
+    base_type::clear();
     clearSolutions();
 }
 //------------------------------------------------------------------------------
@@ -71,14 +68,13 @@ CLevelSolutionFinder::~CLevelSolutionFinder() {
 void CLevelSolutionFinder::clear(void) {
     if(m_root)
         m_root->clear();
-    if(m_pLevelData) {
+    if(getLevelDataHolder()) {
         if(m_root)
-            m_root->blockType = m_pLevelData->getBlockType();
+            m_root->blockType = getLevelDataHolder()->getBlockType();
     }
     m_currentSolution = NULL;
     clearSolutions();
-    if(m_levelSolver)
-        m_levelSolver->clear();
+    base_type::clear();
 }
 //------------------------------------------------------------------------------
 
@@ -96,19 +92,18 @@ void CLevelSolutionFinder::clearSolutions(void) {
 //------------------------------------------------------------------------------
 
 fgBool CLevelSolutionFinder::prepareRoot(void) {
-    if(!m_pLevelData) {
+    CLevelDataHolder* pLevelData = base_type::getLevelDataHolder();
+    if(!pLevelData) {
         return FG_FALSE;
     }
-    if(m_pLevelData->isEmpty()) {
+    if(pLevelData->isEmpty()) {
         return FG_FALSE;
     }
-    if(m_pLevelData->getBlocksCount() < m_pLevelData->getLevelFile()->getBlocksCount())
-        m_pLevelData->restart();
+    if(pLevelData->getBlocksCount() < pLevelData->getLevelFile()->getBlocksCount())
+        pLevelData->restart();
     m_root->clearSteps();
     m_root->prepareAsRoot();
-    if(m_pLevelData) {
-        m_root->blockType = m_pLevelData->getBlockType();
-    }
+    m_root->blockType = pLevelData->getBlockType();
     prepareStep(m_root);
 }
 //------------------------------------------------------------------------------
@@ -119,7 +114,7 @@ fgBool CLevelSolutionFinder::prepareStep(SBlockMoveStep* pStep) {
     }
     if(pStep->count() > 0)
         return FG_TRUE; // no need to add again
-    CLevelDataHolder::BlockDataVec& blocks = m_pLevelData->getBlocks();
+    CLevelDataHolder::BlockDataVec& blocks = getLevelDataHolder()->getBlocks();
     CVector<RotationDirection> rotations;
     rotations.reserve(8);
     const unsigned int n = blocks.size();
@@ -148,7 +143,7 @@ fgBool CLevelSolutionFinder::prepareStep(SBlockMoveStep* pStep) {
 //------------------------------------------------------------------------------
 
 fgBool CLevelSolutionFinder::search(void) {
-    if(!m_pLevelData)
+    if(!getLevelDataHolder())
         return FG_FALSE;
     if(!prepareRoot()) {
         return FG_FALSE;
@@ -171,13 +166,11 @@ fgBool CLevelSolutionFinder::search(void) {
         performStep(pStep);
         performBalance();
         m_currentBestSolution = NULL;
-        m_pLevelData->appendTo(pStep->levelState); // save the level state
+        getLevelDataHolder()->appendTo(pStep->levelState); // save the level state
         pStep->rewind();
         status = searchHelper(pStep);
         if(status) {
             //probably found solution
-            //m_levelSolution->getMoves().insert(m_levelSolution->getMoves().begin(),
-            //                                   *((SBlockMoveInfo*)pStep));
 #if defined(DEBUG)
             if(m_currentBestSolution)
                 m_currentBestSolution->dump();
@@ -185,7 +178,7 @@ fgBool CLevelSolutionFinder::search(void) {
 #endif
         }
         // reset the game grid?
-        m_pLevelData->restart();
+        getLevelDataHolder()->restart();
     }
 
     return status;
@@ -193,7 +186,8 @@ fgBool CLevelSolutionFinder::search(void) {
 //------------------------------------------------------------------------------
 
 fgBool CLevelSolutionFinder::searchHelper(SBlockMoveStep* pMainStep) {
-    if(!m_pLevelData)
+    CLevelDataHolder* pLevelData = getLevelDataHolder();
+    if(!pLevelData)
         return FG_FALSE;
     if(!pMainStep)
         return FG_FALSE;
@@ -224,13 +218,13 @@ fgBool CLevelSolutionFinder::searchHelper(SBlockMoveStep* pMainStep) {
                 pPrevious->clearSteps(); // this one will be ignored
             }
             pSubStep = stack.back();
-            m_pLevelData->restartFrom(pSubStep->levelState);
+            pLevelData->restartFrom(pSubStep->levelState);
             continue;
         } else {
             stack.push_back(pSubStep);
         }
 #if defined(DEBUG)
-        if(m_isPrintMessages)
+        if(base_type::isPrintMessages())
             pSubStep->dump();
 #endif
         performStep(pSubStep);
@@ -272,14 +266,14 @@ fgBool CLevelSolutionFinder::searchHelper(SBlockMoveStep* pMainStep) {
                    pSubStep->moveDepth,
                    m_minimalDepth);
 #endif
-            if(m_pLevelData->isEmpty()) {
+            if(pLevelData->isEmpty()) {
                 stack.pop_back();
                 pSubStep = stack.back();
-                m_pLevelData->restartFrom(pSubStep->levelState);
+                pLevelData->restartFrom(pSubStep->levelState);
 
             }
         } else {
-            m_pLevelData->appendTo(pSubStep->levelState);
+            pLevelData->appendTo(pSubStep->levelState);
         }
     }
     const unsigned int nSolutions = m_solutions.size();
@@ -304,10 +298,11 @@ fgBool CLevelSolutionFinder::searchHelper(SBlockMoveStep* pMainStep) {
 //------------------------------------------------------------------------------
 
 fgBool CLevelSolutionFinder::checkCompletion(void) {
-    if(!m_pLevelData)
+    CLevelDataHolder* pLevelData = getLevelDataHolder();
+    if(!pLevelData)
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    if(m_pLevelData->getBlocksCount() == 0) {
+    if(pLevelData->getBlocksCount() == 0) {
         // the stage is cleared
         // probably passed level
         status = FG_TRUE;
@@ -319,25 +314,24 @@ fgBool CLevelSolutionFinder::checkCompletion(void) {
 fgBool CLevelSolutionFinder::performStep(SBlockMoveStep* pStep) {
     if(!pStep)
         return FG_FALSE;
-    SBlockData* pBlockData = m_pLevelData->getBlockData(pStep->pos.x, pStep->pos.y);
-    SBlockData* pNewBlock = m_pLevelData->moveBlockToNewPlace(pBlockData,
+    CLevelDataHolder* pLevelData = getLevelDataHolder();
+    SBlockData* pBlockData = pLevelData->getBlockData(pStep->pos.x, pStep->pos.y);
+    SBlockData* pNewBlock = pLevelData->moveBlockToNewPlace(pBlockData,
                                                               pStep->target.x,
                                                               pStep->target.y);
     if(!pNewBlock) {
-        m_levelSolver->getOrphanBlocks().push_back(pBlockData);
+        base_type::getOrphanBlocks().push_back(pBlockData);
     } else {
-        m_levelSolver->setUserDisturbance(pNewBlock);
+        base_type::setUserDisturbance(pNewBlock);
     }
 }
 //------------------------------------------------------------------------------
 
 void CLevelSolutionFinder::performBalance(void) {
-    if(!m_levelSolver)
-        return;
-    m_levelSolver->setChainReaction(); // now should animate
-    m_levelSolver->setStepOn(FG_TRUE);
-    while(m_levelSolver->isChainReaction()) {
-        m_levelSolver->balance(10.0f);
+    base_type::setChainReaction(); // now should animate
+    base_type::setStepOn(FG_TRUE);
+    while(base_type::isChainReaction()) {
+        base_type::balance(10.0f);
     }
 }
 //------------------------------------------------------------------------------
@@ -384,3 +378,50 @@ void CLevelSolutionFinder::getSearchRange(unsigned int* begin, unsigned int* end
         *end = m_searchRange.end;
 }
 //------------------------------------------------------------------------------
+
+unsigned int CLevelSolutionFinder::appendTo(SolutionsVec& solutions) {
+    const unsigned int n = m_solutions.size();
+    unsigned int i = 0;
+    solutions.reserve(solutions.size()+n+1);
+    for(;i<n;i++) {        
+        solutions.push_back(m_solutions[i]);
+    }
+    return i;
+}
+//------------------------------------------------------------------------------
+
+unsigned int CLevelSolutionFinder::copyTo(SolutionsVec& solutions) {
+    const unsigned int n = m_solutions.size();
+    unsigned int i = 0;
+    solutions.reserve(solutions.size()+n+1);
+    for(;i<n;i++) {
+        CLevelSolution* pOriginal = m_solutions[i];
+        CLevelSolution* pCopy = new CLevelSolution(*pOriginal);
+        solutions.push_back(pCopy);
+    }
+    return i;
+}
+//------------------------------------------------------------------------------
+
+CLevelSolution* CLevelSolutionFinder::getBestSolutionFrom(const SolutionsVec& solutions,
+                                                          CLevelSolution* pOtherBest) {
+    const unsigned int nSolutions = solutions.size();
+    CLevelSolution* pCurrentBest = pOtherBest;
+    for(unsigned int i = 0; i < nSolutions; i++) {
+        CLevelSolution* pSolution = solutions[i];
+        if(!pSolution)
+            continue;
+        if(pSolution->isEmpty())
+            continue;
+        if(pCurrentBest == NULL) {
+            pCurrentBest = pSolution;
+            continue;
+        }
+        if(pCurrentBest->count() > pSolution->count()) {
+            pCurrentBest = pSolution;
+        }
+    }
+    return pCurrentBest;
+}
+//------------------------------------------------------------------------------
+

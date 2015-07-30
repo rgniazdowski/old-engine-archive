@@ -406,6 +406,8 @@ fgBool CLevelVisualization::prepareSceneManager(void) {
     m_pSceneMgr->setPickSelectionToggle(FG_FALSE);
     m_pSceneMgr->setPickSelectionAABBTriangles(FG_TRUE);
     m_pSceneMgr->setPickSelectionOnHover(FG_TRUE);
+    m_pSceneMgr->setFrustumCheckSphere(FG_TRUE);
+    m_pSceneMgr->setLinearTraverse(FG_TRUE);
     //m_pSceneMgr->setPickSelectionOnClick(FG_TRUE);
     m_pSceneMgr->setIgnoreCollisions(FG_TRUE);
     //m_pSceneMgr->setShowGroundGrid(FG_TRUE); // TESTING
