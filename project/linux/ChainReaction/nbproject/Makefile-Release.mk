@@ -39,6 +39,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/CLevelDataHolder.o \
 	${OBJECTDIR}/CLevelFile.o \
 	${OBJECTDIR}/CLevelGenerator.o \
+	${OBJECTDIR}/CLevelSolution.o \
+	${OBJECTDIR}/CLevelSolutionFinder.o \
 	${OBJECTDIR}/CLevelSolver.o \
 	${OBJECTDIR}/CLevelVisualization.o \
 	${OBJECTDIR}/ChainReaction.o \
@@ -91,6 +93,16 @@ ${OBJECTDIR}/CLevelGenerator.o: CLevelGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelGenerator.o CLevelGenerator.cpp
+
+${OBJECTDIR}/CLevelSolution.o: CLevelSolution.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolution.o CLevelSolution.cpp
+
+${OBJECTDIR}/CLevelSolutionFinder.o: CLevelSolutionFinder.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolutionFinder.o CLevelSolutionFinder.cpp
 
 ${OBJECTDIR}/CLevelSolver.o: CLevelSolver.cpp 
 	${MKDIR} -p ${OBJECTDIR}
