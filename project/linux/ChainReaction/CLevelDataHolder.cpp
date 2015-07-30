@@ -208,6 +208,7 @@ SBlockData* CLevelDataHolder::requestBlockData(void) {
         m_freeSlots.pop_back();
     }
     pBlock = m_allBlocksData[index];
+    pBlock->invalidate();
     pBlock->internalIdx = index;
     return pBlock;
 }
@@ -219,6 +220,7 @@ void CLevelDataHolder::addToFree(SBlockData* pBlock) {
     m_freeSlots.push_back(pBlock->internalIdx);
     pBlock->externalIdx = -1;
     pBlock->unbind();
+    pBlock->rotation = 0.0f;
 }
 //------------------------------------------------------------------------------
 
@@ -454,12 +456,15 @@ fgBool CLevelDataHolder::restartFrom(const BlockInfoVec& blocks) {
     if(!m_pLevelFile || !m_pGrid) {
         return FG_FALSE;
     }
-    if(blocks.empty())
-        return FG_FALSE;
+    clear(); // reset nodes/blocks
     unsigned int n = blocks.size();
+    if(!n) {
+        return FG_FALSE;
+    }
+    prepareAllBlocks();
+    // need to reserve proper size
     unsigned int nReserve = (unsigned int)(n * 1.5f);
-    m_blocksData.reserve(nReserve);
-    clear();
+    m_blocksData.reserve(nReserve);    
     m_pLevelFile->applyToGrid(blocks, m_pGrid);
     // Prepare new number of blocks
     for(unsigned int i = 0; i < n; i++) {
@@ -483,7 +488,8 @@ int CLevelDataHolder::appendTo(BlockInfoVec& blockInfoVec) {
     int nAppend = 0;
     BlockDataVecConstItor itor = m_blocksData.begin();
     BlockDataVecConstItor end = m_blocksData.end();
-
+    unsigned int nCount = m_blocksData.size();
+    blockInfoVec.reserve(blockInfoVec.size() + nCount + 1);
     for(; itor != end; itor++) {
         const SBlockData* pBlockData = *itor;
         if(!pBlockData)
@@ -499,8 +505,29 @@ int CLevelDataHolder::appendTo(BlockInfoVec& blockInfoVec) {
             nAppend++;
         }
     }
-
     return nAppend;
+}
+//------------------------------------------------------------------------------
+
+int CLevelDataHolder::convertTo(BlockInfoVec& blockInfoVec) {
+    if(m_blocksData.empty())
+        return -1;
+    const unsigned int nCount = m_blocksData.size();
+    blockInfoVec.clear();
+    blockInfoVec.reserve(nCount + 1);
+    for(unsigned int i = 0; i < nCount; i++) {
+        const SBlockData* pBlockData = m_blocksData[i];
+        if(!pBlockData)
+            continue;
+        if(!pBlockData->pCellHolder)
+            continue;
+        SBlockInfo blockInfo;
+        blockInfo.color = pBlockData->color;
+        blockInfo.pos.x = pBlockData->pCellHolder->pos.x;
+        blockInfo.pos.y = pBlockData->pCellHolder->pos.y;
+        blockInfoVec.push_back(blockInfo);
+    }
+    return (int)nCount;
 }
 //------------------------------------------------------------------------------
 

@@ -136,6 +136,7 @@ fgBool CLevelSolution::save(const std::string& filePath) {
     if(filePath.empty()) {
         return FG_FALSE;
     }
+    setFilePath(filePath);
     return save();
 }
 //------------------------------------------------------------------------------
@@ -147,6 +148,7 @@ fgBool CLevelSolution::save(const char* filePath) {
     if(!filePath[0]) {
         return FG_FALSE;
     }
+    setFilePath(filePath);
     return save();
 }
 //------------------------------------------------------------------------------

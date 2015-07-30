@@ -115,10 +115,14 @@ void SBlockMoveStep::clear(void) {
     base_type::clear();
     self_type::clearSteps();
     this->levelState.clear();
+    this->rewind();
 }
 //------------------------------------------------------------------------------
 
 void SBlockMoveStep::clearSteps(void) {
+    fgBool shouldRewind = FG_FALSE;
+    if(!isItorValid())
+        shouldRewind = FG_TRUE;
     unsigned int n = this->steps.size();
     for(unsigned int i = 0; i < n; i++) {
         self_type* pStep = this->steps[i];
@@ -128,6 +132,8 @@ void SBlockMoveStep::clearSteps(void) {
         this->steps[i] = NULL;
     }
     this->steps.clear();
+    if(shouldRewind)
+        this->rewind();
 }
 //------------------------------------------------------------------------------
 
@@ -140,13 +146,14 @@ SBlockMoveStep::self_type* SBlockMoveStep::next(fgBool shouldClearPrevious) {
     if(!isItorValid()) {
         currentStep = steps.begin();
     } else {
-        currentStep++;
         if(shouldClearPrevious) {
-            Iterator itor = steps.begin();
-            for(; itor != currentStep; itor++) {
-                (*itor)->clearSteps();
-            }
+            current()->clearSteps();
+            //Iterator itor = steps.begin();
+            //for(; itor != currentStep; itor++) {
+            //    (*itor)->clearSteps();
+            //}
         }
+        currentStep++;
     }
     return current();
 }

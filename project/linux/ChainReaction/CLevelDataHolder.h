@@ -293,6 +293,13 @@ namespace fg {
         int appendTo(BlockInfoVec& blockInfoVec);
 
         /**
+         * 
+         * @param blockInfoVec
+         * @return
+         */
+        int convertTo(BlockInfoVec& blockInfoVec);
+
+        /**
          *
          * @param x
          * @param y

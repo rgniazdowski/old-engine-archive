@@ -27,8 +27,9 @@ m_currentBestSolution(NULL),
 m_solutions(),
 m_root(NULL),
 m_reachedDepth(0),
-m_minimalDepth(MAX_NUMBER_DEPTH),
-m_numAllPossibleSteps(0),
+m_maximalDepth(MAX_NUMBER_DEPTH),
+m_forcedMaxDepth(MAX_NUMBER_DEPTH),
+m_numCheckedSteps(0),
 m_stepsIndexes(),
 m_searchRange() {
     //m_currentSolution = new CLevelSolution();
@@ -47,8 +48,8 @@ m_searchRange() {
 CLevelSolutionFinder::CLevelSolutionFinder(const CLevelSolutionFinder& orig) : base_type(orig) {
     this->m_searchRange.begin = orig.m_searchRange.begin;
     this->m_searchRange.end = orig.m_searchRange.end;
-    this->m_numAllPossibleSteps = orig.m_numAllPossibleSteps;
-    this->m_minimalDepth = orig.m_minimalDepth;
+    this->m_numCheckedSteps = orig.m_numCheckedSteps;
+    this->m_maximalDepth = orig.m_maximalDepth;
 }
 //------------------------------------------------------------------------------
 
@@ -96,15 +97,13 @@ fgBool CLevelSolutionFinder::prepareRoot(void) {
     if(!pLevelData) {
         return FG_FALSE;
     }
-    if(pLevelData->isEmpty()) {
-        return FG_FALSE;
-    }
     if(pLevelData->getBlocksCount() < pLevelData->getLevelFile()->getBlocksCount())
         pLevelData->restart();
     m_root->clearSteps();
     m_root->prepareAsRoot();
     m_root->blockType = pLevelData->getBlockType();
     prepareStep(m_root);
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
@@ -149,12 +148,18 @@ fgBool CLevelSolutionFinder::search(void) {
         return FG_FALSE;
     }
     fgBool status = FG_FALSE;
-    m_numAllPossibleSteps = 0;
+    m_numCheckedSteps = 0;
     m_reachedDepth = 0;
     clearSolutions();
     unsigned int rootIdx = m_searchRange.begin;
     unsigned int rootMax = m_searchRange.end;
-    m_minimalDepth = MAX_NUMBER_DEPTH; // reset minimal depth
+    // reset maximal depth - if set to max, the search algorithm
+    // will try to determine maximal depth itself
+    // in most cases it will be too big and cause extreme computation time
+    if(m_forcedMaxDepth >= MAX_NUMBER_DEPTH - 1)
+        m_maximalDepth = MAX_NUMBER_DEPTH;
+    else
+        m_maximalDepth = m_forcedMaxDepth;
     for(; rootIdx <= rootMax; rootIdx++) {
         // take the current step (in root)
         SBlockMoveStep* pStep = m_root->at(rootIdx);
@@ -198,24 +203,21 @@ fgBool CLevelSolutionFinder::searchHelper(SBlockMoveStep* pMainStep) {
     stack.reserve(pMainStep->count());
     stack.push_back(pMainStep);
     float t1 = timesys::ms();
-    while(true) {
 
+    while(true) {
         if(stack.empty())
             break;
         prepareStep(pSubStep);
         pPrevious = pSubStep;
         pSubStep = pSubStep->next(FG_TRUE); // this will clear previous
-        if(!pSubStep || (pSubStep && pSubStep->moveDepth >= m_minimalDepth)) {
+        if(!pSubStep || (pSubStep && pSubStep->moveDepth >= m_maximalDepth)) {
             if(!pSubStep && pPrevious->moveDepth == m_reachedDepth) {
-                if(m_minimalDepth >= MAX_NUMBER_DEPTH)
-                    this->m_minimalDepth = m_reachedDepth;
+                if(m_maximalDepth >= MAX_NUMBER_DEPTH - 1)
+                    this->m_maximalDepth = m_reachedDepth;
             }
             stack.pop_back();
             if(stack.empty()) {
                 break;
-            }
-            if(pSubStep) {
-                pPrevious->clearSteps(); // this one will be ignored
             }
             pSubStep = stack.back();
             pLevelData->restartFrom(pSubStep->levelState);
@@ -227,55 +229,74 @@ fgBool CLevelSolutionFinder::searchHelper(SBlockMoveStep* pMainStep) {
         if(base_type::isPrintMessages())
             pSubStep->dump();
 #endif
-        performStep(pSubStep);
-        performBalance();
+        int beforeCnt = pLevelData->getBlocksCount();
+        int stepDiff = performStep(pSubStep);
+        int balanceDiff = performBalance();
+        int afterCnt = pLevelData->getBlocksCount();
+        int allDiff = afterCnt - beforeCnt;
+        
+        pLevelData->convertTo(pSubStep->levelState);
+        if(allDiff == 0) {
+            // balanceStatus of 0 means that number of blocks did not change
+            // need to skip such steps
+            stack.pop_back();
+            pSubStep = stack.back();
+            pLevelData->restartFrom(pSubStep->levelState);
+            continue;
+        }
+
+        // need some better heuristics
+        // if after performing this step, the level state (number of blocks)
+        // does not change - skip it
         if(pSubStep) {
             this->m_reachedDepth = math::max(m_reachedDepth, pSubStep->moveDepth);
-            this->m_numAllPossibleSteps++;
+            this->m_numCheckedSteps++;
         }
-        if(this->m_numAllPossibleSteps % 150000 == 0) {
-            float t2 = timesys::ms();
-            printf("[%.2fs] Already scanned: %d\n", (t2 - t1) / 1000.0f, this->m_numAllPossibleSteps);
-        }
-        if(this->m_numAllPossibleSteps % 350000 == 0) {
-            float t2 = timesys::ms();
-            printf("[%.2fs] Stack size: %d | Current depth: %d\n", (t2 - t1) / 1000.0f, stack.size(), pSubStep->moveDepth);
-        }
-        if(this->m_numAllPossibleSteps % 500000 == 0) {
-            float t2 = timesys::ms();
-            printf("[%.2fs] Stack size: %d | Current depth: %d | stack dump: \n", (t2 - t1) / 1000.0f, stack.size(), pSubStep->moveDepth);
-            unsigned int nStack = stack.size();
-            for(unsigned int i = 0; i < nStack; i++) {
-                SBlockMoveStep* pStep = stack[i];
-                printf("[%d][%p][d:%d@idx:%d]", i, pStep, pStep->moveDepth, pStep->moveIdx);
-                if(i < nStack - 1)
-                    printf("-> ");
+        // debug messages
+#if defined(FG_DEBUG) || defined(DEBUG)
+        {
+            if(this->m_numCheckedSteps % 150000 == 0) {
+                float t2 = timesys::ms();
+                printf("[%.2fs] Already scanned: %d\n", (t2 - t1) / 1000.0f,
+                       this->m_numCheckedSteps);
             }
-            printf("\n");
-        }
+            if(this->m_numCheckedSteps % 350000 == 0) {
+                float t2 = timesys::ms();
+                printf("[%.2fs] Stack size: %d | Current depth: %d\n",
+                       (t2 - t1) / 1000.0f, stack.size(), pSubStep->moveDepth);
+            }
+            if(this->m_numCheckedSteps % 500000 == 0) {
+                float t2 = timesys::ms();
+                printf("[%.2fs] Stack size: %d | Current depth: %d | stack dump: \n",
+                       (t2 - t1) / 1000.0f, stack.size(), pSubStep->moveDepth);
+                dumpStack(stack);
+            }
+        } // debug messages
+#endif // DEBUG
         if(checkCompletion()) {
-            this->m_minimalDepth = math::min(m_minimalDepth, pSubStep->moveDepth);
+            this->m_maximalDepth = math::min(m_maximalDepth, pSubStep->moveDepth);
             // stack contains the solution
             m_currentSolution = new CLevelSolution();
             m_solutions.push_back(m_currentSolution);
+            printf("This step is in stack: %d\n", stack.find(pSubStep));
             m_currentSolution->setFromSearchSteps(stack);
 #if defined(DEBUG)
-            //if(m_isPrintMessages)
+            printf("-----------------------------------\n");
             m_currentSolution->dump();
-            printf("Already scanned: %d | Current depth: %d | Minimal: %d\n", m_numAllPossibleSteps,
+            printf("-----------------------------------\n");
+            dumpStack(stack, FG_TRUE);
+            printf("-----------------------------------\n");
+            printf("Already scanned: %d | Current depth: %d | Minimal: %d\n", m_numCheckedSteps,
                    pSubStep->moveDepth,
-                   m_minimalDepth);
+                   m_maximalDepth);
 #endif
             if(pLevelData->isEmpty()) {
                 stack.pop_back();
                 pSubStep = stack.back();
                 pLevelData->restartFrom(pSubStep->levelState);
-
             }
-        } else {
-            pLevelData->appendTo(pSubStep->levelState);
         }
-    }
+    } // while(true))
     const unsigned int nSolutions = m_solutions.size();
     for(unsigned int i = 0; i < nSolutions; i++) {
         CLevelSolution* pSolution = m_solutions[i];
@@ -306,33 +327,90 @@ fgBool CLevelSolutionFinder::checkCompletion(void) {
         // the stage is cleared
         // probably passed level
         status = FG_TRUE;
+        printf("The stage is CLEARED! [%d]\n", pLevelData->getBlocks().size());
     }
     return status;
 }
 //------------------------------------------------------------------------------
 
-fgBool CLevelSolutionFinder::performStep(SBlockMoveStep* pStep) {
+int CLevelSolutionFinder::performStep(SBlockMoveStep* pStep) {
     if(!pStep)
-        return FG_FALSE;
+        return 0;
     CLevelDataHolder* pLevelData = getLevelDataHolder();
+    const int beforeCount = getLevelDataHolder()->getBlocksCount();
     SBlockData* pBlockData = pLevelData->getBlockData(pStep->pos.x, pStep->pos.y);
     SBlockData* pNewBlock = pLevelData->moveBlockToNewPlace(pBlockData,
-                                                              pStep->target.x,
-                                                              pStep->target.y);
+                                                            pStep->target.x,
+                                                            pStep->target.y);
+
+    const int afterCount = getLevelDataHolder()->getBlocksCount();
+    int diff = afterCount - beforeCount;
     if(!pNewBlock) {
         base_type::getOrphanBlocks().push_back(pBlockData);
+        diff = -1;
     } else {
         base_type::setUserDisturbance(pNewBlock);
     }
+    return diff;
 }
 //------------------------------------------------------------------------------
 
-void CLevelSolutionFinder::performBalance(void) {
+int CLevelSolutionFinder::performBalance(void) {
     base_type::setChainReaction(); // now should animate
     base_type::setStepOn(FG_TRUE);
+    int beforeCount = getLevelDataHolder()->getBlocksCount();
     while(base_type::isChainReaction()) {
         base_type::balance(10.0f);
     }
+    int afterCount = getLevelDataHolder()->getBlocksCount();
+    return (afterCount - beforeCount);
+}
+//------------------------------------------------------------------------------
+#if defined(FG_DEBUG) || defined(DEBUG)
+
+void CLevelSolutionFinder::dumpStack(const StepsVec& stack, fgBool reallyVerbose) {
+    unsigned int nStack = stack.size();
+    unsigned int maxIdx = 0;
+    for(unsigned int i = 0; i < nStack; i++) {
+        SBlockMoveStep* pStep = stack[i];
+        if(i == 0)
+            maxIdx = m_root->count();
+        else
+            maxIdx = stack[i - 1]->count();
+        printf("[%d][%p][idx:%d/%d]", i + 1, pStep, pStep->moveIdx, maxIdx);
+        if(i < nStack - 1)
+            printf("-> ");
+    }
+    printf("\n");
+    if(!reallyVerbose)
+        return;
+    // with really verbose set to true, function will also dump grid state after
+    // every step on the stack
+    CLevelDataHolder* pDataHolder = base_type::getLevelDataHolder();
+    BlockInfoVec backup;
+    pDataHolder->appendTo(backup);
+    pDataHolder->restart();
+    pDataHolder->dumpGrid();
+    for(unsigned int i = 0; i < nStack; i++) {
+        SBlockMoveStep* pStep = stack[i];
+        pStep->dump();
+        pDataHolder->restartFrom(pStep->levelState);
+        pDataHolder->dumpGrid();
+    }
+    pDataHolder->restartFrom(backup);
+}
+#endif
+//------------------------------------------------------------------------------
+
+void CLevelSolutionFinder::setLevelDataHolder(CLevelDataHolder* pDataHolder) {
+    if(pDataHolder && base_type::getLevelDataHolder() != pDataHolder) {
+        m_root->clearSteps();
+    }
+    base_type::setLevelDataHolder(pDataHolder);
+    if(base_type::getLevelDataHolder()) {
+        m_root->blockType = base_type::getLevelDataHolder()->getBlockType();
+    }
+
 }
 //------------------------------------------------------------------------------
 
@@ -382,8 +460,8 @@ void CLevelSolutionFinder::getSearchRange(unsigned int* begin, unsigned int* end
 unsigned int CLevelSolutionFinder::appendTo(SolutionsVec& solutions) {
     const unsigned int n = m_solutions.size();
     unsigned int i = 0;
-    solutions.reserve(solutions.size()+n+1);
-    for(;i<n;i++) {        
+    solutions.reserve(solutions.size() + n + 1);
+    for(; i < n; i++) {
         solutions.push_back(m_solutions[i]);
     }
     return i;
@@ -393,8 +471,8 @@ unsigned int CLevelSolutionFinder::appendTo(SolutionsVec& solutions) {
 unsigned int CLevelSolutionFinder::copyTo(SolutionsVec& solutions) {
     const unsigned int n = m_solutions.size();
     unsigned int i = 0;
-    solutions.reserve(solutions.size()+n+1);
-    for(;i<n;i++) {
+    solutions.reserve(solutions.size() + n + 1);
+    for(; i < n; i++) {
         CLevelSolution* pOriginal = m_solutions[i];
         CLevelSolution* pCopy = new CLevelSolution(*pOriginal);
         solutions.push_back(pCopy);

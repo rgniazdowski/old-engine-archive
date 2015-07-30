@@ -77,6 +77,10 @@ namespace fg {
          */
         fgBool search(void);
 
+    #if defined(FG_DEBUG) || defined(DEBUG)
+        void dumpStack(const StepsVec& stack, fgBool reallyVerbose = FG_FALSE);
+    #endif
+
     protected:
 
         /**
@@ -107,11 +111,11 @@ namespace fg {
          * @param pStep
          * @return
          */
-        fgBool performStep(SBlockMoveStep* pStep);
+        int performStep(SBlockMoveStep* pStep);
         /**
          *
          */
-        void performBalance(void);
+        int performBalance(void);
 
     public:
 
@@ -120,13 +124,7 @@ namespace fg {
          *
          * @param pDataHolder
          */
-        void setLevelDataHolder(CLevelDataHolder* pDataHolder) {
-            base_type::setLevelDataHolder(pDataHolder);
-            if(base_type::getLevelDataHolder()) {
-                m_root->blockType = base_type::getLevelDataHolder()->getBlockType();
-            }
-
-        }
+        void setLevelDataHolder(CLevelDataHolder* pDataHolder);
         /**
          *
          */
@@ -155,6 +153,34 @@ namespace fg {
          * @param end
          */
         void getSearchRange(unsigned int* begin, unsigned int* end) const;
+        /**
+         * 
+         * @return 
+         */
+        unsigned int getMaximalDepth(void) const {
+            return m_maximalDepth;
+        }
+        /**
+         *
+         * @return 
+         */
+        unsigned int getForcedMaximalDepth(void) const {
+            return m_forcedMaxDepth;
+        }
+        /**
+         *
+         * @param maxDepth
+         */
+        void setForcedMaximalDepth(unsigned int maxDepth) {
+            m_forcedMaxDepth = maxDepth;
+        }
+        /**
+         * 
+         * @return
+         */
+        unsigned int getNumCheckedSteps(void) const {
+            return m_numCheckedSteps;
+        }
         /**
          *
          * @return
@@ -239,9 +265,11 @@ namespace fg {
         ///
         unsigned int m_reachedDepth;
         ///
-        unsigned int m_minimalDepth;
+        unsigned int m_maximalDepth;
         ///
-        unsigned int m_numAllPossibleSteps;
+        unsigned int m_forcedMaxDepth;
+        ///
+        unsigned int m_numCheckedSteps;
         ///
         CVector<unsigned int> m_stepsIndexes;
 

@@ -189,7 +189,7 @@ fgBool SBlockData::isRotating(void) const {
 
 fgBool SBlockData::isRotationFinished(void) const {
     if(rotDir != NO_ROTATION) {
-        if(rotation <= (M_PIF + FG_EPSILON*2.0f) && rotation >= (M_PIF - FG_EPSILON)) {
+        if(rotation >= (M_PIF - FG_EPSILON)) {
             return FG_TRUE;
         }
     }

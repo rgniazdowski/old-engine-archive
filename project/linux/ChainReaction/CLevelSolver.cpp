@@ -154,9 +154,11 @@ void CLevelSolver::update(float elapsed) {
             RotationDirection rotDir = pBlockData->rotDir;
             unsigned short x = 0, y = 0;
             pBlockData->getCoveredNeighbourCoord(x, y);
-            FG_LOG_DEBUG("ChainReaction: Moving block %dx%d -> %dx%d", pBlockData->pCellHolder->pos.x,
-                         pBlockData->pCellHolder->pos.y, x, y);
-            int idxTest = m_finishedBlocks.find(pBlockData->getCoveredNeighbourBlockData());
+            if(isPrintMessages()) {
+                FG_LOG_DEBUG("ChainReaction: Moving block %dx%d -> %dx%d", pBlockData->pCellHolder->pos.x,
+                             pBlockData->pCellHolder->pos.y, x, y);
+            }
+            int idxTest = m_finishedBlocks.find(pCoveredBlock);
             {
                 SBlockData* pNewBlock = m_pLevelData->moveBlockToNewPlace(pBlockData, x, y);
                 if(!pNewBlock) {
@@ -165,10 +167,12 @@ void CLevelSolver::update(float elapsed) {
                         // need to destroy this quad - gradually
                         if(m_orphanBlocks.find(pBlockData) < 0) {
                             m_orphanBlocks.push_back(pBlockData);
-                            FG_LOG_DEBUG("ChainReaction: Unable to move: Adding Orphan[%p]@[%dx%d]",
-                                         pBlockData,
-                                         pBlockData->pCellHolder->pos.x,
-                                         pBlockData->pCellHolder->pos.y);
+                            if(isPrintMessages()) {
+                                FG_LOG_DEBUG("ChainReaction: Unable to move: Adding Orphan[%p]@[%dx%d]",
+                                             pBlockData,
+                                             pBlockData->pCellHolder->pos.x,
+                                             pBlockData->pCellHolder->pos.y);
+                            }
                         }
                     }
                 } else {
@@ -185,14 +189,18 @@ void CLevelSolver::update(float elapsed) {
                 }
             }
             if(idxTest >= 0) {
-                FG_LOG_DEBUG("ChainReaction: Two quads are rotating to position: [%dx%d]", x, y);
+                if(isPrintMessages()) {
+                    FG_LOG_DEBUG("ChainReaction: Two quads are rotating to position: [%dx%d]", x, y);
+                }
                 if(m_duplicates.find(Vec2i(x, y)) < 0) {
                     m_duplicates.push_back(Vec2i(x, y));
                 } else {
                     // Such position already is in duplicates?
                     // this would mean that three blocks are rotating into this
                     // position
-                    FG_LOG_DEBUG("ChainReaction: Third quad is rotating to position: [%dx%d]", x, y);
+                    if(isPrintMessages()) {
+                        FG_LOG_DEBUG("ChainReaction: Third quad is rotating to position: [%dx%d]", x, y);
+                    }
                 }
                 // Well this is some kind of special case -
                 // maybe can create some kind of chain reaction
@@ -262,17 +270,19 @@ void CLevelSolver::update(float elapsed) {
             if(pBlockData) {
                 nConflicts++;
                 m_orphanBlocks.push_back(pBlockData);
-                FG_LOG_DEBUG("ChainReaction: Conflict: Adding Orphan[%p]@[%dx%d]",
-                             pBlockData,
-                             pBlockData->pCellHolder->pos.x,
-                             pBlockData->pCellHolder->pos.y);
+                if(isPrintMessages()) {
+                    FG_LOG_DEBUG("ChainReaction: Conflict: Adding Orphan[%p]@[%dx%d]",
+                                 pBlockData,
+                                 pBlockData->pCellHolder->pos.x,
+                                 pBlockData->pCellHolder->pos.y);
+                }
             }
         }
         for(unsigned int i = 0; i < nAdditional && !nConflicts; i++) {
             unsigned short x = m_additionalBlocks[i].pos.x;
             unsigned short y = m_additionalBlocks[i].pos.y;
             VColor color = m_additionalBlocks[i].color;
-            color = SBlockData::getOppositeColor(color);            
+            color = SBlockData::getOppositeColor(color);
             SBlockData* pBlockData = m_pLevelData->insertNewBlock(x, y, color);
             if(pBlockData) {
                 pBlockData->setScale(0.001f, 0.001f, 1.0f);
@@ -324,10 +334,12 @@ void CLevelSolver::update(float elapsed) {
                 continue;
             if(pBlockData->isOrphan() && !pBlockData->isDragged) {
                 m_orphanBlocks.push_back(pBlockData);
-                FG_LOG_DEBUG("ChainReaction: Stage wide: Adding Orphan[%p]@[%dx%d]",
-                             pBlockData,
-                             pBlockData->pCellHolder->pos.x,
-                             pBlockData->pCellHolder->pos.y);
+                if(isPrintMessages()) {
+                    FG_LOG_DEBUG("ChainReaction: Stage wide: Adding Orphan[%p]@[%dx%d]",
+                                 pBlockData,
+                                 pBlockData->pCellHolder->pos.x,
+                                 pBlockData->pCellHolder->pos.y);
+                }
             }
         }
     }
