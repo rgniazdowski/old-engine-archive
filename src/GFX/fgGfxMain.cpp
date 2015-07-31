@@ -386,6 +386,29 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         delete hexPrismModel;
     }
     static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinHexagonalPrism");
+
+    //---------------------------------------------
+    SMeshAoS *builtin_oct_prism_mesh = new SMeshAoS();
+    SShape *builtin_oct_prism_shape = new SShape();
+    primitives::createOctagonalPrismMesh(builtin_oct_prism_mesh, 1.0f, FG_TRUE,
+                                         M_PIF/2.0f, Vec3f(1.0f, 0.0f, 0.0f));
+    CModel *octPrismModel = new CModelResource();
+    octPrismModel->setModelType(ModelType::MODEL_BUILTIN);
+    octPrismModel->setName("builtinOctagonalPrism");
+    builtin_oct_prism_shape->name = "builtinOctagonalPrism";
+    builtin_oct_prism_shape->mesh = builtin_oct_prism_mesh;
+    builtin_oct_prism_shape->material = new SMaterial();
+    builtin_oct_prism_shape->material->diffuseTexName = "empty.tga";
+    builtin_oct_prism_shape->material->shaderName = "sPlainEasy";
+    octPrismModel->addShape(builtin_oct_prism_shape);
+    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
+    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(octPrismModel)) {
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(octPrismModel);
+        delete octPrismModel;
+    }
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinOctagonalPrism");
+
+    //---------------------------------------------
 }
 
 ////////////////////////////////////////////////////////////////////////////////

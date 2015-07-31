@@ -73,7 +73,20 @@ namespace fg {
              * @param mesh
              * @param scale
              */
-            void createHexagonalPrismMesh(fg::gfx::SMeshBase *mesh, float scale = 1.0f,
+            void createHexagonalPrismMesh(fg::gfx::SMeshBase *pMesh, float scale = 1.0f,
+                                          fgBool shouldPreRotate = FG_FALSE,
+                                          float angle = 0.0f,
+                                          const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
+
+            /**
+             * 
+             * @param mesh
+             * @param scale
+             * @param shouldPreRotate
+             * @param angle
+             * @param axis
+             */
+            void createOctagonalPrismMesh(fg::gfx::SMeshBase *pMesh, float scale = 1.0f,
                                           fgBool shouldPreRotate = FG_FALSE,
                                           float angle = 0.0f,
                                           const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
