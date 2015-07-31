@@ -286,6 +286,7 @@ namespace fg {
         BLOCK_QUAD = 0,
         BLOCK_HEXAGON = 1,
         BLOCK_OCTAGON = 2,
+        NUM_BLOCK_TYPES = 3,
         BLOCK_INVALID = 100
     };
 
@@ -293,10 +294,11 @@ namespace fg {
      *
      */
     enum LevelType {
-        LEVEL_INVALID = 0,
-        LEVEL_QUADS = 1,
-        LEVEL_HEXAGONS = 2,
-        LEVEL_OCTAGONS = 3
+        LEVEL_QUADS = 0,
+        LEVEL_HEXAGONS = 1,
+        LEVEL_OCTAGONS = 2,
+        NUM_LEVEL_TYPES = 3,
+        LEVEL_INVALID = 100,
     };
 
     /**

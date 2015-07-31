@@ -120,6 +120,8 @@ fgBool CLevelFile::load(void) {
                 m_type = LevelType::LEVEL_HEXAGONS;
             } else if(strings::startsWith(mapType, "quad\0", FG_FALSE)) {
                 m_type = LevelType::LEVEL_QUADS;
+            } else if(strings::startsWith(mapType, "oct\0", FG_FALSE)) {
+                m_type = LevelType::LEVEL_OCTAGONS;
             } else {
                 m_type = LevelType::LEVEL_QUADS;
             }
@@ -145,6 +147,9 @@ fgBool CLevelFile::load(void) {
             m_area.min.x = MIN(m_area.min.x, xPos);
             m_area.min.y = MIN(m_area.min.y, yPos);
             m_blocks.push_back(quadInfo);
+            if(!m_colorTable.contains(quadInfo.color)) {
+                m_colorTable.push_back(quadInfo.color);
+            }
         }
         yPos++;
     }
@@ -253,6 +258,8 @@ fgBool CLevelFile::save(void) {
         levelType = "quads\0";
     } else if(m_type == LevelType::LEVEL_HEXAGONS) {
         levelType = "hexagons\0";
+    } else if(m_type == LevelType::LEVEL_OCTAGONS) {
+        levelType = "octagons\0";
     } else {
         levelType = "quads\0"; // Force quads
     }
@@ -452,6 +459,7 @@ void CLevelFile::clear(void) {
     m_area.size.x = 0;
     m_area.size.y = 0;
     m_blocks.clear();
+    m_colorTable.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -466,6 +474,9 @@ int CLevelFile::appendBlocks(BlockInfoVec const& inBlocks, fgBool shouldResize) 
     }
     int nAppend = 0;
     unsigned int n = inBlocks.size();
+    if(shouldResize) {
+        m_blocks.reserve(m_blocks.size() + n + 1);
+    }
     for(unsigned int i = 0; i < n; i++) {
         SBlockInfo const& blockInfo = inBlocks[i];
         if(blockInfo.pos.x < m_size.x &&
@@ -476,7 +487,6 @@ int CLevelFile::appendBlocks(BlockInfoVec const& inBlocks, fgBool shouldResize) 
             }
         }
     }
-
     return nAppend;
 }
 //------------------------------------------------------------------------------
@@ -485,10 +495,9 @@ fgBool CLevelFile::contains(unsigned short x, unsigned short y) const {
     if(m_blocks.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    BlockInfoVecConstItor itor = m_blocks.begin();
-    BlockInfoVecConstItor end = m_blocks.end();
-    for(; itor != end; itor++) {
-        SBlockInfo const& blockInfo = *itor;
+    const unsigned int n = m_blocks.size();
+    for(unsigned int i = 0; i < n; i++) {
+        SBlockInfo const& blockInfo = m_blocks[i];
         if(blockInfo.pos.x == x && blockInfo.pos.y == y) {
             status = FG_TRUE;
             break;
@@ -502,16 +511,25 @@ fgBool CLevelFile::contains(const SSize& pos) const {
     if(m_blocks.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    BlockInfoVecConstItor itor = m_blocks.begin();
-    BlockInfoVecConstItor end = m_blocks.end();
-    for(; itor != end; itor++) {
-        SBlockInfo const& blockInfo = *itor;
+    const unsigned int n = m_blocks.size();
+    for(unsigned int i = 0; i < n; i++) {
+        SBlockInfo const& blockInfo = m_blocks[i];
         if(blockInfo.pos == pos) {
             status = FG_TRUE;
             break;
         }
     }
     return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::contains(const SBlockInfo& blockInfo) const {
+    return (fgBool)m_blocks.contains(blockInfo);
+}
+//------------------------------------------------------------------------------
+
+fgBool CLevelFile::contains(VColor color) const {
+    return (fgBool)m_colorTable.contains(color);
 }
 //------------------------------------------------------------------------------
 

@@ -194,34 +194,37 @@ void SOctData::rotate(RotationDirection direction, float amount) {
     if(isOpposite) {
         reverse = -1.0f;
     }
+    // height = a*(1+sqrt(2))/2.0    
+    const float a_f = 1.0f / (1.0f + (float)M_SQRT2);
+    const float trans_f = a_f/(float)M_SQRT2/2.0f + a_f/2.0f;
     if(direction == UP_LEFT) {
         // Y bigger (more minus) -> UP
-        translationAxis.y = OCT_HALF_SIZE * M_SQRT3F * 0.25f;
-        rotationAxis.x = -1.0f;
+        translationAxis.y = trans_f; // plus
+        rotationAxis.x = -1.0f;        
         // X bigger (more minus) -> LEFT
-        translationAxis.x = -OCT_HALF_SIZE * 0.75f;
-        rotationAxis.y = -M_SQRT3F;
+        translationAxis.x = -trans_f; // minus
+        rotationAxis.y = -1.0f;        
     } else if(direction == UP_RIGHT) {
         // Y bigger (more minus) -> UP
-        translationAxis.y = OCT_HALF_SIZE * M_SQRT3F * 0.25f;
+        translationAxis.y = trans_f;
         rotationAxis.x = -1.0f;
         // X bigger -> RIGHT
-        translationAxis.x = OCT_HALF_SIZE * 0.75f;
-        rotationAxis.y = M_SQRT3F;
+        translationAxis.x = trans_f; // plus
+        rotationAxis.y = 1.0f;
     } else if(direction == DOWN_LEFT) {
         // Y bigger -> DOWN
-        translationAxis.y = -OCT_HALF_SIZE * M_SQRT3F * 0.25f;
+        translationAxis.y = -trans_f; // minus
         rotationAxis.x = 1.0f;
         // X bigger (more minus) -> LEFT
-        translationAxis.x = -OCT_HALF_SIZE * 0.75f;
-        rotationAxis.y = -M_SQRT3F;
+        translationAxis.x = -trans_f; // minus
+        rotationAxis.y = -1.0f;
     } else if(direction == DOWN_RIGHT) {
         // Y bigger -> DOWN
-        translationAxis.y = -OCT_HALF_SIZE * M_SQRT3F * 0.25f;
+        translationAxis.y = -trans_f; // minus
         rotationAxis.x = 1.0f;
         // X bigger -> RIGHT
-        translationAxis.x = OCT_HALF_SIZE * 0.75f;
-        rotationAxis.y = M_SQRT3F;
+        translationAxis.x = trans_f; // plus
+        rotationAxis.y = 1.0f;
     } else {
         shouldRotate = FG_FALSE;
     }
@@ -262,13 +265,6 @@ void SOctData::getCoveringCoord(RotationDirection direction,
     if(_x % 2 == 0)
         isEven = FG_TRUE;
     switch(direction) {
-        case UP:
-            // up so the grid Y coords go down
-            _y--;
-            break;
-        case DOWN:
-            _y++;
-            break;
         case UP_LEFT:
             if(isEven) {
                 _y--;

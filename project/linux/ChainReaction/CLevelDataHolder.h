@@ -394,6 +394,8 @@ namespace fg {
                 return BlockType::BLOCK_QUAD;
             if(levelType == LEVEL_HEXAGONS)
                 return BlockType::BLOCK_HEXAGON;
+            if(levelType == LEVEL_OCTAGONS)
+                return BlockType::BLOCK_OCTAGON;
             return BlockType::BLOCK_INVALID;
         }
 

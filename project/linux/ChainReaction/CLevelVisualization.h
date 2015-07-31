@@ -73,10 +73,20 @@ namespace fg {
         static fgBool actionLevelDataDestroyedCallback(void* systemData, void* userData);
 
     public:
+        /**
+         * 
+         * @param x
+         * @param y
+         * @param nodePos
+         * @param isEven
+         * @param isHex
+         * @param isOct
+         */
         void calculateNodePosition(unsigned short x, unsigned short y,
                                    Vec2f& nodePos,
                                    fgBool* isEven = NULL,
-                                   fgBool* isHex = NULL);
+                                   fgBool* isHex = NULL,
+                                   fgBool* isOct = NULL);
         /**
          * Creates the new scene node with proper size, scale, position and material.
          * The node is NOT being inserted into the scene manager.

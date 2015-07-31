@@ -261,7 +261,8 @@ void CLevelVisualization::calculateNodePosition(unsigned short x,
                                                 unsigned short y,
                                                 Vec2f& nodePos,
                                                 fgBool* isEven,
-                                                fgBool* isHex) {
+                                                fgBool* isHex,
+                                                fgBool* isOct) {
     Vec2f startPos;
     fgBool internalIsEven = FG_FALSE;
     unsigned short areaSX, areaSY;
@@ -272,22 +273,34 @@ void CLevelVisualization::calculateNodePosition(unsigned short x,
     getLevelFile()->getAreaMax(areaMaxX, areaMaxY);
     float scaleX = m_scale;
     float scaleY = m_scale;
-    const fgBool internalIsHex = getLevelFile()->getLevelType() == LevelType::LEVEL_HEXAGONS;
+    const fgBool internalIsHex = (fgBool)(getLevelFile()->getLevelType() == LevelType::LEVEL_HEXAGONS);
+    const fgBool internalIsOct = (fgBool)(getLevelFile()->getLevelType() == LevelType::LEVEL_OCTAGONS);
     if(internalIsHex) {
         scaleX = m_scale * 0.75f;
         scaleY = m_scale * M_SQRT3F * 0.5f;
+        internalIsEven = (fgBool)!!(x % 2 == 0);
+    } else if(internalIsOct) {
+        float a_f = (1.0f / (1.0f + (float)M_SQRT2));
+        scaleX = m_scale * (1.0f + a_f) / 2.0f;
+        scaleY = m_scale * (1.0f + a_f);
         internalIsEven = (fgBool)!!(x % 2 == 0);
     }
     startPos.x = -1.0f * (float)areaSX / 2.0f * scaleX + scaleX / 2.0f;
     startPos.y = (float)areaSY / 2.0f * scaleY - scaleY / 2.0f;
     nodePos.x = startPos.x + (float)(x - areaMinX) * (scaleX);
     nodePos.y = startPos.y - 1.0f * (float)(y - areaMinY) * (scaleY);
-    if(!internalIsEven)
+    if(!internalIsEven && internalIsHex) {
         nodePos.y -= m_scale * 0.5f * M_SQRT3F * 0.5f;
+    } else if(!internalIsEven && internalIsOct) {
+        float a_f = (1.0f / (1.0f + (float)M_SQRT2));
+        nodePos.y -= m_scale * (1.0f + a_f) / 2.0f;
+    }
     if(isEven)
         *isEven = internalIsEven;
     if(isHex)
         *isHex = internalIsHex;
+    if(isOct)
+        *isOct = internalIsOct;
 }
 //------------------------------------------------------------------------------
 
@@ -299,16 +312,19 @@ gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
     }
     Vec2f nodePos;
     fgBool isHex = FG_FALSE;
+    fgBool isOct = FG_FALSE;
     const char* modelNameStr = "builtinCube1x1";
     char quadNodeName[64];
     gfx::CModelResource* pModelRes = NULL;
     gfx::CSceneNodeObject* pNodeObj = NULL;
     gfx::CDrawCall* pDrawCall = NULL;
-    calculateNodePosition(x, y, nodePos, NULL, &isHex);
+    calculateNodePosition(x, y, nodePos, NULL, &isHex, &isOct);
     if(isHex) {
         modelNameStr = "builtinHexagonalPrism";
-    }    
-    
+    } else if(isOct) {
+        modelNameStr = "builtinOctagonalPrism";
+    }
+
     std::sprintf(quadNodeName, "cr_node_%dx%d", x, y);
     pModelRes = (gfx::CModelResource*)(((resource::CResourceManager*)m_pSceneMgr->getResourceManager())->get(modelNameStr));
     if(!pModelRes) {
@@ -424,10 +440,11 @@ fgBool CLevelVisualization::prepareSceneManager(void) {
     // moar?
 
     m_pSceneMgr->refreshGfxInternals();
-    
+
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
+
 void CLevelVisualization::refreshBlocks(void) {
     if(!getLevelDataHolder())
         return;

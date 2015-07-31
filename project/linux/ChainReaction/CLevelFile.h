@@ -45,6 +45,9 @@ namespace fg {
         typedef CLevelFile self_type;
         typedef CLevelFile type;
 
+        typedef CVector<VColor> ColorTable;
+        typedef ColorTable::iterator ColorTableItor;
+
     public:
 
         static const unsigned int MIN_COLOR_ID = 0;
@@ -251,6 +254,17 @@ namespace fg {
         fgBool contains(const SSize& pos) const;
         /**
          *
+         * @param blockInfo
+         * @return
+         */
+        fgBool contains(const SBlockInfo& blockInfo) const;
+        /**
+         * 
+         * @return
+         */
+        fgBool contains(VColor color) const;
+        /**
+         *
          */
         inline void reset(void) {
             m_filePath.clear();
@@ -322,12 +336,28 @@ namespace fg {
         inline LevelType getLevelType(void) const {
             return m_type;
         }
+        /**
+         * 
+         * @return
+         */
+        ColorTable& getColorTable(void) {
+            return m_colorTable;
+        }
+        /**
+         *
+         * @return
+         */
+        ColorTable const& getColorTable(void) const {
+            return m_colorTable;
+        }
 
     private:
         ///
         std::string m_filePath;
         ///
         BlockInfoVec m_blocks;
+        ///
+        ColorTable m_colorTable;
         ///
         int m_levelIdx;
         ///

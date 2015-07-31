@@ -258,7 +258,7 @@ namespace fg {
         /// Mouse callback object
         event::CFunctionCallback* m_mouseCallback;
         /// Materials designed for different blocks and colors
-        gfx::SMaterial* m_materials[2][VColor::NUM_COLORS];
+        gfx::SMaterial* m_materials[3][VColor::NUM_COLORS];
 
         /**
          *

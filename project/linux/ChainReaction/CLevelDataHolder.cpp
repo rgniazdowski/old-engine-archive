@@ -17,6 +17,7 @@
 #include "CLevelDataHolder.h"
 #include "SHexData.h"
 #include "SQuadData.h"
+#include "SOctData.h"
 #include "fgLog.h"
 
 using namespace fg;
@@ -163,6 +164,8 @@ fgBool CLevelDataHolder::prepareAllBlocks(void) {
                 pBlockData = new SQuadData();
             } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_HEXAGONS) {
                 pBlockData = new SHexData();
+            } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_OCTAGONS) {
+                pBlockData = new SOctData();
             } else {
                 pBlockData = new SQuadData();
             }

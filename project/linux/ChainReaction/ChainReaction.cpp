@@ -192,7 +192,7 @@ fgBool CChainReaction::destroy(void) {
         m_mouseCallback = NULL;
     }
     unsigned int n = VColor::NUM_COLORS;
-    for(unsigned int j = 0; j < 2; j++) {
+    for(unsigned int j = 0; j < BlockType::NUM_BLOCK_TYPES; j++) {
         for(unsigned int i = 0; i < n; i++) {
             if(m_materials[j][i] != NULL) {
                 delete m_materials[j][i];
@@ -232,7 +232,7 @@ fgBool CChainReaction::initialize(void) {
     m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
 
     unsigned int n = VColor::NUM_COLORS;
-    for(unsigned int j = 0; j < 2; j++) {
+    for(unsigned int j = 0; j < BlockType::NUM_BLOCK_TYPES; j++) {
         for(unsigned int i = 0; i < n; i++) {
             if(m_materials[j][i] != NULL) {
                 delete m_materials[j][i];
@@ -241,7 +241,7 @@ fgBool CChainReaction::initialize(void) {
         }
     }
     // #FIXME
-    const char *texNames[2] = {"quadWhite.jpg", "hexWhite.jpg"};
+    const char *texNames[3] = {"quadWhite.jpg", "hexWhite.jpg", "octWhite.jpg"};
     const char *colorNames[VColor::NUM_COLORS];
     colorNames[VColor::INVALID_COLOR] = NULL;
     colorNames[VColor::BLACK] = "Black";
@@ -254,8 +254,8 @@ fgBool CChainReaction::initialize(void) {
     colorNames[VColor::YELLOW] = "Yellow";
     colorNames[VColor::MAGENTA] = "Magenta";
 
-    // 0 - quad / 1 - hexagon
-    for(unsigned int j = 0; j < 2; j++) {
+    // 0 - quad / 1 - hexagon / 2 - octagon
+    for(unsigned int j = 0; j < BlockType::NUM_BLOCK_TYPES; j++) {
         for(unsigned int i = VColor::BLACK; i < n; i++) {
             float blackOffset = 0.0f;
             if(i == VColor::BLACK)
@@ -280,10 +280,12 @@ void CChainReaction::refreshLevelMaterials(void) {
         return;
     if(!m_levelVis->getLevelFile())
         return;
-    const CLevelFile::LevelType levelType = m_levelVis->getLevelType();
-    SBlockData::BlockType blockType = CLevelDataHolder::getBlockTypeFromLevelType(levelType);
-    // 0 - quads / 1 - hexagons
-    if(blockType != SBlockData::QUAD && blockType != SBlockData::HEXAGON)
+    const LevelType levelType = m_levelVis->getLevelType();
+    BlockType blockType = CLevelDataHolder::getBlockTypeFromLevelType(levelType);
+    // 0 - quads / 1 - hexagons / 2 - hexagons
+    if(blockType != BlockType::BLOCK_QUAD && 
+       blockType != BlockType::BLOCK_HEXAGON &&
+       blockType != BlockType::BLOCK_OCTAGON)
         return;
     const unsigned int index = (unsigned int)blockType;
     const unsigned int n = VColor::NUM_COLORS;
