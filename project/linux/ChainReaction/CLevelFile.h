@@ -340,6 +340,13 @@ namespace fg {
          * 
          * @return
          */
+        inline BlockType getBlockType(void) const {
+            return cr::getBlockTypeFromLevelType(m_type);
+        }
+        /**
+         * 
+         * @return
+         */
         ColorTable& getColorTable(void) {
             return m_colorTable;
         }

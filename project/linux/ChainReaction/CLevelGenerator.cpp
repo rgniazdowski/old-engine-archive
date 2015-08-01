@@ -420,6 +420,9 @@ void CLevelGenerator::checkInternals(void) {
     if(m_genLevelType == LevelType::LEVEL_HEXAGONS) {
         nMinColors = 3;
     }
+    if(m_genLevelType == LevelType::LEVEL_OCTAGONS_NG) {
+        nMinColors = 4;
+    }
     int nDiff = m_colorTable.size() - nMinColors;
     if(nDiff < 0) {
         // means that there is not enough colors
@@ -465,6 +468,7 @@ void CLevelGenerator::checkInternals(void) {
         }
         getLevelFile()->setLevelIndex(m_genLevelIdx);
         getLevelFile()->setLevelType(m_genLevelType);
+        getLevelData()->prepareAllBlocks();
     }
 }
 //------------------------------------------------------------------------------

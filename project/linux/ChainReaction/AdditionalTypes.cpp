@@ -193,6 +193,8 @@ void SBlockMoveInfo::setDirection(RotationDirection _moveDir) {
         SHexData::getCoveringCoord(_moveDir, pos.x, pos.y, target.x, target.y);
     } else if(blockType == BLOCK_OCTAGON) {
         SOctData::getCoveringCoord(_moveDir, pos.x, pos.y, target.x, target.y);
+    } else if(blockType == BLOCK_OCTAGON_NG) {
+        SOctData::getCoveringCoord(_moveDir, pos.x, pos.y, target.x, target.y, FG_TRUE);
     }
 }
 //------------------------------------------------------------------------------

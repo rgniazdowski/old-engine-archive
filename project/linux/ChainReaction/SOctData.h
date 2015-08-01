@@ -180,7 +180,8 @@ namespace fg {
                                      unsigned short x,
                                      unsigned short y,
                                      unsigned short& newX,
-                                     unsigned short& newY);
+                                     unsigned short& newY,
+                                     fgBool isNG = FG_FALSE);
 
         //----------------------------------------------------------------------
 

@@ -33,22 +33,64 @@ SOctData::~SOctData() { }
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::left(fgBool rewind) {
-    return NULL;
+    if(!isNG())
+        return NULL;
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->left(rewind);
+    if(!pNeighbourCell)
+        return NULL;
+    pNeighbourCell = pNeighbourCell->left(rewind);
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SBlockData*)pNeighbourCell->pData;
 }
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::right(fgBool rewind) {
-    return NULL;
+    if(!isNG())
+        return NULL;
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->right(rewind);
+    if(!pNeighbourCell)
+        return NULL;
+    pNeighbourCell = pNeighbourCell->right(rewind);
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SBlockData*)pNeighbourCell->pData;
 }
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::up(fgBool rewind) {
-    return NULL;
+    if(!isNG())
+        return NULL;
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->down(rewind); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SBlockData*)pNeighbourCell->pData;
 }
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::down(fgBool rewind) {
-    return NULL;
+    if(!isNG())
+        return NULL;
+    if(!pCellHolder)
+        return NULL;
+    game::CGrid::SCellHolder* pNeighbourCell = pCellHolder->up(rewind); // REVERSED
+    if(!pNeighbourCell)
+        return NULL;
+    if(!pNeighbourCell->pData)
+        return NULL;
+    return (SBlockData*)pNeighbourCell->pData;
 }
 //------------------------------------------------------------------------------
 
@@ -151,6 +193,24 @@ int SOctData::getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind) {
     //neighbours.push_back(SNeighbourInfo(this->right(shouldRewind), RIGHT));
     SBlockData* pNeighbour = NULL;
 
+    if(isNG()) {
+        pNeighbour = this->left(shouldRewind);
+        if(pNeighbour)
+            neighbours.push_back(SNeighbourInfo(pNeighbour, LEFT));
+
+        pNeighbour = this->right(shouldRewind);
+        if(pNeighbour)
+            neighbours.push_back(SNeighbourInfo(pNeighbour, RIGHT));
+
+        pNeighbour = this->up(shouldRewind);
+        if(pNeighbour)
+            neighbours.push_back(SNeighbourInfo(pNeighbour, UP));
+
+        pNeighbour = this->down(shouldRewind);
+        if(pNeighbour)
+            neighbours.push_back(SNeighbourInfo(pNeighbour, DOWN));
+    }
+
     pNeighbour = this->upLeft(shouldRewind);
     if(pNeighbour)
         neighbours.push_back(SNeighbourInfo(pNeighbour, UP_LEFT));
@@ -200,9 +260,23 @@ void SOctData::rotate(RotationDirection direction, float amount) {
     if(isOpposite) {
         reverse = -1.0f;
     }
-    // height = a*(1+sqrt(2))/2.0    
     const float a_f = 1.0f / (1.0f + (float)M_SQRT2);
     const float trans_f = a_f / (float)M_SQRT2 / 2.0f + a_f / 2.0f;
+    if(isNG()) {
+        if(direction == UP) {
+            translationAxis.y = 0.5f + a_f / 2.0f;
+            rotationAxis.x = -1.0f;
+        } else if(direction == DOWN) {
+            translationAxis.y = -0.5f - a_f / 2.0f;
+            rotationAxis.x = 1.0f;
+        } else if(direction == LEFT) {
+            translationAxis.x = -0.5f - a_f / 2.0f;
+            rotationAxis.y = -1.0f;
+        } else if(direction == RIGHT) {
+            translationAxis.x = 0.5f + a_f / 2.0f;
+            rotationAxis.y = 1.0f;
+        }
+    }
     if(direction == UP_LEFT) {
         // Y bigger (more minus) -> UP
         translationAxis.y = trans_f; // plus
@@ -231,7 +305,7 @@ void SOctData::rotate(RotationDirection direction, float amount) {
         // X bigger -> RIGHT
         translationAxis.x = trans_f; // plus
         rotationAxis.y = 1.0f;
-    } else {
+    } else if(!isNG()) {
         shouldRotate = FG_FALSE;
     }
 
@@ -261,7 +335,8 @@ void SOctData::getCoveringCoord(RotationDirection direction,
                                 unsigned short x,
                                 unsigned short y,
                                 unsigned short& newX,
-                                unsigned short& newY) {
+                                unsigned short& newY,
+                                fgBool isNG) {
     // this function always returns something - even if the rotation is not complete
     if(direction == NO_ROTATION || direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION) {
         return;
@@ -271,6 +346,30 @@ void SOctData::getCoveringCoord(RotationDirection direction,
     if(_x % 2 == 0)
         isEven = FG_TRUE;
     switch(direction) {
+        case UP:
+        {
+            if(isNG)
+                _y--;
+        }
+            break;
+        case DOWN:
+        {
+            if(isNG)
+                _y++;
+        }
+            break;
+        case LEFT:
+        {
+            if(isNG)
+                _x = _x - 2;
+        }
+            break;
+        case RIGHT:
+        {
+            if(isNG)
+                _x = _x + 2;
+        }
+            break;
         case UP_LEFT:
             if(isEven) {
                 _y--;
@@ -316,7 +415,7 @@ void SOctData::getCoveredNeighbourCoord(unsigned short& x, unsigned short& y) {
         // no cell holder pointer available - no way to determine the neighbour
         return;
     }
-    getCoveringCoord(rotDir, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
+    getCoveringCoord(rotDir, pCellHolder->pos.x, pCellHolder->pos.y, x, y, isNG());
 }
 //------------------------------------------------------------------------------
 
@@ -327,7 +426,7 @@ fgBool SOctData::getPotentialNeighbourCoord(RotationDirection direction,
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
-    getCoveringCoord(direction, pCellHolder->pos.x, pCellHolder->pos.y, x, y);
+    getCoveringCoord(direction, pCellHolder->pos.x, pCellHolder->pos.y, x, y, isNG());
     if(pCellHolder->pParent) {
         status = pCellHolder->pParent->isValidAddress(x, y);
     } else {
@@ -341,10 +440,12 @@ fgBool SOctData::getPotentialNeighbourCoord(RotationDirection direction,
 
 int SOctData::getValidRotations(CVector<RotationDirection>& rotations) {
     rotations.clear();
-    //rotations.push_back(LEFT);
-    //rotations.push_back(RIGHT);
-    //rotations.push_back(UP);
-    //rotations.push_back(DOWN);
+    if(isNG()) {
+        rotations.push_back(LEFT);
+        rotations.push_back(RIGHT);
+        rotations.push_back(UP);
+        rotations.push_back(DOWN);
+    }
     rotations.push_back(UP_LEFT);
     rotations.push_back(UP_RIGHT);
     rotations.push_back(DOWN_LEFT);
@@ -380,9 +481,33 @@ game::CGrid::SCellHolder* SOctData::getCoveredNeighbourCellHolder(void) {
         isEven = FG_TRUE;
     // rotation has finished
     switch(rotDir) {
+        case UP:
+            if(isNG()) {
+                return pCellHolder->down();
+            }
+            break;
+        case DOWN:
+            if(isNG()) {
+                return pCellHolder->up();
+            }
+            break;
+        case LEFT:
+            if(isNG()) {
+                game::CGrid::SCellHolder* pCell = pCellHolder->left();
+                if(pCell)
+                    return pCell->left();
+            }
+            break;
+        case RIGHT:
+            if(isNG()) {
+                game::CGrid::SCellHolder* pCell = pCellHolder->right();
+                if(pCell)
+                    return pCell->right();
+            }
+            break;
         case UP_LEFT:
             if(isEven) {
-                game::CGrid::SCellHolder* pCell = pCellHolder->up(); // REVERSE
+                game::CGrid::SCellHolder* pCell = pCellHolder->down(); // REVERSE
                 if(pCell)
                     return pCell->left();
             } else {
@@ -427,11 +552,13 @@ game::CGrid::SCellHolder* SOctData::getCoveredNeighbourCellHolder(void) {
 fgBool SOctData::isRotationValid(RotationDirection direction) const {
     if(direction == AUTO_ROTATION || direction == OPPOSITE_ROTATION)
         return FG_FALSE;
-    // These are not valid rotation directions for octagon
-    if(direction == LEFT || direction == RIGHT)
-        return FG_FALSE;
-    if(direction == UP || direction == LEFT)
-        return FG_FALSE;
+    if(!isNG()) {
+        // These are not valid rotation directions for octagon (non NG)
+        if(direction == LEFT || direction == RIGHT)
+            return FG_FALSE;
+        if(direction == UP || direction == LEFT)
+            return FG_FALSE;
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

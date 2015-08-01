@@ -273,8 +273,10 @@ void CLevelVisualization::calculateNodePosition(unsigned short x,
     getLevelFile()->getAreaMax(areaMaxX, areaMaxY);
     float scaleX = m_scale;
     float scaleY = m_scale;
-    const fgBool internalIsHex = (fgBool)(getLevelFile()->getLevelType() == LevelType::LEVEL_HEXAGONS);
-    const fgBool internalIsOct = (fgBool)(getLevelFile()->getLevelType() == LevelType::LEVEL_OCTAGONS);
+    LevelType levelType = getLevelFile()->getLevelType();
+    const fgBool internalIsHex = (fgBool)(levelType == LevelType::LEVEL_HEXAGONS);
+    const fgBool internalIsOct = (fgBool)(levelType == LevelType::LEVEL_OCTAGONS ||
+                                          levelType == LevelType::LEVEL_OCTAGONS_NG);
     if(internalIsHex) {
         scaleX = m_scale * 0.75f;
         scaleY = m_scale * M_SQRT3F * 0.5f;

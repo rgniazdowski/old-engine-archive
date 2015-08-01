@@ -154,12 +154,20 @@ unsigned int CLevelDataHolder::getMaximumBlocksCount(void) {
 fgBool CLevelDataHolder::prepareAllBlocks(void) {
     if(!m_pGrid || !m_pLevelFile)
         return FG_FALSE;
+    if(m_allBlocksData.size()) {
+        if(m_allBlocksData[0]) {
+            if(cr::getBlockTypeFromLevelType(getLevelType()) != m_allBlocksData[0]->getType()) {
+                // need to regenerate
+                destroyAllBlocks();
+            }
+        }
+    }
     unsigned int nMax = getMaximumBlocksCount();
     m_allBlocksData.reserve(nMax + 1);
     if(m_allBlocksData.size() < nMax) {
         const unsigned int nDiff = nMax - m_allBlocksData.size();
         for(unsigned int i = 0; i < nDiff; i++) {
-            SBlockData* pBlockData = cr::createBlock(m_pLevelFile->getLevelType());
+            SBlockData* pBlockData = cr::createBlock(getLevelType());
             if(!pBlockData) {
                 pBlockData = new SQuadData();
             }
@@ -189,6 +197,8 @@ fgBool CLevelDataHolder::destroyAllBlocks(void) {
         m_allBlocksData[i] = NULL;
     }
     m_blocksData.clear();
+    m_allBlocksData.clear();
+    m_freeSlots.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -579,6 +589,17 @@ int CLevelDataHolder::getBlockDataIndex(unsigned short x, unsigned short y) {
 //------------------------------------------------------------------------------
 
 void CLevelDataHolder::setLevelFile(CLevelFile* pLvlFile) {
+    if(pLvlFile != NULL && pLvlFile != m_pLevelFile && m_pLevelFile) {
+        if(pLvlFile->getLevelType() != m_pLevelFile->getLevelType()) {
+            destroyAllBlocks();
+        } else if(m_allBlocksData.size()) {
+            if(m_allBlocksData[0]) {
+                if(m_allBlocksData[0]->getType() != pLvlFile->getBlockType()) {
+                    destroyAllBlocks();
+                }
+            }
+        }
+    }
     m_pLevelFile = pLvlFile;
     if(m_pLevelFile) {
         unsigned int n = m_pLevelFile->getBlocksCount();

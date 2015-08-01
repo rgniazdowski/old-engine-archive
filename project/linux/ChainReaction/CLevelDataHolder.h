@@ -157,11 +157,14 @@ namespace fg {
         fgBool internalCall(InternalActionType actionType,
                             SBlockData* pOriginal,
                             SBlockData* pNew = NULL);
+    public:
         /**
          *
          * @return
          */
         fgBool prepareAllBlocks(void);
+
+    protected:
         /**
          *
          * @return
