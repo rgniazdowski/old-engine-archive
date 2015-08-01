@@ -31,6 +31,7 @@ namespace fg {
         typedef SBlockData base_type;
 
         constexpr static const float HEX_HALF_SIZE = 0.5f;
+        static const unsigned int MATERIAL_INDEX = 1;
 
         /**
          *
@@ -104,6 +105,14 @@ namespace fg {
         virtual SBlockData* downRight(fgBool rewind = FG_FALSE);
 
         //----------------------------------------------------------------------
+
+        /**
+         * 
+         * @return
+         */
+        virtual unsigned int getMaterialIndex(void) const {
+            return MATERIAL_INDEX;
+        }
 
         /**
          * 

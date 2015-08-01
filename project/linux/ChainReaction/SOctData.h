@@ -20,9 +20,19 @@ namespace fg {
         typedef SBlockData base_type;
         typedef SOctData self_type;
         typedef SOctData type;
-        constexpr static const float OCT_HALF_SIZE = 0.5f;
 
-        SOctData();
+        constexpr static const float OCT_HALF_SIZE = 0.5f;
+        static const unsigned int MATERIAL_INDEX = 2;
+
+        /**
+         *
+         */
+        SOctData(fgBool isNG = FG_FALSE);
+        /**
+         *
+         * @param rewind
+         * @return
+         */
         virtual ~SOctData();
 
         //----------------------------------------------------------------------
@@ -88,6 +98,14 @@ namespace fg {
         virtual SBlockData* downRight(fgBool rewind = FG_FALSE);
 
         //----------------------------------------------------------------------
+
+        /**
+         * 
+         * @return
+         */
+        virtual unsigned int getMaterialIndex(void) const {
+            return MATERIAL_INDEX;
+        }
 
         /**
          *
@@ -165,6 +183,8 @@ namespace fg {
                                      unsigned short& newY);
 
         //----------------------------------------------------------------------
+
+        fgBool isNG(void) const;
 
     }; // struct SOctData
 

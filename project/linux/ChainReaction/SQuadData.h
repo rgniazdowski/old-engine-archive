@@ -29,13 +29,14 @@ namespace fg {
         typedef SQuadData self_type;
         typedef SQuadData type;
         typedef SBlockData base_type;
+        
         constexpr static const float QUAD_HALF_SIZE = 0.5f;
+        static const unsigned int MATERIAL_INDEX = 0;
 
         /**
          *
          */
         SQuadData();
-
         /**
          *
          */
@@ -104,6 +105,14 @@ namespace fg {
         virtual SBlockData* downRight(fgBool rewind = FG_FALSE);
 
         //----------------------------------------------------------------------
+
+        /**
+         * 
+         * @return
+         */
+        virtual unsigned int getMaterialIndex(void) const {
+            return self_type::MATERIAL_INDEX;
+        }
 
         /**
          *

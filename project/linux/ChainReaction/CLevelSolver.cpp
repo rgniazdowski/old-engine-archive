@@ -251,7 +251,7 @@ void CLevelSolver::update(float elapsed) {
                         unsigned short newX, newY;
                         VColor qColor = coverInfo.color;
                         BlockInfo qInfo = BlockInfo(x, y, qColor);
-                        getCoveringCoord(CLevelDataHolder::getBlockTypeFromLevelType(getLevelType()),
+                        getCoveringCoord(cr::getBlockTypeFromLevelType(getLevelType()),
                                          coverInfo.direction,
                                          x, y, qInfo.pos.x, qInfo.pos.y);
                         if(m_additionalBlocks.find(qInfo) < 0)

@@ -67,6 +67,7 @@ namespace fg {
 
     public:
         constexpr static const float QUAD_HALF_SIZE = SQuadData::QUAD_HALF_SIZE;
+        static const unsigned int NUM_MATERIALS = 3;
 
     public:
         /**
@@ -227,6 +228,10 @@ namespace fg {
             m_pPluginInfo = pPluginInfo;
         }
 
+    protected:
+        static unsigned int getMaterialIdxFromLevelType(LevelType levelType);
+        static unsigned int getMaterialIdxFromBlockType(BlockType blockType);
+
     private:
         /// Pointer to the internal plugin info
         ::fg::CPluginResource::SInternalInfo* m_pPluginInfo;
@@ -258,7 +263,7 @@ namespace fg {
         /// Mouse callback object
         event::CFunctionCallback* m_mouseCallback;
         /// Materials designed for different blocks and colors
-        gfx::SMaterial* m_materials[3][VColor::NUM_COLORS];
+        gfx::SMaterial* m_materials[NUM_MATERIALS][VColor::NUM_COLORS];
 
         /**
          *

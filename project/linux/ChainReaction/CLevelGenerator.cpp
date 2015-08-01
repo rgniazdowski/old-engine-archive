@@ -264,7 +264,7 @@ fgBool CLevelGenerator::generate(void) {
                     pNeighbour = nInfo.ptr;
 
                     FG_LOG_DEBUG("ChainReaction: Generator: Color conflict (%s)->%dx%d",
-                                 getColorName(pBlock->color),
+                                 cr::getColorName(pBlock->color),
                                  pBlock->pCellHolder->pos.x,
                                  pBlock->pCellHolder->pos.y);
                     //VColor opposite = pNeighbour->getOppositeColor();
@@ -314,7 +314,7 @@ fgBool CLevelGenerator::generate(void) {
                                 }
                             }
 
-                            FG_LOG_DEBUG("ChainReaction: Generator: Using %s as a rescue!", getColorName(pBlock->color));
+                            FG_LOG_DEBUG("ChainReaction: Generator: Using %s as a rescue!", cr::getColorName(pBlock->color));
                         }
                         if(nFails > 2) {
                             FG_LOG_DEBUG("ChainReaction: Generator: Number of fails exceeded for this node: %dx%d", pBlock->pCellHolder->pos.x, pBlock->pCellHolder->pos.y);

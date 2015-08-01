@@ -208,6 +208,12 @@ namespace fg {
 
         /**
          *
+         * @return
+         */
+        virtual unsigned int getMaterialIndex(void) const = 0;
+
+        /**
+         *
          * @param neighbours
          * @return
          */

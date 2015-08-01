@@ -341,7 +341,7 @@ namespace fg {
          */
         BlockType getBlockType(void) const {
             if(m_pLevelFile) {
-                return getBlockTypeFromLevelType(m_pLevelFile->getLevelType());
+                return cr::getBlockTypeFromLevelType(m_pLevelFile->getLevelType());
             } else if(m_blocksData.size()) {
                 return m_blocksData[0]->getType();
             } else {
@@ -383,21 +383,8 @@ namespace fg {
          * @param y
          */
         void getSize(unsigned short* x, unsigned short* y);
-    public:
-        /**
-         *
-         * @param levelType
-         * @return
-         */
-        static BlockType getBlockTypeFromLevelType(LevelType levelType) {
-            if(levelType == LEVEL_QUADS)
-                return BlockType::BLOCK_QUAD;
-            if(levelType == LEVEL_HEXAGONS)
-                return BlockType::BLOCK_HEXAGON;
-            if(levelType == LEVEL_OCTAGONS)
-                return BlockType::BLOCK_OCTAGON;
-            return BlockType::BLOCK_INVALID;
-        }
+
+    public:        
 
     #if defined(DEBUG) || defined(FG_DEBUG)
         void dump(void);

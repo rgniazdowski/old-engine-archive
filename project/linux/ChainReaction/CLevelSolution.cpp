@@ -172,12 +172,7 @@ fgBool CLevelSolution::setFromSearchSteps(const MoveStepsVec& searchSteps) {
         m_moves.back().pData = NULL;
     }
     BlockType blockType = m_moves[0].blockType;
-    if(blockType == BLOCK_QUAD)
-        m_levelType = LEVEL_QUADS;
-    else if(blockType == BLOCK_HEXAGON)
-        m_levelType = LEVEL_HEXAGONS;
-    else if(blockType == BLOCK_OCTAGON)
-        m_levelType = LEVEL_OCTAGONS;
+    m_levelType = cr::getLevelTypeFromBlockType(blockType);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -185,15 +180,7 @@ fgBool CLevelSolution::setFromSearchSteps(const MoveStepsVec& searchSteps) {
 BlockType CLevelSolution::getBlockType(void) const {
     BlockType blockType = BlockType::BLOCK_INVALID;
     if(m_moves.empty()) {
-        if(m_levelType == LEVEL_INVALID) {
-            blockType = BlockType::BLOCK_INVALID;
-        } else if(m_levelType == LEVEL_QUADS) {
-            blockType = BlockType::BLOCK_QUAD;
-        } else if(m_levelType == LEVEL_HEXAGONS) {
-            blockType = BlockType::BLOCK_HEXAGON;
-        } else if(m_levelType == LEVEL_OCTAGONS) {
-            blockType = BlockType::BLOCK_OCTAGON;
-        }
+        blockType = cr::getBlockTypeFromLevelType(m_levelType);
     } else {
         blockType = m_moves[0].blockType;
     }
@@ -215,7 +202,7 @@ void CLevelSolution::dump(void) {
                      moveInfo.pos.y,
                      moveInfo.target.x,
                      moveInfo.target.y,
-                     getRotationName(moveInfo.moveDir));
+                     cr::getRotationName(moveInfo.moveDir));
     }
 }
 #endif

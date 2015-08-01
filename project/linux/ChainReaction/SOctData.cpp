@@ -20,7 +20,13 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-SOctData::SOctData() { }
+SOctData::SOctData(fgBool isNG) : base_type() {
+    if(isNG) {
+        blockType = BLOCK_OCTAGON_NG;
+    } else {
+        blockType = BLOCK_OCTAGON;
+    }
+}
 //------------------------------------------------------------------------------
 
 SOctData::~SOctData() { }
@@ -37,7 +43,7 @@ SBlockData* SOctData::right(fgBool rewind) {
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::up(fgBool rewind) {
-    return NULL;    
+    return NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -144,7 +150,7 @@ int SOctData::getNeighbours(NeighbourInfoVec& neighbours, fgBool shouldRewind) {
     //neighbours.push_back(SNeighbourInfo(this->left(shouldRewind), LEFT));
     //neighbours.push_back(SNeighbourInfo(this->right(shouldRewind), RIGHT));
     SBlockData* pNeighbour = NULL;
-    
+
     pNeighbour = this->upLeft(shouldRewind);
     if(pNeighbour)
         neighbours.push_back(SNeighbourInfo(pNeighbour, UP_LEFT));
@@ -196,14 +202,14 @@ void SOctData::rotate(RotationDirection direction, float amount) {
     }
     // height = a*(1+sqrt(2))/2.0    
     const float a_f = 1.0f / (1.0f + (float)M_SQRT2);
-    const float trans_f = a_f/(float)M_SQRT2/2.0f + a_f/2.0f;
+    const float trans_f = a_f / (float)M_SQRT2 / 2.0f + a_f / 2.0f;
     if(direction == UP_LEFT) {
         // Y bigger (more minus) -> UP
         translationAxis.y = trans_f; // plus
-        rotationAxis.x = -1.0f;        
+        rotationAxis.x = -1.0f;
         // X bigger (more minus) -> LEFT
         translationAxis.x = -trans_f; // minus
-        rotationAxis.y = -1.0f;        
+        rotationAxis.y = -1.0f;
     } else if(direction == UP_RIGHT) {
         // Y bigger (more minus) -> UP
         translationAxis.y = trans_f;
@@ -373,7 +379,7 @@ game::CGrid::SCellHolder* SOctData::getCoveredNeighbourCellHolder(void) {
     if(_x % 2 == 0)
         isEven = FG_TRUE;
     // rotation has finished
-    switch(rotDir) {        
+    switch(rotDir) {
         case UP_LEFT:
             if(isEven) {
                 game::CGrid::SCellHolder* pCell = pCellHolder->up(); // REVERSE
@@ -427,5 +433,10 @@ fgBool SOctData::isRotationValid(RotationDirection direction) const {
     if(direction == UP || direction == LEFT)
         return FG_FALSE;
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool SOctData::isNG(void) const {
+    return (fgBool)(this->blockType == BlockType::BLOCK_OCTAGON_NG);
 }
 //------------------------------------------------------------------------------

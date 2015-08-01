@@ -18,6 +18,135 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
+SBlockData* cr::createBlock(LevelType levelType) {
+    if(levelType == LEVEL_QUADS)
+        return new SQuadData();
+    if(levelType == LEVEL_HEXAGONS)
+        return new SHexData();
+    if(levelType == LEVEL_OCTAGONS)
+        return new SOctData();
+    if(levelType == LEVEL_OCTAGONS_NG)
+        return new SOctData(FG_TRUE);
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+SBlockData* cr::createBlock(BlockType blockType) {
+    if(blockType == BLOCK_QUAD)
+        return new SQuadData();
+    if(blockType == BLOCK_HEXAGON)
+        return new SHexData();
+    if(blockType == BLOCK_OCTAGON)
+        return new SOctData();
+    if(blockType == BLOCK_OCTAGON_NG)
+        return new SOctData(FG_TRUE);
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+BlockType cr::getBlockTypeFromLevelType(LevelType levelType) {
+    if(levelType == LEVEL_QUADS)
+        return BlockType::BLOCK_QUAD;
+    if(levelType == LEVEL_HEXAGONS)
+        return BlockType::BLOCK_HEXAGON;
+    if(levelType == LEVEL_OCTAGONS)
+        return BlockType::BLOCK_OCTAGON;
+    if(levelType == LEVEL_OCTAGONS_NG)
+        return BlockType::BLOCK_OCTAGON_NG;
+    return BlockType::BLOCK_INVALID;
+}
+//------------------------------------------------------------------------------
+
+LevelType cr::getLevelTypeFromBlockType(BlockType blockType) {
+    if(blockType == BLOCK_QUAD)
+        return LevelType::LEVEL_QUADS;
+    if(blockType == BLOCK_HEXAGON)
+        return LevelType::LEVEL_HEXAGONS;
+    if(blockType == BLOCK_OCTAGON)
+        return LevelType::LEVEL_OCTAGONS;
+    if(blockType == BLOCK_OCTAGON_NG)
+        return LevelType::LEVEL_OCTAGONS_NG;
+    return LevelType::LEVEL_INVALID;
+}
+//------------------------------------------------------------------------------
+
+const char* cr::getColorName(VColor color) {
+    const char* returnValue = "invalid";
+    switch(color) {
+        case BLACK:
+            returnValue = "black";
+            break;
+        case WHITE:
+            returnValue = "white";
+            break;
+        case GRAY:
+            returnValue = "gray";
+            break;
+        case RED:
+            returnValue = "red";
+            break;
+        case GREEN:
+            returnValue = "green";
+            break;
+        case BLUE:
+            returnValue = "blue";
+            break;
+        case CYAN:
+            returnValue = "cyan";
+            break;
+        case MAGENTA:
+            returnValue = "magenta";
+            break;
+        case YELLOW:
+            returnValue = "yellow";
+            break;
+    };
+    return returnValue;
+}
+//------------------------------------------------------------------------------
+
+const char* cr::getRotationName(RotationDirection rotation) {
+    const char* returnValue = "invalid";
+    switch(rotation) {
+        case NO_ROTATION:
+            returnValue = "no rotation";
+            break;
+        case LEFT:
+            returnValue = "left";
+            break;
+        case RIGHT:
+            returnValue = "right";
+            break;
+        case UP:
+            returnValue = "up";
+            break;
+        case DOWN:
+            returnValue = "down";
+            break;
+        case UP_LEFT:
+            returnValue = "up-left";
+            break;
+        case UP_RIGHT:
+            returnValue = "up-right";
+            break;
+        case DOWN_LEFT:
+            returnValue = "down-left";
+            break;
+        case DOWN_RIGHT:
+            returnValue = "down-right";
+            break;
+        case AUTO_ROTATION:
+            returnValue = "auto";
+            break;
+        case OPPOSITE_ROTATION:
+            returnValue = "opposite";
+            break;
+    };
+    return returnValue;
+}
+
+//------------------------------------------------------------------------------
+
 SBlockMoveInfo::SBlockMoveInfo(BlockType _blockType) :
 pos(),
 target(),
@@ -231,7 +360,7 @@ void SBlockMoveStep::dump(void) {
            pos.y,
            target.x,
            target.y,
-           getRotationName(moveDir),
+           cr::getRotationName(moveDir),
            moveDepth,
            moveIdx);
 }

@@ -122,6 +122,8 @@ fgBool CLevelFile::load(void) {
                 m_type = LevelType::LEVEL_QUADS;
             } else if(strings::startsWith(mapType, "oct\0", FG_FALSE)) {
                 m_type = LevelType::LEVEL_OCTAGONS;
+            } else if(strings::startsWith(mapType, "ng_oct\0", FG_FALSE)) {
+                m_type = LevelType::LEVEL_OCTAGONS_NG;
             } else {
                 m_type = LevelType::LEVEL_QUADS;
             }
@@ -260,6 +262,8 @@ fgBool CLevelFile::save(void) {
         levelType = "hexagons\0";
     } else if(m_type == LevelType::LEVEL_OCTAGONS) {
         levelType = "octagons\0";
+    } else if (m_type == LevelType::LEVEL_OCTAGONS_NG) {
+        levelType = "ng_octagons\0";
     } else {
         levelType = "quads\0"; // Force quads
     }

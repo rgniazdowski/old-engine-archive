@@ -133,8 +133,9 @@ m_drag() {
     m_drag.invalidate();
     //memset(m_materials, 0, sizeof(m_materials));
     for(unsigned int i = 0; i < VColor::NUM_COLORS; i++) {
-        m_materials[0][i] = NULL;
-        m_materials[1][i] = NULL;
+        m_materials[0][i] = NULL; // quads
+        m_materials[1][i] = NULL; // hexagons
+        m_materials[2][i] = NULL; // octagons (2 versions)
     }
 }
 //------------------------------------------------------------------------------
@@ -232,7 +233,7 @@ fgBool CChainReaction::initialize(void) {
     m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
 
     unsigned int n = VColor::NUM_COLORS;
-    for(unsigned int j = 0; j < BlockType::NUM_BLOCK_TYPES; j++) {
+    for(unsigned int j = 0; j < NUM_MATERIALS; j++) {
         for(unsigned int i = 0; i < n; i++) {
             if(m_materials[j][i] != NULL) {
                 delete m_materials[j][i];
@@ -255,7 +256,7 @@ fgBool CChainReaction::initialize(void) {
     colorNames[VColor::MAGENTA] = "Magenta";
 
     // 0 - quad / 1 - hexagon / 2 - octagon
-    for(unsigned int j = 0; j < BlockType::NUM_BLOCK_TYPES; j++) {
+    for(unsigned int j = 0; j < NUM_MATERIALS; j++) {
         for(unsigned int i = VColor::BLACK; i < n; i++) {
             float blackOffset = 0.0f;
             if(i == VColor::BLACK)
@@ -280,14 +281,9 @@ void CChainReaction::refreshLevelMaterials(void) {
         return;
     if(!m_levelVis->getLevelFile())
         return;
-    const LevelType levelType = m_levelVis->getLevelType();
-    BlockType blockType = CLevelDataHolder::getBlockTypeFromLevelType(levelType);
-    // 0 - quads / 1 - hexagons / 2 - hexagons
-    if(blockType != BlockType::BLOCK_QUAD && 
-       blockType != BlockType::BLOCK_HEXAGON &&
-       blockType != BlockType::BLOCK_OCTAGON)
-        return;
-    const unsigned int index = (unsigned int)blockType;
+    const LevelType levelType = m_levelVis->getLevelType();    
+    // 0 - quads / 1 - hexagons / 2 - octagons
+    const unsigned int index = (unsigned int)getMaterialIdxFromLevelType(levelType);
     const unsigned int n = VColor::NUM_COLORS;
     for(unsigned int i = (unsigned int)VColor::BLACK; i < n; i++) {
         if(m_materials[index][i])
@@ -748,6 +744,36 @@ fgBool CChainReaction::renderHandler(void* system, void* user) {
     }
 
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+unsigned int CChainReaction::getMaterialIdxFromLevelType(LevelType levelType) {
+    unsigned int index = 0;
+    if(levelType == LevelType::LEVEL_QUADS) {
+        index = 0;
+    } else if(levelType == LevelType::LEVEL_HEXAGONS) {
+        index = 1;
+    } else if(levelType == LevelType::LEVEL_OCTAGONS) {
+        index = 2;
+    } else if(levelType == LevelType::LEVEL_OCTAGONS_NG) {
+        index = 2;
+    }
+    return index;
+}
+
+//------------------------------------------------------------------------------
+
+unsigned int CChainReaction::getMaterialIdxFromBlockType(BlockType blockType) {
+    unsigned int index = 0;
+    if(blockType == BlockType::BLOCK_QUAD) {
+        index = 0;
+    } else if(blockType == BlockType::BLOCK_HEXAGON) {
+        index = 1;
+    } else if(blockType == BlockType::BLOCK_OCTAGON) {
+        index = 2;
+    } else if(blockType == BlockType::BLOCK_OCTAGON_NG) {
+        index = 2;
+    }
 }
 //------------------------------------------------------------------------------
 

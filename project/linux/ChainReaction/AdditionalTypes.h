@@ -78,88 +78,6 @@ namespace fg {
         ///
         NUM_COLORS = 10
     };
-    /**
-     * 
-     * @param color
-     * @return
-     */
-    inline const char* getColorName(VColor color) {
-        const char* returnValue = "invalid";
-        switch(color) {
-            case BLACK:
-                returnValue = "black";
-                break;
-            case WHITE:
-                returnValue = "white";
-                break;
-            case GRAY:
-                returnValue = "gray";
-                break;
-            case RED:
-                returnValue = "red";
-                break;
-            case GREEN:
-                returnValue = "green";
-                break;
-            case BLUE:
-                returnValue = "blue";
-                break;
-            case CYAN:
-                returnValue = "cyan";
-                break;
-            case MAGENTA:
-                returnValue = "magenta";
-                break;
-            case YELLOW:
-                returnValue = "yellow";
-                break;
-        };
-        return returnValue;
-    }
-    /**
-     * 
-     * @param rotation
-     * @return
-     */
-    inline const char* getRotationName(RotationDirection rotation) {
-        const char* returnValue = "invalid";
-        switch(rotation) {
-            case NO_ROTATION:
-                returnValue = "no rotation";
-                break;
-            case LEFT:
-                returnValue = "left";
-                break;
-            case RIGHT:
-                returnValue = "right";
-                break;
-            case UP:
-                returnValue = "up";
-                break;
-            case DOWN:
-                returnValue = "down";
-                break;
-            case UP_LEFT:
-                returnValue = "up-left";
-                break;
-            case UP_RIGHT:
-                returnValue = "up-right";
-                break;
-            case DOWN_LEFT:
-                returnValue = "down-left";
-                break;
-            case DOWN_RIGHT:
-                returnValue = "down-right";
-                break;
-            case AUTO_ROTATION:
-                returnValue = "auto";
-                break;
-            case OPPOSITE_ROTATION:
-                returnValue = "opposite";
-                break;
-        };
-        return returnValue;
-    }
 
     struct SBlockData;
 
@@ -286,7 +204,8 @@ namespace fg {
         BLOCK_QUAD = 0,
         BLOCK_HEXAGON = 1,
         BLOCK_OCTAGON = 2,
-        NUM_BLOCK_TYPES = 3,
+        BLOCK_OCTAGON_NG = 3,
+        NUM_BLOCK_TYPES = 4,
         BLOCK_INVALID = 100
     };
 
@@ -297,9 +216,49 @@ namespace fg {
         LEVEL_QUADS = 0,
         LEVEL_HEXAGONS = 1,
         LEVEL_OCTAGONS = 2,
-        NUM_LEVEL_TYPES = 3,
+        LEVEL_OCTAGONS_NG = 3,
+        NUM_LEVEL_TYPES = 4,
         LEVEL_INVALID = 100,
     };
+
+    namespace cr {
+        /**
+         *
+         * @param levelType
+         * @return
+         */
+        SBlockData* createBlock(LevelType levelType);
+        /**
+         * 
+         * @param blockType
+         * @return
+         */
+        SBlockData* createBlock(BlockType blockType);
+        /**
+         *
+         * @param levelType
+         * @return
+         */
+        BlockType getBlockTypeFromLevelType(LevelType levelType);
+        /**
+         * 
+         * @param blockType
+         * @return
+         */
+        LevelType getLevelTypeFromBlockType(BlockType blockType);
+        /**
+         *
+         * @param color
+         * @return
+         */
+        const char* getColorName(VColor color);
+        /**
+         *
+         * @param rotation
+         * @return
+         */
+        const char* getRotationName(RotationDirection rotation);
+    }
 
     /**
      *

@@ -159,14 +159,8 @@ fgBool CLevelDataHolder::prepareAllBlocks(void) {
     if(m_allBlocksData.size() < nMax) {
         const unsigned int nDiff = nMax - m_allBlocksData.size();
         for(unsigned int i = 0; i < nDiff; i++) {
-            SBlockData* pBlockData = NULL;
-            if(m_pLevelFile->getLevelType() == LevelType::LEVEL_QUADS) {
-                pBlockData = new SQuadData();
-            } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_HEXAGONS) {
-                pBlockData = new SHexData();
-            } else if(m_pLevelFile->getLevelType() == LevelType::LEVEL_OCTAGONS) {
-                pBlockData = new SOctData();
-            } else {
+            SBlockData* pBlockData = cr::createBlock(m_pLevelFile->getLevelType());
+            if(!pBlockData) {
                 pBlockData = new SQuadData();
             }
             pBlockData->internalIdx = m_allBlocksData.size();
@@ -467,7 +461,7 @@ fgBool CLevelDataHolder::restartFrom(const BlockInfoVec& blocks) {
     prepareAllBlocks();
     // need to reserve proper size
     unsigned int nReserve = (unsigned int)(n * 1.5f);
-    m_blocksData.reserve(nReserve);    
+    m_blocksData.reserve(nReserve);
     m_pLevelFile->applyToGrid(blocks, m_pGrid);
     // Prepare new number of blocks
     for(unsigned int i = 0; i < n; i++) {
@@ -634,7 +628,7 @@ void CLevelDataHolder::dump(void) {
             y = pBlock->pCellHolder->pos.y;
         }
         printf("[%d] block: %s [%dx%d] bound[%d] type[%d]\n", i,
-               getColorName(pBlock->color),
+               cr::getColorName(pBlock->color),
                x,
                y,
                (int)pBlock->isBound(),
