@@ -11,6 +11,7 @@
             <make-dep-projects>
                 <make-dep-project>/home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB</make-dep-project>
                 <make-dep-project>../FlexiGame_NB</make-dep-project>
+                <make-dep-project>/home/vigilant/develop/flexigame/project/linux/ChainReaction</make-dep-project>
                 <make-dep-project>/home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB</make-dep-project>
                 <make-dep-project>/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB</make-dep-project>
             </make-dep-projects>

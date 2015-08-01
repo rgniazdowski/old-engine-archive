@@ -35,19 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/AdditionalTypes.o \
-	${OBJECTDIR}/CLevelDataHolder.o \
-	${OBJECTDIR}/CLevelFile.o \
-	${OBJECTDIR}/CLevelGenerator.o \
-	${OBJECTDIR}/CLevelSolution.o \
-	${OBJECTDIR}/CLevelSolutionFinder.o \
-	${OBJECTDIR}/CLevelSolver.o \
-	${OBJECTDIR}/CLevelVisualization.o \
-	${OBJECTDIR}/ChainReaction.o \
-	${OBJECTDIR}/SBlockData.o \
-	${OBJECTDIR}/SHexData.o \
-	${OBJECTDIR}/SOctData.o \
-	${OBJECTDIR}/SQuadData.o \
 	${OBJECTDIR}/main_SolutionFinder.o
 
 
@@ -65,11 +52,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lm /home/vigilant/develop/flexigame/project/linux/FlexiGame_NB/dist/Debug_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a /home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB/dist/Debug/GNU-Linux-x86/libluaplusnextgen_nb.a /home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB/dist/Debug/GNU-Linux-x86/libminizipmaster_nb.a `pkg-config --libs glew` `pkg-config --libs gl` `pkg-config --libs zlib` `pkg-config --libs libpng` -ljpeg -ldl -lpthread   
+LDLIBSOPTIONS=-lm /home/vigilant/develop/flexigame/project/linux/ChainReaction/dist/Debug_STATIC/GNU-Linux-x86/libchainreaction.a /home/vigilant/develop/flexigame/project/linux/FlexiGame_NB/dist/Debug_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a /home/vigilant/develop/flexigame/project/linux/LuaPlusNextGen_NB/dist/Debug/GNU-Linux-x86/libluaplusnextgen_nb.a /home/vigilant/develop/flexigame/project/linux/MiniZipMaster_NB/dist/Debug/GNU-Linux-x86/libminizipmaster_nb.a `pkg-config --libs glew` `pkg-config --libs gl` `pkg-config --libs zlib` `pkg-config --libs libpng` -ljpeg -ldl -lpthread   
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chainreaction
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chainreaction: /home/vigilant/develop/flexigame/project/linux/ChainReaction/dist/Debug_STATIC/GNU-Linux-x86/libchainreaction.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chainreaction: /home/vigilant/develop/flexigame/project/linux/FlexiGame_NB/dist/Debug_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a
 
@@ -81,71 +70,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chainreaction: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chainreaction ${OBJECTFILES} ${LDLIBSOPTIONS} -rdynamic -Wl,--export-dynamic
 
-${OBJECTDIR}/AdditionalTypes.o: AdditionalTypes.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AdditionalTypes.o AdditionalTypes.cpp
-
-${OBJECTDIR}/CLevelDataHolder.o: CLevelDataHolder.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelDataHolder.o CLevelDataHolder.cpp
-
-${OBJECTDIR}/CLevelFile.o: CLevelFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelFile.o CLevelFile.cpp
-
-${OBJECTDIR}/CLevelGenerator.o: CLevelGenerator.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelGenerator.o CLevelGenerator.cpp
-
-${OBJECTDIR}/CLevelSolution.o: CLevelSolution.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolution.o CLevelSolution.cpp
-
-${OBJECTDIR}/CLevelSolutionFinder.o: CLevelSolutionFinder.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolutionFinder.o CLevelSolutionFinder.cpp
-
-${OBJECTDIR}/CLevelSolver.o: CLevelSolver.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolver.o CLevelSolver.cpp
-
-${OBJECTDIR}/CLevelVisualization.o: CLevelVisualization.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelVisualization.o CLevelVisualization.cpp
-
-${OBJECTDIR}/ChainReaction.o: ChainReaction.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ChainReaction.o ChainReaction.cpp
-
-${OBJECTDIR}/SBlockData.o: SBlockData.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SBlockData.o SBlockData.cpp
-
-${OBJECTDIR}/SHexData.o: SHexData.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SHexData.o SHexData.cpp
-
-${OBJECTDIR}/SOctData.o: SOctData.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SOctData.o SOctData.cpp
-
-${OBJECTDIR}/SQuadData.o: SQuadData.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -s -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags glew` `pkg-config --cflags gl` `pkg-config --cflags zlib` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SQuadData.o SQuadData.cpp
-
 ${OBJECTDIR}/main_SolutionFinder.o: main_SolutionFinder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -153,6 +77,7 @@ ${OBJECTDIR}/main_SolutionFinder.o: main_SolutionFinder.cpp
 
 # Subprojects
 .build-subprojects:
+	cd /home/vigilant/develop/flexigame/project/linux/ChainReaction && ${MAKE} -j 20 -f Makefile CONF=Debug_STATIC
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -161,6 +86,7 @@ ${OBJECTDIR}/main_SolutionFinder.o: main_SolutionFinder.cpp
 
 # Subprojects
 .clean-subprojects:
+	cd /home/vigilant/develop/flexigame/project/linux/ChainReaction && ${MAKE} -j 20 -f Makefile CONF=Debug_STATIC clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

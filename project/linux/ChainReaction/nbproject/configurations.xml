@@ -681,6 +681,18 @@
           <linkerLibItems>
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
             <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/ChainReaction"
+                            CT="3"
+                            CN="Debug_STATIC"
+                            AC="false"
+                            BL="true"
+                            WD="/home/vigilant/develop/flexigame/project/linux/ChainReaction"
+                            BC="${MAKE} -j 20 -f Makefile CONF=Debug_STATIC"
+                            CC="${MAKE} -j 20 -f Makefile CONF=Debug_STATIC clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libchainreaction.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
               <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB"
                             CT="3"
                             CN="Debug_GLEW_StaticLib"
@@ -739,55 +751,55 @@
           </makeArtifact>
         </requiredProjects>
       </compileType>
-      <item path="AdditionalTypes.cpp" ex="false" tool="1" flavor2="8">
+      <item path="AdditionalTypes.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelDataHolder.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelDataHolder.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelDataHolder.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelFile.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelGenerator.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelGenerator.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelGenerator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelSolution.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelSolution.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelSolution.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelSolutionFinder.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelSolutionFinder.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelSolutionFinder.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelSolver.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelVisualization.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelVisualization.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelVisualization.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="8">
+      <item path="ChainReaction.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SBlockData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SBlockData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SBlockData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SHexData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SHexData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SHexData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SOctData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SOctData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SOctData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SQuadData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SQuadData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -874,6 +886,18 @@
           <linkerLibItems>
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
             <linkerLibProjectItem>
+              <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/ChainReaction"
+                            CT="3"
+                            CN="Release_STATIC"
+                            AC="false"
+                            BL="true"
+                            WD="/home/vigilant/develop/flexigame/project/linux/ChainReaction"
+                            BC="${MAKE} -j 20 -f Makefile CONF=Release_STATIC"
+                            CC="${MAKE} -j 20 -f Makefile CONF=Release_STATIC clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libchainreaction.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
               <makeArtifact PL="/home/vigilant/develop/flexigame/project/linux/FlexiGame_NB"
                             CT="3"
                             CN="Release_GLEW_StaticLib"
@@ -919,55 +943,55 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="AdditionalTypes.cpp" ex="false" tool="1" flavor2="8">
+      <item path="AdditionalTypes.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="AdditionalTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelDataHolder.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelDataHolder.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelDataHolder.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelFile.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelFile.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelFile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelGenerator.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelGenerator.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelGenerator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelSolution.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelSolution.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelSolution.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelSolutionFinder.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelSolutionFinder.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelSolutionFinder.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelSolver.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelSolver.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelSolver.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="CLevelVisualization.cpp" ex="false" tool="1" flavor2="8">
+      <item path="CLevelVisualization.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="CLevelVisualization.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ChainReaction.cpp" ex="false" tool="1" flavor2="8">
+      <item path="ChainReaction.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="ChainReaction.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SBlockData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SBlockData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SBlockData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SHexData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SHexData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SHexData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SOctData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SOctData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SOctData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SQuadData.cpp" ex="false" tool="1" flavor2="8">
+      <item path="SQuadData.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="SQuadData.h" ex="false" tool="3" flavor2="0">
       </item>
