@@ -193,7 +193,7 @@ fgBool CChainReaction::destroy(void) {
         m_mouseCallback = NULL;
     }
     unsigned int n = VColor::NUM_COLORS;
-    for(unsigned int j = 0; j < BlockType::NUM_BLOCK_TYPES; j++) {
+    for(unsigned int j = 0; j < NUM_MATERIALS; j++) {
         for(unsigned int i = 0; i < n; i++) {
             if(m_materials[j][i] != NULL) {
                 delete m_materials[j][i];
