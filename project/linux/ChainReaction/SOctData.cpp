@@ -20,7 +20,8 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-SOctData::SOctData(fgBool isNG) : base_type() {
+SOctData::SOctData(fgBool isNG) : base_type(),
+m_isOrphanChecking(FG_FALSE) {
     if(isNG) {
         blockType = BLOCK_OCTAGON_NG;
     } else {
@@ -33,7 +34,7 @@ SOctData::~SOctData() { }
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::left(fgBool rewind) {
-    if(!isNG())
+    if(!isNG() && !m_isOrphanChecking)
         return NULL;
     if(!pCellHolder)
         return NULL;
@@ -50,7 +51,7 @@ SBlockData* SOctData::left(fgBool rewind) {
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::right(fgBool rewind) {
-    if(!isNG())
+    if(!isNG() && !m_isOrphanChecking)
         return NULL;
     if(!pCellHolder)
         return NULL;
@@ -67,7 +68,7 @@ SBlockData* SOctData::right(fgBool rewind) {
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::up(fgBool rewind) {
-    if(!isNG())
+    if(!isNG() && !m_isOrphanChecking)
         return NULL;
     if(!pCellHolder)
         return NULL;
@@ -81,7 +82,7 @@ SBlockData* SOctData::up(fgBool rewind) {
 //------------------------------------------------------------------------------
 
 SBlockData* SOctData::down(fgBool rewind) {
-    if(!isNG())
+    if(!isNG() && !m_isOrphanChecking)
         return NULL;
     if(!pCellHolder)
         return NULL;
@@ -565,5 +566,13 @@ fgBool SOctData::isRotationValid(RotationDirection direction) const {
 
 fgBool SOctData::isNG(void) const {
     return (fgBool)(this->blockType == BlockType::BLOCK_OCTAGON_NG);
+}
+//------------------------------------------------------------------------------
+
+fgBool SOctData::isOrphan(void) {
+    m_isOrphanChecking = FG_TRUE;
+    fgBool status = base_type::isOrphan();
+    m_isOrphanChecking = FG_FALSE;
+    return status;
 }
 //------------------------------------------------------------------------------

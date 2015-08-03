@@ -185,7 +185,20 @@ namespace fg {
 
         //----------------------------------------------------------------------
 
+        /**
+         * 
+         * @return
+         */
         fgBool isNG(void) const;
+
+        /**
+         *
+         * @return
+         */
+        virtual fgBool isOrphan(void);
+
+    private:
+        fgBool m_isOrphanChecking;
 
     }; // struct SOctData
 

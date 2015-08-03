@@ -84,7 +84,9 @@ namespace fg {
             REMOVE_ORPHANS = 0x0400,
             /// Creating regular checkerboard will avoid conflicts where
             /// color from outside the color-table has to be used
-            REGULAR_CHECKERBOARD = 0x0800
+            REGULAR_CHECKERBOARD = 0x0800,
+            /// Use custom color table
+            USE_CUSTOM_COLOR_TABLE = 0x1000
         }; // enum StateFlags
 
     public:
@@ -337,6 +339,9 @@ namespace fg {
          */
         void useGrayColor(fgBool toggle = FG_TRUE) {
             setFlag(USE_GRAY_COLOR, toggle);
+            if(toggle) {
+                setFlag(USE_CUSTOM_COLOR_TABLE, FG_FALSE);
+            }
         }
         /**
          *
@@ -351,6 +356,9 @@ namespace fg {
          */
         void useRgbColors(fgBool toggle = FG_TRUE) {
             setFlag(USE_RGB_COLORS, toggle);
+            if(toggle) {
+                setFlag(USE_CUSTOM_COLOR_TABLE, FG_FALSE);
+            }
         }
         /**
          *
@@ -365,6 +373,9 @@ namespace fg {
          */
         void useCmyColors(fgBool toggle = FG_TRUE) {
             setFlag(USE_CMY_COLORS, toggle);
+            if(toggle) {
+                setFlag(USE_CUSTOM_COLOR_TABLE, FG_FALSE);
+            }
         }
         /**
          *
@@ -379,6 +390,9 @@ namespace fg {
          */
         void useBlackAndWhiteColors(fgBool toggle = FG_TRUE) {
             setFlag(USE_BW_COLORS, toggle);
+            if(toggle) {
+                setFlag(USE_CUSTOM_COLOR_TABLE, FG_FALSE);
+            }
         }
         /**
          *
@@ -492,6 +506,38 @@ namespace fg {
          */
         fgBool isRegularCheckerboard(void) const {
             return (fgBool)!!(m_stateFlags & REGULAR_CHECKERBOARD);
+        }
+        /**
+         * 
+         * @param toggle
+         */
+        void useCustomColorTable(fgBool toggle = FG_TRUE) {
+            setFlag(USE_CUSTOM_COLOR_TABLE, toggle);
+            if(toggle) {
+                setFlag(USE_BW_COLORS, FG_FALSE);
+                setFlag(USE_CMY_COLORS, FG_FALSE);
+                setFlag(USE_RGB_COLORS, FG_FALSE);
+                setFlag(USE_GRAY_COLOR, FG_FALSE);
+                m_colorTable.clear();
+            }
+        }
+        /**
+         * 
+         * @param colorTable
+         */
+        void useCustomColorTable(const ColorTable& colorTable);
+        /**
+         *
+         * @param color
+         * @param toggle
+         */
+        void useCustomColor(VColor color, fgBool toggle = FG_TRUE);
+        /**
+         *
+         * @return
+         */
+        fgBool isUsingCustomColorTable(void) const {
+            return (fgBool)!!(m_stateFlags & USE_CUSTOM_COLOR_TABLE);
         }
 
         //----------------------------------------------------------------------

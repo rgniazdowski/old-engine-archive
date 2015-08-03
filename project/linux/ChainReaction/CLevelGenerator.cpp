@@ -130,10 +130,12 @@ fgBool CLevelGenerator::generate(void) {
     tPositions.reserve(gridCapacity + 1);
     usedColors.reserve(8);
     orphans.reserve(8);
+    const fgBool isOctNG = (fgBool)(m_genLevelType == LevelType::LEVEL_OCTAGONS_NG);
+    const fgBool isOct = (fgBool)(m_genLevelType == LevelType::LEVEL_OCTAGONS);
 
     // Need to populate tPositions completely
-    for(unsigned int y = m_border.y; y < sizeY-m_border.y; y++) {
-        for(unsigned int x = m_border.x; x < sizeX-m_border.x; x++) {
+    for(unsigned int y = m_border.y; y < sizeY - m_border.y; y++) {
+        for(unsigned int x = m_border.x; x < sizeX - m_border.x; x++) {
             SBlockInfo blockInfo;
             blockInfo.pos.x = x;
             blockInfo.pos.y = y;
@@ -142,12 +144,30 @@ fgBool CLevelGenerator::generate(void) {
             } else if(isRegularCheckerboard()) {
                 // now with the regular checkerboard active
                 const fgBool isEven = (fgBool)!!(x % 2 == 0);
+                const fgBool isEvenY = (fgBool)!!(y % 2 == 0);
                 const unsigned int maxColorIdx = m_colorTable.size();
                 unsigned int colorIdx = 0;
-                if(isEven) {
-                    colorIdx = maxColorIdx - ((y + 1) % maxColorIdx) - 1;
+                if(!isOct && !isOctNG) {
+                    // Quad & Hexagon
+                    if(isEven) {
+                        colorIdx = maxColorIdx - ((y + 1) % maxColorIdx) - 1;
+                    } else {
+                        colorIdx = maxColorIdx - ((y) % maxColorIdx) - 1;
+                    }
+                } else if(isOct) {
+                    // Octagon
+                    if(isEven) {
+                        colorIdx = maxColorIdx - ((y + 1 - isEvenY) % maxColorIdx) - 1;
+                    } else {
+                        colorIdx = maxColorIdx - ((y + isEvenY) % maxColorIdx) - 1;
+                    }
                 } else {
-                    colorIdx = maxColorIdx - ((y) % maxColorIdx) - 1;
+                    // Octagon NG
+                    if(isEvenY) {
+                        colorIdx = maxColorIdx - ((x + 2) % maxColorIdx) - 1;
+                    } else {
+                        colorIdx = maxColorIdx - ((x) % maxColorIdx) - 1;
+                    }
                 }
                 blockInfo.color = m_colorTable[colorIdx];
             }
@@ -413,6 +433,37 @@ VColor CLevelGenerator::getRandomColor(void) const {
 }
 //------------------------------------------------------------------------------
 
+void CLevelGenerator::useCustomColorTable(const ColorTable& colorTable) {
+    if(colorTable.empty()) {
+        return;
+    }
+    useCustomColorTable(FG_TRUE);
+    const unsigned int n = colorTable.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(!m_colorTable.contains(colorTable[i])) {
+            m_colorTable.push_back(colorTable[i]);
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void CLevelGenerator::useCustomColor(VColor color, fgBool toggle) {
+    if(toggle) {
+        if(!isUsingCustomColorTable()) {
+            useCustomColorTable(FG_TRUE);
+        }
+        if(!m_colorTable.contains(color)) {
+            m_colorTable.push_back(color);
+        }
+    } else {
+        int index = m_colorTable.find(color);
+        if(index >= 0) {
+            m_colorTable.remove(index);
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
 void CLevelGenerator::checkInternals(void) {
     refreshColorTable();
     // now validate color table
@@ -474,23 +525,25 @@ void CLevelGenerator::checkInternals(void) {
 //------------------------------------------------------------------------------
 
 void CLevelGenerator::refreshColorTable(void) {
-    m_colorTable.clear();
-    if(isUsingBlackAndWhiteColors()) {
-        m_colorTable.push_back(VColor::BLACK);
-        m_colorTable.push_back(VColor::WHITE);
-    }
-    if(isUsingGrayColor()) {
-        m_colorTable.push_back(VColor::GRAY);
-    }
-    if(isUsingRgbColors()) {
-        m_colorTable.push_back(VColor::RED);
-        m_colorTable.push_back(VColor::GREEN);
-        m_colorTable.push_back(VColor::BLUE);
-    }
-    if(isUsingCmyColors()) {
-        m_colorTable.push_back(VColor::CYAN);
-        m_colorTable.push_back(VColor::MAGENTA);
-        m_colorTable.push_back(VColor::YELLOW);
+    if(!isUsingCustomColorTable()) {
+        m_colorTable.clear();
+        if(isUsingBlackAndWhiteColors()) {
+            m_colorTable.push_back(VColor::BLACK);
+            m_colorTable.push_back(VColor::WHITE);
+        }
+        if(isUsingGrayColor()) {
+            m_colorTable.push_back(VColor::GRAY);
+        }
+        if(isUsingRgbColors()) {
+            m_colorTable.push_back(VColor::RED);
+            m_colorTable.push_back(VColor::GREEN);
+            m_colorTable.push_back(VColor::BLUE);
+        }
+        if(isUsingCmyColors()) {
+            m_colorTable.push_back(VColor::CYAN);
+            m_colorTable.push_back(VColor::MAGENTA);
+            m_colorTable.push_back(VColor::YELLOW);
+        }
     }
 }
 //------------------------------------------------------------------------------
