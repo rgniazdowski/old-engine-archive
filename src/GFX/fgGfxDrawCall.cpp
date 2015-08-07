@@ -536,8 +536,16 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
 void gfx::CDrawCall::draw(void) {
     // Internal array uses vertex data objects allocated inside of this draw call
     // If it's not set - nothing to draw
-    if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY)
+    if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
         return;
+    }
+    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+        m_vecDataBase->refreshAttributes(m_attrData);
+        m_drawingInfo.count = m_vecDataBase->size();
+    }
+    if(!m_drawingInfo.count) {
+        return;
+    }
     fgBool scissorSet = FG_FALSE;
     if(m_scissorBox.z != 0 && m_scissorBox.w != 0) {
         // If scissor box has some kind of size then...
@@ -546,8 +554,7 @@ void gfx::CDrawCall::draw(void) {
     }
     if(m_MVP && m_program) {
         // force use program?
-        m_program->use();
-        //m_MVP->calculate(m_modelMat);
+        m_program->use();        
         m_program->setUniform(m_MVP);
     }
     if(m_program) {
@@ -567,13 +574,7 @@ void gfx::CDrawCall::draw(void) {
             }
         }
     }
-    // #FIXME - need to use attribute data array
-    //fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
-    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
-        m_vecDataBase->refreshAttributes(m_attrData);
-        m_drawingInfo.count = m_vecDataBase->size();
-    }
-    // Will now draw data from Other types ...
+    // Will now draw data
     if(applyAttributeData()) {
         if(m_material) {
             context::setCullFace(m_material->isCullFace());

@@ -2469,8 +2469,8 @@ namespace fg {
             void vertexAttribPointer(SAttributeData& attrData);
 
         };
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_CONTEXT_BLOCK
 #endif /* FG_INC_GFX_CONTEXT */
