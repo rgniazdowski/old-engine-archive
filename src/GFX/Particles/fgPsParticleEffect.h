@@ -18,49 +18,16 @@
 
     #include "fgParticle.h"
     #include "Util/fgTag.h"
-// #FIXME - maybe save particle effects (or any kind of effects)
-// inside of a resource manager ? Particle System would be just 
-// used for display routines? Well... whatever
+
     #include "Resource/fgResource.h"
     #include "Util/fgConfigStruct.h"
-
 
 namespace fg {
     namespace gfx {
         class CParticleEffect;
 
-        /**
-         *
-         */
-        enum ParticleEffectFlags {
-            /// No specific flags are specified
-            FG_PARTICLE_FLAG_NONE = 0x00000000,
-            /// Is velocity random or static? If random then it's from <-spreadSpeed, spreadSpeed>
-            FG_PARTICLE_RANDOM_VELOCITY = 0x00000001,
-            /// Does life of the particle sets the size?
-            FG_PARTICLE_LIFE_AS_SIZE = 0x00000002,
-            /// Do particles pitch in the direction they're flying
-            FG_PARTICLE_FACING_VELOCITY = 0x00000004,
-            /// Does the particle is rotated so it's facing the camera
-            FG_PARTICLE_FACING_CAMERA = 0x00000008,
-            /// The particle sprite is rotated at a random angle when it is emitted
-            FG_PARTICLE_RANDOM_ANGLE = 0x00000010,
-            /// Is the current particle grouped? #FIXME
-            FG_PARTICLE_GROUP_EFFECT = 0x00000020,
-            /// Are parameters (start/end size, start/end color) taken into account 
-            /// when calculating the particles. LifeAsSize will be overridden.
-            FG_PARTICLE_PARAMS_ACTIVE = 0x00000040,
-            /// TTL range is specified
-            FG_PARTICLE_TTL_RANGE = 0x00000080,
-            /// Fade speed range is specified
-            FG_PARTICLE_FADE_SPEED_RANGE = 0x00000100,
-            /// Life range is specified
-            FG_PARTICLE_LIFE_RANGE = 0x00000200,
-        };
-        
-        FG_ENUM_FLAGS(ParticleEffectFlags);
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
 
 
@@ -121,7 +88,7 @@ namespace fg {
     namespace gfx {
 
         class CShaderProgram;
-        
+
         /// Special tag type for particle effect
         typedef FG_TAG_PARTICLE_EFFECT ParticleEffectTag;
         /// Special handle type for particle effect
@@ -136,12 +103,42 @@ namespace fg {
             typedef CParticleEffect self_type;
             ///
             typedef CParticleEffect type;
-            
+
+        public:
+
+            enum StateFlags {
+                /// No specific flags are specified
+                NO_FLAGS = 0x00000000,
+                /// Is velocity random or static? If random then it's from <-spreadSpeed, spreadSpeed>
+                RANDOM_VELOCITY = 0x00000001,
+                /// Does life of the particle sets the size?
+                LIFE_AS_SIZE = 0x00000002,
+                /// Do particles pitch in the direction they're flying
+                FACING_VELOCITY = 0x00000004,
+                /// Does the particle is rotated so it's facing the camera
+                FACING_CAMERA = 0x00000008,
+                /// The particle sprite is rotated at a random angle when it is emitted
+                RANDOM_ANGLE = 0x00000010,
+                /// Is the current particle grouped? #FIXME
+                GROUP_EFFECT = 0x00000020,
+                /// Are parameters (start/end size, start/end color) taken into account 
+                /// when calculating the particles. LifeAsSize will be overridden.
+                PARAMS_ACTIVE = 0x00000040,
+                /// TTL range is specified
+                TTL_RANGE_SET = 0x00000080,
+                /// Fade speed range is specified
+                FADE_SPEED_RANGE_SET = 0x00000100,
+                /// Life range is specified
+                LIFE_RANGE_SET = 0x00000200,
+                /// Burn (color) range is specified
+                BURN_RANGE_SET = 0x00000400
+            };
+
         private:
             /// Maximum number of a particles displayed at one time
             int m_maxCount;
             /// Particle effect specific flags
-            ParticleEffectFlags m_flags;
+            StateFlags m_flags;
             /// Particle area bounding box
             BoundingBox3Df m_particleArea;
             /// Is area set?
@@ -150,24 +147,21 @@ namespace fg {
             fgBool m_isAreaCheck;
             /// Texture name to use
             std::string m_textureName;
-            /// 
+            /// Shader name to use
             std::string m_shaderName;
-            ///
-            CShaderProgram *m_shaderProgram;
-            /// Texture ID
+            /// Pointer to external shader program to use (cache)
+            CShaderProgram *m_pShaderProgram;
+            /// Holder for gfx texture ID
             STextureID m_textureGfxID;
             /// Texture sprite sheet size
             Vector2i m_textureSheetSize;
-            /// Texture ID range
+            /// Texture ID range to use with this particle effect
             Vector2i m_textureIDRange;
 
             //
             // Particle parameters, used in automated particle addition
             // They're ignored when adding custom particles definitions
-            // #FIXME   - adding particles in also moved to another place
-            //          - the ParticleEmitter
-            //
-
+            
             /// The start size of the added particle. This will work if TTL is set
             Vector3f m_startSize;
             /// The end size of the animated particle. The particle will reach the end size in TTL miliseconds
@@ -180,8 +174,7 @@ namespace fg {
             /// Life = 10.0f equals TTL 1000ms
             /// The high life of the added particle. When the particle is added its life is set between start and end value
             Vector2f m_lifeRange;
-
-            /// TTL range
+            /// TTL range (used when randomizing)
             Vector2i m_ttlRange;
 
             /// Fade speed range
@@ -192,9 +185,9 @@ namespace fg {
             /// The end color of the animated particle. The particle will reach the end color in TTL miliseconds
             Color4f m_endColor;
 
-            /// 
+            /// Burnout delay
             unsigned int m_burnoutDelay;
-            ///
+            /// Burn parameter range
             Vector2f m_burnRange;
 
         protected:
@@ -213,6 +206,8 @@ namespace fg {
              * 
              */
             virtual ~CParticleEffect();
+
+            //------------------------------------------------------------------
 
             FG_RESOURCE_FACTORY_CREATE_FUNCTION(CParticleEffect);
 
@@ -239,24 +234,22 @@ namespace fg {
              * @return 
              */
             virtual fgBool isDisposed(void) const;
-            
-            ////////////////////////////////////////////////////////////////////
-            
+
+            //------------------------------------------------------------------
             /**
              * 
              * @param pShaderProgram
              */
             void setShaderProgram(CShaderProgram* pShaderProgram) {
-                m_shaderProgram = pShaderProgram;
+                m_pShaderProgram = pShaderProgram;
             }
             /**
              * 
              * @return 
              */
             CShaderProgram* getShaderProgram(void) const {
-                return m_shaderProgram;
+                return m_pShaderProgram;
             }
-            
             /**
              * 
              * @param shaderName
@@ -264,7 +257,7 @@ namespace fg {
             void setShaderName(const char* shaderName) {
                 if(shaderName)
                     m_shaderName = shaderName;
-            }            
+            }
             /**
              * 
              * @param shaderName
@@ -272,7 +265,6 @@ namespace fg {
             void setShaderName(const std::string& shaderName) {
                 m_shaderName = shaderName;
             }
-            
             /**
              * 
              * @return 
@@ -287,9 +279,8 @@ namespace fg {
             std::string const& getShaderName(void) const {
                 return m_shaderName;
             }
-            
-            ////////////////////////////////////////////////////////////////////
-            
+
+            //------------------------------------------------------------------
             /**
              * Limits number of particles the emitter will hold
              * Also limits number of the vertices, colors and UV binds
@@ -327,9 +318,8 @@ namespace fg {
                 m_isAreaSet = FG_FALSE;
                 m_isAreaCheck = FG_FALSE;
             }
-            
-            ////////////////////////////////////////////////////////////////////
-            
+
+            //------------------------------------------------------------------
             /**
              * Set the particle area for checking collisions with
              * @param area
@@ -360,14 +350,7 @@ namespace fg {
              * @param flags
              * @param toggle
              */
-            inline void setFlag(const ParticleEffectFlags flags, const fgBool toggle = FG_TRUE) {
-                if(toggle) {
-                    m_flags |= flags;
-                } else {
-                    m_flags |= flags;
-                    m_flags ^= flags;
-                }
-            }
+            void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
             /**
              * Set texture array X size (number of columns)
              */
@@ -409,42 +392,42 @@ namespace fg {
              * @param toggle
              */
             inline void setParamsActive(const fgBool toggle = FG_TRUE) {
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, toggle);
+                setFlag(PARAMS_ACTIVE, toggle);
             }
             /**
              * Is velocity random?
              * @param toggle
              */
             inline void setRandomVelocity(const fgBool toggle = FG_TRUE) {
-                setFlag(FG_PARTICLE_RANDOM_VELOCITY, toggle);
+                setFlag(RANDOM_VELOCITY, toggle);
             }
             /**
              * Is life of the particle describing also the size?
              * @param toggle
              */
             inline void setLifeAsSize(const fgBool toggle = FG_TRUE) {
-                setFlag(FG_PARTICLE_LIFE_AS_SIZE, toggle);
+                setFlag(LIFE_AS_SIZE, toggle);
             }
             /**
              * Do particles pitch in the direction they're flying?
              * @param toggle
              */
             inline void setFacingVelocity(const fgBool toggle = FG_TRUE) {
-                setFlag(FG_PARTICLE_FACING_VELOCITY, toggle);
+                setFlag(FACING_VELOCITY, toggle);
             }
             /**
              * 
              * @param toggle
              */
             inline void setFacingCamera(const fgBool toggle = FG_TRUE) {
-                setFlag(FG_PARTICLE_FACING_CAMERA, toggle);
+                setFlag(FACING_CAMERA, toggle);
             }
             /**
              * Is the newly added particle randomly rotated?
              * @param toggle
              */
             inline void setRandomAngle(const fgBool toggle = FG_TRUE) {
-                setFlag(FG_PARTICLE_RANDOM_ANGLE, toggle);
+                setFlag(RANDOM_ANGLE, toggle);
             }
             /**
              * 
@@ -461,7 +444,7 @@ namespace fg {
                 m_startSize.x = size;
                 m_startSize.y = size;
                 m_startSize.z = size;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * 
@@ -469,7 +452,7 @@ namespace fg {
              */
             inline void setStartSize(const Vector3f& size) {
                 m_startSize = size;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * The end size of the animated particle. The particle will reach the end size in TTL milliseconds
@@ -478,7 +461,7 @@ namespace fg {
                 m_endSize.x = size;
                 m_endSize.y = size;
                 m_endSize.z = size;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * 
@@ -486,7 +469,7 @@ namespace fg {
              */
             inline void setEndSize(const Vector3f& size) {
                 m_endSize = size;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * The start life of the added particle. When the particle is added its life is set between start and end value
@@ -537,7 +520,7 @@ namespace fg {
              */
             inline void setStartColor(const Color4f& color) {
                 m_startColor = color;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * 
@@ -551,7 +534,7 @@ namespace fg {
                 m_startColor.g = (float)g / 255.0f;
                 m_startColor.b = (float)b / 255.0f;
                 m_startColor.a = (float)a / 255.0f;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
 
             }
             /**
@@ -559,7 +542,7 @@ namespace fg {
              */
             inline void setEndColor(const Color4f& color) {
                 m_endColor = color;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * 
@@ -573,7 +556,7 @@ namespace fg {
                 m_endColor.g = (float)g / 255.0f;
                 m_endColor.b = (float)b / 255.0f;
                 m_endColor.a = (float)a / 255.0f;
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
+                setFlag(PARAMS_ACTIVE, FG_TRUE);
             }
             /**
              * 
@@ -612,14 +595,13 @@ namespace fg {
             inline void setTextureGfxID(const STextureID& texGfxID) {
                 m_textureGfxID = texGfxID;
             }
-            
-            ////////////////////////////////////////////////////////////////////
-            
+
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
              */
-            inline ParticleEffectFlags getFlags(void) const {
+            inline StateFlags getFlags(void) const {
                 return m_flags;
             }
             /**
@@ -640,7 +622,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline const char * getTextureNameStr(void) const {
+            inline const char* getTextureNameStr(void) const {
                 return m_textureName.c_str();
             }
             /**
@@ -724,47 +706,74 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgBool isParamsActive(void) {
-                return (fgBool)!!(m_flags & FG_PARTICLE_PARAMS_ACTIVE);
+            inline fgBool isParamsActive(void) const {
+                return (fgBool)!!(m_flags & PARAMS_ACTIVE);
             }
             /**
              * 
              * @return 
              */
-            inline fgBool isRandomVelocity(void) {
-                return (fgBool)!!(m_flags & FG_PARTICLE_RANDOM_VELOCITY);
+            inline fgBool isRandomVelocity(void) const {
+                return (fgBool)!!(m_flags & RANDOM_VELOCITY);
             }
             /**
              * 
              * @return 
              */
-            inline fgBool isLifeAsSize(void) {
-                return (fgBool)!!(m_flags & FG_PARTICLE_LIFE_AS_SIZE);
+            inline fgBool isLifeAsSize(void) const {
+                return (fgBool)!!(m_flags & LIFE_AS_SIZE);
             }
             /**
              * 
              * @return 
              */
-            inline fgBool isFacingVelocity(void) {
-                return (fgBool)!!(m_flags & FG_PARTICLE_FACING_VELOCITY);
+            inline fgBool isFacingVelocity(void) const {
+                return (fgBool)!!(m_flags & FACING_VELOCITY);
             }
             /**
              * 
              * @return 
              */
-            inline fgBool isFacingCamera(void) {
-                return (fgBool)!!(m_flags & FG_PARTICLE_FACING_CAMERA);
+            inline fgBool isFacingCamera(void) const {
+                return (fgBool)!!(m_flags & FACING_CAMERA);
             }
             /**
              * 
              * @return 
              */
-            inline fgBool isRandomAngle(void) {
-                return (fgBool)!!(m_flags & FG_PARTICLE_RANDOM_ANGLE);
+            inline fgBool isRandomAngle(void) const {
+                return (fgBool)!!(m_flags & RANDOM_ANGLE);
             }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isTTLRangeSet(void) const {
+                return (fgBool)!!(m_flags & TTL_RANGE_SET);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isFadeSpeedRangeSet(void) const {
+                return (fgBool)!!(m_flags & FADE_SPEED_RANGE_SET);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isLifeRangeSet(void) const {
+                return (fgBool)!!(m_flags & LIFE_RANGE_SET);
+            }
+            /**
+             * 
+             * @return
+             */
+            inline fgBool isBurnRangeSet(void) const {
+                return (fgBool)!!(m_flags & BURN_RANGE_SET);
+            }
+            //------------------------------------------------------------------
 
-            ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @param params
@@ -794,9 +803,21 @@ namespace fg {
              * @param outputParticle
              */
             void basicCalculate(SParticle *outputParticle);
-        };
-    };
-};
+        }; // class CParticleEffect
+
+        FG_ENUM_FLAGS(CParticleEffect::StateFlags);
+
+        //----------------------------------------------------------------------
+        inline void CParticleEffect::setFlag(const StateFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_flags |= flags;
+            } else {
+                m_flags |= flags;
+                m_flags ^= flags;
+            }
+        }
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_PS_PARTICLE_EFFECT_BLOCK
 #endif /* FG_INC_PS_PARTICLE_EFFECT */

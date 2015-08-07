@@ -153,6 +153,18 @@ void gfx::CParticleEmitter::calculate(void) {
             removeParticle(i);
             //continue;
         }
+#if 0
+        else if(m_isAreaCheck == false && m_drawMode == MODE_2D) {
+            if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x / 2 >= float(screenArea.x) && m_particles[i].bbox.pos.x - m_particles[i].bbox.size.x / 2 <= float(screenArea.x + screenArea.w)) {
+                // The UPPER and LOWER boundary
+                if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y / 2 <= float(screenArea.y) || m_particles[i].bbox.pos.y - m_particles[i].bbox.size.y / 2 >= float(screenArea.y + screenArea.h))
+                    remove(i);
+                // Particle X position is out of boundaries so we can delete it
+            } else {
+                remove(i);
+            }
+        }
+#endif
         SParticle &particle = m_particles[i];
         //
         // Calculate the texture coords based on texture sheet parameters
@@ -308,7 +320,7 @@ void gfx::CParticleEmitter::calculate(void) {
 void gfx::CParticleEmitter::draw(void) {
     //glEnable(GL_POLYGON_OFFSET_FILL);
     //glPolygonOffset(1.0f, 2.0f);
-    //m_drawCall->setZIndex(45); // #FIXME
+
     // #FIXME - such things should be set inside of a material
     context::blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     context::setBlend(FG_TRUE);

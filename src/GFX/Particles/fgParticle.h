@@ -100,9 +100,15 @@ namespace fg {
                 // is useful for some scaling effects
                 // This also means that fadeSpeed/life need
                 // to be stored as float values
-                ttl = _ttl;
-                life = 1000.0f;
-                fadeSpeed = life / ttl * 1000.0f;
+                if(ttl) {
+                    ttl = _ttl;
+                    life = 1000.0f;
+                    fadeSpeed = life / ttl * 1000.0f;
+                } else {
+                    ttl = 0;
+                    life = 1000.0f;
+                    fadeSpeed = 0.0f;
+                }
             }
             /**
              * 
@@ -112,11 +118,15 @@ namespace fg {
             void setLife(const float _life, const float _fadeSpeed) {
                 life = _life;
                 fadeSpeed = _fadeSpeed;
-                ttl = life / fadeSpeed;
+                if(fadeSpeed > 0.0f) {
+                    ttl = life / fadeSpeed;
+                } else {
+                    ttl = 0;
+                }
             }
-        };
-    };
-};
+        }; // struct SParticle
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_PARTICLE_BLOCK
 #endif /* FG_INC_PARTICLE */

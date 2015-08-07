@@ -16,15 +16,15 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-gfx::CParticleEffect::CParticleEffect() : CResource(),
+gfx::CParticleEffect::CParticleEffect() : base_type(),
 m_maxCount(10),
-m_flags(FG_PARTICLE_FLAG_NONE),
+m_flags(NO_FLAGS),
 m_particleArea(),
 m_isAreaSet(FG_FALSE),
 m_isAreaCheck(FG_FALSE),
 m_textureName(),
 m_shaderName(),
-m_shaderProgram(NULL),
+m_pShaderProgram(NULL),
 m_textureGfxID(),
 m_textureSheetSize(),
 m_textureIDRange(),
@@ -82,7 +82,7 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
             if(param->type == util::SCfgParameter::STRING) {
                 //this->setName(param->string);
                 if(strcasecmp(param->string, "group") == 0) {
-                    this->setFlag(FG_PARTICLE_GROUP_EFFECT, FG_TRUE);
+                    this->setFlag(GROUP_EFFECT, FG_TRUE);
                 } else if(FG_FALSE && strcasecmp(param->string, "single") == 0) {
 
                 }
@@ -113,32 +113,32 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
             // random - velocity – bool –
         } else if(param->name.compare("random-velocity") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
-                setFlag(FG_PARTICLE_RANDOM_VELOCITY, param->bool_val);
+                setFlag(RANDOM_VELOCITY, param->bool_val);
 
             // random - angle – bool –
         } else if(param->name.compare("random-angle") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
-                setFlag(FG_PARTICLE_RANDOM_ANGLE, param->bool_val);
+                setFlag(RANDOM_ANGLE, param->bool_val);
 
             // life - as - size – bool –
         } else if(param->name.compare("life-as-size") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
-                setFlag(FG_PARTICLE_LIFE_AS_SIZE, param->bool_val);
+                setFlag(LIFE_AS_SIZE, param->bool_val);
 
             // facing - velocity – bool –
         } else if(param->name.compare("facing-velocity") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
-                setFlag(FG_PARTICLE_FACING_VELOCITY, param->bool_val);
+                setFlag(FACING_VELOCITY, param->bool_val);
 
             // facing - camera – bool –
         } else if(param->name.compare("facing-camera") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
-                setFlag(FG_PARTICLE_FACING_CAMERA, param->bool_val);
+                setFlag(FACING_CAMERA, param->bool_val);
 
             // params - active – bool –
         } else if(param->name.compare("params-active") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
-                setFlag(FG_PARTICLE_PARAMS_ACTIVE, param->bool_val);
+                setFlag(PARAMS_ACTIVE, param->bool_val);
 
             // start - size – vector –
         } else if(param->name.compare("start-size") == 0) {
@@ -159,20 +159,20 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
         } else if(param->name.compare("life-range") == 0) {
             if(param->type == util::SCfgParameter::STRING) {
                 strings::parseVector<Vector2f>(m_lifeRange, param->string);
-                setFlag(FG_PARTICLE_LIFE_RANGE, FG_TRUE);
+                setFlag(LIFE_RANGE_SET, FG_TRUE);
             }
             // ttl - range – vector –
         } else if(param->name.compare("ttl-range") == 0) {
             if(param->type == util::SCfgParameter::STRING) {
                 strings::parseVector<Vector2i>(m_ttlRange, param->string);
-                setFlag(FG_PARTICLE_TTL_RANGE, FG_TRUE);
+                setFlag(TTL_RANGE_SET, FG_TRUE);
             }
 
             // fade - speed - range – vector –
         } else if(param->name.compare("fade-speed-range") == 0) {
             if(param->type == util::SCfgParameter::STRING) {
                 strings::parseVector<Vector2f>(m_fadeSpeedRange, param->string);
-                setFlag(FG_PARTICLE_FADE_SPEED_RANGE, FG_TRUE);
+                setFlag(FADE_SPEED_RANGE_SET, FG_TRUE);
             }
             // start - color – color –
         } else if(param->name.compare("start-color") == 0) {
@@ -268,6 +268,7 @@ fgBool gfx::CParticleEffect::create(void) {
     m_isReady = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::destroy(void) {
     m_isReady = FG_FALSE;
@@ -311,10 +312,10 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
     from.velocity = -m_spreadSpeed;
     from.bbox.size = m_startSize;
 
-    if(!(m_flags & FG_PARTICLE_TTL_RANGE) && !(FG_PARTICLE_FADE_SPEED_RANGE)) {
+    if(!(m_flags & TTL_RANGE_SET) && !(FADE_SPEED_RANGE_SET)) {
         // m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
         from.setTTL(m_lifeRange.x / 10.0f * 1000.0f);
-    } else if(!!(m_flags & FG_PARTICLE_TTL_RANGE)) {
+    } else if(!!(m_flags & TTL_RANGE_SET)) {
         // from ttl range
         from.setTTL(m_ttlRange.x);
     } else {
@@ -347,10 +348,10 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
     to.velocity = m_spreadSpeed;
     to.bbox.size = m_startSize;
 
-    if(!(m_flags & FG_PARTICLE_TTL_RANGE) && !(FG_PARTICLE_FADE_SPEED_RANGE)) {
+    if(!(m_flags & TTL_RANGE_SET) && !(FADE_SPEED_RANGE_SET)) {
         // m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
         to.setTTL(m_lifeRange.y / 10.0f * 1000.0f);
-    } else if(!!(m_flags & FG_PARTICLE_TTL_RANGE)) {
+    } else if(!!(m_flags & TTL_RANGE_SET)) {
         // from ttl range
         to.setTTL(m_ttlRange.y);
     } else {
@@ -391,54 +392,9 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
 }
 //------------------------------------------------------------------------------
 
-#if 0
-
-void gfx::CParticleEffect::calculate(void) {
-    if(m_particles[i].life <= 0.0f) {
-        remove(i);
-        // Checking the particle area which means checking and bouncing off particles of the area edges
-    } else if(m_isAreaSet == FG_TRUE && m_isAreaCheck == FG_TRUE && m_drawMode == MODE_2D) {
-        // Particle X position is within the boundaries so we can check the Y position
-        if(m_particles[i].bbox.pos.x >= float(m_particleArea.x) && m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x <= float(m_particleArea.x + m_particleArea.w)) {
-            // The UPPER and LOWER boundary
-            if(m_particles[i].bbox.pos.y <= float(m_particleArea.y) || m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y >= float(m_particleArea.y + m_particleArea.h))
-                m_particles[i].velocity.y *= -1.0f;
-            // Particle X position is out of boundaries so we can change it's direction
-        } else {
-            m_particles[i].velocity.x *= -1.0f;
-            // FIXME
-        }
-
-        if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y > float(m_particleArea.y + m_particleArea.h)) {
-            float diff = fabs(float(m_particleArea.y + m_particleArea.h) - (m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y));
-            m_particles[i].bbox.pos.y -= diff + m_particles[i].bbox.size.y / 4.0f;
-        }
-
-        if(m_particles[i].bbox.pos.x < float(m_particleArea.x))
-            m_particles[i].bbox.pos.x += fabs(m_particles[i].bbox.pos.x - float(m_particleArea.x));
-
-        if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x > float(m_particleArea.x + m_particleArea.w)) {
-            float diff = fabs(float(m_particleArea.x + m_particleArea.w) - (m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x));
-            m_particles[i].bbox.pos.x -= diff + m_particles[i].bbox.size.x / 4.0f;
-        }
-        // Deleting particles fully offscreen
-    } else if(m_isAreaCheck == false && m_drawMode == MODE_2D) {
-        if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x / 2 >= float(screenArea.x) && m_particles[i].bbox.pos.x - m_particles[i].bbox.size.x / 2 <= float(screenArea.x + screenArea.w)) {
-            // The UPPER and LOWER boundary
-            if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y / 2 <= float(screenArea.y) || m_particles[i].bbox.pos.y - m_particles[i].bbox.size.y / 2 >= float(screenArea.y + screenArea.h))
-                remove(i);
-            // Particle X position is out of boundaries so we can delete it
-        } else {
-            remove(i);
-        }
-    }
-}
-}
-#endif
-
 void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
                                            const SParticle* to,
-                                           SParticle * result) {
+                                           SParticle* result) {
     int from_val, to_val;
     SParticle* target = result;
 
