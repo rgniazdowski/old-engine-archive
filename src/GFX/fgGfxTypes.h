@@ -228,9 +228,21 @@ namespace fg {
                 buffer = 0;
                 count = 0;
             }
+        }; // struct SDrawingInfo
+
+        /**
+         *
+         */
+        enum class PrimitiveMode {
+            TRIANGLES = (fgGFXenum)GL_TRIANGLES,
+            TRIANGLE_STRIP = (fgGFXenum)GL_TRIANGLE_STRIP,
+            TRIANGLE_FAN = (fgGFXenum)GL_TRIANGLE_FAN,
+            LINES = (fgGFXenum)GL_LINES,
+            LINE_LOOP = (fgGFXenum)GL_LINE_LOOP,
+            LINE_STRIP = (fgGFXenum)GL_LINE_STRIP
         };
-    }
-}
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_TYPES_BLOCK
 #endif /* FG_INC_GFX_TYPES */

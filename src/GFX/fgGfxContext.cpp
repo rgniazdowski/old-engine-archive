@@ -1608,10 +1608,29 @@ void gfx::context::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::context::bindBuffer(const ParamType target, const fgGFXuint buffer) {
+    if(target == gfx::ARRAY_BUFFER) {
+        g_params[gfx::ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
+    } else if(target == gfx::ELEMENT_ARRAY_BUFFER) {
+        g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
+    }
+}
+//------------------------------------------------------------------------------
+
 fgGFXuint gfx::context::boundBuffer(const fgGFXenum target) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
         return g_params[gfx::ARRAY_BUFFER_BINDING];
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
+        return g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING];
+    }
+    return 0;
+}
+//------------------------------------------------------------------------------
+
+fgGFXuint gfx::context::boundBuffer(const ParamType target) {
+    if(target == gfx::ARRAY_BUFFER) {
+        return g_params[gfx::ARRAY_BUFFER_BINDING];
+    } else if(target == gfx::ELEMENT_ARRAY_BUFFER) {
         return g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING];
     }
     return 0;
@@ -2164,5 +2183,19 @@ void gfx::context::vertexAttribPointer(SAttributeData& attrData) {
                           attrData.stride,
                           attrData.pointer);
     GLCheckError("glVertexAttribPointer"); // #FIXME
+}
+//------------------------------------------------------------------------------
+
+void gfx::context::drawElements(PrimitiveMode primitiveMode,
+                                const fgGFXsizei count,
+                                const fgGFXvoid* indices) {
+    glDrawElements((fgGFXenum)primitiveMode, count, GL_UNSIGNED_SHORT, indices);
+}
+//------------------------------------------------------------------------------
+
+void gfx::context::drawArrays(PrimitiveMode primitiveMode,
+                              fgGFXint first,
+                              fgGFXsizei count) {
+    glDrawArrays((fgGFXenum)primitiveMode, first, count);
 }
 //------------------------------------------------------------------------------

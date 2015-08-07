@@ -497,21 +497,21 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
     primitives::appendRect2D(m_vecDataBase, pos, size, uv1, uv2, m_color, m_primMode, rewind);
 }
 //------------------------------------------------------------------------------
-
+#if 0
 fgBool gfx::CDrawCall::applyAttributeData(void) {
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
        m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY ||
        m_drawCallType == FG_GFX_DRAW_CALL_EXTERNAL_ARRAY) {
         context::diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
-            context::bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
+            context::bindBuffer(gfx::ARRAY_BUFFER, m_attrData[0].buffer);
         } else {
-            context::bindBuffer(GL_ARRAY_BUFFER, 0);
+            context::bindBuffer(gfx::ARRAY_BUFFER, 0);
         }
         for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
             if(m_attrData[i].isEnabled) {
                 if(m_attrData[i].isInterleaved == FG_FALSE && m_attrData[i].isBO) {
-                    context::bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
+                    context::bindBuffer(gfx::ARRAY_BUFFER, m_attrData[i].buffer);
                 }
                 context::vertexAttribPointer(m_attrData[i].index,
                                              m_attrData[i].size,
@@ -522,15 +522,16 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
             }
         }
         if(m_drawingInfo.buffer) {
-            context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
+            context::bindBuffer(gfx::ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
         } else {
-            context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            context::bindBuffer(gfx::ELEMENT_ARRAY_BUFFER, 0);
         }
     } else {
         return FG_FALSE;
     }
     return FG_TRUE;
 }
+#endif
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::draw(void) {
@@ -554,7 +555,7 @@ void gfx::CDrawCall::draw(void) {
     }
     if(m_MVP && m_program) {
         // force use program?
-        m_program->use();        
+        m_program->use();
         m_program->setUniform(m_MVP);
     }
     if(m_program) {
@@ -574,8 +575,11 @@ void gfx::CDrawCall::draw(void) {
             }
         }
     }
-    // Will now draw data
-    if(applyAttributeData()) {
+    // Will now draw data    
+    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
+       m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY ||
+       m_drawCallType == FG_GFX_DRAW_CALL_EXTERNAL_ARRAY) {
+        primitives::applyAttributeData(m_attrData, m_drawingInfo, m_attribMask);
         if(m_material) {
             context::setCullFace(m_material->isCullFace());
             context::setDepthTest(m_material->isDepthTest());
@@ -586,14 +590,14 @@ void gfx::CDrawCall::draw(void) {
         // attribute data array is set
         // unsigned short is mainly because of ES
         if(m_drawingInfo.buffer || m_drawingInfo.indices.pointer) {
-            glDrawElements((fgGFXenum)m_primMode, m_drawingInfo.count, GL_UNSIGNED_SHORT, m_drawingInfo.indices.offset);
+            context::drawElements(m_primMode, m_drawingInfo.count, m_drawingInfo.indices.offset);
         } else {
             // #FIXME
-            glDrawArrays((fgGFXenum)m_primMode, 0, m_drawingInfo.count);
+            context::drawArrays(m_primMode, 0, m_drawingInfo.count);
         }
         // #FIXME
-        context::bindBuffer(GL_ARRAY_BUFFER, 0);
-        context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        context::bindBuffer(gfx::ARRAY_BUFFER, 0);
+        context::bindBuffer(gfx::ELEMENT_ARRAY_BUFFER, 0);
     }
 
     if(scissorSet) {

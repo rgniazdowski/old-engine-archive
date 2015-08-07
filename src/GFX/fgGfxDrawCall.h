@@ -52,7 +52,7 @@ namespace fg {
         const unsigned int Z_INDEX_DEFAULT = 127; // center / zero
         const unsigned int Z_INDEX_MIN = 0; // it's like -127
         const unsigned int Z_INDEX_MAX = 255; // +127
-        
+
         const unsigned int Z_INDEX_PARTICLES = 100;
         const unsigned int Z_INDEX_OBJECTS_3D = 120;
 
@@ -164,7 +164,9 @@ namespace fg {
             /**
              * 
              */
+    #if 0
             fgBool applyAttributeData(void);
+    #endif
 
         protected:
             /**
@@ -207,13 +209,13 @@ namespace fg {
              * @param pMesh
              */
             void setupFromMesh(const SMeshBase* pMesh);
-            
+
             /**
              * 
              * @param pShape
              */
             void setupFromShape(const SShape* pShape);
-            
+
             /**
              * 
              * @param pMaterial
@@ -221,13 +223,13 @@ namespace fg {
             void setupMaterial(const SMaterial* pMaterial);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @return 
              */
             SMaterial *getMaterial(void) const;
-            
+
             /**
              * 
              * @return 
@@ -345,7 +347,7 @@ namespace fg {
             void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * Set active color for the next data
              * @param color
@@ -360,7 +362,7 @@ namespace fg {
              * This will reset used color
              */
             virtual void resetColor(void);
-            
+
             ////////////////////////////////////////////////////////////////////
 
             /**
@@ -385,7 +387,7 @@ namespace fg {
             CShaderProgram* getShaderProgram(void) const;
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * Sets the texture pointer
              * @param textureID
@@ -403,7 +405,7 @@ namespace fg {
             STextureID& getTexture(void);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * Clear the buffers
              */
@@ -433,7 +435,7 @@ namespace fg {
                               const fgBool rewind = FG_FALSE);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              */

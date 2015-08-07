@@ -451,10 +451,9 @@ void gfx::primitives::drawSkyBoxOptimized(void) {
                                  reinterpret_cast<fgGFXvoid*>(offset));
 
     //(GLenum mode, GLsizei count, GLenum type, const void *indices)
-    glDrawElements((GLenum)PrimitiveMode::TRIANGLE_STRIP,
-                   sizeof (c_stripCube1x1Idx) / sizeof (c_stripCube1x1Idx[0]),
-                   GL_UNSIGNED_SHORT,
-                   c_stripCube1x1Idx);
+    context::drawElements(PrimitiveMode::TRIANGLE_STRIP,
+                          sizeof (c_stripCube1x1Idx) / sizeof (c_stripCube1x1Idx[0]),
+                          c_stripCube1x1Idx);
 }
 //------------------------------------------------------------------------------
 
@@ -499,12 +498,12 @@ void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
 //------------------------------------------------------------------------------
 
 static fgBool createMeshFromRawData_Helper(gfx::SMeshBase* pMesh,
-                                    const gfx::Vertex3v* pInputData, unsigned int numVertex,
-                                    const fgGFXushort* pIndices = NULL, unsigned int numIndices = 0,
-                                    gfx::PrimitiveMode primMode = gfx::PrimitiveMode::TRIANGLE_STRIP,
-                                    const Vec3f& scale = Vec3f(1.0f, 1.0f, 1.0f),
-                                    fgBool shouldPreRotate = FG_FALSE, float angle = 0.0f,
-                                    const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
+                                           const gfx::Vertex3v* pInputData, unsigned int numVertex,
+                                           const fgGFXushort* pIndices = NULL, unsigned int numIndices = 0,
+                                           gfx::PrimitiveMode primMode = gfx::PrimitiveMode::TRIANGLE_STRIP,
+                                           const Vec3f& scale = Vec3f(1.0f, 1.0f, 1.0f),
+                                           fgBool shouldPreRotate = FG_FALSE, float angle = 0.0f,
+                                           const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
 
 static fgBool createMeshFromRawData_Helper(gfx::SMeshBase* pMesh,
                                            const gfx::Vertex3v* pInputData, unsigned int numVertices,
@@ -730,7 +729,7 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
                                  FG_GFX_FALSE,
                                  sizeof (Vector4f),
                                  reinterpret_cast<fgGFXvoid*>(offset));
-    glDrawArrays((GLenum)PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
+    context::drawArrays(PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
 
 }
 //------------------------------------------------------------------------------
@@ -748,7 +747,7 @@ void gfx::primitives::drawArray(const CVector<Vector3f>& inputData,
                                  FG_GFX_FALSE,
                                  sizeof (Vector3f),
                                  reinterpret_cast<fgGFXvoid*>(offset));
-    glDrawArrays((GLenum)mode, 0, inputData.size());
+    context::drawArrays(mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
 //------------------------------------------------------------------------------
@@ -778,7 +777,7 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex2v> &inputData,
                                      sizeof (Vertex2v),
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
-    glDrawArrays((GLenum)mode, 0, inputData.size());
+    context::drawArrays(mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
 //------------------------------------------------------------------------------
@@ -820,7 +819,7 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
                                      sizeof (Vertex3v),
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
-    glDrawArrays((GLenum)mode, 0, inputData.size());
+    context::drawArrays(mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
 //------------------------------------------------------------------------------
@@ -868,7 +867,7 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                      sizeof (Vertex4v),
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
-    glDrawArrays((GLenum)mode, 0, inputData.size());
+    context::drawArrays(mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
 //------------------------------------------------------------------------------
@@ -900,7 +899,7 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                      sizeof (Vertex2v),
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
-    glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
+    context::drawElements(mode, indices.size(), &indices.front());
     GLCheckError("glDrawElements");
 }
 //------------------------------------------------------------------------------
@@ -1000,14 +999,14 @@ void gfx::primitives::applyAttributeData(SAttributeData *attrData,
         return;
     context::diffVertexAttribArrayMask(attribMask);
     if(attrData[0].isInterleaved == FG_TRUE && attrData[0].isBO) {
-        context::bindBuffer(GL_ARRAY_BUFFER, attrData[0].buffer);
+        context::bindBuffer(gfx::ARRAY_BUFFER, attrData[0].buffer);
     } else {
-        context::bindBuffer(GL_ARRAY_BUFFER, 0);
+        context::bindBuffer(gfx::ARRAY_BUFFER, 0);
     }
     for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
         if(attrData[i].isEnabled) {
             if(attrData[i].isInterleaved == FG_FALSE && attrData[i].isBO) {
-                context::bindBuffer(GL_ARRAY_BUFFER, attrData[i].buffer);
+                context::bindBuffer(gfx::ARRAY_BUFFER, attrData[i].buffer);
             }
             context::vertexAttribPointer(attrData[i].index,
                                          attrData[i].size,
@@ -1018,9 +1017,9 @@ void gfx::primitives::applyAttributeData(SAttributeData *attrData,
         }
     }
     if(drawingInfo.buffer) {
-        context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawingInfo.buffer);
+        context::bindBuffer(gfx::ELEMENT_ARRAY_BUFFER, drawingInfo.buffer);
     } else {
-        context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        context::bindBuffer(gfx::ELEMENT_ARRAY_BUFFER, 0);
     }
 }
 //------------------------------------------------------------------------------
@@ -1052,10 +1051,10 @@ void gfx::primitives::drawVertexData(const CVertexData *inputData,
     // attribute data array is set
     // unsigned short is mainly because of ES
     if(drawingInfo.buffer || drawingInfo.indices.pointer) {
-        glDrawElements((fgGFXenum)mode, drawingInfo.count, GL_UNSIGNED_SHORT, drawingInfo.indices.offset);
+        context::drawElements(mode, drawingInfo.count, drawingInfo.indices.offset);
     } else {
         // #FIXME
-        glDrawArrays((fgGFXenum)mode, 0, drawingInfo.count);
+        context::drawArrays(mode, 0, drawingInfo.count);
     }
     // #FIXME
     context::bindBuffer(GL_ARRAY_BUFFER, 0);
@@ -1103,7 +1102,7 @@ void gfx::primitives::drawVertexData(const CVertexData *inputData,
                                          inputData->stride(),
                                          reinterpret_cast<fgGFXvoid*>(offset));
         }
-        glDrawArrays((fgGFXenum)mode, 0, inputData->size());
+        context::drawArrays((fgGFXenum)mode, 0, inputData->size());
         GLCheckError("glDrawArrays");
     }
 #endif
@@ -1127,7 +1126,7 @@ void gfx::primitives::drawSquare2D(void) {
                                  FG_GFX_FALSE,
                                  sizeof (Vertex3v),
                                  (fgGFXvoid*)offset);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (Vertex3v));
+    context::drawArrays(PrimitiveMode::TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (Vertex3v));
 }
 //------------------------------------------------------------------------------
 
@@ -1147,7 +1146,7 @@ void gfx::primitives::drawRect2D(void) {
                                  FG_GFX_FALSE,
                                  sizeof (Vertex3v),
                                  (fgGFXvoid*)offset);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (Vertex3v));
+    context::drawArrays(PrimitiveMode::TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (Vertex3v));
     GLCheckError("glDrawArrays");
 }
 //------------------------------------------------------------------------------

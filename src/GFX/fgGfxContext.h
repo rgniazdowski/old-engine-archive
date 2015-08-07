@@ -1490,7 +1490,10 @@ namespace fg {
 
             /// Number of GL parameters that can be set via glSet* functions
             /// This will be also the size of special parameter array (client side)
-            NUM_GL_PARAMETERS
+            NUM_GL_PARAMETERS,
+
+            ARRAY_BUFFER = ARRAY_BUFFER_BINDING,
+            ELEMENT_ARRAY_BUFFER = ELEMENT_ARRAY_BUFFER_BINDING
         };
 
         /**
@@ -2084,6 +2087,12 @@ namespace fg {
             void bindBuffer(const fgGFXenum target, const fgGFXuint buffer);
             /**
              * Bind given buffer ID to target array
+             * @param target
+             * @param buffer
+             */
+            void bindBuffer(const ParamType target, const fgGFXuint buffer);
+            /**
+             * Bind given buffer ID to target array
              * @param bufferID
              * @param target
              */
@@ -2094,6 +2103,12 @@ namespace fg {
              * @return 
              */
             fgGFXuint boundBuffer(const fgGFXenum target = GL_ARRAY_BUFFER);
+            /**
+             * Return currently bound buffer
+             * @param target
+             * @return 
+             */
+            fgGFXuint boundBuffer(const ParamType target = gfx::ARRAY_BUFFER);
 
             /**
              * Delete/release given buffer
@@ -2467,6 +2482,14 @@ namespace fg {
              * @param attrData
              */
             void vertexAttribPointer(SAttributeData& attrData);
+
+            void drawElements(PrimitiveMode primitiveMode,
+                              const fgGFXsizei count,
+                              const fgGFXvoid* indices);
+
+            void drawArrays(PrimitiveMode primitiveMode,
+                            fgGFXint first,
+                            fgGFXsizei count);
 
         };
     } // namespace gfx
