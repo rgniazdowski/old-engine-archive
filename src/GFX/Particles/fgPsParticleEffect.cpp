@@ -157,19 +157,23 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
 
             // life - range – vector –
         } else if(param->name.compare("life-range") == 0) {
-            if(param->type == util::SCfgParameter::STRING)
+            if(param->type == util::SCfgParameter::STRING) {
                 strings::parseVector<Vector2f>(m_lifeRange, param->string);
-
+                setFlag(FG_PARTICLE_LIFE_RANGE, FG_TRUE);
+            }
             // ttl - range – vector –
         } else if(param->name.compare("ttl-range") == 0) {
-            if(param->type == util::SCfgParameter::STRING)
+            if(param->type == util::SCfgParameter::STRING) {
                 strings::parseVector<Vector2i>(m_ttlRange, param->string);
+                setFlag(FG_PARTICLE_TTL_RANGE, FG_TRUE);
+            }
 
             // fade - speed - range – vector –
         } else if(param->name.compare("fade-speed-range") == 0) {
-            if(param->type == util::SCfgParameter::STRING)
+            if(param->type == util::SCfgParameter::STRING) {
                 strings::parseVector<Vector2f>(m_fadeSpeedRange, param->string);
-
+                setFlag(FG_PARTICLE_FADE_SPEED_RANGE, FG_TRUE);
+            }
             // start - color – color –
         } else if(param->name.compare("start-color") == 0) {
             if(param->type == util::SCfgParameter::STRING)
@@ -307,8 +311,16 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
     from.velocity = -m_spreadSpeed;
     from.bbox.size = m_startSize;
 
-    // m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
-    from.setTTL(m_lifeRange.x / 10.0f * 1000.0f);
+    if(!(m_flags & FG_PARTICLE_TTL_RANGE) && !(FG_PARTICLE_FADE_SPEED_RANGE)) {
+        // m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
+        from.setTTL(m_lifeRange.x / 10.0f * 1000.0f);
+    } else if(!!(m_flags & FG_PARTICLE_TTL_RANGE)) {
+        // from ttl range
+        from.setTTL(m_ttlRange.x);
+    } else {
+        // from fade speed range
+        from.setLife(m_lifeRange.x, m_fadeSpeedRange.x);
+    }
 
     from.rotation.x = 0.0f;
     from.rotation.y = 0.0f;
@@ -335,12 +347,20 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
     to.velocity = m_spreadSpeed;
     to.bbox.size = m_startSize;
 
-    // m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
-    to.setTTL(m_lifeRange.y / 10.0f * 1000.0f);
+    if(!(m_flags & FG_PARTICLE_TTL_RANGE) && !(FG_PARTICLE_FADE_SPEED_RANGE)) {
+        // m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
+        to.setTTL(m_lifeRange.y / 10.0f * 1000.0f);
+    } else if(!!(m_flags & FG_PARTICLE_TTL_RANGE)) {
+        // from ttl range
+        to.setTTL(m_ttlRange.y);
+    } else {
+        // from fade speed range
+        to.setLife(m_lifeRange.y, m_fadeSpeedRange.y);
+    }
 
     to.rotation.x = 0.0f;
     to.rotation.y = 0.0f;
-    if(m_flags & FG_PARTICLE_RANDOM_ANGLE)
+    if(isRandomAngle())
         to.rotation.z = 360.0f;
     else
         to.rotation.z = 0.0f;
@@ -353,7 +373,7 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
     to.texIndex = m_textureIDRange.y;
 
     randomizeOnPair(&from, &to, outputParticle);
-    if((m_flags & FG_PARTICLE_RANDOM_VELOCITY) == 0) {
+    if(isRandomVelocity() == 0) {
         int r = FG_Rand(0, 1);
         if(r == 1) {
             if(outputParticle->velocity.x < 0.0f)
@@ -563,30 +583,30 @@ void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
 //------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
+    const float elapsed =  timesys::elapsed();
     // MOVEMENT
-    outputParticle->bbox.pos.x += outputParticle->velocity.x * timesys::elapsed();
-    outputParticle->bbox.pos.y += outputParticle->velocity.y * timesys::elapsed();
-    outputParticle->bbox.pos.z += outputParticle->velocity.z * timesys::elapsed();
+    outputParticle->bbox.pos.x += outputParticle->velocity.x * elapsed;
+    outputParticle->bbox.pos.y += outputParticle->velocity.y * elapsed;
+    outputParticle->bbox.pos.z += outputParticle->velocity.z * elapsed;
 
     // ROTATION
-    outputParticle->rotation.x += outputParticle->angularVelocity.x * timesys::elapsed();
-    outputParticle->rotation.y += outputParticle->angularVelocity.y * timesys::elapsed();
-    outputParticle->rotation.z += outputParticle->angularVelocity.z * timesys::elapsed();
+    outputParticle->rotation.x += outputParticle->angularVelocity.x * elapsed;
+    outputParticle->rotation.y += outputParticle->angularVelocity.y * elapsed;
+    outputParticle->rotation.z += outputParticle->angularVelocity.z * elapsed;
 
     // FADING
-    outputParticle->life -= outputParticle->fadeSpeed * timesys::elapsed();
+    outputParticle->life -= outputParticle->fadeSpeed * elapsed;
 
     // LIFE AS SIZE
     if(isLifeAsSize()) {
-        outputParticle->bbox.size.x = fabs(outputParticle->life);
-        outputParticle->bbox.size.y = fabs(outputParticle->life);
-        outputParticle->bbox.size.z = fabs(outputParticle->life);
+        outputParticle->bbox.size.x = math::abs(outputParticle->life);
+        outputParticle->bbox.size.y = math::abs(outputParticle->life);
+        outputParticle->bbox.size.z = math::abs(outputParticle->life);
     }
 
     if(isParamsActive()) {
         // This actions will work properly only if the particle TTL parameter is set
-        // Size
-        float elapsed = timesys::elapsed();
+        // Size        
         float ttl = (float)outputParticle->ttl / 1000.0f;
         outputParticle->bbox.size += (m_endSize - m_startSize) / ttl * elapsed;
         Color4f &color = outputParticle->color;
@@ -610,6 +630,52 @@ void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
             color.a = 0.0f;
         if(color.a > 1.0f)
             color.a = 1.0f;
+    }
+
+    if(m_isAreaSet == FG_TRUE && m_isAreaCheck == FG_TRUE) {
+        const float leftEdge = m_particleArea.left();
+        const float rightEdge = m_particleArea.right();
+        const float topEdge = m_particleArea.top();
+        const float bottomEdge = m_particleArea.bottom();
+        const float frontEdge = m_particleArea.front();
+        const float backEdge = m_particleArea.back();
+        // Particle X position is within the boundaries so we can check the Y position
+        if(outputParticle->bbox.pos.x >= leftEdge && outputParticle->bbox.pos.x + outputParticle->bbox.size.x <= rightEdge) {
+            // The UPPER and LOWER boundary
+            if(outputParticle->bbox.top() <= topEdge ||
+               outputParticle->bbox.bottom() >= bottomEdge)
+                outputParticle->velocity.y *= -1.0f;
+            // The FRONT and BACK boundary
+            if(outputParticle->bbox.back() <= backEdge ||
+               outputParticle->bbox.front() >= frontEdge)
+                outputParticle->velocity.z *= -1.0f;
+            // Particle X position is out of boundaries so we can change it's direction
+        } else {
+            outputParticle->velocity.x *= -1.0f;
+            // FIXME
+        }
+
+        if(outputParticle->bbox.bottom() > bottomEdge) {
+            float diff = math::abs(bottomEdge - outputParticle->bbox.bottom());
+            outputParticle->bbox.pos.y -= diff;
+        }
+
+        if(outputParticle->bbox.pos.x < leftEdge)
+            outputParticle->bbox.pos.x += math::abs(outputParticle->bbox.pos.x - leftEdge);
+
+        if(outputParticle->bbox.right() > rightEdge) {
+            float diff = math::abs(rightEdge - outputParticle->bbox.right());
+            outputParticle->bbox.pos.x -= diff;
+        }
+
+        if(outputParticle->bbox.pos.z < backEdge) {
+            outputParticle->bbox.pos.z += math::abs(outputParticle->bbox.pos.z - backEdge);
+        }
+
+        if(outputParticle->bbox.front() > frontEdge) {
+            float diff = math::abs(frontEdge - outputParticle->bbox.front());
+            outputParticle->bbox.pos.z -= diff;
+        }
     }
 }
 //------------------------------------------------------------------------------

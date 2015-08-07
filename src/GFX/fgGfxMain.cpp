@@ -52,7 +52,7 @@ m_init(FG_FALSE) {
     m_3DScene = new gfx::CScene3D();
     m_2DScene = new gfx::CScene2D();
     m_particleSystem = new gfx::CParticleSystem();
-    m_particleSystem->setSceneManager(m_2DScene);
+    m_particleSystem->setSceneManager(m_3DScene);
 
     m_shaderMgr = new gfx::CShaderManager();
     m_3DScene->setShaderManager(m_shaderMgr);

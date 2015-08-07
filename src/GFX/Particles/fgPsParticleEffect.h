@@ -49,7 +49,13 @@ namespace fg {
             FG_PARTICLE_GROUP_EFFECT = 0x00000020,
             /// Are parameters (start/end size, start/end color) taken into account 
             /// when calculating the particles. LifeAsSize will be overridden.
-            FG_PARTICLE_PARAMS_ACTIVE = 0x00000040
+            FG_PARTICLE_PARAMS_ACTIVE = 0x00000040,
+            /// TTL range is specified
+            FG_PARTICLE_TTL_RANGE = 0x00000080,
+            /// Fade speed range is specified
+            FG_PARTICLE_FADE_SPEED_RANGE = 0x00000100,
+            /// Life range is specified
+            FG_PARTICLE_LIFE_RANGE = 0x00000200,
         };
         
         FG_ENUM_FLAGS(ParticleEffectFlags);
@@ -719,42 +725,42 @@ namespace fg {
              * @return 
              */
             inline fgBool isParamsActive(void) {
-                return (fgBool)(m_flags & FG_PARTICLE_PARAMS_ACTIVE);
+                return (fgBool)!!(m_flags & FG_PARTICLE_PARAMS_ACTIVE);
             }
             /**
              * 
              * @return 
              */
             inline fgBool isRandomVelocity(void) {
-                return (fgBool)(m_flags & FG_PARTICLE_RANDOM_VELOCITY);
+                return (fgBool)!!(m_flags & FG_PARTICLE_RANDOM_VELOCITY);
             }
             /**
              * 
              * @return 
              */
             inline fgBool isLifeAsSize(void) {
-                return (fgBool)(m_flags & FG_PARTICLE_LIFE_AS_SIZE);
+                return (fgBool)!!(m_flags & FG_PARTICLE_LIFE_AS_SIZE);
             }
             /**
              * 
              * @return 
              */
             inline fgBool isFacingVelocity(void) {
-                return (fgBool)(m_flags & FG_PARTICLE_FACING_VELOCITY);
+                return (fgBool)!!(m_flags & FG_PARTICLE_FACING_VELOCITY);
             }
             /**
              * 
              * @return 
              */
             inline fgBool isFacingCamera(void) {
-                return (fgBool)(m_flags & FG_PARTICLE_FACING_CAMERA);
+                return (fgBool)!!(m_flags & FG_PARTICLE_FACING_CAMERA);
             }
             /**
              * 
              * @return 
              */
             inline fgBool isRandomAngle(void) {
-                return (fgBool)(m_flags & FG_PARTICLE_RANDOM_ANGLE);
+                return (fgBool)!!(m_flags & FG_PARTICLE_RANDOM_ANGLE);
             }
 
             ////////////////////////////////////////////////////////////////////

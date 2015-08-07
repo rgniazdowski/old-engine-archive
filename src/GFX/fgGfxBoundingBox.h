@@ -524,14 +524,14 @@ namespace fg {
              * @return 
              */
             value_type front(void) const {
-                return this->pos.z;
+                return this->pos.z + this->size.z;
             }
             /**
              * 
              * @return 
              */
             value_type back(void) const {
-                return this->pos.z - this->size.z; // #FIXME
+                return this->pos.z;
             }
             /**
              * 
@@ -546,7 +546,7 @@ namespace fg {
              * @return 
              */
             self_type& setFront(value_type front) {
-                this->pos.z = front;
+                this->pos.z = front - this->size.z;
                 return (*this);
             }
             /**
@@ -555,7 +555,7 @@ namespace fg {
              * @return 
              */
             self_type& setBack(value_type back) {
-                this->size.z = back + this->pos.z; // #FIXME
+                this->pos.z = back;
                 return (*this);
             }
             /**
