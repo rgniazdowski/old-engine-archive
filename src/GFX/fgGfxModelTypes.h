@@ -888,9 +888,9 @@ namespace fg {
                     size += mesh->getDataSize();
                 return size;
             }
-        };
-    };
-};
+        }; // struct SShape
+    } // namespace gfx
+} // namespace fg
 
 // Custom 3d model file format
 //#define	FG_GFX_MODEL_RES_CUSTOM		0x0F0

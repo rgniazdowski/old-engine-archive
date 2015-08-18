@@ -18,40 +18,79 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
+#if defined(FG_USING_ASSIMP)
+#include "assimp/Importer.hpp" // #FIXME IOSystem!
+::Assimp::Importer* gfx::CModelResource::s_objImporter = NULL;
+#endif
+int gfx::CModelResource::s_cmrInstanceCount = 0;
+
+//------------------------------------------------------------------------------
+
 gfx::CModelResource::CModelResource() :
-CResource(),
+base_type(),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
-m_isMultitextured(FG_FALSE),
-m_isTextured(FG_FALSE),
-m_hasMaterial(FG_FALSE),
-m_isInterleaved(FG_TRUE) {
+m_modelFlags(NO_FLAGS) {
+    setFlag(INTERLEAVED, FG_TRUE);
     memset(m_numData, 0, sizeof (m_numData));
     base_type::m_resType = resource::MODEL3D;
+    s_cmrInstanceCount++;
+#if defined(FG_USING_ASSIMP)
+    if(!s_objImporter) {
+        s_objImporter = new ::Assimp::Importer();
+    }
+#endif
 }
 //------------------------------------------------------------------------------
 
 gfx::CModelResource::CModelResource(const char *path) :
-CResource(path),
+base_type(path),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
-m_isMultitextured(FG_FALSE),
-m_isTextured(FG_FALSE),
-m_hasMaterial(FG_FALSE),
-m_isInterleaved(FG_TRUE) {
+m_modelFlags(NO_FLAGS) {
+    setFlag(INTERLEAVED, FG_TRUE);
     base_type::m_resType = resource::MODEL3D;
+    s_cmrInstanceCount++;
+#if defined(FG_USING_ASSIMP)
+    if(!s_objImporter) {
+        s_objImporter = new ::Assimp::Importer();
+    }
+#endif
 }
 //------------------------------------------------------------------------------
 
 gfx::CModelResource::CModelResource(std::string& path) :
-CResource(path),
+base_type(path),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
-m_isMultitextured(FG_FALSE),
-m_isTextured(FG_FALSE),
-m_hasMaterial(FG_FALSE),
-m_isInterleaved(FG_TRUE) {
+m_modelFlags(NO_FLAGS) {
+    m_modelFlags = NO_FLAGS;
+    setFlag(INTERLEAVED, FG_TRUE);
     base_type::m_resType = resource::MODEL3D;
+    s_cmrInstanceCount++;
+#if defined(FG_USING_ASSIMP)
+    if(!s_objImporter) {
+        s_objImporter = new ::Assimp::Importer();
+    }
+#endif
+}
+//------------------------------------------------------------------------------
+
+gfx::CModelResource::~CModelResource() {
+    s_cmrInstanceCount--;
+    if(s_cmrInstanceCount == 0) {
+#if defined(FG_USING_ASSIMP)
+        if(s_objImporter) {
+            delete s_objImporter;
+            s_objImporter = NULL;
+        }
+#endif
+    }
+    if(s_cmrInstanceCount < 0) {
+        // now this is highly unlikely!
+        FG_LOG_DEBUG("CModelResource: For some reason instance count is below zero after destructor call.");
+    }
+    destroy();
 }
 //------------------------------------------------------------------------------
 
@@ -59,10 +98,9 @@ void gfx::CModelResource::clear(void) {
     base_type::clear();
     m_materialOverride = NULL;
     m_modelType = MODEL_INVALID;
-    m_isTextured = FG_FALSE;
-    m_isMultitextured = FG_FALSE;
-    m_hasMaterial = FG_FALSE;
-    m_isInterleaved = FG_TRUE;
+    m_modelFlags = NO_FLAGS;
+    base_type::m_resType = resource::MODEL3D;
+    setFlag(INTERLEAVED, FG_TRUE);
     memset(m_numData, 0, sizeof (m_numData));
 }
 //------------------------------------------------------------------------------
@@ -79,8 +117,22 @@ fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
         m_modelType = MODEL_3DS;
     } else if(strcasecmp(ext, FG_GFX_MODEL_RES_OBJ_EXTENSION) == 0) {
         m_modelType = MODEL_OBJ;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_BLEND_EXTENSION) == 0) {
+        m_modelType = MODEL_BLEND;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_DAE_EXTENSION) == 0) {
+        m_modelType = MODEL_DAE;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_DXF_EXTENSION) == 0) {
+        m_modelType = MODEL_DXF;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_FBX_EXTENSION) == 0) {
+        m_modelType = MODEL_FBX;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_LWO_EXTENSION) == 0) {
+        m_modelType = MODEL_LWO;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_OFF_EXTENSION) == 0) {
+        m_modelType = MODEL_OFF;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_X_EXTENSION) == 0) {
+        m_modelType = MODEL_X;
     }
-    return FG_TRUE;
+    return (fgBool)(m_modelType != MODEL_INVALID);
 }
 //------------------------------------------------------------------------------
 
@@ -114,11 +166,15 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
         }
         this->m_size += shape->getDataSize();
     }
+    if(m_numMaterials) {
+        setFlag(HAS_MATERIALS, FG_TRUE);
+    }
     if(!m_materialOverride) {
-        if(!m_numShapes)
+        if(!m_numShapes) {
             m_materialOverride = new SMaterial();
-        else
+        } else {
             m_materialOverride = new SMaterial(*this->m_shapes[0]->material);
+        }
     }
     this->m_size += m_materialOverride->getDataSize();
     FG_LOG_DEBUG("GFX.Model: '%s': vertices[%d], normals[%d], indices[%d], uvs[%d], size(B)[%d]", getNameStr(),
@@ -166,13 +222,13 @@ gfx::SShape* gfx::CModelResource::addShape(SMeshBase *pMesh, const std::string& 
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CModelResource::loadWavefrontObj(void) {
+fgBool gfx::CModelResource::internal_loadWavefrontObj(void) {
     if(getFilePath(this->m_quality).empty()) {
         return FG_FALSE;
     }
     std::string err;
     std::string mtl_basepath = fg::path::dirName(getFilePath());
-    err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(this->m_quality), mtl_basepath.c_str(), m_isInterleaved);
+    err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(this->m_quality), mtl_basepath.c_str(), isInterleaved());
     if(!err.empty()) {
         FG_LOG_ERROR("Error while loading model: '%s'", err.c_str());
         this->m_shapes.clear();
@@ -182,6 +238,133 @@ fgBool gfx::CModelResource::loadWavefrontObj(void) {
     refreshInternalData();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadFlexiObject(void) {
+    return FG_FALSE; // TODO
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadAutodesk3ds(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadBlender(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadCollada(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadAutoCAD(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadAutodeskExchange(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadLightwaveObject(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadObjectFile(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::internal_loadDirectXModel(void) {
+#if defined(FG_USING_ASSIMP)
+    return internal_loadUsingAssimp();
+#else
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+#endif
+}
+//------------------------------------------------------------------------------
+#if defined(FG_USING_ASSIMP)
+
+fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
+    if(getFilePath(this->m_quality).empty()) {
+        return FG_FALSE;
+    }
+    if(!s_objImporter)
+        return FG_FALSE;
+    const char *ext = path::fileExt(getCurrentFilePathStr());
+    if(!ext)
+        return FG_FALSE;
+
+    if(s_objImporter->IsExtensionSupported(ext) == false) {
+        FG_LOG_ERROR("GFX: '%s' model extension is not supported. Will not load '%s'.");
+        return FG_FALSE;
+    }
+
+    // reset the ready flag
+    this->m_isReady = FG_FALSE;
+    refreshInternalData();
+    return FG_TRUE;
+}
+#endif
 //------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::create(void) {
@@ -204,14 +387,23 @@ fgBool gfx::CModelResource::create(void) {
     }
     switch(m_modelType) {
         case MODEL_CUSTOM:
+            if(!internal_loadFlexiObject()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
             break;
 
         case MODEL_3DS:
+            FG_LOG_DEBUG("Preparing to load a 3DS file for model: '%s'", getNameStr());
+            if(!internal_loadAutodesk3ds()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
             break;
 
         case MODEL_OBJ:
             FG_LOG_DEBUG("Preparing to load an OBJ file for model: '%s'", getNameStr());
-            if(!loadWavefrontObj()) {
+            if(!internal_loadWavefrontObj()) {
                 return FG_FALSE;
             }
             this->m_isReady = FG_TRUE;
@@ -220,24 +412,65 @@ fgBool gfx::CModelResource::create(void) {
             break;
 
         case MODEL_BLEND:
+            FG_LOG_DEBUG("Preparing to load a Blender file for model: '%s'", getNameStr());
+            if(!internal_loadBlender()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded a Blender model file: '%s'", getFilePathStr());
             break;
 
         case MODEL_DAE:
+            FG_LOG_DEBUG("Preparing to load a Collada file for model: '%s'", getNameStr());
+            if(!internal_loadCollada()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded a Collada model file: '%s'", getFilePathStr());
             break;
 
         case MODEL_DXF:
+            FG_LOG_DEBUG("Preparing to load an AutoCAD Exchange file for model: '%s'", getNameStr());
+            if(!internal_loadAutoCAD()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded an AutoCAD Exchange model file: '%s'", getFilePathStr());
             break;
 
         case MODEL_FBX:
+            FG_LOG_DEBUG("Preparing to load an Autodesk Exchange file for model: '%s'", getNameStr());
+            if(!internal_loadAutodeskExchange()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded an Autodesk Exchange model file: '%s'", getFilePathStr());
             break;
 
         case MODEL_LWO:
+            FG_LOG_DEBUG("Preparing to load a Lightwave object file for model: '%s'", getNameStr());
+            if(!internal_loadLightwaveObject()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
             break;
 
         case MODEL_OFF:
+            FG_LOG_DEBUG("Preparing to load an OFF file for model: '%s'", getNameStr());
+            if(!internal_loadObjectFile()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded an OFF model file: '%s'", getFilePathStr());
             break;
 
         case MODEL_X:
+            FG_LOG_DEBUG("Preparing to load a DirectX file for model: '%s'", getNameStr());
+            if(!internal_loadDirectXModel()) {
+                return FG_FALSE;
+            }
+            this->m_isReady = FG_TRUE;
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded a DirectX model file: '%s'", getFilePathStr());
             break;
 
         case MODEL_BUILTIN:
@@ -288,7 +521,7 @@ void gfx::CModelResource::dispose(void) {
         delete m_materialOverride;
     }
     m_materialOverride = NULL;
-    m_hasMaterial = FG_FALSE;
+    setFlag(HAS_MATERIALS, FG_FALSE);
     base_type::m_isReady = FG_FALSE;
 }
 //------------------------------------------------------------------------------

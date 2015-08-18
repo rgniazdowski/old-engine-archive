@@ -18,7 +18,15 @@
     #ifndef FG_INC_GFX_MODEL_TYPES
         #include "fgGfxModelTypes.h"
     #endif
-    #include "Resource/fgResource.h"
+    #ifndef FG_INC_RESOURCE
+        #include "Resource/fgResource.h"
+    #endif
+
+    #if defined(FG_USING_ASSIMP)
+namespace Assimp {
+    class Importer;
+}
+    #endif
 
 namespace fg {
     namespace resource {
@@ -83,6 +91,28 @@ namespace fg {
             typedef ShapesVec::iterator ShapesVecItor;
 
         public:
+
+            /**
+             *
+             */
+            enum ModelFlags {
+                /// Empty flags - none set
+                NO_FLAGS = 0x0000,
+                /// Does this model contain animations?
+                ANIMATED = 0x0001,
+                /// Is this model rigged? (bone information)
+                RIGGED = 0x0002,
+                /// Does this model have any kind of material? (excluding the override)
+                HAS_MATERIALS = 0x0004,
+                /// Is data interleaved (soa or aos?)
+                INTERLEAVED = 0x0008,
+                /// Is model textured?
+                TEXTURED = 0x0010,
+                /// is model multitextured?
+                MULTITEXTURED = 0x0020
+            };
+
+        public:
             /**
              * 
              */
@@ -100,9 +130,7 @@ namespace fg {
             /**
              * 
              */
-            virtual ~CModelResource() {
-                destroy();
-            }
+            virtual ~CModelResource();
 
             FG_RESOURCE_FACTORY_CREATE_FUNCTION(CModelResource)
 
@@ -168,9 +196,73 @@ namespace fg {
              * Helper function for loading the proper .OBJ model file
              * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
              */
-            fgBool loadWavefrontObj(void);
+            fgBool internal_loadWavefrontObj(void);
+            /**
+             * Helper function for loading custom internal FlexiGame model file
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadFlexiObject(void);
+            /**
+             * Helper function for loading 3DS model file (Autodesk 3ds Max 3D)
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadAutodesk3ds(void);
+            /**
+             * Helper function for loading Blender file database
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadBlender(void);
+            /**
+             * Helper function for loading Collada model file
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadCollada(void);
+            /**
+             * Helper function for loading AutoCAD .DXF file
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadAutoCAD(void);
+            /**
+             * Helper function for loading Autodesk exchange file
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadAutodeskExchange(void);
+            /**
+             * Helper function for loading Lightwave object
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadLightwaveObject(void);
+            /**
+             * Helper function for loading .OFF model (Object File Format)
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadObjectFile(void);
+            /**
+             * Helper function for loading .X model (DirectX)
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadDirectXModel(void);
+
+    #if defined(FG_USING_ASSIMP)
+            /**
+             * General helper function for loading models using Assimp library
+             * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+             */
+            fgBool internal_loadUsingAssimp(void);
+    #endif
+
+            /**
+             * 
+             * @param flags
+             * @param toggle
+             */
+            void setFlag(const ModelFlags flags, const fgBool toggle = FG_TRUE);
 
         public:
+            /**
+             * 
+             * @param modelType
+             */
             void setModelType(ModelType modelType) {
                 m_modelType = modelType;
             }
@@ -245,6 +337,8 @@ namespace fg {
              *              model data was not even loaded or the buffers were not valid
              */
             fgBool deleteBuffers(void);
+
+            //------------------------------------------------------------------
             /**
              * Gets the main override material of the model resource
              * @return      Pointer to the override material for all shapes
@@ -260,11 +354,26 @@ namespace fg {
                 return m_modelType;
             }
             /**
+             * Returns whether the model contains animations
+             * @return  FG_TRUE if the model contains animations, FG_FALSE otherwise.
+             */
+            inline fgBool isAnimated(void) const {
+                return (fgBool)!!(m_modelFlags & ANIMATED);
+            }
+            /**
+             * Returns whether the model is rigged
+             * @return  FG_TRUE if the model is rigged for animation,
+             *          FG_FALSE otherwise.
+             */
+            inline fgBool isRigged(void) const {
+                return (fgBool)!!(m_modelFlags & RIGGED);
+            }
+            /**
              * Returns whether the model is multi-textured
              * @return  FG_TRUE if the model is multi-textured, FG_FALSE otherwise
              */
             inline fgBool isMultitextured(void) const {
-                return m_isMultitextured;
+                return (fgBool)!!(m_modelFlags & MULTITEXTURED);
             }
             /**
              * Returns whether model is textured
@@ -272,7 +381,7 @@ namespace fg {
              *          texture coordinates data), FG_FALSE otherwise
              */
             inline fgBool isTextured(void) const {
-                return m_isTextured;
+                return (fgBool)!!(m_modelFlags & TEXTURED);
             }
             /**
              * Returns whether the model has any kind of material
@@ -281,14 +390,14 @@ namespace fg {
              *          the main material (override) is still available and set to defaults
              */
             inline fgBool hasMaterial(void) const {
-                return m_hasMaterial;
+                return (fgBool)!!(m_modelFlags & HAS_MATERIALS);
             }
             /**
              * Returns whether the data in the model is interleaved
              * @return  FG_TRUE if the data is interleaved, FG_FALSE otherwise
              */
             inline fgBool isInterleaved(void) const {
-                return m_isInterleaved;
+                return (fgBool)!!(m_modelFlags & INTERLEAVED);
             }
             /**
              * Sets the data to be interleaved 
@@ -297,7 +406,7 @@ namespace fg {
              *                  effect requires explicit reload of the model file
              */
             inline void setInterleaved(fgBool toggle = FG_TRUE) {
-                m_isInterleaved = toggle;
+                setFlag(INTERLEAVED, toggle);
             }
             /**
              * Number of vertices
@@ -372,14 +481,8 @@ namespace fg {
             AABoundingBox3Df m_aabb;
             /// Identifier of the model type - based on the input data file extension
             ModelType m_modelType;
-            /// Is model multitextured?
-            fgBool m_isMultitextured;
-            /// Is model textured?
-            fgBool m_isTextured;
-            /// Does the model have any kind of material?
-            fgBool m_hasMaterial;
-            /// Is data interleaved (soa or aos?)
-            fgBool m_isInterleaved;
+            /// Model internal flags (on/off info)
+            ModelFlags m_modelFlags;
 
             union {
 
@@ -405,12 +508,38 @@ namespace fg {
                     fgGFXuint m_numShapes;
                     /// Number of used materials
                     fgGFXuint m_numMaterials;
-                };
+                }; // unnamed struct
                 /// Special array containing all data (number of specific vertex data)
                 fgGFXuint m_numData[8];
-            };
+            }; // unnamed union
+
+        protected:
+    #if defined(FG_USING_ASSIMP)
+            /// Importer instance - it's destroyed when the last ModelResource
+            /// object is destroyed
+            static ::Assimp::Importer* s_objImporter;
+    #endif
+
+        private:
+            /// Internal count of CModelResource instances
+            static int s_cmrInstanceCount;
 
         }; // class CModelResource
+
+        FG_ENUM_FLAGS(CModelResource::ModelFlags);
+        /**
+         * 
+         * @param flags
+         * @param toggle
+         */
+        inline void CModelResource::setFlag(const ModelFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_modelFlags |= flags;
+            } else {
+                m_modelFlags |= flags;
+                m_modelFlags ^= flags;
+            }
+        }
 
         typedef CModelResource CModel;
     } // namespace gfx
