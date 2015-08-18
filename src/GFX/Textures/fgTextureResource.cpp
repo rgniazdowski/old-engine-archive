@@ -142,13 +142,13 @@ fgBool gfx::CTextureResource::create(void) {
                 FG_LOG_ERROR("GFX: texture file type (RAW) is not yet supported!");
                 break;
             case texture::FILE_JPEG:
-                *targetRawData = fgTextureLoader::loadJPEG(filePathPtr, m_width, m_height);
+                *targetRawData = texture::loadJPEG(filePathPtr, m_width, m_height);
                 break;
             case texture::FILE_PNG:
-                *targetRawData = fgTextureLoader::loadPNG(filePathPtr, m_width, m_height);
+                *targetRawData = texture::loadPNG(filePathPtr, m_width, m_height);
                 break;
             case texture::FILE_TGA:
-                *targetRawData = fgTextureLoader::loadTGA(filePathPtr, m_width, m_height);
+                *targetRawData = texture::loadTGA(filePathPtr, m_width, m_height);
                 break;
             case texture::FILE_OTHER:
                 FG_LOG_ERROR("GFX: texture file type (OTHER) is not yet supported!");

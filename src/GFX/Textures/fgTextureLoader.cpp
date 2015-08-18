@@ -14,6 +14,8 @@
 #include "Util/fgFile.h"
 #include "Util/fgStrings.h"
 
+//------------------------------------------------------------------------------
+
 extern "C" {
 #include "jerror.h"
 }
@@ -29,6 +31,7 @@ typedef struct
 typedef fg_jpeg_my_source_mgr * fg_jpeg_my_src_ptr;
 
 #define INPUT_BUF_SIZE  4096    /* choose an efficiently fread'able size */
+//------------------------------------------------------------------------------
 
 /**
  *
@@ -43,6 +46,7 @@ static void fg_jpeg_init_source(j_decompress_ptr cinfo) {
      */
     src->start_of_file = TRUE;
 }
+//------------------------------------------------------------------------------
 
 /**
  *
@@ -81,6 +85,7 @@ static boolean fg_jpeg_fill_input_buffer(j_decompress_ptr cinfo) {
 
     return TRUE;
 }
+//------------------------------------------------------------------------------
 
 static void fg_jpeg_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
     fg_jpeg_my_src_ptr src = (fg_jpeg_my_src_ptr)cinfo->src;
@@ -105,10 +110,12 @@ static void fg_jpeg_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
         src->pub.bytes_in_buffer -= (size_t)num_bytes;
     }
 }
+//------------------------------------------------------------------------------
 
 static boolean fg_jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired) {
     return jpeg_resync_to_restart(cinfo, desired);
 }
+//------------------------------------------------------------------------------
 
 static void fg_jpeg_term_source(j_decompress_ptr cinfo) {
     fg_jpeg_my_src_ptr src = (fg_jpeg_my_src_ptr)cinfo->src;
@@ -118,6 +125,7 @@ static void fg_jpeg_term_source(j_decompress_ptr cinfo) {
         // Some additional static check?
     }
 }
+//------------------------------------------------------------------------------
 
 static void fg_png_custom_read(png_structp png_ptr, png_bytep data, png_size_t length) {
     png_size_t lenread = 0;
@@ -137,6 +145,7 @@ static void fg_png_custom_read(png_structp png_ptr, png_bytep data, png_size_t l
         FG_LOG_WARNING("PNG.custom_read: Warning, did not read all data from file: path[%s], %d < %d", file->getPath(), lenread, length);
     }
 }
+//------------------------------------------------------------------------------
 
 /*
  * This function is used for preloading given file for later processing
@@ -154,11 +163,11 @@ static unsigned char *universalPreLoad(const char *path,
     if(fileStream->open(fg::util::CFile::Mode::READ | fg::util::CFile::Mode::BINARY)) {
         unsigned char *data = NULL;
         if(strncasecmp(extType, "jpeg", 4) == 0) {
-            data = fgTextureLoader::loadJPEG(fileStream, width, height);
+            data = fg::gfx::texture::loadJPEG(fileStream, width, height);
         } else if(strncasecmp(extType, "png", 4) == 0) {
-            data = fgTextureLoader::loadPNG(fileStream, width, height);
+            data = fg::gfx::texture::loadPNG(fileStream, width, height);
         } else if(strncasecmp(extType, "tga", 4) == 0) {
-            data = fgTextureLoader::loadTGA(fileStream, width, height);
+            data = fg::gfx::texture::loadTGA(fileStream, width, height);
         }
         if(!fileStream->close()) {
             // #TODO error handling / reporting
@@ -175,12 +184,17 @@ static unsigned char *universalPreLoad(const char *path,
         return NULL;
     }
 }
+//------------------------------------------------------------------------------
 
-unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &height) {
+using namespace fg;
+//------------------------------------------------------------------------------
+
+unsigned char *gfx::texture::loadJPEG(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "jpeg");
 }
+//------------------------------------------------------------------------------
 
-unsigned char *fgTextureLoader::loadJPEG(fg::util::base::CFile *fileStream, int &width, int &height) {
+unsigned char *gfx::texture::loadJPEG(fg::util::base::CFile *fileStream, int &width, int &height) {
     if(!fileStream) {
         // #TODO error handling / reporting
         return NULL;
@@ -194,12 +208,12 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::CFile *fileStream, int 
     int i = 0, j = 0, rowStride = -1;
     long cont = 0;
     struct jpeg_decompress_struct cinfo;
-    struct fgJPEGErrorMgr jpegError;
+    struct SJPEGErrorMgr jpegError;
     JSAMPARRAY buffer;
     JSAMPLE *dataBuffer = NULL;
 
     cinfo.err = jpeg_std_error(&jpegError.pub);
-    jpegError.pub.error_exit = fgJPEGErrorExit;
+    jpegError.pub.error_exit = FuncJPEGErrorExit;
     if(setjmp(jpegError.setjmp_buffer)) {
         // #TODO error handling / reporting
         FG_LOG_ERROR("JPEG LOAD: Error occurred while loading JPEG file: '%s'", fileStream->getPath());
@@ -260,12 +274,14 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::CFile *fileStream, int 
     FG_LOG_DEBUG("JPEG LOAD: texture file[%s] converted to RGBA - alpha fixed as RGB average", fg::path::fileName(fileStream->getPath()));
     return data;
 }
+//------------------------------------------------------------------------------
 
-unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &height) {
+unsigned char *gfx::texture::loadPNG(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "png");
 }
+//------------------------------------------------------------------------------
 
-unsigned char *fgTextureLoader::loadPNG(fg::util::base::CFile *fileStream, int &width, int &height) {
+unsigned char *gfx::texture::loadPNG(fg::util::base::CFile *fileStream, int &width, int &height) {
     if(!fileStream) {
         // #TODO error handling / reporting
         FG_LOG_ERROR("PNG LOAD: FileStream specified is NULL!");
@@ -376,12 +392,14 @@ unsigned char *fgTextureLoader::loadPNG(fg::util::base::CFile *fileStream, int &
         FG_LOG_DEBUG("PNG LOAD: texture file[%s] converted to RGBA - alpha fixed as RGB average", fg::path::fileName(fileStream->getPath()));
     return data;
 }
+//------------------------------------------------------------------------------
 
-unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &height) {
+unsigned char *gfx::texture::loadTGA(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "tga");
 }
+//------------------------------------------------------------------------------
 
-unsigned char *fgTextureLoader::loadTGA(fg::util::base::CFile *fileStream, int &width, int &height) {
+unsigned char *gfx::texture::loadTGA(fg::util::base::CFile *fileStream, int &width, int &height) {
     if(!fileStream) {
         FG_LOG_ERROR("TGA LOAD: FileStream specified is NULL!");
         return NULL;
@@ -486,8 +504,9 @@ unsigned char *fgTextureLoader::loadTGA(fg::util::base::CFile *fileStream, int &
         FG_LOG_DEBUG("TGA LOAD: texture file[%s] converted to RGBA - alpha fixed as RGB average", fg::path::fileName(fileStream->getPath()));
     return data;
 }
+//------------------------------------------------------------------------------
 
-fgBool fgTextureLoader::saveTGA(const char *path, const unsigned char *data, const int width, const int height) {
+fgBool gfx::texture::saveTGA(const char *path, const unsigned char *data, const int width, const int height) {
     int i, j;
     unsigned char *buf;
     FILE *file = fopen(path, "wb");
@@ -526,3 +545,4 @@ fgBool fgTextureLoader::saveTGA(const char *path, const unsigned char *data, con
     delete buf;
     return 1;
 }
+//------------------------------------------------------------------------------
