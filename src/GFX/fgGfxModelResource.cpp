@@ -127,40 +127,42 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CModelResource::addShape(SShape *shape) {
-    if(!shape)
+void gfx::CModelResource::addShape(SShape *pShape) {
+    if(!pShape)
         return;
-    if(shape->name.empty()) {
-        shape->name = "XShape1";
+    if(pShape->name.empty()) {
+        pShape->name = "XShape1"; // #FIXME
     }
-    m_shapes.push_back(shape);
+    m_shapes.push_back(pShape);
 }
 //------------------------------------------------------------------------------
 
-void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
-    if(!mesh || !name) {
-        return;
+gfx::SShape* gfx::CModelResource::addShape(SMeshBase *pMesh, const char *name) {
+    if(!pMesh || !name) {
+        return NULL;
     }
     if(!name[0]) {
-        return;
+        return NULL;
     }
 
     SShape *shape = new SShape();
     shape->name = name;
-    shape->mesh = mesh;
+    shape->mesh = pMesh;
     m_shapes.push_back(shape);
+    return shape;
 }
 //------------------------------------------------------------------------------
 
-void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
-    if(!mesh || name.empty()) {
-        return;
+gfx::SShape* gfx::CModelResource::addShape(SMeshBase *pMesh, const std::string& name) {
+    if(!pMesh || name.empty()) {
+        return NULL;
     }
 
     SShape *shape = new SShape();
     shape->name = name;
-    shape->mesh = mesh;
+    shape->mesh = pMesh;
     m_shapes.push_back(shape);
+    return shape;
 }
 //------------------------------------------------------------------------------
 

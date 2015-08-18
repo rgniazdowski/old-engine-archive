@@ -185,6 +185,11 @@ namespace fg {
     #else
         false,
     #endif
+    #ifdef FG_USING_ASSIMP
+        true,
+    #else
+        false,
+    #endif
     #ifdef FG_USING_PLATFORM_WINDOWS
         true,
     #else

@@ -2,7 +2,13 @@
 #define FG_INC_ASSIMP_CUSTOM_CONFIG
 
 #undef ASSIMP_DOXYGEN_BUILD
+// use external zlib
+// FlexiGame uses it's own internal zlib library with minizip compiled
+#ifndef ASSIMP_BUILD_NO_OWN_ZLIB
+#define ASSIMP_BUILD_NO_OWN_ZLIB
+#endif
 
+// Force to not use Boost as it is too heavy dependency
 #ifndef ASSIMP_BUILD_BOOST_WORKAROUND
 #define ASSIMP_BUILD_BOOST_WORKAROUND
 #endif
@@ -39,6 +45,17 @@
 #define ASSIMP_BUILD_NO_STL_EXPORTER
 #define ASSIMP_BUILD_NO_PLY_EXPORTER
 #define ASSIMP_BUILD_NO_EXPORT
+
+// Currently supported formats 
+// '*.3ds;*.blend;*.bvh;*.csm;*.dae;*.dxf;*.fbx;*.lwo;*.lxo;*.obj;*.off;*.pk3;*.prj;*.x'
+
+// maybe later: LightWave Scene ( .lws ) and irrlicht meshes and scenes, ogre
+// or unreal engine object format (.3d)
+
+// Note:
+// Biovision BVH ( .bvh )
+// CharacterStudio Motion ( .csm )
+// bvh/csm are motion capture formats
 
 #endif // FG_INC_ASSIMP_CUSTOM_CONFIG
 

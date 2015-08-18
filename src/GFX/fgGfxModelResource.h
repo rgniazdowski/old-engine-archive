@@ -45,17 +45,21 @@ namespace fg {
             MODEL_BLEND = 0x0F3,
             /// DAE - COLLADA
             MODEL_DAE = 0x0F4,
-            /// DXF - AutoCAD, Drawing Exchange Format - CAD data file format developed by Autodesk
+            /// DXF - AutoCAD, Drawing Exchange Format
+            /// CAD data file format developed by Autodesk
             MODEL_DXF = 0x0F5,
-            /// FBX - Autodesk exchange - exchange format, in particular for interoperability between Autodesk products and other Digital content creation (DCC) software packages
+            /// FBX - Autodesk exchange - exchange format, in particular for 
+            /// inter-operability between Autodesk products and other Digital
+            /// content creation (DCC) software packages
             MODEL_FBX = 0x0F6,
-            /// LWO - Lightwave - LightWave high-end software file format
+            /// LWO - Lightwave object - LightWave high-end software file format
             MODEL_LWO = 0x0F7,
             /// OFF - Object File Format 
             MODEL_OFF = 0x0F8,
             /// X - DirectX 3D Model
             MODEL_X = 0x0F9,
-            /// BUILT IN DATA
+            /// Built-in data - from static memory (compiled with vertices or
+            /// auto-generated with some algorithm)
             MODEL_BUILTIN = 0x0FA
         };
 
@@ -155,9 +159,9 @@ namespace fg {
              *              FG_FALSE otherwise
              */
             fgBool setModelTypeFromFilePath(void) {
-                if(getFilePath(m_quality).empty())
+                if(getFilePath(base_type::m_quality).empty())
                     return FG_FALSE;
-                return setModelTypeFromFilePath(getFilePath(m_quality));
+                return setModelTypeFromFilePath(getFilePath(base_type::m_quality));
             }
 
             /**
@@ -170,12 +174,23 @@ namespace fg {
             void setModelType(ModelType modelType) {
                 m_modelType = modelType;
             }
-
+            /**
+             *
+             * @param shape
+             */
             void addShape(SShape *shape);
-
-            void addShape(SMeshBase *mesh, const char *name);
-
-            void addShape(SMeshBase *mesh, const std::string& name);
+            /**
+             * 
+             * @param mesh
+             * @param name
+             */
+            SShape* addShape(SMeshBase *pMesh, const char *name);
+            /**
+             *
+             * @param mesh
+             * @param name
+             */
+            SShape* addShape(SMeshBase *pMesh, const std::string& name);
 
         public:
             /**
@@ -395,11 +410,11 @@ namespace fg {
                 fgGFXuint m_numData[8];
             };
 
-        };
+        }; // class CModelResource
 
         typedef CModelResource CModel;
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_MODEL_RESOURCE_BLOCK
 #endif /* FG_INC_GFX_MODEL_RESOURCE */
