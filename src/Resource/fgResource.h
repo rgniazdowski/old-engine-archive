@@ -466,6 +466,27 @@ namespace fg {
             inline ResourceType getResourceType(void) const {
                 return m_resType;
             }
+            /**
+             * 
+             * @return
+             */
+            inline const char* getCurrentFilePathStr(void) const {
+                return base_type::getFilePathStr(this->m_quality);
+            }
+            /**
+             *
+             * @return
+             */
+            inline std::string& getCurrentFilePath(void) {
+                return base_type::getFilePath(this->m_quality);
+            }
+            /**
+             *
+             * @return
+             */
+            inline std::string const& getCurrentFilePath(void) const {
+                return base_type::getFilePath(this->m_quality);
+            }
 
         protected:
             /**
@@ -576,9 +597,10 @@ namespace fg {
             /// Is the resource loaded and ready to be used in program?
             fgBool m_isReady;
 
-        };
-    };
-};
+        }; // class CResource
+
+    } // namespace resource
+} // namespace fg
 
     #undef FG_INC_RESOURCE_BLOCK
 #endif /* FG_INC_RESOURCE */

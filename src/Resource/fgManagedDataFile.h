@@ -38,6 +38,8 @@ namespace fg {
             ///
             typedef typename FileMapping::iterator FileMappingItor;
             ///
+            typedef typename FileMapping::const_iterator FileMappingConstItor;
+            ///
             typedef THandleType handle_type;
             ///
             typedef TMapKeyType map_key_type;
@@ -144,9 +146,12 @@ namespace fg {
              * @param id
              * @return 
              */
-            inline std::string getFilePath(TMapKeyType id) const {
-                // this lazy cast is ok - non-const version does not modify anything
-                return (const_cast<CManagedDataFile<THandleType, TMapKeyType>*>(this)->getFilePath(id));
+            inline std::string const& getFilePath(TMapKeyType id) const {
+                FileMappingConstItor c_itor = m_fileMapping.find(id);
+                if(c_itor == m_fileMapping.end()) {
+                    return m_filePath;
+                }
+                return c_itor->second;
             }
             /**
              * 
@@ -164,11 +169,12 @@ namespace fg {
              * @param id
              * @return 
              */
-            inline const char* getFilePathStr(TMapKeyType id) {
-                if(m_fileMapping.find(id) == m_fileMapping.end()) {
+            inline const char* getFilePathStr(TMapKeyType id) const {
+                FileMappingConstItor c_itor = m_fileMapping.find(id);
+                if(c_itor == m_fileMapping.end()) {
                     return m_filePath.c_str();
                 }
-                return m_fileMapping[id].c_str();
+                return c_itor->second.c_str();
             }
             /**
              * 
@@ -185,8 +191,8 @@ namespace fg {
             std::string m_filePath;
             /// Default ID to write to
             TMapKeyType m_defaultID;
-        };
-    };
-};
+        }; // class CManagedDataFile
+    } // namespace resource
+} // namespace fg
     #undef FG_INC_MANAGED_DATA_FILE_BLOCK
 #endif /* FG_INC_MANAGED_DATA_FILE */
