@@ -6,11 +6,15 @@ build
 *.sln
 *.ncb
 *.vcproj
+.gitignore.swp
 
 # Output
 bin/
 lib/
 contrib/
+tools/assimp_cmd/Makefile
+code/Makefile
+Makefile
 
 # Generated
 assimp.pc
