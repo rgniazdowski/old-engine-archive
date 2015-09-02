@@ -72,6 +72,7 @@ void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
         m_drawCall->setupFromMesh(pMesh);
     }
     setBoundingVolume(pMesh->aabb);
+    m_modelMat = math::translate(Matrix4f(), pMesh->displacement);
 }
 //------------------------------------------------------------------------------
 

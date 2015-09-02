@@ -289,14 +289,14 @@ void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
     if(!isVisible())
         return;
     if(m_drawCall) {
-        m_drawCall->draw(modelMat);
+        m_drawCall->draw(m_modelMat * modelMat);
     }
     ChildrenVecItor it = m_children.begin(), end = m_children.end();
     for(; it != end; it++) {
         if(!(*it))
             continue;
         if(m_drawCall != (*it)->getDrawCall()) {
-            (*it)->draw(modelMat);
+            (*it)->draw(m_modelMat * modelMat);
         }
     }
 }
