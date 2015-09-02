@@ -137,14 +137,14 @@ namespace fg {
              * Get reference tothe texture id used by the low level graphics system - handle in OpenGL
              * @return 
              */
-            STextureID& getRefGfxID() {
+            STextureID& getRefGfxID(void) {
                 return m_textureGfxID;
             }
             /**
              * 
              * @return 
              */
-            STextureID* getPtrGfxID() {
+            STextureID* getPtrGfxID(void) {
                 return &m_textureGfxID;
             }
             /**
@@ -158,7 +158,7 @@ namespace fg {
              * Get width of the texture in pixels
              * @return 
              */
-            int getWidth() const {
+            int getWidth(void) const {
                 return m_width;
             }
             /**
@@ -292,7 +292,8 @@ namespace fg {
             /// When set to TRUE, even if gfxID is invalid it tells that texture
             /// needs to be re-uploaded
             ///
-            /// On GL suspend all gfx IDs (including shaders, vbo's and others become invalid)
+            /// On GL suspend all gfx IDs (including shaders, vbo's
+            /// and others become invalid)
             fgBool m_isInVRAM;
         };
 

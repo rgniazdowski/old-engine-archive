@@ -215,15 +215,16 @@ fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
         return FG_FALSE;
     // #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
     const char *ext = fg::path::fileExt(path.c_str(), FG_TRUE);
-    if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
+    
+    if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_BMP, FG_FALSE)) {
         this->m_fileType = texture::FILE_BMP;
-    } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
+    } else if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_RAW, FG_FALSE)) {
         this->m_fileType = texture::FILE_RAW;
-    } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
+    } else if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_JPEG, FG_FALSE)) {
         this->m_fileType = texture::FILE_JPEG;
-    } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
+    } else if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_PNG, FG_FALSE)) {
         this->m_fileType = texture::FILE_PNG;
-    } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
+    } else if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_TGA, FG_FALSE)) {
         this->m_fileType = texture::FILE_TGA;
     } else {
         this->m_fileType = texture::FILE_OTHER;

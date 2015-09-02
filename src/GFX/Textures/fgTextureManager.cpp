@@ -303,7 +303,9 @@ fgBool gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
 void gfx::CTextureManager::allReleaseNonGFX(void) {
     if(!m_pResourceMgr)
         return;
-    resource::ResourceType searchTypes[] = {resource::TEXTURE, resource::FONT, resource::INVALID};
+    resource::ResourceType searchTypes[] = {resource::TEXTURE,
+                                            resource::FONT,
+                                            resource::INVALID};
     //
     // #FIXME #P1 - this needs more testing and should look quite different
     // right now it's just bollocks
@@ -331,7 +333,9 @@ void gfx::CTextureManager::allReleaseNonGFX(void) {
 void gfx::CTextureManager::allReleaseGFX(void) {
     if(!m_pResourceMgr)
         return;
-    resource::ResourceType searchTypes[] = {resource::TEXTURE, resource::FONT, resource::INVALID};
+    resource::ResourceType searchTypes[] = {resource::TEXTURE,
+                                            resource::FONT,
+                                            resource::INVALID};
     //
     // #FIXME #P1 - this needs more testing and should look quite different
     // right now it's just bollocks
@@ -344,7 +348,7 @@ void gfx::CTextureManager::allReleaseGFX(void) {
         }
         resource::ResourceType resType = resource->getResourceType();
         if(resType == resource::TEXTURE || resType == resource::FONT) {
-            CTextureResource *textureResource = (CTextureResource *)resource;
+            CTextureResource* textureResource = (CTextureResource *)resource;
             STextureID& texGfxID = textureResource->getRefGfxID();
             gfx::context::deleteTexture(texGfxID);
             //textureResource->releaseNonGFX();
@@ -369,7 +373,6 @@ void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
 fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     if(!m_pResourceMgr)
         return FG_FALSE;
-    // DEVICE YIELD
     if(!pTexture) {
         FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
@@ -379,7 +382,6 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         return FG_FALSE;
     }
     ((resource::CResourceManager *)m_pResourceMgr)->lockResource(pTexture);
-
     if(!pTexture->getRawData() || !pTexture->hasOwnedRAM()) {
         FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is disposed / empty");
         return FG_FALSE;
@@ -438,11 +440,20 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     }
     if(textureType == texture::PLAIN || textureType == texture::FONT) {
-        glTexImage2D(target, 0, (fgGFXint)internalformat, pTexture->getWidth(), pTexture->getHeight(), 0, (fgGFXenum)dataformat, GL_UNSIGNED_BYTE, pTexture->getRawData());
+        glTexImage2D(target,
+                     0,
+                     (fgGFXint)internalformat,
+                     pTexture->getWidth(),
+                     pTexture->getHeight(),
+                     0,
+                     (fgGFXenum)dataformat,
+                     GL_UNSIGNED_BYTE,
+                     pTexture->getRawData());
     } else if(textureType == texture::CUBE) {
         target = GL_TEXTURE_CUBE_MAP;
         for(int i = 0; i < texture::NUM_CUBE_MAPS; i++) {
-            glTexImage2D(cubeTargets[i], 0,
+            glTexImage2D(cubeTargets[i],
+                         0,
                          (fgGFXint)internalformat,
                          pTexture->getWidth(),
                          pTexture->getHeight(),
@@ -461,8 +472,11 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         FG_LOG_ERROR("GFX: Errors on texture '%s' upload. Failing functions: %s", pTexture->getNameStr(), failedFuncs.substr(0, failedFuncs.length() - 2).c_str());
         failedFuncs.clear();
     } else {
-        FG_LOG_DEBUG("GFX: Texture [%s] uploaded successfully: gfxID=%d;", pTexture->getNameStr(), pTexture->getRefGfxID().id);
-        FG_LOG_DEBUG("GFX: Texture [%s] dimensions: %dx%d", pTexture->getNameStr(), pTexture->getWidth(), pTexture->getHeight());
+        FG_LOG_DEBUG("GFX: Texture [%s] uploaded successfully: gfxID=%d; size=%dx%d;",
+                     pTexture->getNameStr(),
+                     pTexture->getRefGfxID().id,
+                     pTexture->getWidth(),
+                     pTexture->getHeight());
     }
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     // DEVICE YIELD
