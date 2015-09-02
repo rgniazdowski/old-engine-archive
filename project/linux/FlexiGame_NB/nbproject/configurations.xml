@@ -57,6 +57,22 @@
         <itemPath>../../../src/GameLogic/fgGrid.h</itemPath>
       </logicalFolder>
       <logicalFolder name="GFX" displayName="GFX" projectFiles="true">
+        <logicalFolder name="f1" displayName="Animation" projectFiles="true">
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimation.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimation.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimationChannel.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimationChannel.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimationInfo.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimationInfo.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxArmature.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxArmature.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBone.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBone.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBoneAnimation.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBoneAnimation.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxObjectAnimation.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxObjectAnimation.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="Particles" displayName="Particles" projectFiles="true">
           <itemPath>../../../src/GFX/Particles/fgParticle.h</itemPath>
           <itemPath>../../../src/GFX/Particles/fgParticleSystem.cpp</itemPath>
@@ -783,6 +799,76 @@
       <item path="../../../src/Event/fgThrownEvent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgTimeoutCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2484,6 +2570,76 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgParticle.h"
             ex="false"
             tool="3"
@@ -4147,6 +4303,76 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgParticle.h"
             ex="false"
             tool="3"
@@ -5792,6 +6018,76 @@
       <item path="../../../src/Event/fgThrownEvent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgTimeoutCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7464,6 +7760,76 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgParticle.h"
             ex="false"
             tool="3"
@@ -9120,6 +9486,76 @@
       <item path="../../../src/Event/fgThrownEvent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgTimeoutCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxArmature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBone.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBoneAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
