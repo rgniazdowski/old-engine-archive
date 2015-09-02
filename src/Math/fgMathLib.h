@@ -304,11 +304,25 @@ namespace fg {
     typedef glm::dmat4 Matrix4d;
         #endif /* !defined(FG_MATH_GLM_MATRIX_MASK) */
 
-        #ifndef FG_MATH_GLM_QUAT_MASK
+        #if !defined(FG_MATH_GLM_QUAT_MASK)
             #define FG_MATH_GLM_QUAT_MASK
     typedef glm::quat Quaternionf;
     typedef glm::dquat Quaterniond;
-        #endif
+
+            #if !defined(FG_MATH_GLM_QUAT_TEMPLATE_MASK)
+                #if defined(FG_USING_MARMALADE)
+
+    template<typename T>
+    struct QuatertionT {
+        typedef glm::detail::tquat<T, glm::defaultp> type;
+    };
+                #else
+    template<typename T>
+    using QuaternionT = glm::detail::tquat<T, glm::defaultp>;
+                #endif /* FG_USING_MARMALADE */
+            #endif /* !defined(FG_MATH_GLM_QUAT_TEMPLATE_MASK) */
+
+        #endif /* !defined(FG_MATH_GLM_QUAT_MASK) */
 
     #else /* FG_USING_GLM */
 

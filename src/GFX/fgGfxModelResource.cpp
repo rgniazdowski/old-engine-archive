@@ -420,7 +420,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     nodeTransVec.reserve(16);
     std::stack<aiNode*> stack;
     aiMatrix4x4 aiTransform;
-    
+
     stack.push(pScene->mRootNode);    
     while(!stack.empty()) {
         aiQuaternion quat;
