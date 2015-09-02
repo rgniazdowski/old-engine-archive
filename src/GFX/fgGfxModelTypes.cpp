@@ -13,6 +13,7 @@
 #include "Util/fgMemory.h"
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 const unsigned short gfx::SMeshSoA::POSITIONS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshSoA::VERTICES_VBO_ARRAY_IDX = 0;
@@ -25,18 +26,23 @@ const unsigned short gfx::SMeshSoA::INDICES_VBO_ARRAY_IDX = 3;
  * MESH SOA FUNCTIONS - STRUCTURE OF ARRAYS
  ******************************************************************************/
 
-void gfx::SMeshSoA::fixCenter(void) {
-    const unsigned int n = this->vertices.size() / 3;
+void gfx::SMeshSoA::fixCenter(fgBool saveDisplacement) {
+    const unsigned int n = this->vertices.size();
     if(!n)
         return;
     const Vector3f center = this->aabb.getCenter();
-    const void *data = (const void *) & this->vertices.front();
-    for(unsigned int i = 0; i < n; i++) {
+    //const void *data = (const void *) & this->vertices.front();
+    for(unsigned int i = 0; i < n; i += 3) {
         for(unsigned int j = 0; j < 3; j++) {
             this->vertices[i + j] -= center[j];
         }
     }
-    this->aabb.setBoundsFromData(data, sizeof (Vector3f), n);
+    if(saveDisplacement) {
+        this->displacement += center;
+    }
+    this->aabb.min -= center;
+    this->aabb.max -= center;
+    //this->aabb.setBoundsFromData(data, sizeof (Vector3f), n);
 }
 //------------------------------------------------------------------------------
 
@@ -294,16 +300,21 @@ const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
 
 //------------------------------------------------------------------------------
 
-void gfx::SMeshAoS::fixCenter(void) {
+void gfx::SMeshAoS::fixCenter(fgBool saveDisplacement) {
     const unsigned int n = this->vertices.size();
     if(!n)
         return;
     const Vector3f center = this->aabb.getCenter();
-    const void *data = this->vertices.front();
+    //const void *data = this->vertices.front();
     for(unsigned int i = 0; i < n; i++) {
         this->vertices[i].position -= center;
     }
-    this->aabb.setBoundsFromData(data, vertices.stride(), n);
+    if(saveDisplacement) {
+        this->displacement += center;
+    }
+    this->aabb.min -= center;
+    this->aabb.max -= center;
+    //this->aabb.setBoundsFromData(data, vertices.stride(), n);
 }
 //------------------------------------------------------------------------------
 
@@ -349,11 +360,11 @@ fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
                  (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id, front(), stride(), size());
     //FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
     if(count == 2) {
-    FG_LOG_DEBUG("GFX: MESH AoS: buffer id[indices][%d], data[%p], size(B)[%d], size[%d]",
-                 (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
-                 (fgGFXvoid *)(&indices.front()),
-                 sizeof (fgGFXushort) * indices.size(),
-                 indices.size());
+        FG_LOG_DEBUG("GFX: MESH AoS: buffer id[indices][%d], data[%p], size(B)[%d], size[%d]",
+                     (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
+                     (fgGFXvoid *)(&indices.front()),
+                     sizeof (fgGFXushort) * indices.size(),
+                     indices.size());
     }
     return FG_GFX_TRUE;
 }

@@ -56,12 +56,14 @@ namespace fg {
         struct SMeshBase : public CVertexData {
             ////
             AABoundingBox3Df aabb;
+            ///
+            Vector3f displacement;
             ////
             PrimitiveMode primMode;
             /**
              * 
              */
-            SMeshBase() : aabb(), primMode(PrimitiveMode::TRIANGLES) { }
+            SMeshBase() : aabb(), displacement(), primMode(PrimitiveMode::TRIANGLES) { }
             /**
              * 
              */
@@ -82,7 +84,7 @@ namespace fg {
             /**
              * 
              */
-            virtual void fixCenter(void) = 0;
+            virtual void fixCenter(fgBool saveDisplacement = FG_TRUE) = 0;
         };
 
         /**
@@ -90,6 +92,9 @@ namespace fg {
          * - structure of arrays
          */
         struct SMeshSoA : SMeshBase {
+            typedef SMeshBase base_type;
+            typedef SMeshSoA self_type;
+
             /// Vector holding floats representing position (vertices)
             fg::CVector<fgGFXfloat> vertices; //3 fgVector3f
             /// Vector holding floats for normals
@@ -108,45 +113,7 @@ namespace fg {
             /**
              * 
              */
-            SMeshSoA() { }
-
-    #if 0
-            SMeshSoA(tinyobj::mesh_t & mesh) {
-                int n = mesh.positions.size();
-                vertices.reserve(n);
-                for(int i = 0; i < n; i++) {
-                    vertices.push_back(mesh.positions[i]);
-                }
-                n = mesh.normals.size();
-                normals.reserve(n);
-                for(int i = 0; i < n; i++) {
-                    normals.push_back(mesh.normals[i]);
-                }
-                if(normals.empty() && 0) {
-                    n = mesh.positions.size();
-                    for(int i = 0; i < n / 9; i += 9) {
-                        Vector3f normal;
-                        Vector3f v1(mesh.positions[i + 0], mesh.positions[i + 1], mesh.positions[i + 2]);
-                        Vector3f v2(mesh.positions[i + 3], mesh.positions[i + 4], mesh.positions[i + 5]);
-                        Vector3f v3(mesh.positions[i + 6], mesh.positions[i + 7], mesh.positions[i + 8]);
-                        fgGfxComputeNormal(v1, v2, v3, normal);
-                        normals.push_back(normal[0]);
-                        normals.push_back(normal[1]);
-                        normals.push_back(normal[2]);
-                    }
-                }
-                n = mesh.texcoords.size();
-                uvs.reserve(n);
-                for(int i = 0; i < n; i++) {
-                    uvs.push_back(mesh.texcoords[i]);
-                }
-                n = mesh.indices.size();
-                indices.reserve(n);
-                for(int i = 0; i < n; i++) {
-                    indices.push_back((fgGFXushort)mesh.indices[i]);
-                }
-            }
-    #endif
+            SMeshSoA() : base_type(), vertices(), normals(), uvs(), indices() { }
             /**
              * Destructor for the Mesh SoA object
              */
@@ -165,7 +132,7 @@ namespace fg {
             /**
              * 
              */
-            virtual void fixCenter(void);
+            virtual void fixCenter(fgBool saveDisplacement = FG_TRUE);
             /**
              * Returns whether the vertex data supports/generates VBOs
              * @return 
@@ -306,12 +273,7 @@ namespace fg {
             virtual void append(const Vector3f &pos) {
                 vertices.push_back(pos.x);
                 vertices.push_back(pos.y);
-                vertices.push_back(pos.z);
-                //fgVertex3 vertex;
-                //vertex.position = pos;
-                //vertex.normal = fgVector3f(1.0f, 1.0f, 1.0f);
-                //vertex.uv = fgVector2f(1.0f, 1.0f);
-                //fgVector<fgVertex3>::push_back(vertex);
+                vertices.push_back(pos.z);                
             }
             /**
              * Append to the vertex data (position and uv)
@@ -324,12 +286,7 @@ namespace fg {
                 vertices.push_back(pos.y);
                 vertices.push_back(pos.z);
                 uvs.push_back(uv.x);
-                uvs.push_back(uv.y);
-                /*fgVertex3 vertex;
-                vertex.position = pos;
-                vertex.normal = fgVector3f(1.0f, 1.0f, 1.0f);
-                vertex.uv = uv;
-                fgVector<fgVertex3>::push_back(vertex);*/
+                uvs.push_back(uv.y);                
             }
             /**
              * Append to the vertex data (position, normal and uv)
@@ -347,12 +304,7 @@ namespace fg {
                 normals.push_back(normal.y);
                 normals.push_back(normal.z);
                 uvs.push_back(uv.x);
-                uvs.push_back(uv.y);
-                /*fgVertex3 vertex;
-                vertex.position = pos;
-                vertex.normal = normal;
-                vertex.uv = uv;
-                fgVector<fgVertex3>::push_back(vertex);*/
+                uvs.push_back(uv.y);                
             }
             /**
              * Append to the vertex data (position, normal and uv). Color will be ignored
@@ -392,7 +344,6 @@ namespace fg {
                 normals.pop_back();
                 uvs.pop_back();
                 uvs.pop_back();
-                //fgVector<fgVertex3>::pop_back();
             }
             /**
              * Pointer to the back (vertices array - positions)
@@ -464,6 +415,9 @@ namespace fg {
          *
          */
         struct SMeshAoS : SMeshBase {
+            typedef SMeshBase base_type;
+            typedef SMeshAoS self_type;
+
             /// Vertex data - AoS
             CVertexData3v vertices;
             /// Special indices array
@@ -479,47 +433,9 @@ namespace fg {
             /**
              * Default constructor for Mesh AoS object
              */
-            SMeshAoS() {
-                vertices.reserve(1);
+            SMeshAoS() : base_type(), vertices(), indices() {
+                vertices.reserve(4);
             }
-
-            // #FIXME #SERIOUSLY
-    #if 0
-            SMeshAoS(tinyobj::mesh_t & mesh) {
-                // pos, norm, uv
-                int npos = mesh.positions.size();
-                int nnorm = mesh.normals.size();
-                int nuvs = mesh.texcoords.size();
-                int nind = mesh.indices.size();
-                vertices.reserve(npos / 3);
-                for(int i = 0, k = 0; i < npos; i += 3, k += 2) {
-                    Vertex3v vertex;
-                    for(int j = 0; j < 3; j++)
-                        vertex.position[j] = mesh.positions[i + j];
-
-                    for(int j = 0; j < 3 && i + j < nnorm; j++)
-                        vertex.normal[j] = mesh.normals[i + j];
-
-                    for(int j = 0; j < 2 && k + j < nuvs; j++) {
-                        vertex.uv[j] = mesh.texcoords[k + j];
-                        // FLIP TEXTURE
-                        vertex.uv[j + 1] = 1.0f - mesh.texcoords[k + j + 1];
-                        break;
-                    }
-                    vertices.push_back(vertex);
-                }
-                if(nnorm == 0) {
-                    // FIXME - this is soooo fucked up ....
-                    for(int i = 2; i < npos; i++) {
-                        fgGfxComputeNormal(vertices[i].position, vertices[i - 1].position, vertices[i - 2].position, vertices[i].normal);
-                    }
-                }
-                indices.reserve(nind);
-                for(int i = 0; i < nind; i++) {
-                    indices.push_back((fgGFXushort)mesh.indices[i]);
-                }
-            }
-    #endif
             /**
              * Destructor for Mesh AoS object
              */
@@ -538,7 +454,7 @@ namespace fg {
             /**
              *
              */
-            virtual void fixCenter(void);
+            virtual void fixCenter(fgBool saveDisplacement = FG_TRUE);
             /**
              * Clear the internal data arrays
              */
@@ -804,9 +720,6 @@ namespace fg {
              */
             virtual void reserve(const unsigned int newSize) {
                 this->vertices.reserve(newSize);
-                //this->indices.reserve(newSize);
-                //this->normals.reserve(newSize);
-                //this->uvs.reserve(newSize);
             }
             /**
              * 
@@ -814,9 +727,6 @@ namespace fg {
              */
             virtual void resize(const unsigned int newSize) {
                 this->vertices.resize(newSize);
-                //this->indices.resize(newSize);
-                //this->normals.resize(newSize);
-                //this->uvs.resize(newSize);
             }
             /**
              * 
@@ -832,7 +742,7 @@ namespace fg {
             virtual bool empty(void) const {
                 return (bool) vertices.empty();
             }
-        };
+        }; // struct SMeshAoS
 
         /**
          *
@@ -889,6 +799,7 @@ namespace fg {
                 return size;
             }
         }; // struct SShape
+
     } // namespace gfx
 } // namespace fg
 

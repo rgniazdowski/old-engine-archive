@@ -147,6 +147,8 @@
           <itemPath>../../../src/GFX/Textures/fgTextureTypes.h</itemPath>
         </logicalFolder>
         <itemPath>../../../src/GFX/fgGfxAABoundingBox.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAssimpHelper.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAssimpHelper.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAttribBits.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAttributeData.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxBoundingBox.h</itemPath>
@@ -613,7 +615,7 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
               </makeArtifact>
             </linkerLibProjectItem>
-            <linkerLibFileItem>../../../modules/assimp/lib/libassimpd.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/assimp/lib/libassimp.a</linkerLibFileItem>
           </linkerLibItems>
           <commandLine>-rdynamic</commandLine>
         </linkerTool>
@@ -1191,6 +1193,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2882,6 +2894,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
@@ -4535,6 +4557,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
@@ -6170,6 +6202,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7832,6 +7874,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
@@ -9478,6 +9530,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAssimpHelper.h"
             ex="false"
             tool="3"
             flavor2="0">

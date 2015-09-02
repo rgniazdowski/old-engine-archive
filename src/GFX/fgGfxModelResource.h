@@ -109,7 +109,17 @@ namespace fg {
                 /// Is model textured?
                 TEXTURED = 0x0010,
                 /// is model multitextured?
-                MULTITEXTURED = 0x0020
+                MULTITEXTURED = 0x0020,
+                /// Ignore/drop animations in this model
+                DROP_ANIMATIONS = 0x0100,
+                /// Ignore/drop bone information contained in this model
+                DROP_BONES = 0x0200,
+                /// Merge all meshes into one shape
+                MERGE_MESHES = 0x0400,
+                /// All meshes will be moved to their geometric center (based on AABB)
+                FIX_CENTER = 0x0800,
+                /// Write move vector relative to geometric center of each mesh
+                SAVE_DISPLACEMENT = 0x1000
             };
 
         public:
@@ -408,6 +418,116 @@ namespace fg {
             inline void setInterleaved(fgBool toggle = FG_TRUE) {
                 setFlag(INTERLEAVED, toggle);
             }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isDropAnimations(void) const {
+                return (fgBool)!!(m_modelFlags & DROP_ANIMATIONS);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool shouldDropAnimations(void) const {
+                return (fgBool)!!(m_modelFlags & DROP_ANIMATIONS);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setDropAnimations(fgBool toggle = FG_TRUE) {
+                setFlag(DROP_ANIMATIONS, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isDropBones(void) const {
+                return (fgBool)!!(m_modelFlags & DROP_BONES);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool shouldDropBones(void) const {
+                return (fgBool)!!(m_modelFlags & DROP_BONES);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setDropBones(fgBool toggle = FG_TRUE) {
+                setFlag(DROP_BONES, toggle);
+                if(toggle) {
+                    // without bones there is no need for animations
+                    setFlag(DROP_ANIMATIONS, FG_TRUE);
+                }
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isMergeMeshes(void) const {
+                return (fgBool)!!(m_modelFlags & MERGE_MESHES);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool shouldMergeMeshes(void) const {
+                return (fgBool)!!(m_modelFlags & MERGE_MESHES);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setMergeMeshes(fgBool toggle = FG_TRUE) {
+                setFlag(MERGE_MESHES, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isFixCenter(void) const {
+                return (fgBool)!!(m_modelFlags & FIX_CENTER);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool shouldFixCenter(void) const {
+                return (fgBool)!!(m_modelFlags & FIX_CENTER);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setFixCenter(fgBool toggle = FG_TRUE) {
+                setFlag(FIX_CENTER, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isSaveDisplacement(void) const {
+                return (fgBool)!!(m_modelFlags & SAVE_DISPLACEMENT);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool shouldSaveDisplacement(void) const {
+                return (fgBool)!!(m_modelFlags & SAVE_DISPLACEMENT);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setSaveDisplacement(fgBool toggle = FG_TRUE) {
+                setFlag(SAVE_DISPLACEMENT, toggle);
+            }
+            //------------------------------------------------------------------
             /**
              * Number of vertices
              * @return 

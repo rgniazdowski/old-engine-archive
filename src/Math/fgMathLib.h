@@ -108,16 +108,28 @@ namespace fg {
             }
             return sv;
         }
-        /**
-         *
-         * @param a
-         * @param b
-         * @return
-         */
-        inline fgBool isZero(float a, float b = (float)0.00001) {
-            if(a == (float)0.0)return FG_TRUE;
+        //----------------------------------------------------------------------
+        template <typename T>
+        inline fgBool isZero(T a, T b = (T)0.00001) {
+            if(a == (T)0.0) return FG_TRUE;
             return ( a > -b && a < b);
         }
+        //----------------------------------------------------------------------
+        template <typename T, precision P>
+        inline fgBool isZero(detail::tvec2<T, P> const & v, T b = (T)0.00001) {
+            return (fgBool)(isZero(v.x, b) && isZero(v.y, b));
+        }
+        //----------------------------------------------------------------------
+        template <typename T, precision P>
+        inline fgBool isZero(detail::tvec3<T, P> const & v, T b = (T)0.00001) {
+            return (fgBool)(isZero(v.x, b) && isZero(v.y, b) && isZero(v.z, b));
+        }
+        //----------------------------------------------------------------------
+        template <typename T, precision P>
+        inline fgBool isZero(detail::tvec4<T, P> const & v, T b = (T)0.00001) {
+            return (fgBool)(isZero(v.x, b) && isZero(v.y, b) && isZero(v.z, b) && isZero(v.w, b));
+        }
+        //----------------------------------------------------------------------
         template <typename T, precision P>
         GLM_FUNC_QUALIFIER T squareLength(detail::tvec2<T, P> const & v) {
             GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");

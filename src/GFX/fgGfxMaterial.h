@@ -321,7 +321,7 @@ namespace fg {
              * @return 
              */
             unsigned int getSortingValue(const unsigned int maxValue = 255) const;
-        };
+        }; // struct SMaterial
 
         FG_ENUM_FLAGS(SMaterial::StateFlags);
         /**
@@ -338,8 +338,8 @@ namespace fg {
             }
         }
 
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_MATERIAL_BLOCK
 #endif /* FG_INC_GFX_MATERIAL */

@@ -20,6 +20,9 @@ using namespace fg;
 
 #if defined(FG_USING_ASSIMP)
 #include "assimp/Importer.hpp" // #FIXME IOSystem!
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+#include "fgGfxAssimpHelper.h"
 ::Assimp::Importer* gfx::CModelResource::s_objImporter = NULL;
 #endif
 int gfx::CModelResource::s_cmrInstanceCount = 0;
@@ -32,6 +35,8 @@ m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
     setFlag(INTERLEAVED, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    setFlag(FIX_CENTER, FG_TRUE);
     memset(m_numData, 0, sizeof (m_numData));
     base_type::m_resType = resource::MODEL3D;
     s_cmrInstanceCount++;
@@ -49,6 +54,8 @@ m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
     setFlag(INTERLEAVED, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    setFlag(FIX_CENTER, FG_TRUE);
     base_type::m_resType = resource::MODEL3D;
     s_cmrInstanceCount++;
 #if defined(FG_USING_ASSIMP)
@@ -66,6 +73,8 @@ m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
     m_modelFlags = NO_FLAGS;
     setFlag(INTERLEAVED, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    setFlag(FIX_CENTER, FG_TRUE);
     base_type::m_resType = resource::MODEL3D;
     s_cmrInstanceCount++;
 #if defined(FG_USING_ASSIMP)
@@ -101,6 +110,8 @@ void gfx::CModelResource::clear(void) {
     m_modelFlags = NO_FLAGS;
     base_type::m_resType = resource::MODEL3D;
     setFlag(INTERLEAVED, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    setFlag(FIX_CENTER, FG_TRUE);
     memset(m_numData, 0, sizeof (m_numData));
 }
 //------------------------------------------------------------------------------
@@ -358,10 +369,170 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
         FG_LOG_ERROR("GFX: '%s' model extension is not supported. Will not load '%s'.");
         return FG_FALSE;
     }
+    // This functions uses assimp to load model representation;
+    // Assimps' importer create a scene graph containing all the nodes in hierarchy.
+    // In this loading procedure the scene graph will be ignored.
+    // All models/meshes within the scene are saved as shapes of this model and
+    // are pre-transformed based on nodes' transformation matrix.
+    const ::aiScene* pScene = NULL;
+    unsigned int defaultFlags = 0;
 
+    setFlag(FIX_CENTER, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    defaultFlags |= aiProcess_JoinIdenticalVertices;
+    // defaultFlags |= aiProcess_MakeLeftHanded; // only for DirectX
+    defaultFlags |= aiProcess_Triangulate;
+    defaultFlags |= aiProcess_GenUVCoords;
+    defaultFlags |= aiProcess_RemoveComponent;
+    defaultFlags |= aiProcess_RemoveRedundantMaterials;
+    defaultFlags |= aiProcess_SortByPType;
+    defaultFlags |= aiProcess_TransformUVCoords;
+    defaultFlags |= aiProcess_FlipUVs;
+
+    //defaultFlags |= aiProcess_OptimizeGraph;
+    // force generation of per vertex normals
+    defaultFlags |= aiProcess_GenSmoothNormals;
+    //defaultFlags |= aiProcess_CalcTangentSpace;
+    // Remove not needed cameras and lights
+    // tangents and bi-tangents are currently ignored #TODO
+    s_objImporter->SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,
+                                      aiComponent_CAMERAS |
+                                      aiComponent_LIGHTS |
+                                      aiComponent_COLORS |
+                                      aiComponent_NORMALS |
+                                      aiComponent_TANGENTS_AND_BITANGENTS);
+    // Remove lines and points from the model - not used in rendering
+    s_objImporter->SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE,
+                                      aiPrimitiveType_LINE |
+                                      aiPrimitiveType_POINT);
+    // Set the smoothing angle limit
+    s_objImporter->SetPropertyInteger(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE, 80);
+
+    pScene = s_objImporter->ReadFile(getCurrentFilePath(), defaultFlags);
+    if(!pScene) {
+        FG_LOG_ERROR("GFX: Failed to load model file: '%s': %s",
+                     getCurrentFilePathStr(),
+                     s_objImporter->GetErrorString());
+        return FG_FALSE;
+    }
+    // DFS algorithm for searching through scene and generating gfx shapes
+    CVector<aiNode*> nodeTransVec;
+    nodeTransVec.reserve(16);
+    std::stack<aiNode*> stack;
+    aiMatrix4x4 aiTransform;
+    
+    stack.push(pScene->mRootNode);    
+    while(!stack.empty()) {
+        aiQuaternion quat;
+        aiVector3D matPos, matScale;
+
+        aiNode* pNode = stack.top();
+        stack.pop();
+        const fgBool isRoot = (fgBool)(pNode->mParent == NULL);
+        for(unsigned int i = 0; i < pNode->mNumChildren; i++) {
+            stack.push(pNode->mChildren[i]);
+        }
+        if(isRoot) {
+            pNode->mTransformation.Decompose(matScale, quat, matPos);
+            printf("%p: %s [Root] [t:%.2f;%.2f;%.2f] [rot:%.2f;%.2f;%.2f;%.2f] [scale:%.2f;%.2f;%.2f]\n",
+                   pNode, pNode->mName.C_Str(),
+                   matPos.x, matPos.y, matPos.z,
+                   quat.w, quat.x, quat.y, quat.z,
+                   matScale.x, matScale.y, matScale.z);
+            continue;
+        }
+        std::string spacing;
+        spacing.reserve(32);
+        // need to generate modelMatrix and transform vertices accordingly
+        aiNode* pSearchNode = pNode;
+        while(pSearchNode) {
+            nodeTransVec.push_back(pSearchNode);
+            pSearchNode = pSearchNode->mParent;
+            if(pSearchNode)
+                spacing.append("  ");
+        }
+        nodeTransVec.reverse();
+        aiTransform = aiMatrix4x4();
+        unsigned int n = nodeTransVec.size();
+        for(unsigned int i = 0; i < n; i++) {            
+            aiTransform *= nodeTransVec[i]->mTransformation;
+        }
+        nodeTransVec.clear();
+        aiTransform.Decompose(matScale, quat, matPos);
+
+        printf("%s%p: %s [t:%.2f;%.2f;%.2f] [rot:%.2f;%.2f;%.2f;%.2f] [scale:%.2f;%.2f;%.2f]\n",
+               spacing.c_str(), pNode, pNode->mName.C_Str(),
+               matPos.x, matPos.y, matPos.z,
+               quat.w, quat.x, quat.y, quat.z,
+               matScale.x, matScale.y, matScale.z);
+        if(!pNode->mNumMeshes) {
+            printf("NO MESH AT NODE: %s\n", pNode->mName.C_Str());
+        }
+        for(unsigned int i = 0; i < pNode->mNumMeshes; i++) {
+            aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
+            if(!pMesh) {                
+                continue;
+            }
+            
+            SShape* pShape = new SShape();
+            pShape->name.reserve(pNode->mName.length);
+            pShape->name.append(pNode->mName.C_Str());
+            m_shapes.push_back(pShape);
+
+            if(isInterleaved()) {
+                pShape->mesh = new SMeshAoS(); // mesh - array of structures
+            } else {
+                pShape->mesh = new SMeshSoA(); // mesh - structure of arrays
+            }
+
+            for(unsigned int fn = 0; fn < pMesh->mNumFaces; fn++) {
+                struct aiFace* pFace = &pMesh->mFaces[fn];
+                for(unsigned int fidx = 0; fidx < pFace->mNumIndices; fidx++) {
+                    pShape->mesh->appendIndice(pFace->mIndices[fidx]);
+                }
+            }
+            // Fix center and save displacement should be used together
+            // In most cases using only save displacement may cause artifacts
+            // as the objects will be moved twice: once by the model matrix
+            // transformation, the second time because of the transformation
+            // of vertices.
+            // This may not be working properly for now. #FIXME
+            if(isFixCenter()) {
+                // Zero the transformation: the mesh will now appear at center (local)
+                aiTransform.a4 = 0.0f;
+                aiTransform.b4 = 0.0f;
+                aiTransform.c4 = 0.0f;
+            }
+            if(isSaveDisplacement()) {
+                // Save the displacement info (off-center transformation)
+                assimp_helper::copyVector(pShape->mesh->displacement, matPos);
+            }
+            for(unsigned int vidx = 0; vidx < pMesh->mNumVertices; vidx++) {
+                Vector3f pos, normal;
+                Vector2f uv;
+                assimp_helper::copyVector(normal, pMesh->mNormals[vidx]);
+                if(pMesh->HasTextureCoords(0)) {
+                    assimp_helper::copyVector(uv, pMesh->mTextureCoords[0][vidx]);
+                }
+                // aiVector3D is a little problematic (make some transform functions?)
+                aiVector3D transPos = pMesh->mVertices[vidx];
+                transPos *= aiTransform;
+                assimp_helper::copyVector(pos, transPos);
+                pShape->mesh->append(pos, normal, uv);
+            }
+            struct aiMaterial* pMaterial = pScene->mMaterials[pMesh->mMaterialIndex];
+            SMaterial* pNewMaterial = new SMaterial();
+            // copy aiMaterial data to gfx::SMaterial
+            assimp_helper::setupMaterial(pNewMaterial, pMaterial);
+            pShape->material = pNewMaterial;
+
+        } // for (mNumMeshes)
+    } // while (stack not empty)
+
+    s_objImporter->FreeScene();
     // reset the ready flag
     this->m_isReady = FG_FALSE;
-    refreshInternalData();
+    refreshInternalData(); // recalculate internals
     return FG_TRUE;
 }
 #endif
@@ -540,7 +711,8 @@ void gfx::CModelResource::updateAABB(void) {
     for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
             m_shapes[i]->updateAABB();
-            m_shapes[i]->mesh->fixCenter();
+            if(isFixCenter())
+                m_shapes[i]->mesh->fixCenter(isSaveDisplacement());
             m_aabb.merge(m_shapes[i]->mesh->aabb);
         }
     }
