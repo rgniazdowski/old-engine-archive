@@ -94,7 +94,7 @@ namespace fg {
 
         private:
             /// Attribute binding data
-            SAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
+            SAttributeData m_attrData[NUM_ATTRIBUTE_TYPES];
             /// Information on indices used in this draw call
             /// Pointers within must be always valid
             SDrawingInfo m_drawingInfo;

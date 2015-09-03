@@ -146,6 +146,7 @@
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderBase.h</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderConfig.cpp</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderConfig.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderDefs.cpp</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderDefs.h</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderManager.cpp</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderManager.h</itemPath>
@@ -166,6 +167,7 @@
         <itemPath>../../../src/GFX/fgGfxAssimpHelper.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxAssimpHelper.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAttribBits.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAttributeData.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxAttributeData.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxBoundingBox.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxBoundingVolume.h</itemPath>
@@ -1213,6 +1215,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
@@ -1294,6 +1301,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAttributeData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
@@ -2980,6 +2992,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
@@ -3061,6 +3078,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAttributeData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
@@ -4713,6 +4735,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
@@ -4794,6 +4821,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAttributeData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
@@ -6432,6 +6464,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
@@ -6513,6 +6550,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAttributeData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
@@ -8170,6 +8212,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
@@ -8251,6 +8298,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAttributeData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
@@ -9900,6 +9952,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
@@ -9981,6 +10038,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAttributeData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"

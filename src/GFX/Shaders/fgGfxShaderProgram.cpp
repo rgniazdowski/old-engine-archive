@@ -19,7 +19,6 @@
 #endif
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CShaderProgram::CShaderProgram() : base_type(),
@@ -42,7 +41,7 @@ m_manager(NULL) {
     m_params[FG_GFX_PROGRAM_ACTIVE_ATTRIBUTES] = 0;
     m_params[FG_GFX_PROGRAM_ACTIVE_ATTRIBUTE_MAX_LENGTH] = 0;
     m_params[FG_GFX_PROGRAM_ACTIVE_UNIFORMS] = 0;
-    m_baseType = FG_GFX_BASE_TYPE_PROGRAM;
+    m_baseType = BASE_TYPE_PROGRAM;
 }
 //------------------------------------------------------------------------------
 
@@ -82,16 +81,13 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
-
-    if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX) != 0) {
+    if(strcasecmp(ext, shaders::getShaderProgramConfigSuffix()) != 0) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
-
     if(!m_config) {
         m_config = new CShaderConfig();
     }
-
     //const char *fileName = fgPath::fileName(path);
     std::string fullPath = path;
     std::string filePathNoExt = fullPath.substr(0, fullPath.length() - 1 - strlen(ext));
@@ -100,20 +96,20 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
     if(!m_config->load(path, context::getSLVersion())) {
         return FG_FALSE;
     }
-    CShaderConfig::ShaderTypeVec shaderTypes = m_config->getRefShaderTypes();
+    CShaderConfig::ShaderTypeVec shaderTypes = m_config->getShaderTypes();
     m_nameTag = m_config->getProgramName();
 
     CShaderConfig::ConstantVec shaderConstants = m_config->getRefConstants();
 
     for(int i = 0; i < (int)shaderTypes.size(); i++) {
         std::string newPath;
-        newPath.append(filePathNoExt).append(".").append(FG_GFX_SHADER_CFG_STD_SUFFIX(shaderTypes[i]));
+        newPath.append(filePathNoExt).append(".").append(getShaderConfigSuffix(shaderTypes[i]));
 
         if(!m_config->load(newPath.c_str(), context::getSLVersion())) {
             FG_LOG_ERROR("GFX: Failed to load shader program config: '%s'", newPath.c_str());
             return FG_FALSE;
         }
-        ShaderType shaderType = shaderTypes[i];
+        shaders::ShaderType shaderType = shaderTypes[i];
         int spID = shaderTypeToSpID(shaderType);
         if(m_shaders[spID]) {
             // ?? shader already initialized lol
@@ -124,10 +120,11 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
         // Need to find a way :D for now supporting only one file / quality universal
         // #TODO #FILEMAPPING
         newPath = path::dirName(fullPath);
-        newPath.append(m_config->getRefFiles()[0]);
+        newPath.append(m_config->getFiles()[0]);
         shader->setFilePath(newPath);
         newPath.clear();
         shader->setVersion(FG_GFX_ESSL_100);
+        //m_config->getProgramName();
         {
             CShaderConfig::ConstantVec & _vec = m_config->getRefConstants();
             for(int i = 0; i < (int)_vec.size(); i++)
@@ -136,20 +133,19 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
                 shader->appendDefine(shaderConstants[i]);
         }
         {
-            CShaderConfig::IncludeNameVec & _vec = m_config->getRefIncludes();
+            CShaderConfig::IncludeNameVec& _vec = m_config->getIncludes();
             for(int i = 0; i < (int)_vec.size(); i++) {
                 shader->appendInclude(_vec[i]);
             }
         }
-        appendAttributeBinds(m_config->getRefAttributeBinds());
-        appendUniformBinds(m_config->getRefUniformBinds());
+        appendAttributeBinds(m_config->getAttributeBinds());
+        appendUniformBinds(m_config->getUniformBinds());
     }
     delete m_config;
     m_config = NULL;
     setPreloaded(FG_TRUE);
     FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "Shader program loaded successfully: '%s'", m_nameTag.c_str());
-    FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);
-    ////////////////////////////////////////////////////////////////////////////
+    FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);    
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -259,7 +255,7 @@ fgBool gfx::CShaderProgram::link(void) {
         itor = begin;
         for(; itor != end; itor++) {
             SAttributeBind & bind = *itor;
-            if(bind.location == -1 || bind.type == FG_GFX_ATTRIBUTE_INVALID)
+            if(bind.location == -1 || bind.type == ATTRIBUTE_INVALID)
                 continue;
             int boundLoc = glGetAttribLocation(m_gfxID, bind.variableName.c_str());
             FG_LOG_DEBUG("GFX: Bound attribute '%s' to location %d (should be %d)",
@@ -476,7 +472,7 @@ fgBool gfx::CShaderProgram::releaseGFX(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setManager(fg::base::CManager *pManager) {
+fgBool gfx::CShaderProgram::setManager(::fg::base::CManager *pManager) {
     if(!pManager)
         return FG_FALSE;
     setManaged(FG_TRUE);
@@ -500,11 +496,11 @@ fgBool gfx::CShaderProgram::bindAttributes(void) {
     for(; itor != end; itor++) {
         SAttributeBind & bind = *itor;
         // ? NEED STANDARD LOCATIONS
-        if(bind.location == -1 || bind.type == FG_GFX_ATTRIBUTE_INVALID)
+        if(bind.location == -1 || bind.type == ATTRIBUTE_INVALID)
             continue;
         FG_LOG_DEBUG("GFX: Binding attribute '%s' of type: '%s'(%d), in shader program: '%s' to location: %d",
                      bind.variableName.c_str(),
-                     FG_GFX_ATTRIBUTE_TYPE_TO_TEXT(bind.type),
+                     getTextFromAttributeType(bind.type),
                      (int)bind.type,
                      getNameStr(),
                      (int)bind.location);
@@ -530,9 +526,9 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
     itor = begin;
     for(; itor != end; itor++) {
         SUniformBind & bind = *itor;
-        if(bind.type == FG_GFX_UNIFORM_INVALID)
+        if(bind.type == shaders::UNIFORM_INVALID)
             continue;
-        FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)", bind.variableName.c_str(), FG_GFX_UNIFORM_TYPE_TO_TEXT(bind.type), (int)bind.type);
+        FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)", bind.variableName.c_str(), getTextFromUniformType(bind.type), (int)bind.type);
         bind.location = glGetUniformLocation(m_gfxID, bind.variableName.c_str());
         FG_LOG_DEBUG("GFX: Bound uniform '%s' to location: %d", bind.variableName.c_str(), bind.location);
         GLCheckError("glGetUniformLocation");
@@ -541,14 +537,14 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
 }
 //------------------------------------------------------------------------------
 
-fgGFXint gfx::CShaderProgram::getUniformBindIndex(UniformType type) {
-    if(type == FG_GFX_UNIFORM_INVALID)
+fgGFXint gfx::CShaderProgram::getUniformBindIndex(shaders::UniformType type) {
+    if(type == shaders::UNIFORM_INVALID)
         return -1;
     fgGFXint foundIndex = -1;
     int i, n = (int)m_uniformBinds.size();
     for(i = 0; i < n; i++) {
         SUniformBind & bind = m_uniformBinds.at(i);
-        if(bind.type == FG_GFX_UNIFORM_INVALID)
+        if(bind.type == shaders::UNIFORM_INVALID)
             continue;
         if(bind.type == type) {
             foundIndex = i;
@@ -559,7 +555,7 @@ fgGFXint gfx::CShaderProgram::getUniformBindIndex(UniformType type) {
 }
 //------------------------------------------------------------------------------
 
-gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(UniformType type) {
+gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(shaders::UniformType type) {
     int index = getUniformBindIndex(type);
     if(index < 0)
         return NULL;
@@ -567,7 +563,7 @@ gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(UniformType type) {
 }
 //------------------------------------------------------------------------------
 
-fgGFXint gfx::CShaderProgram::getUniformLocation(UniformType type) {
+fgGFXint gfx::CShaderProgram::getUniformLocation(shaders::UniformType type) {
     SUniformBind * bind = getUniformBind(type);
     if(!bind)
         return -1;
@@ -585,7 +581,7 @@ fgGFXint gfx::CShaderProgram::getUniformLocation(std::string variableName) {
 fgBool gfx::CShaderProgram::setUniform(CMVPMatrix *matrix) {
     if(!matrix)
         return FG_FALSE;
-    SUniformBind * bind = getUniformBind(FG_GFX_MVP_MATRIX);
+    SUniformBind * bind = getUniformBind(shaders::UNIFORM_MVP_MATRIX);
     if(!bind)
         return FG_FALSE;
     if(bind->location == -1)
@@ -597,7 +593,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVPMatrix *matrix) {
 //------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(CMVMatrix *matrix) {
-    SUniformBind * bind = getUniformBind(FG_GFX_MV_MATRIX);
+    SUniformBind * bind = getUniformBind(shaders::UNIFORM_MV_MATRIX);
     if(!bind || !matrix)
         return FG_FALSE;
     if(bind->location == -1)
@@ -608,7 +604,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVMatrix *matrix) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0) {
     SUniformBind * bind = getUniformBind(type);
     if(!bind)
@@ -621,7 +617,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0,
                                        fgGFXfloat v1) {
     SUniformBind * bind = getUniformBind(type);
@@ -635,7 +631,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0,
                                        fgGFXfloat v1,
                                        fgGFXfloat v2) {
@@ -650,7 +646,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0,
                                        fgGFXfloat v1,
                                        fgGFXfloat v2,
@@ -666,7 +662,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0) {
     SUniformBind *bind = getUniformBind(type);
     if(!bind)
@@ -679,7 +675,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0,
                                        fgGFXint v1) {
     SUniformBind *bind = getUniformBind(type);
@@ -693,7 +689,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0,
                                        fgGFXint v1,
                                        fgGFXint v2) {
@@ -708,7 +704,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0,
                                        fgGFXint v1,
                                        fgGFXint v2,
@@ -724,7 +720,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXsizei count,
                                        const fgGFXfloat *value) {
     SUniformBind *bind = getUniformBind(type);
@@ -737,7 +733,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::setUniform(UniformType type,
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXsizei count,
                                        const fgGFXint *value) {
     SUniformBind *bind = getUniformBind(type);

@@ -238,7 +238,7 @@ fgBool gfx::CModelResource::internal_loadWavefrontObj(void) {
         return FG_FALSE;
     }
     std::string err;
-    std::string mtl_basepath = fg::path::dirName(getFilePath());
+    std::string mtl_basepath = path::dirName(getFilePath());
     err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(this->m_quality), mtl_basepath.c_str(), isInterleaved());
     if(!err.empty()) {
         FG_LOG_ERROR("Error while loading model: '%s'", err.c_str());
@@ -473,7 +473,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             if(!pMesh) {                
                 continue;
             }
-            
             SShape* pShape = new SShape();
             pShape->name.reserve(pNode->mName.length);
             pShape->name.append(pNode->mName.C_Str());

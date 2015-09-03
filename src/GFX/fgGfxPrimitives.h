@@ -61,7 +61,7 @@ namespace fg {
              * @param mesh
              * @param scale
              */
-            void createHexagonalPrismMesh(fg::gfx::SMeshBase *pMesh, float scale = 1.0f,
+            void createHexagonalPrismMesh(SMeshBase *pMesh, float scale = 1.0f,
                                           fgBool shouldPreRotate = FG_FALSE,
                                           float angle = 0.0f,
                                           const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
@@ -74,7 +74,7 @@ namespace fg {
              * @param angle
              * @param axis
              */
-            void createOctagonalPrismMesh(fg::gfx::SMeshBase *pMesh, float scale = 1.0f,
+            void createOctagonalPrismMesh(SMeshBase *pMesh, float scale = 1.0f,
                                           fgBool shouldPreRotate = FG_FALSE,
                                           float angle = 0.0f,
                                           const Vec3f& axis = Vec3f(0.0f, 0.0f, 0.0f));
@@ -139,7 +139,7 @@ namespace fg {
              * @param attribMask
              * @param mode
              */
-            void drawArray(const fg::CVector<Vertex2v> &inputData,
+            void drawArray(const CVector<Vertex2v> &inputData,
                            const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
@@ -149,7 +149,7 @@ namespace fg {
              * @param attribMask
              * @param mode
              */
-            void drawArray(const fg::CVector<Vertex3v> &inputData,
+            void drawArray(const CVector<Vertex3v> &inputData,
                            const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
@@ -159,7 +159,7 @@ namespace fg {
              * @param attribMask
              * @param mode
              */
-            void drawArray(const fg::CVector<Vertex4v> &inputData,
+            void drawArray(const CVector<Vertex4v> &inputData,
                            const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
@@ -172,7 +172,7 @@ namespace fg {
              * @param attribMask
              * @param mode
              */
-            void drawArrayIndexed(const fg::CVector<Vertex2v> &inputData,
+            void drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                   const CVector<fgGFXushort>& indices,
                                   const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
@@ -184,7 +184,7 @@ namespace fg {
              * @param attribMask
              * @param mode
              */
-            void drawArrayIndexed(const fg::CVector<Vertex3v> &inputData,
+            void drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                   const CVector<fgGFXushort>& indices,
                                   const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
@@ -196,7 +196,7 @@ namespace fg {
              * @param attribMask
              * @param mode
              */
-            void drawArrayIndexed(const fg::CVector<Vertex4v> &inputData,
+            void drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                   const CVector<fgGFXushort>& indices,
                                   const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
@@ -237,7 +237,7 @@ namespace fg {
              */
             void appendRect2D(CVertexData *outputData,
                               float sizex, float sizey,
-                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const Vector2f &uv1, const Vector2f &uv2,
                               const Color4f &color,
                               const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
                               const fgBool rewind = FG_FALSE);
@@ -246,8 +246,8 @@ namespace fg {
              *
              */
             void appendRect2D(CVertexData *outputData,
-                              const fg::Vector2f &size,
-                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const Vector2f &size,
+                              const Vector2f &uv1, const Vector2f &uv2,
                               const Color4f &color,
                               const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
                               const fgBool rewind = FG_FALSE);
@@ -256,8 +256,8 @@ namespace fg {
              *
              */
             void appendRect2D(CVertexData *outputData,
-                              const fg::Vector2f &relPos, const fg::Vector2f &size,
-                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const Vector2f &relPos, const Vector2f &size,
+                              const Vector2f &uv1, const Vector2f &uv2,
                               const Color4f &color,
                               const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
                               const fgBool rewind = FG_FALSE);

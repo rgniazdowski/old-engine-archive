@@ -201,8 +201,8 @@ void gfx::CScene3D::render(void) {
     // This node queue was updated in CScene3D::sortCalls
     CSceneManager::render();
     CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
-    pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-    pProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+    pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
+    pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     const unsigned int n = m_octNodes.size();
     unsigned int i = 0;
     while(i < n) {
@@ -225,7 +225,7 @@ void gfx::CScene3D::render(void) {
         }
 #endif        
     }
-    pProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+    pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
 }
 //------------------------------------------------------------------------------
 
@@ -343,5 +343,5 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
             }
         }
     }
-}
+} // gfx::CScene3D::checkCollisions()
 //------------------------------------------------------------------------------

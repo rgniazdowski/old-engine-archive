@@ -15,13 +15,11 @@
     #ifdef FG_INC_GFX_STD_INC_BLOCK
         #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
     #endif
+
     #include "fgGfxShaderDefs.h"
     #include "Hardware/fgQualityTypes.h"
     #include "Util/fgConfig.h"
-    #include "Util/fgTag.h"
-
-    #define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME   "ShaderProgramConfig"
-    #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME     "ShaderConfig"
+    #include "Util/fgTag.h"    
 
 namespace fg {
     namespace gfx {
@@ -39,18 +37,31 @@ namespace fg {
         typedef FG_TAG_GFX_SHADER_CONFIG ShaderConfigTag;
 
         enum ShaderConfigType {
-            FG_GFX_SHADER_CONFIG_INVALID = 0,
-            FG_GFX_SHADER_CONFIG_PROGRAM = 1,
-            FG_GFX_SHADER_CONFIG_FRAGMENT = 2,
-            FG_GFX_SHADER_CONFIG_VERTEX = 3
+            SHADER_CONFIG_INVALID = 0,
+            SHADER_CONFIG_PROGRAM = 1,
+            SHADER_CONFIG_FRAGMENT = 2,
+            SHADER_CONFIG_VERTEX = 3
     #if defined FG_USING_OPENGL
             ,
-            FG_GFX_SHADER_CONFIG_TESS_CONTROL = 4,
-            FG_GFX_SHADER_CONFIG_TESS_EVALUATION = 5,
-            FG_GFX_SHADER_CONFIG_GEOMETRY = 6,
-            FG_GFX_SHADER_CONFIG_COMPUTE = 7
+            SHADER_CONFIG_TESS_CONTROL = 4,
+            SHADER_CONFIG_TESS_EVALUATION = 5,
+            SHADER_CONFIG_GEOMETRY = 6,
+            SHADER_CONFIG_COMPUTE = 7
     #endif
         };
+
+        /**
+         *
+         * @param suffix
+         * @return
+         */
+        ShaderConfigType getShaderConfigTypeFromSuffix(const char* suffix);
+        /**
+         * 
+         * @param suffix
+         * @return
+         */
+        ShaderConfigType getShaderConfigTypeFromSuffix(const std::string& suffix);
 
         /*
          * Shader config mission is to read special configs (INI) holding information
@@ -72,23 +83,17 @@ namespace fg {
          */
         class CShaderConfig : protected fg::util::CConfig {
         public:
-            ///
             typedef fg::util::CConfig base_type;
-            ///
+            typedef CShaderConfig self_type;
+            typedef CShaderConfig type;
             typedef ShaderConfigTag tag_type;
-            ///
-            typedef CVector<ShaderType> ShaderTypeVec;
-            ///
+
+            typedef CVector<shaders::ShaderType> ShaderTypeVec;
             typedef CVector<SUniformBind> UniformBindVec;
-            ///
             typedef CVector<SAttributeBind> AttributeBindVec;
-            ///
             typedef CVector<std::string> IncludeNameVec;
-            ///
             typedef CVector<std::string> FileNameVec;
-            ///
             typedef CVector<Quality> QualityVec;
-            ///
             typedef CVector<SShaderConstantDef> ConstantVec;
 
         protected:
@@ -118,7 +123,7 @@ namespace fg {
             ShadingLangVersion m_preferredSLVersion; // FIXME - this sould be probably somewhere else
 
             ///
-            ShaderPrecision m_defaultPrecision;
+            shaders::ShaderPrecision m_defaultPrecision;
 
         public:
             /**
@@ -145,7 +150,8 @@ namespace fg {
              * @param SLver
              * @return 
              */
-            fgBool load(const char *filePath = NULL, ShadingLangVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
+            fgBool load(const char *filePath = NULL,
+                        ShadingLangVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
             /**
              * 
              * @return 
@@ -157,84 +163,84 @@ namespace fg {
              * 
              * @return 
              */
-            inline ShaderTypeVec& getRefShaderTypes(void) {
+            inline ShaderTypeVec& getShaderTypes(void) {
                 return m_shaderTypes;
             }
             /**
              * 
              * @return 
              */
-            inline ShaderTypeVec const& getRefShaderTypes(void) const {
+            inline ShaderTypeVec const& getShaderTypes(void) const {
                 return m_shaderTypes;
             }
             /**
              * 
              * @return 
              */
-            inline UniformBindVec& getRefUniformBinds(void) {
+            inline UniformBindVec& getUniformBinds(void) {
                 return m_uniformBinds;
             }
             /**
              * 
              * @return 
              */
-            inline UniformBindVec const& getRefUniformBinds(void) const {
+            inline UniformBindVec const& getUniformBinds(void) const {
                 return m_uniformBinds;
             }
             /**
              * 
              * @return 
              */
-            inline AttributeBindVec& getRefAttributeBinds(void) {
+            inline AttributeBindVec& getAttributeBinds(void) {
                 return m_attributeBinds;
             }
             /**
              * 
              * @return 
              */
-            inline AttributeBindVec const& getRefAttributeBinds(void) const {
+            inline AttributeBindVec const& getAttributeBinds(void) const {
                 return m_attributeBinds;
             }
             /**
              * 
              * @return 
              */
-            inline IncludeNameVec& getRefIncludes(void) {
+            inline IncludeNameVec& getIncludes(void) {
                 return m_includes;
             }
             /**
              * 
              * @return 
              */
-            inline IncludeNameVec const& getRefIncludes(void) const {
+            inline IncludeNameVec const& getIncludes(void) const {
                 return m_includes;
             }
             /**
              * 
              * @return 
              */
-            inline FileNameVec& getRefFiles(void) {
+            inline FileNameVec& getFiles(void) {
                 return m_files;
             }
             /**
              * 
              * @return 
              */
-            inline FileNameVec const& getRefFiles(void) const {
+            inline FileNameVec const& getFiles(void) const {
                 return m_files;
             }
             /**
              * 
              * @return 
              */
-            inline QualityVec& getRefQualities(void) {
+            inline QualityVec& getQualities(void) {
                 return m_qualities;
             }
             /**
              * 
              * @return 
              */
-            inline QualityVec const& getRefQualities(void) const {
+            inline QualityVec const& getQualities(void) const {
                 return m_qualities;
             }
             /**
@@ -269,6 +275,13 @@ namespace fg {
              * 
              * @return 
              */
+            inline const char* getProgramNameStr(void) const {
+                return m_programName.c_str();
+            }
+            /**
+             * 
+             * @return 
+             */
             inline std::string& getSelectedConfigName(void) {
                 return m_selectedConfigName;
             }
@@ -278,6 +291,13 @@ namespace fg {
              */
             inline std::string const& getSelectedConfigName(void) const {
                 return m_selectedConfigName;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline const char* getSelectedConfigNameStr(void) const {
+                return m_selectedConfigName.c_str();
             }
             /**
              * 
@@ -307,9 +327,9 @@ namespace fg {
              */
             fgBool private_parseInclude(util::SCfgSection *includeSection);
 
-        };
-    };
-};
+        }; // class CShaderConfig
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SHADER_CONFIG_BLOCK
 #endif /* FG_INC_GFX_SHADER_CONFIG */

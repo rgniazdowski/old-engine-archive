@@ -723,8 +723,8 @@ void gfx::CGfxMain::render(void) {
         return;
     }
     m_shaderMgr->useProgram(sPlainEasyProgram);
-    sPlainEasyProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
-    sPlainEasyProgram->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
+    sPlainEasyProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
+    sPlainEasyProgram->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, (fgGFXint)0);
 
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
@@ -752,7 +752,7 @@ void gfx::CGfxMain::render(void) {
         return;
     }
     m_shaderMgr->useProgram(sOrthoEasyProgram);
-    sOrthoEasyProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+    sOrthoEasyProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     context::setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0.0f,
                                   (float)m_mainWindow->getWidth(),

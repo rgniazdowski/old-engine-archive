@@ -14,14 +14,78 @@
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
-using namespace fg;
+#define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME   "ShaderProgramConfig"
+#define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME     "ShaderConfig"
 
+#define FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX         "program.ini"
+#define FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX        "frag.shader.ini"
+#define FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX          "vert.shader.ini"
+#define FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX    "tesc.shader.ini"
+#define FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX "tese.shader.ini"
+#define FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX        "geom.shader.ini"
+#define FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX         "comp.shader.ini"
+
+#define FG_GFX_SHADER_CONFIG_STD_SUFFIX                 "shader.ini"
+
+namespace fg {
+    namespace gfx {
+        const ShaderConfigType g_ShaderConfigTypes[] = {
+                                                        SHADER_CONFIG_PROGRAM,
+                                                        SHADER_CONFIG_FRAGMENT,
+                                                        SHADER_CONFIG_VERTEX
+#if defined FG_USING_OPENGL
+            ,
+                                                        SHADER_CONFIG_TESS_CONTROL,
+                                                        SHADER_CONFIG_TESS_EVALUATION,
+                                                        SHADER_CONFIG_GEOMETRY,
+                                                        SHADER_CONFIG_COMPUTE
+#endif
+        };
+
+        const char * const g_ShaderCfgAllSuffixes[] = {
+                                                       FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX,
+                                                       FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX,
+                                                       FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX
+#if defined (FG_USING_OPENGL)
+            ,
+                                                       FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX,
+                                                       FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX,
+                                                       FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX,
+                                                       FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX
+#endif
+        };
+    } // namespace gfx 
+} // namespace fg
+
+using namespace fg;
+//------------------------------------------------------------------------------
+
+gfx::ShaderConfigType gfx::getShaderConfigTypeFromSuffix(const char* suffix) {
+    ShaderConfigType result = SHADER_CONFIG_INVALID;
+    if(!suffix)
+        return result;
+    if(!suffix[0])
+        return result;
+    const unsigned int n = sizeof (g_ShaderConfigTypes) / sizeof (ShaderConfigType);
+    for(unsigned int i = 0; i < n; i++) {
+        if(strings::isEqual(g_ShaderCfgAllSuffixes[i], suffix, FG_FALSE)) {
+            // shader config suffix (frag.shader.ini/vert.shader.ini)
+            result = g_ShaderConfigTypes[i];
+        }
+    }
+    return result;
+}
+//------------------------------------------------------------------------------
+
+gfx::ShaderConfigType gfx::getShaderConfigTypeFromSuffix(const std::string& suffix) {
+    return getShaderConfigTypeFromSuffix(suffix.c_str());
+}
 //------------------------------------------------------------------------------
 
 gfx::CShaderConfig::CShaderConfig() :
-m_configType(FG_GFX_SHADER_CONFIG_INVALID),
+m_configType(SHADER_CONFIG_INVALID),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
-m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
+m_defaultPrecision(shaders::SHADER_PRECISION_DEFAULT) { }
 //------------------------------------------------------------------------------
 
 gfx::CShaderConfig::CShaderConfig(const char *filePath) {
@@ -35,12 +99,12 @@ gfx::CShaderConfig::~CShaderConfig() {
 //------------------------------------------------------------------------------
 
 void gfx::CShaderConfig::clearAll(void) {
-    CConfig::clearAll();
+    base_type::clearAll();
     m_selectedConfigName.clear();
     m_programName.clear();
     m_preferredSLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
-    m_configType = FG_GFX_SHADER_CONFIG_INVALID;
-    m_defaultPrecision = FG_GFX_SHADER_PRECISION_DEFAULT;
+    m_configType = SHADER_CONFIG_INVALID;
+    m_defaultPrecision = shaders::SHADER_PRECISION_DEFAULT;
     m_shaderTypes.clear_optimised();
     m_uniformBinds.clear_optimised();
     m_attributeBinds.clear_optimised();
@@ -53,7 +117,7 @@ void gfx::CShaderConfig::clearAll(void) {
 
 fgBool gfx::CShaderConfig::load(const char *filePath, ShadingLangVersion SLver) {
     gfx::CShaderConfig::clearAll();
-    if(!CConfig::load(filePath)) {
+    if(!base_type::load(filePath)) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
         return FG_FALSE;
     }
@@ -125,32 +189,14 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         return FG_FALSE;
     }
 
-    m_configType = FG_GFX_SHADER_CONFIG_INVALID;
-    if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_PROGRAM;
-    } else if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_FRAGMENT;
-    } else if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_VERTEX;
-#if defined FG_USING_OPENGL
-    } else if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_TESS_CONTROL;
-    } else if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_TESS_EVALUATION;
-    } else if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_VERTEX;
-    } else if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX) == 0) {
-        m_configType = FG_GFX_SHADER_CONFIG_VERTEX;
-#endif
-    }
-
-    if(m_configType == FG_GFX_SHADER_CONFIG_INVALID) {
+    m_configType = getShaderConfigTypeFromSuffix(ext);
+    if(m_configType == SHADER_CONFIG_INVALID) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_CFG_TYPE);
         return FG_FALSE;
     }
 
     util::SCfgSection *mainSection = NULL;
-    if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
+    if(m_configType == SHADER_CONFIG_PROGRAM) {
         mainSection = getSection(FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME);
     } else {
         mainSection = getSection(FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME);
@@ -164,7 +210,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
     {
         util::SCfgParameter *param = mainSection->getParameter("precision", util::SCfgParameter::STRING);
         if(param) {
-            m_defaultPrecision = (ShaderPrecision)FG_GFX_PRECISION_FROM_TEXT(param->string);
+            m_defaultPrecision = shaders::getShaderPrecisionFromText(param->string);
         }
     }
 
@@ -210,7 +256,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
     //
     // Parse more wide parameters from specific shader configuration (not program config)
     //
-    if(m_configType != FG_GFX_SHADER_CONFIG_PROGRAM) {
+    if(m_configType != SHADER_CONFIG_PROGRAM) {
         util::SCfgParameter *param = mainSection->getParameter("shaderType", util::SCfgParameter::STRING);
         if(!param) {
             // no shader type specified - it has to be explicitly stated in config
@@ -218,13 +264,13 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_TYPE);
             return FG_FALSE;
         }
-        ShaderType _shadertype = FG_GFX_SHADER_TYPE_FROM_TEXT(param->string);
-        if(_shadertype == ShaderType::FG_GFX_SHADER_INVALID) {
+        shaders::ShaderType _shadertype = shaders::getShaderTypeFromText(param->string);
+        if(_shadertype == shaders::SHADER_INVALID) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
             return FG_FALSE;
         }
         m_shaderTypes.push_back(_shadertype);
-        const char *shortPrefix = FG_GFX_SHADER_SHORT_PREFIX(_shadertype);
+        const char *shortPrefix = shaders::getShaderShortPrefix(_shadertype);
 
         // Parse defines
         std::string _tmp;
@@ -287,7 +333,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         //
         // Loading attributes
         //
-        if(_shadertype == ShaderType::FG_GFX_SHADER_VERTEX) {
+        if(_shadertype == shaders::SHADER_VERTEX) {
             // checking for attributes only for vertex shader 
             // (attributes in fragment shader are not allowed / needed)
             util::config::SectionVec _attributes;
@@ -303,8 +349,8 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
             unsigned short _nmax = (unsigned short)_attributes.size(), i;
             for(i = 0; i < _nmax; i++) {
                 SAttributeBind _bind;
-                _bind.type = FG_GFX_ATTRIBUTE_TYPE_FROM_TEXT(_attributes[i]->subName.c_str());
-                if(_bind.type == FG_GFX_ATTRIBUTE_INVALID) {
+                _bind.type = getAttributeTypeFromText(_attributes[i]->subName.c_str());
+                if(_bind.type == ATTRIBUTE_INVALID) {
                     FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
                     continue;
                 }
@@ -318,9 +364,9 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
                     FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
                     continue;
                 }
-                _bind.precision = FG_GFX_PRECISION_DEFAULT;
+                _bind.precision = shaders::PRECISION_DEFAULT;
                 if(_aprecision) {
-                    _bind.precision = FG_GFX_PRECISION_FROM_TEXT(_aprecision->string);
+                    _bind.precision = shaders::getPrecisionFromText(_aprecision->string);
                 }
                 _bind.variableName = _aname->string;
                 //_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_aDataType->string);
@@ -341,8 +387,8 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         unsigned short _nmax = (unsigned short)_uniforms.size(), i;
         for(i = 0; i < _nmax; i++) {
             SUniformBind _bind;
-            _bind.type = FG_GFX_UNIFORM_TYPE_FROM_TEXT(_uniforms[i]->subName.c_str());
-            if(_bind.type == FG_GFX_UNIFORM_INVALID) {
+            _bind.type = shaders::getUniformTypeFromText(_uniforms[i]->subName.c_str());
+            if(_bind.type == shaders::UNIFORM_INVALID) {
                 // Not a valid / supported uniform type - can ignore it ? Pass empty data to it?
                 // #FIXME
                 FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
@@ -357,9 +403,9 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
                 FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
                 continue;
             }
-            _bind.precision = FG_GFX_PRECISION_DEFAULT;
+            _bind.precision = shaders::PRECISION_DEFAULT;
             if(_uprecision) {
-                _bind.precision = FG_GFX_PRECISION_FROM_TEXT(_uprecision->string);
+                _bind.precision = shaders::getPrecisionFromText(_uprecision->string);
             }
             _bind.variableName = _uname->string;
             //_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_uDataType->string);
@@ -367,7 +413,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         }
     }
     // specific configuration procedures for main shader config (shader program)
-    if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
+    if(m_configType == SHADER_CONFIG_PROGRAM) {
         util::SCfgParameter *param = NULL;
         param = mainSection->getParameter("programName", util::SCfgParameter::STRING);
         if(!param) {
@@ -382,15 +428,15 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         else if(FG_BUILD_CONFIG.usingOpenGL)
             nmax = 6; // #FIXME - need global GFX config array (like with build config)
         // for various runtime / etc info on GFX subsystem (no of shader types supported ?)
-        if(nmax > (int)sizeof (g_fgGfxSupportedShaderTypes) / (int)sizeof (g_fgGfxSupportedShaderTypes[0]))
-            nmax = (int)sizeof (g_fgGfxSupportedShaderTypes) / (int)sizeof (g_fgGfxSupportedShaderTypes[0]); // #FIXME - ugly...
+        if(nmax > (int)sizeof (shaders::g_SupportedShaderTypes) / (int)sizeof (shaders::ShaderType))
+            nmax = (int)sizeof (shaders::g_SupportedShaderTypes) / (int)sizeof (shaders::ShaderType); // #FIXME - ugly...
         for(int i = 0; i < nmax; i++) {
             std::string qstr = "has";
-            qstr.append(g_fgGfxSupportedShaderTypesText[i]);
+            qstr.append(shaders::g_SupportedShaderTypesText[i]);
             param = mainSection->getParameter(qstr, util::SCfgParameter::BOOL);
             if(param) {
                 if(param->bool_val == FG_TRUE) {
-                    m_shaderTypes.push_back(g_fgGfxSupportedShaderTypes[i]);
+                    m_shaderTypes.push_back(shaders::g_SupportedShaderTypes[i]);
                 }
             }
         }
@@ -398,23 +444,23 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         if(m_shaderTypes.size() == 2 && 0) {
             // #TODO
         }
-    } else if(m_configType == FG_GFX_SHADER_CONFIG_FRAGMENT) {
+    } else if(m_configType == SHADER_CONFIG_FRAGMENT) {
         // specific configuration for fragment shader (pixel shader)
-    } else if(m_configType == FG_GFX_SHADER_CONFIG_VERTEX) {
+    } else if(m_configType == SHADER_CONFIG_VERTEX) {
         // configuration for vertex shader
-#if defined FG_USING_OPENGL
-    } else if(m_configType == FG_GFX_SHADER_CONFIG_TESS_CONTROL) {
+#if defined(FG_USING_OPENGL)
+    } else if(m_configType == SHADER_CONFIG_TESS_CONTROL) {
         // configuration for tessellation control shader
-    } else if(m_configType == FG_GFX_SHADER_CONFIG_TESS_EVALUATION) {
+    } else if(m_configType == SHADER_CONFIG_TESS_EVALUATION) {
         // configuration for tessellation evaluation shader
-    } else if(m_configType == FG_GFX_SHADER_CONFIG_GEOMETRY) {
+    } else if(m_configType == SHADER_CONFIG_GEOMETRY) {
         // configuration for geometry shader
-    } else if(m_configType == FG_GFX_SHADER_CONFIG_COMPUTE) {
+    } else if(m_configType == SHADER_CONFIG_COMPUTE) {
         // specific configuration procedures for compute shader
 #endif
     }
     FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "GFX: Shader config loaded successfully: '%s'", fg::path::fileName(m_configPath.c_str()));
-    if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
+    if(m_configType == SHADER_CONFIG_PROGRAM) {
         FG_LOG_DEBUG("GFX: Shader config for program loaded; name[%s], file[%s]", m_programName.c_str(), fg::path::fileName(m_configPath.c_str()));
     } else {
         FG_LOG_DEBUG("GFX: Shader config loaded: file[%s]", fg::path::fileName(m_configPath.c_str()));

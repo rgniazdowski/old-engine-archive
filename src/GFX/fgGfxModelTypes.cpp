@@ -114,11 +114,11 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const 
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION].isInterleaved = FG_FALSE;
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION].isInterleaved = FG_FALSE;
 
     return FG_GFX_TRUE;
@@ -139,7 +139,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_POSITION;
+    pDataArray[index].type = ATTRIBUTE_POSITION;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = sizeof (Vector3f);
     pDataArray[index].isEnabled = FG_TRUE;
@@ -163,7 +163,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_NORMAL;
+    pDataArray[index].type = ATTRIBUTE_NORMAL;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = sizeof (Vector3f);
     pDataArray[index].isEnabled = FG_TRUE;
@@ -186,7 +186,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
-    pDataArray[index].type = FG_GFX_TEXTURE_COORD;
+    pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = sizeof (Vector2f);
     pDataArray[index].isEnabled = FG_TRUE;
@@ -203,11 +203,11 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION].isInterleaved = FG_FALSE;
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION].isInterleaved = FG_FALSE;
 
     return FG_GFX_TRUE;

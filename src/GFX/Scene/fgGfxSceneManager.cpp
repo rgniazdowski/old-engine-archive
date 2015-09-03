@@ -976,7 +976,7 @@ void gfx::CSceneManager::sortCalls(void) {
 void gfx::CSceneManager::render(void) {
     CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
     CShaderProgram* pProgram = pShaderMgr->getCurrentProgram();
-    pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
+    pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
     // Will now render main skybox
     if(!isHideSkyBox()) {
         CShaderProgram* pSkyboxProgram = m_skybox.getShaderProgram();
@@ -1017,8 +1017,8 @@ void gfx::CSceneManager::render(void) {
                 profile::g_debugProfiling->end("GFX::Scene::DrawNode");
             }
 #endif
-            pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-            pProgram->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+            pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
+            pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
 #if defined(FG_DEBUG)
             CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
             SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;
@@ -1059,7 +1059,7 @@ void gfx::CSceneManager::render(void) {
         } // for(node queue iteration)
     }
     if(isShowGroundGrid()) {
-        pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+        pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
         m_groundGrid.render(pProgram, &m_MVP);
         CVertexData4v gridLines;
         Vector3f pos;

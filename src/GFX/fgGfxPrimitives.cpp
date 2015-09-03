@@ -752,7 +752,7 @@ void gfx::primitives::drawArray(const CVector<Vector3f>& inputData,
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::drawArray(const fg::CVector<Vertex2v> &inputData,
+void gfx::primitives::drawArray(const CVector<Vertex2v> &inputData,
                                 const unsigned int attribMask,
                                 const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
@@ -1003,7 +1003,7 @@ void gfx::primitives::applyAttributeData(SAttributeData *attrData,
     } else {
         context::bindBuffer(gfx::ARRAY_BUFFER, 0);
     }
-    for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
+    for(int i = 0; i < NUM_ATTRIBUTE_TYPES; i++) {
         if(attrData[i].isEnabled) {
             if(attrData[i].isInterleaved == FG_FALSE && attrData[i].isBO) {
                 context::bindBuffer(gfx::ARRAY_BUFFER, attrData[i].buffer);
@@ -1032,7 +1032,7 @@ void gfx::primitives::drawVertexData(const CVertexData *inputData,
     if(inputData->empty() || !attribMask)
         return;
     unsigned int andMask = (attribMask & inputData->attribMask());
-    SAttributeData attrData[FG_GFX_ATTRIBUTE_COUNT];
+    SAttributeData attrData[NUM_ATTRIBUTE_TYPES];
     SDrawingInfo drawingInfo;
     inputData->setupAttributes(attrData);
     if(inputData->hasIndices()) {

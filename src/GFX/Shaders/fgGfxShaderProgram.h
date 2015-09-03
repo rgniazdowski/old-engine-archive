@@ -71,11 +71,11 @@ namespace fg {
         /**
          *
          */
-        class CShaderProgram : public fg::gfx::base::CShader {
-            friend class fg::gfx::CShaderManager;
+        class CShaderProgram : public ::fg::gfx::base::CShader {
+            friend class ::fg::gfx::CShaderManager;
         public:
             ///
-            typedef fg::gfx::base::CShader base_type;
+            typedef gfx::base::CShader base_type;
             ///
             typedef ShaderProgramTag tag_type;
 
@@ -117,26 +117,26 @@ namespace fg {
              * @param _type
              * @return 
              */
-            static fgGFXint shaderTypeToSpID(ShaderType _type) {
+            static fgGFXint shaderTypeToSpID(shaders::ShaderType _type) {
                 fgGFXint spID = 0;
                 switch(_type) {
-                    case ShaderType::FG_GFX_SHADER_FRAGMENT:
+                    case shaders::SHADER_FRAGMENT:
                         spID = SP_FRAGMENT_SHADER_ID;
                         break;
-                    case ShaderType::FG_GFX_SHADER_VERTEX:
+                    case shaders::SHADER_VERTEX:
                         spID = SP_VERTEX_SHADER_ID;
                         break;
-    #if defined FG_USING_OPENGL
-                    case ShaderType::FG_GFX_SHADER_TESS_CONTROL:
+    #if defined(FG_USING_OPENGL)
+                    case shaders::SHADER_TESS_CONTROL:
                         spID = SP_TESS_CONTROL_SHADER_ID;
                         break;
-                    case ShaderType::FG_GFX_SHADER_TESS_EVALUATION:
+                    case shaders::SHADER_TESS_EVALUATION:
                         spID = SP_TESS_EVALUATION_SHADER_ID;
                         break;
-                    case ShaderType::FG_GFX_SHADER_GEOMETRY:
+                    case shaders::SHADER_GEOMETRY:
                         spID = SP_GEOMETRY_SHADER_ID;
                         break;
-                    case ShaderType::FG_GFX_SHADER_COMPUTE:
+                    case shaders::SHADER_COMPUTE:
                         spID = SP_COMPUTE_SHADER_ID;
                         break;
     #endif
@@ -352,7 +352,7 @@ namespace fg {
              * @param pManager
              * @return 
              */
-            fgBool setManager(fg::base::CManager *pManager);
+            fgBool setManager(::fg::base::CManager *pManager);
 
         public:
             // Create the shader program with direct GL calls
@@ -425,7 +425,7 @@ namespace fg {
              * @param type
              * @return 
              */
-            inline CShader *getShader(ShaderType type) const {
+            inline CShader *getShader(shaders::ShaderType type) const {
                 fgGFXint id = shaderTypeToSpID(type);
                 if(id != -1)
                     return m_shaders[id];
@@ -440,7 +440,7 @@ namespace fg {
              * @param type
              * @return 
              */
-            fgGFXint getUniformLocation(UniformType type);
+            fgGFXint getUniformLocation(shaders::UniformType type);
             /**
              * 
              * @param variableName
@@ -455,13 +455,13 @@ namespace fg {
              * @param type
              * @return 
              */
-            fgGFXint getUniformBindIndex(UniformType type);
+            fgGFXint getUniformBindIndex(shaders::UniformType type);
             /**
              * 
              * @param type
              * @return 
              */
-            SUniformBind *getUniformBind(UniformType type);
+            SUniformBind *getUniformBind(shaders::UniformType type);
 
             /**
              * 
@@ -484,7 +484,7 @@ namespace fg {
              * @param v0
              * @return 
              */
-            fgBool setUniform(UniformType type, fgGFXfloat v0);
+            fgBool setUniform(shaders::UniformType type, fgGFXfloat v0);
             /**
              * 
              * @param type
@@ -492,7 +492,7 @@ namespace fg {
              * @param v1
              * @return 
              */
-            fgBool setUniform(UniformType type, fgGFXfloat v0, fgGFXfloat v1);
+            fgBool setUniform(shaders::UniformType type, fgGFXfloat v0, fgGFXfloat v1);
             /**
              * 
              * @param type
@@ -501,7 +501,7 @@ namespace fg {
              * @param v2
              * @return 
              */
-            fgBool setUniform(UniformType type,
+            fgBool setUniform(shaders::UniformType type,
                               fgGFXfloat v0,
                               fgGFXfloat v1,
                               fgGFXfloat v2);
@@ -514,7 +514,7 @@ namespace fg {
              * @param v3
              * @return 
              */
-            fgBool setUniform(UniformType type,
+            fgBool setUniform(shaders::UniformType type,
                               fgGFXfloat v0,
                               fgGFXfloat v1,
                               fgGFXfloat v2,
@@ -528,7 +528,7 @@ namespace fg {
              * @param v0
              * @return 
              */
-            fgBool setUniform(UniformType type, fgGFXint v0);
+            fgBool setUniform(shaders::UniformType type, fgGFXint v0);
             /**
              * 
              * @param type
@@ -536,7 +536,7 @@ namespace fg {
              * @param v1
              * @return 
              */
-            fgBool setUniform(UniformType type, fgGFXint v0, fgGFXint v1);
+            fgBool setUniform(shaders::UniformType type, fgGFXint v0, fgGFXint v1);
             /**
              * 
              * @param type
@@ -545,7 +545,7 @@ namespace fg {
              * @param v2
              * @return 
              */
-            fgBool setUniform(UniformType type,
+            fgBool setUniform(shaders::UniformType type,
                               fgGFXint v0,
                               fgGFXint v1,
                               fgGFXint v2);
@@ -558,7 +558,7 @@ namespace fg {
              * @param v3
              * @return 
              */
-            fgBool setUniform(UniformType type,
+            fgBool setUniform(shaders::UniformType type,
                               fgGFXint v0,
                               fgGFXint v1,
                               fgGFXint v2,
@@ -571,7 +571,7 @@ namespace fg {
              * @param value
              * @return 
              */
-            fgBool setUniform(UniformType type,
+            fgBool setUniform(shaders::UniformType type,
                               fgGFXsizei count,
                               const fgGFXfloat *value);
             /**
@@ -581,7 +581,7 @@ namespace fg {
              * @param value
              * @return 
              */
-            fgBool setUniform(UniformType type,
+            fgBool setUniform(shaders::UniformType type,
                               fgGFXsizei count,
                               const fgGFXint *value);
 

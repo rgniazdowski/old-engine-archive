@@ -39,7 +39,7 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Normals - there are no normals, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(FG_GFX_NORMAL);
+    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(ATTRIBUTE_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
     offset += sizeof (Vector3f);
@@ -58,10 +58,10 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -80,7 +80,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_POSITION;
+    pDataArray[index].type = ATTRIBUTE_POSITION;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -97,7 +97,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Normals - there are no normals, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(FG_GFX_NORMAL);
+    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(ATTRIBUTE_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
     offset += sizeof (Vector3f);
@@ -106,7 +106,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
-    pDataArray[index].type = FG_GFX_TEXTURE_COORD;
+    pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -123,10 +123,10 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -219,10 +219,10 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -241,7 +241,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_POSITION;
+    pDataArray[index].type = ATTRIBUTE_POSITION;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -264,7 +264,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_NORMAL;
+    pDataArray[index].type = ATTRIBUTE_NORMAL;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -287,7 +287,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
-    pDataArray[index].type = FG_GFX_TEXTURE_COORD;
+    pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -304,10 +304,10 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -415,7 +415,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Tangents - this attribute will be disabled - not yet supported
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -434,7 +434,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_POS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_POSITION;
+    pDataArray[index].type = ATTRIBUTE_POSITION;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -457,7 +457,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
-    pDataArray[index].type = FG_GFX_NORMAL;
+    pDataArray[index].type = ATTRIBUTE_NORMAL;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -480,7 +480,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
-    pDataArray[index].type = FG_GFX_TEXTURE_COORD;
+    pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -504,7 +504,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     index = FG_GFX_ATTRIB_COLOR_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 4;
-    pDataArray[index].type = FG_GFX_COLOR;
+    pDataArray[index].type = ATTRIBUTE_COLOR;
     pDataArray[index].dataType = FG_GFX_FLOAT;
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
@@ -521,7 +521,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Tangents - this attribute will be disabled - not yet supported
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }

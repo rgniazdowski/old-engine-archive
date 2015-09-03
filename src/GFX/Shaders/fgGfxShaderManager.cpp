@@ -129,8 +129,8 @@ fgBool gfx::CShaderManager::initialize(void) {
            "	v_color = a_color;\n"
            "}\n\0");
 
-    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID] = new CShader(ShaderType::FG_GFX_SHADER_FRAGMENT);
-    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID] = new CShader(ShaderType::FG_GFX_SHADER_VERTEX);
+    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID] = new CShader(shaders::SHADER_FRAGMENT);
+    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID] = new CShader(shaders::SHADER_VERTEX);
 
     ////////////////////////////////////////////////////////////////////////////
     // FRAGMENT SHADER
@@ -152,14 +152,14 @@ fgBool gfx::CShaderManager::initialize(void) {
     }
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setSourceBuffer(sourceVertex);
 
-    attrBinds.push_back(SAttributeBind("a_position", AttributeType::FG_GFX_POSITION));
-    attrBinds.push_back(SAttributeBind("a_texCoord", AttributeType::FG_GFX_TEXTURE_COORD));
-    attrBinds.push_back(SAttributeBind("a_color", AttributeType::FG_GFX_COLOR));
+    attrBinds.push_back(SAttributeBind("a_position", AttributeType::ATTRIBUTE_POSITION));
+    attrBinds.push_back(SAttributeBind("a_texCoord", AttributeType::ATTRIBUTE_TEXTURE_COORD));
+    attrBinds.push_back(SAttributeBind("a_color", AttributeType::ATTRIBUTE_COLOR));
 
-    uniformBinds.push_back(SUniformBind("u_mvpMatrix", UniformType::FG_GFX_MVP_MATRIX));
-    uniformBinds.push_back(SUniformBind("u_CustomColor", UniformType::FG_GFX_CUSTOM_COLOR));
-    uniformBinds.push_back(SUniformBind("u_useTexture", UniformType::FG_GFX_USE_TEXTURE));
-    uniformBinds.push_back(SUniformBind("s_texture", UniformType::FG_GFX_PLAIN_TEXTURE));
+    uniformBinds.push_back(SUniformBind("u_mvpMatrix", shaders::UNIFORM_MVP_MATRIX));
+    uniformBinds.push_back(SUniformBind("u_CustomColor", shaders::UNIFORM_CUSTOM_COLOR));
+    uniformBinds.push_back(SUniformBind("u_useTexture", shaders::UNIFORM_USE_TEXTURE));
+    uniformBinds.push_back(SUniformBind("s_texture", shaders::UNIFORM_PLAIN_TEXTURE));
 
     defaultProgram->setPreloaded(FG_TRUE);
 
@@ -178,8 +178,8 @@ fgBool gfx::CShaderManager::initialize(void) {
         FG_LOG_ERROR("GFX: Unable to insert default built-in shader program into the Manager");
     } else {
         useProgram(defaultProgram);
-        defaultProgram->setUniform(UniformType::FG_GFX_USE_TEXTURE, 1.0f);
-        defaultProgram->setUniform(UniformType::FG_GFX_PLAIN_TEXTURE, 0);
+        defaultProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
+        defaultProgram->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, 0);
     }
 
     m_init = FG_TRUE;
@@ -207,7 +207,7 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
     std::string filePath;
     std::string pattern;
     pattern = "*";
-    pattern.append(FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX);
+    pattern.append(shaders::getShaderProgramConfigSuffix());
 
     CStringVector shProgramCfgs;
     m_shadersDir->rewind();
@@ -336,7 +336,7 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
             fext = path::fileExt(filePath.c_str(), FG_TRUE);
         }
 
-        if(strings::endsWith(fext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX, FG_TRUE)) {
+        if(strings::endsWith(fext, shaders::getShaderProgramConfigSuffix(), FG_TRUE)) {
             isConfig = FG_TRUE;
         }
 

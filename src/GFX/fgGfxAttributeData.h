@@ -26,23 +26,79 @@
         #include "fgGfxAttribBits.h"
     #endif
 
-    #ifndef FG_GFX_ATTR_TYPE_DEFINED
-        #define FG_GFX_ATTR_TYPE_DEFINED
-// Attribute type also corresponds to bound attribute location
+
+
 namespace fg {
     namespace gfx {
+    #ifndef FG_GFX_ATTRIBUTE_TYPE_DEFINED
+        #define FG_GFX_ATTRIBUTE_TYPE_DEFINED
 
+        /**
+         * Attribute type also corresponds to bound attribute location
+         */
         enum AttributeType {
-            FG_GFX_ATTRIBUTE_INVALID = -1,
-            FG_GFX_POSITION = FG_GFX_ATTRIB_POS_LOCATION,
-            FG_GFX_NORMAL = FG_GFX_ATTRIB_NORM_LOCATION,
-            FG_GFX_TEXTURE_COORD = FG_GFX_ATTRIB_UVS_LOCATION,
-            FG_GFX_COLOR = FG_GFX_ATTRIB_COLOR_LOCATION,
-            FG_GFX_TANGENT = FG_GFX_ATTRIB_TANGENT_LOCATION
+            ///
+            ATTRIBUTE_INVALID = -1,
+            ///
+            ATTRIBUTE_POSITION = FG_GFX_ATTRIB_POS_LOCATION,
+            ///
+            ATTRIBUTE_NORMAL = FG_GFX_ATTRIB_NORM_LOCATION,
+            ///
+            ATTRIBUTE_TEXTURE_COORD = FG_GFX_ATTRIB_UVS_LOCATION,
+            ///
+            ATTRIBUTE_COLOR = FG_GFX_ATTRIB_COLOR_LOCATION,
+            ///
+            ATTRIBUTE_TANGENT = FG_GFX_ATTRIB_TANGENT_LOCATION,
+            ///
+            ATTRIBUTE_BITANGENT = FG_GFX_ATTRIB_BITANGENT_LOCATION,
+            ///
+            ATTRIBUTE_BLEND_WEIGHTS = FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION,
+            ///
+            ATTRIBUTE_BLEND_INDICES = FG_GFX_ATTRIB_BLEND_INDICES_LOCATION,
+            ///
+            NUM_ATTRIBUTE_TYPES
         };
-    };
-};
     #endif
+
+        //----------------------------------------------------------------------
+
+        /**
+         *
+         * @param text
+         * @return
+         */
+        AttributeType getAttributeTypeFromText(const char* text);
+        /**
+         *
+         * @param text
+         * @return
+         */
+        AttributeType getAttributeTypeFromText(const std::string& text);
+        /**
+         *
+         * @param value
+         * @return
+         */
+        const char* getTextFromAttributeType(AttributeType value);
+
+        AttributeLocation getAttributeLocationFromType(AttributeType value);
+        void getAttributeLocationFromType(unsigned int& location, AttributeType value);
+        AttributeType getAttributeTypeFromLocation(AttributeLocation location);
+        AttributeType getAttributeTypeFromLocation(unsigned int location);
+
+        fgGFXenum getDataTypeFromAttributeType(AttributeType value);
+        fgGFXenum getDataTypeFromAttributeLocation(AttributeLocation location);
+        fgGFXenum getDataTypeFromAttributeLocation(unsigned int location);
+        //----------------------------------------------------------------------
+
+        ///
+        //extern const AttributeType g_AttributeTypes[];
+        ///
+        //extern const AttributeLocation g_AttributeLocations[];
+        ///
+        //extern const char * const g_AttributeTypesText[];
+    }
+}
 
 namespace fg {
     namespace gfx {
@@ -93,7 +149,7 @@ namespace fg {
             fgGFXuint buffer;
 
             // Main constructor
-            SAttributeData(const AttributeType _type = FG_GFX_POSITION) :
+            SAttributeData(const AttributeType _type = ATTRIBUTE_POSITION) :
             index(_type),
             size(3),
             type(_type),
@@ -135,9 +191,11 @@ namespace fg {
             inline bool operator <=(const SAttributeData& a) const {
                 return (int)(this->index) <= (int)(a.index);
             }
-        };
-    };
-};
+
+        }; // struct SAttributeData
+    } // namespace gfx
+} // namespace fg
+
     #ifndef FG_GFX_ATTRIBUTE_DATA_MAX
         #define FG_GFX_ATTRIBUTE_DATA_MAX 12 // #FIXME
     #endif

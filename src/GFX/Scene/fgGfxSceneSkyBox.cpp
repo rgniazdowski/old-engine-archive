@@ -80,8 +80,8 @@ void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
     //printf("SKYBOX - NOT A TEXTURE ! %d || glIsTexture()=%d\n", m_textureID.id, (int)test);
     //}
     if(isTexture && m_MVP && m_program) {
-        m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
-        m_program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)0);
+        m_program->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
+        m_program->setUniform(shaders::UNIFORM_CUBE_TEXTURE, (fgGFXint)0);
         context::setBlend(FG_FALSE);
         context::bindTexture(m_textureID);
         m_MVP->calculate(modelMat);

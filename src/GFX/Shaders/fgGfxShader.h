@@ -31,53 +31,29 @@ namespace fg {
         /**
          *
          */
-        class CShader : public fg::gfx::base::CShader, protected fg::util::DataFile {
+        class CShader : public ::fg::gfx::base::CShader, protected ::fg::util::DataFile {
             friend class CShaderProgram;
             friend class CShaderManager;
         public:
             ///
-            typedef fg::gfx::base::CShader base_type;
+            typedef gfx::base::CShader base_type;
             ///
-            typedef fg::gfx::base::CShader::tag_type tag_type;
+            typedef gfx::base::CShader::tag_type tag_type;
             ///
-            typedef CVector<std::string> defineStrVec;
+            typedef CVector<std::string> DefineStrVec;
             ///
-            typedef defineStrVec::iterator defineStrVecItor;
+            typedef DefineStrVec::iterator DefineStrVecItor;
             ///
-            typedef CVector<std::string> includeStrVec;
+            typedef CVector<std::string> IncludeStrVec;
             ///
-            typedef includeStrVec::iterator includeStrVecItor;
-
-        protected:
-            ///
-            ShaderType m_type;
-            ///
-            defineStrVec m_defineStrVec;
-            ///
-            includeStrVec m_includeStrVec;
-            ///
-            ShadingLangVersion m_version;
-            ///
-            int m_numSources;
-            ///
-            unsigned int m_sourceSize;
-            ///
-            char const ** m_sources;
-            ///
-            char * m_fileSource;
-            ///
-            ShaderPrecision m_precision;
-            ///
-            fgBool m_isSourceLoaded;
-            ///
-            fgBool m_isAttached;
+            typedef IncludeStrVec::iterator IncludeStrVecItor;
 
         public:
             /**
              * 
              * @param type
              */
-            CShader(ShaderType type);
+            CShader(shaders::ShaderType type);
             /**
              * 
              */
@@ -174,14 +150,14 @@ namespace fg {
              * 
              * @param precision
              */
-            void setPrecision(ShaderPrecision precision) {
+            void setPrecision(shaders::ShaderPrecision precision) {
                 m_precision = precision;
             }
             /**
              * 
              * @return 
              */
-            ShaderPrecision getPrecision(void) const {
+            shaders::ShaderPrecision getPrecision(void) const {
                 return m_precision;
             }
             /**
@@ -204,8 +180,8 @@ namespace fg {
              */
             virtual void setPath(const char *filePath) {
                 if(filePath) {
-                    fg::gfx::base::CShader::setFilePath(filePath);
-                    fg::util::DataFile::setPath(filePath);
+                    ::fg::gfx::base::CShader::setFilePath(filePath);
+                    ::fg::util::DataFile::setPath(filePath);
                 }
             }
             /**
@@ -213,8 +189,8 @@ namespace fg {
              * @param filePath
              */
             virtual void setPath(const std::string& filePath) {
-                fg::gfx::base::CShader::setFilePath(filePath);
-                fg::util::DataFile::setPath(filePath);
+                ::fg::gfx::base::CShader::setFilePath(filePath);
+                ::fg::util::DataFile::setPath(filePath);
             }
             /**
              * 
@@ -222,8 +198,8 @@ namespace fg {
              */
             virtual void setFilePath(const char *filePath) {
                 if(filePath) {
-                    fg::gfx::base::CShader::setFilePath(filePath);
-                    fg::util::DataFile::setPath(filePath);
+                    ::fg::gfx::base::CShader::setFilePath(filePath);
+                    ::fg::util::DataFile::setPath(filePath);
                 }
             }
             /**
@@ -231,14 +207,38 @@ namespace fg {
              * @param filePath
              */
             virtual void setFilePath(const std::string& filePath) {
-                fg::gfx::base::CShader::setFilePath(filePath);
-                fg::util::DataFile::setPath(filePath);
+                ::fg::gfx::base::CShader::setFilePath(filePath);
+                ::fg::util::DataFile::setPath(filePath);
             }
+            //------------------------------------------------------------------
+        protected:
+            ///
+            shaders::ShaderType m_type;
+            ///
+            DefineStrVec m_defineStrVec;
+            ///
+            IncludeStrVec m_includeStrVec;
+            ///
+            ShadingLangVersion m_version;
+            ///
+            int m_numSources;
+            ///
+            unsigned int m_sourceSize;
+            ///
+            char const ** m_sources;
+            ///
+            char * m_fileSource;
+            ///
+            shaders::ShaderPrecision m_precision;
+            ///
+            fgBool m_isSourceLoaded;
+            ///
+            fgBool m_isAttached;
 
-        };
+        }; // class CShader
 
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SHADER_BLOCK
 #endif /* FG_INC_GFX_SHADER */

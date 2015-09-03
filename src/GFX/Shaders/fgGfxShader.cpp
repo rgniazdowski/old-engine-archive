@@ -14,30 +14,33 @@
 #include "fgMessageSubsystem.h"
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
-gfx::CShader::CShader(ShaderType type) :
+gfx::CShader::CShader(shaders::ShaderType type) :
 m_type(type),
 m_version(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_numSources(0),
 m_sourceSize(0),
 m_sources(NULL),
 m_fileSource(NULL),
-m_precision(FG_GFX_SHADER_PRECISION_DEFAULT),
+m_precision(shaders::SHADER_PRECISION_DEFAULT),
 m_isSourceLoaded(FG_FALSE) {
-    if(m_type == ShaderType::FG_GFX_SHADER_INVALID)
+    if(m_type == shaders::SHADER_INVALID)
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
     m_params[FG_GFX_SHADER_TYPE] = (int)m_type;
     m_params[FG_GFX_SHADER_DELETE_STATUS] = 0;
     m_params[FG_GFX_SHADER_COMPILE_STATUS] = 0;
     m_params[FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
     m_params[FG_GFX_SHADER_SOURCE_LENGTH] = 0;
-    m_baseType = FG_GFX_BASE_TYPE_SHADER;
+    m_baseType = BASE_TYPE_SHADER;
     //FG_LOG_DEBUG("gfx::CShader::CShader();");
 }
+//------------------------------------------------------------------------------
 
 gfx::CShader::~CShader() {
     gfx::CShader::clearAll();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShader::clearAll(void) {
     freeSource();
@@ -46,6 +49,7 @@ void gfx::CShader::clearAll(void) {
     m_params.clear();
     deleteShader();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::setVersion(ShadingLangVersion slVer) {
     if(slVer != FG_GFX_SHADING_LANGUAGE_INVALID)
@@ -54,6 +58,7 @@ fgBool gfx::CShader::setVersion(ShadingLangVersion slVer) {
         return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShader::appendDefine(SShaderConstantDef constantDef) {
     std::string defStr;
@@ -61,11 +66,14 @@ void gfx::CShader::appendDefine(SShaderConstantDef constantDef) {
     defStr.append("\n");
     m_defineStrVec.push_back(defStr);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShader::appendInclude(std::string & includeName) {
     if(!includeName.empty())
         m_includeStrVec.push_back(includeName);
 }
+//------------------------------------------------------------------------------
+
 // #FIXME
 #define _FG_GFX_SL_VERSION_ES_100 "#version 100 es\n"
 #define _FG_GFX_SL_VERSION_EMPTY "\n"
@@ -125,18 +133,21 @@ fgBool gfx::CShader::loadSource(void) {
     m_isSourceLoaded = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::loadSource(const char *path) {
     setFilePath(path);
     util::DataFile::setPath(path);
     return loadSource();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::loadSource(std::string & path) {
     setFilePath(path);
     util::DataFile::setPath(path);
     return loadSource();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShader::freeSource(void) {
     if(m_fileSource)
@@ -148,17 +159,19 @@ void gfx::CShader::freeSource(void) {
     m_isSourceLoaded = FG_FALSE;
     m_numSources = 0;
 }
+//------------------------------------------------------------------------------
 
 fgGFXuint gfx::CShader::create(void) {
-    if(m_type == ShaderType::FG_GFX_SHADER_INVALID)
+    if(m_type == shaders::SHADER_INVALID)
         return 0;
     if(!m_gfxID || (glIsShader(m_gfxID) == FG_GFX_FALSE)) {
         m_gfxID = glCreateShader((fgGFXenum)m_type);
         GLCheckError("glCreateShader");
-        FG_LOG_DEBUG("GFX: Created shader: %s, gfxID: %d [is shader? = %d]", FG_GFX_SHADER_TYPE_TO_TEXT(m_type), m_gfxID, (int)glIsShader(m_gfxID));
+        FG_LOG_DEBUG("GFX: Created shader: %s, gfxID: %d [is shader? = %d]", getTextFromShaderType(m_type), m_gfxID, (int)glIsShader(m_gfxID));
     }
     return m_gfxID;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::compile(void) {
     if(!m_isSourceLoaded) {
@@ -182,10 +195,11 @@ fgBool gfx::CShader::compile(void) {
     if(!m_params[FG_GFX_SHADER_COMPILE_STATUS]) {
         FG_LOG_ERROR("GFX: compilation failed -  %s", getFilePath().c_str());
     } else {
-        FG_LOG_DEBUG("GFX: Successfully compiled shader: '%s', type: '%s'", getFilePathStr(), FG_GFX_SHADER_TYPE_TO_TEXT(m_type));
+        FG_LOG_DEBUG("GFX: Successfully compiled shader: '%s', type: '%s'", getFilePathStr(), getTextFromShaderType(m_type));
     }
     return (fgBool)m_params[FG_GFX_SHADER_COMPILE_STATUS];
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::compile(const char *path) {
     if(m_isSourceLoaded || m_fileSource) {
@@ -195,6 +209,7 @@ fgBool gfx::CShader::compile(const char *path) {
     util::DataFile::setPath(path);
     return compile();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::compile(std::string & path) {
     if(m_isSourceLoaded || m_fileSource) {
@@ -204,6 +219,7 @@ fgBool gfx::CShader::compile(std::string & path) {
     util::DataFile::setPath(path);
     return compile();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::deleteShader(void) {
     if(glIsShader(m_gfxID) == FG_GFX_TRUE) {
@@ -215,6 +231,7 @@ fgBool gfx::CShader::deleteShader(void) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::attach(fgGFXuint program) {
     if((FG_GFX_TRUE == glIsProgram(program)) && (FG_GFX_TRUE == glIsShader(m_gfxID))) {
@@ -224,6 +241,7 @@ fgBool gfx::CShader::attach(fgGFXuint program) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShader::detach(fgGFXuint program) {
     if((glIsProgram(program) == FG_GFX_TRUE) && (glIsShader(m_gfxID) == FG_GFX_TRUE)) {
@@ -234,3 +252,4 @@ fgBool gfx::CShader::detach(fgGFXuint program) {
 
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------

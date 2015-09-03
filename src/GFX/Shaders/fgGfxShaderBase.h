@@ -28,15 +28,15 @@ namespace fg {
         class CShaderProgram;
         /// Forward declaration for CShaderManager
         class CShaderManager;
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #define FG_TAG_GFX_SHADER_NAME	"GfxShader"
     #define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fg::gfx::CShader)
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShader, FG_TAG_GFX_SHADER_NAME);
 
 namespace fg {
-    
+
     namespace resource {
         template<typename THandleType, typename TMapKeyType> class CManagedDataFile;
     };
@@ -46,17 +46,17 @@ namespace fg {
         /// Tag type for Shader
         typedef FG_TAG_GFX_SHADER ShaderTag;
         /// Special handle type for shader program
-        typedef fg::util::CHandle<ShaderTag> ShaderHandle;
+        typedef ::fg::util::CHandle<ShaderTag> ShaderHandle;
 
         namespace base {
 
             /**
              *
              */
-            class CShader : public fg::resource::CManagedDataFile<ShaderHandle, Quality> {
+            class CShader : public ::fg::resource::CManagedDataFile<ShaderHandle, Quality> {
                 //friend class fg::gfx::CShader;
-                friend class fg::gfx::CShaderProgram;
-                friend class fg::gfx::CShaderManager;
+                friend class ::fg::gfx::CShaderProgram;
+                friend class ::fg::gfx::CShaderManager;
             public:
                 ///
                 typedef CManagedDataFile<ShaderHandle, Quality> base_type;
@@ -73,20 +73,10 @@ namespace fg {
                  *
                  */
                 enum ShaderBaseType {
-                    FG_GFX_BASE_TYPE_INVALID = 0,
-                    FG_GFX_BASE_TYPE_SHADER = 1,
-                    FG_GFX_BASE_TYPE_PROGRAM = 2
-                };
-
-            protected:
-                ///
-                ObjParamMap m_params;
-                ///
-                char *m_log;
-                ///
-                fgGFXuint m_gfxID;
-                /// 
-                ShaderBaseType m_baseType;
+                    BASE_TYPE_INVALID = 0,
+                    BASE_TYPE_SHADER = 1,
+                    BASE_TYPE_PROGRAM = 2
+                }; // enum ShaderBaseType            
 
             public:
                 /**
@@ -97,6 +87,8 @@ namespace fg {
                  * 
                  */
                 virtual ~CShader();
+
+                //--------------------------------------------------------------
                 /**
                  * 
                  * @return 
@@ -146,10 +138,21 @@ namespace fg {
                  * @return 
                  */
                 fgGFXint updateParam(fgGFXenum pname);
-            };
-        };
-    };
-};
+
+            protected:
+                ///
+                ObjParamMap m_params;
+                ///
+                char *m_log;
+                ///
+                fgGFXuint m_gfxID;
+                ///
+                ShaderBaseType m_baseType;
+
+            }; // class CShader
+        } // namespace base
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SHADER_BASE_BLOCK
 #endif /*FG_INC_GFX_SHADER_BASE */

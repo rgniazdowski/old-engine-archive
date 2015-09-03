@@ -83,35 +83,35 @@ void gfx::CDrawCall::resetAttributeData(void) {
 
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].type = FG_GFX_POSITION;
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].type = ATTRIBUTE_POSITION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].stride = sizeof (Vertex3v);
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_FALSE;
 
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].index = FG_GFX_ATTRIB_NORM_LOCATION;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].size = 3;
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].type = FG_GFX_NORMAL;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].type = ATTRIBUTE_NORMAL;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].stride = sizeof (Vertex3v);
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].isEnabled = FG_GFX_FALSE;
 
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].index = FG_GFX_ATTRIB_UVS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].size = 2;
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].type = FG_GFX_TEXTURE_COORD;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].type = ATTRIBUTE_TEXTURE_COORD;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].stride = sizeof (Vertex3v);
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].isEnabled = FG_GFX_FALSE;
 
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].index = FG_GFX_ATTRIB_COLOR_LOCATION;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].size = 4;
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].type = FG_GFX_COLOR;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].type = ATTRIBUTE_COLOR;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].stride = sizeof (Vertex4v);
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].isEnabled = FG_GFX_FALSE;
 
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].index = FG_GFX_ATTRIB_TANGENT_LOCATION;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].size = 3;
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].type = FG_GFX_TANGENT;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].type = ATTRIBUTE_TANGENT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
@@ -508,7 +508,7 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
         } else {
             context::bindBuffer(gfx::ARRAY_BUFFER, 0);
         }
-        for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
+        for(int i = 0; i < NUM_ATTRIBUTE_TYPES; i++) {
             if(m_attrData[i].isEnabled) {
                 if(m_attrData[i].isInterleaved == FG_FALSE && m_attrData[i].isBO) {
                     context::bindBuffer(gfx::ARRAY_BUFFER, m_attrData[i].buffer);
@@ -561,13 +561,13 @@ void gfx::CDrawCall::draw(void) {
     if(m_program) {
         if(context::isTexture(m_textureID.id)) {
             context::bindTexture(m_textureID);
-            m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
+            m_program->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
         } else {
-            m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+            m_program->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
         }
         if(m_material) {
             if(m_material->isCustomColor()) {
-                m_program->setUniform(FG_GFX_CUSTOM_COLOR,
+                m_program->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
                                       m_material->customColor.r,
                                       m_material->customColor.g,
                                       m_material->customColor.b,
