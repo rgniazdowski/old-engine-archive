@@ -30,20 +30,33 @@ namespace fg {
              */
             struct SVertexWeight {
                 typedef SVertexWeight self_type;
-                int vertexIdx;
-                float weight;
-                
-                SVertexWeight() : vertexIdx(0), weight(0.0f) { }
+                typedef SVertexWeight type;
 
+                ///
+                int vertexIdx;
+                ///
+                float weight;
+
+                /**
+                 *
+                 */
+                SVertexWeight() : vertexIdx(0), weight(0.0f) { }
+                /**
+                 *
+                 * @param other
+                 */
                 SVertexWeight(const self_type& other) {
                     vertexIdx = other.vertexIdx;
                     weight = other.weight;
                 }
+                /**
+                 *
+                 */
                 virtual ~SVertexWeight() {
                     vertexIdx = 0;
                     weight = 0.0f;
                 }
-            };
+            }; // struct SVertexWeight
 
             /**
              *
