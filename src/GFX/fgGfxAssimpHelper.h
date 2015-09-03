@@ -136,6 +136,19 @@ namespace fg {
             void copyMatrix4x4(aiMatrix4x4& dest, const Matrix4f& source);
 
             /**
+             * 
+             * @param dest
+             * @param source
+             */
+            void copyMatrix3x3(Matrix3f& dest, const aiMatrix3x3& source);
+            /**
+             *
+             * @param dest
+             * @param source
+             */
+            void copyMatrix3x3(aiMatrix3x3& dest, const Matrix3f& source);
+
+            /**
              *
              * @param source
              * @param scale

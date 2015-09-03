@@ -371,7 +371,8 @@ namespace fgTinyObj {
                 shape->mesh = new fg::gfx::SMeshAoS();
             }
             FG_LOG_DEBUG("fgTinyObj: Constructing AoS mesh in shape: '%s'", shape->name.c_str());
-            ((fg::gfx::SMeshAoS *)shape->mesh)->vertices.swap(vertices);
+            // SWAP FUNCTIONALITY #TODO
+            //((fg::gfx::SMeshAoS *)shape->mesh)->vertices->swap(vertices); // #FIXME
             ((fg::gfx::SMeshAoS *)shape->mesh)->indices.swap(indices);
         } else {
             if(!shape->mesh) {

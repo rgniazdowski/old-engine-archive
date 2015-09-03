@@ -379,6 +379,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
 
     setFlag(FIX_CENTER, FG_TRUE);
     setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    setFlag(HIGH_QUALITY, FG_TRUE);
     defaultFlags |= aiProcess_JoinIdenticalVertices;
     // defaultFlags |= aiProcess_MakeLeftHanded; // only for DirectX
     defaultFlags |= aiProcess_Triangulate;
@@ -388,6 +389,9 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     defaultFlags |= aiProcess_SortByPType;
     defaultFlags |= aiProcess_TransformUVCoords;
     defaultFlags |= aiProcess_FlipUVs;
+    if(isHighQuality()) {
+        defaultFlags |= aiProcess_CalcTangentSpace;
+    }
 
     //defaultFlags |= aiProcess_OptimizeGraph;
     // force generation of per vertex normals
@@ -459,6 +463,9 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
         }
         nodeTransVec.clear();
         aiTransform.Decompose(matScale, quat, matPos);
+        const aiMatrix3x3 aiTransformIT = aiMatrix3x3(aiTransform).Inverse().Transpose();
+        Matrix3f transformIT;
+        assimp_helper::copyMatrix3x3(transformIT, aiTransformIT);
 
         printf("%s%p: %s [t:%.2f;%.2f;%.2f] [rot:%.2f;%.2f;%.2f;%.2f] [scale:%.2f;%.2f;%.2f]\n",
                spacing.c_str(), pNode, pNode->mName.C_Str(),
@@ -478,8 +485,12 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             pShape->name.append(pNode->mName.C_Str());
             m_shapes.push_back(pShape);
 
+            VertexType vertexType = VERTEX_3;
+            if(pMesh->HasTangentsAndBitangents() && isHighQuality()) {
+                vertexType = VERTEX_5_HQ;
+            }
             if(isInterleaved()) {
-                pShape->mesh = new SMeshAoS(); // mesh - array of structures
+                pShape->mesh = new SMeshAoS(vertexType); // mesh - array of structures
             } else {
                 pShape->mesh = new SMeshSoA(); // mesh - structure of arrays
             }
@@ -507,17 +518,26 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 assimp_helper::copyVector(pShape->mesh->displacement, matPos);
             }
             for(unsigned int vidx = 0; vidx < pMesh->mNumVertices; vidx++) {
-                Vector3f pos, normal;
+                Vector3f pos, normal, tangent, bitangent;
                 Vector2f uv;
                 assimp_helper::copyVector(normal, pMesh->mNormals[vidx]);
                 if(pMesh->HasTextureCoords(0)) {
                     assimp_helper::copyVector(uv, pMesh->mTextureCoords[0][vidx]);
                 }
                 // aiVector3D is a little problematic (make some transform functions?)
-                aiVector3D transPos = pMesh->mVertices[vidx];
+                aiVector3D transPos = pMesh->mVertices[vidx];                
                 transPos *= aiTransform;
+                
                 assimp_helper::copyVector(pos, transPos);
-                pShape->mesh->append(pos, normal, uv);
+                if(pMesh->HasTangentsAndBitangents()) {
+                    assimp_helper::copyVector(tangent, pMesh->mTangents[vidx]);
+                    tangent = transformIT * tangent;
+                    assimp_helper::copyVector(bitangent, pMesh->mBitangents[vidx]);
+                    bitangent = transformIT * bitangent;
+                }
+                normal = transformIT * normal;
+                
+                pShape->mesh->append(pos, normal, uv, tangent, bitangent);
             }
             struct aiMaterial* pMaterial = pScene->mMaterials[pMesh->mMaterialIndex];
             SMaterial* pNewMaterial = new SMaterial();

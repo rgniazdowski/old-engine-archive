@@ -197,10 +197,10 @@
         <itemPath>../../../src/GFX/fgGfxMain.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxMaterial.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxMaterial.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMesh.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMesh.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxModelResource.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxModelResource.h</itemPath>
-        <itemPath>../../../src/GFX/fgGfxModelTypes.cpp</itemPath>
-        <itemPath>../../../src/GFX/fgGfxModelTypes.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlane.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlaneGrid.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlaneGrid.h</itemPath>
@@ -1386,6 +1386,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMesh.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxMesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
@@ -1395,13 +1399,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3163,6 +3160,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMesh.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxMesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
@@ -3172,13 +3173,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -4906,6 +4900,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMesh.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxMesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
@@ -4915,13 +4913,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -6635,6 +6626,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMesh.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxMesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
@@ -6644,13 +6639,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -8383,6 +8371,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMesh.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../../src/GFX/fgGfxMesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
@@ -8392,13 +8384,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -10123,6 +10108,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMesh.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../../src/GFX/fgGfxMesh.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
@@ -10132,13 +10121,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>

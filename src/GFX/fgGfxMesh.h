@@ -96,13 +96,13 @@ namespace fg {
             typedef SMeshSoA self_type;
 
             /// Vector holding floats representing position (vertices)
-            fg::CVector<fgGFXfloat> vertices; //3 fgVector3f
+            CVector<fgGFXfloat> vertices; //3 fgVector3f
             /// Vector holding floats for normals
-            fg::CVector<fgGFXfloat> normals; //3 fgVector3f
+            CVector<fgGFXfloat> normals; //3 fgVector3f
             /// Vector holding texture coords
-            fg::CVector<fgGFXfloat> uvs; //2 fgVector2f
+            CVector<fgGFXfloat> uvs; //2 fgVector2f
             /// Vector holding indices
-            fg::CVector<fgGFXushort> indices;
+            CVector<fgGFXushort> indices;
 
             static const unsigned short POSITIONS_VBO_ARRAY_IDX;
             static const unsigned short VERTICES_VBO_ARRAY_IDX;
@@ -261,6 +261,20 @@ namespace fg {
                 return (fgGFXuint)indices.size();
             }
             /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumTangents(void) const {
+                return 0;
+            }
+            /**
+             *
+             * @param indice
+             */
+            virtual fgGFXuint getNumBitangents(void) const {
+                return 0;
+            }
+            /**
              *
              */
             virtual void appendIndice(fgGFXushort indice) {
@@ -273,7 +287,7 @@ namespace fg {
             virtual void append(const Vector3f &pos) {
                 vertices.push_back(pos.x);
                 vertices.push_back(pos.y);
-                vertices.push_back(pos.z);                
+                vertices.push_back(pos.z);
             }
             /**
              * Append to the vertex data (position and uv)
@@ -286,7 +300,7 @@ namespace fg {
                 vertices.push_back(pos.y);
                 vertices.push_back(pos.z);
                 uvs.push_back(uv.x);
-                uvs.push_back(uv.y);                
+                uvs.push_back(uv.y);
             }
             /**
              * Append to the vertex data (position, normal and uv)
@@ -304,7 +318,7 @@ namespace fg {
                 normals.push_back(normal.y);
                 normals.push_back(normal.z);
                 uvs.push_back(uv.x);
-                uvs.push_back(uv.y);                
+                uvs.push_back(uv.y);
             }
             /**
              * Append to the vertex data (position, normal and uv). Color will be ignored
@@ -330,6 +344,21 @@ namespace fg {
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const Color4f &color) {
+                append(pos, normal, uv);
+            }
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) {
                 append(pos, normal, uv);
             }
             /**
@@ -389,6 +418,11 @@ namespace fg {
                 this->uvs.resize(newSize);
             }
             /**
+             * 
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff);
+            /**
              * Returns the stride of the data (here: 0)
              * @return 
              */
@@ -403,13 +437,23 @@ namespace fg {
                 return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
             }
             /**
+             *
+             * @return
+             */
+            virtual fgGFXuint components(void) const {
+                return 3;
+            }
+
+            /**
              * Returns whether the data is empty (positions)
              * @return 
              */
             virtual bool empty(void) const {
                 return (bool) vertices.empty();
             }
-        };
+        }; // struct SMeshSoA
+
+        //----------------------------------------------------------------------
 
         /**
          *
@@ -419,10 +463,10 @@ namespace fg {
             typedef SMeshAoS self_type;
 
             /// Vertex data - AoS
-            CVertexData3v vertices;
+            CVertexData* vertices;
             /// Special indices array
             /// #FIXME Need to check for OGL version, ushort is mandatory on ES2
-            fg::CVector<fgGFXushort> indices;
+            CVector<fgGFXushort> indices;            
 
             static const unsigned short POSITIONS_VBO_ARRAY_IDX;
             static const unsigned short VERTICES_VBO_ARRAY_IDX;
@@ -433,23 +477,45 @@ namespace fg {
             /**
              * Default constructor for Mesh AoS object
              */
-            SMeshAoS() : base_type(), vertices(), indices() {
-                vertices.reserve(4);
-            }
+            SMeshAoS();
+            /**
+             *
+             * @param vertexType
+             */
+            SMeshAoS(VertexType vertexType);
+            /**
+             *
+             * @param attribMask
+             */
+            SMeshAoS(AttributeMask attribMask);
             /**
              * Destructor for Mesh AoS object
              */
-            virtual ~SMeshAoS() {
-                clear();
-                destroyBuffers();
-            }
+            virtual ~SMeshAoS();
+            /**
+             *
+             * @param attribMask
+             * @return
+             */
+            fgBool convertVertexData(AttributeMask attribMask);
+            /**
+             *
+             * @param vertexType
+             * @return
+             */
+            fgBool convertVertexData(VertexType vertexType);
+            /**
+             *
+             * @return
+             */
+            VertexType getVertexType(void) const;
             /**
              * 
              */
             virtual void updateAABB(void) {
-                const void *data = (const void *)vertices.front();
+                const void *data = (const void *)this->vertices->front();
                 // Here size does not need to be divided - AoS
-                this->aabb.setBoundsFromData(data, vertices.stride(), vertices.size());
+                this->aabb.setBoundsFromData(data, this->vertices->stride(), this->vertices->size());
             }
             /**
              *
@@ -459,8 +525,9 @@ namespace fg {
              * Clear the internal data arrays
              */
             virtual void clear(void) {
-                vertices.clear_optimised();
-                indices.clear_optimised();
+                if(this->vertices)
+                    this->vertices->clear();
+                this->indices.clear_optimised();
             }
             /**
              * Returns true if this vertex data structure supports VBOs
@@ -488,14 +555,14 @@ namespace fg {
              * is generated or there are no indices at all
              * @return 
              */
-            virtual fgGFXvoid *getIndicesPointer(void) const;
+            virtual fgGFXvoid* getIndicesPointer(void) const;
             /**
              * 
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const {
-                return vertices.refreshAttributes(pDataArray);
+            virtual fgGFXboolean refreshAttributes(SAttributeData* pDataArray) const {
+                return this->vertices->refreshAttributes(pDataArray);
             }
             /**
              * Attributes for mesh AoS is done the same way as for vertexData v3
@@ -505,43 +572,43 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const {
-                return vertices.setupAttributes(pDataArray);
+            virtual fgGFXboolean setupAttributes(SAttributeData* pDataArray) const {
+                return this->vertices->setupAttributes(pDataArray);
             }
             /**
              * 
              * @return 
              */
             virtual fgBool hasVBO(void) const {
-                return vertices.hasVBO();
+                return this->vertices->hasVBO();
             }
             /**
              * 
              * @return 
              */
             virtual int getVBOCount(void) const {
-                return vertices.getVBOCount();
+                return this->vertices->getVBOCount();
             }
             /**
              * 
              * @return 
              */
             virtual int& getRefVBOCount(void) {
-                return vertices.getRefVBOCount();
+                return this->vertices->getRefVBOCount();
             }
             /**
              * 
              * @return 
              */
             virtual SBufferID* getPtrVBO(void) const {
-                return vertices.getPtrVBO();
+                return this->vertices->getPtrVBO();
             }
             /**
              * 
              * @return 
              */
             virtual SBufferID*& getRefPtrVBO(void) {
-                return vertices.getRefPtrVBO();
+                return this->vertices->getRefPtrVBO();
             }
 
             /**
@@ -581,9 +648,9 @@ namespace fg {
              */
             virtual size_t getDataSize(void) {
                 size_t size = 0;
-                size += sizeof (vertices) + sizeof (indices);
-                size += sizeof (Vertex3v) * vertices.size();
-                size += sizeof (fgGFXuint) * indices.size();
+                size += sizeof (this->vertices) + sizeof (this->indices);
+                size += this->vertices->stride() * this->vertices->size();
+                size += sizeof (fgGFXuint) * this->indices.size();
                 return size;
             }
             /**
@@ -591,64 +658,81 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint getNumVertices(void) const {
-                return (fgGFXuint)vertices.size();
+                return (fgGFXuint)this->vertices->getNumVertices();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumNormals(void) const {
-                return (fgGFXuint)vertices.size();
+                return (fgGFXuint)this->vertices->getNumNormals();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumUVs(void) const {
-                return (fgGFXuint)vertices.size();
+                return (fgGFXuint)this->vertices->getNumUVs();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumColors(void) const {
-                return 0;
+                return (fgGFXuint)this->vertices->getNumColors();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumIndices(void) const {
-                return (fgGFXuint)indices.size();
+                return (fgGFXuint)this->indices.size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumTangents(void) const {
+                return this->vertices->getNumTangents();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumBitangents(void) const {
+                return this->vertices->getNumBitangents();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint attribMask(void) const {
-                return vertices.attribMask();
+                if(this->vertices)
+                    return this->vertices->attribMask();
+                else
+                    return 0;
             }
             /**
              *
              */
             virtual void appendIndice(fgGFXushort indice) {
-                indices.push_back(indice);
+                this->indices.push_back(indice);
             }
             /**
              * 
              * @param pos
              */
-            virtual void append(const Vector3f &pos) {
-                vertices.append(pos);
+            virtual void append(const Vector3f& pos) {
+                vertices->append(pos);
             }
             /**
              * 
              * @param pos
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector2f &uv) {
-                vertices.append(pos, uv);
+            virtual void append(const Vector3f& pos,
+                                const Vector2f& uv) {
+                this->vertices->append(pos, uv);
             }
             /**
              * 
@@ -656,23 +740,10 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv) {
-                vertices.append(pos, normal, uv);
-            }
-            /**
-             * 
-             * @param pos
-             * @param normal
-             * @param uv
-             * @param color
-             */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color3f &color) {
-                vertices.append(pos, normal, uv);
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv) {
+                this->vertices->append(pos, normal, uv);
             }
             /**
              * 
@@ -681,68 +752,113 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color4f &color) {
-                vertices.append(pos, normal, uv);
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color3f& color) {
+                this->vertices->append(pos, normal, uv);
+            }
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param color
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color4f& color) {
+                this->vertices->append(pos, normal, uv);
+            }
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) {
+                this->vertices->append(pos, normal, uv);
             }
             /**
              * 
              */
             virtual void pop_back(void) {
-                vertices.pop_back();
+                this->vertices->pop_back();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXvoid *back(void) const {
-                return vertices.back();
+                return this->vertices->back();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXvoid *front(void) const {
-                return vertices.front();
+                return this->vertices->front();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint size(void) const {
-                return vertices.size();
+                return this->vertices->size();
             }
             /**
              * 
              * @param newSize
              */
             virtual void reserve(const unsigned int newSize) {
-                this->vertices.reserve(newSize);
+                this->vertices->reserve(newSize);
             }
             /**
              * 
              * @param newSize
              */
             virtual void resize(const unsigned int newSize) {
-                this->vertices.resize(newSize);
+                this->vertices->resize(newSize);
+            }
+            /**
+             *
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff) {
+                this->vertices->translate(diff);
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXsizei stride(void) const {
-                return vertices.stride();
+                return this->vertices->stride();
             }
+            /**
+             * 
+             * @return
+             */
+            virtual fgGFXuint components(void) const {
+                return this->vertices->components();
+            }
+
             /**
              * 
              * @return 
              */
             virtual bool empty(void) const {
-                return (bool) vertices.empty();
+                return (bool) this->vertices->empty();
             }
         }; // struct SMeshAoS
+
+        //----------------------------------------------------------------------
 
         /**
          *

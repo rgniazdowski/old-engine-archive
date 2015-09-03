@@ -34,7 +34,7 @@
     #endif
 
     #ifndef FG_INC_GFX_MODEL_TYPES
-        #include "fgGfxModelTypes.h"
+        #include "fgGfxMesh.h"
     #endif
 
     #ifndef FG_INC_GFX_DRAWABLE

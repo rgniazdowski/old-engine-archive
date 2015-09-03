@@ -16,7 +16,7 @@
         #include "fgTypes.h"
     #endif
     #ifndef FG_INC_GFX_MODEL_TYPES
-        #include "fgGfxModelTypes.h"
+        #include "fgGfxMesh.h"
     #endif
     #ifndef FG_INC_RESOURCE
         #include "Resource/fgResource.h"
@@ -119,7 +119,11 @@ namespace fg {
                 /// All meshes will be moved to their geometric center (based on AABB)
                 FIX_CENTER = 0x0800,
                 /// Write move vector relative to geometric center of each mesh
-                SAVE_DISPLACEMENT = 0x1000
+                SAVE_DISPLACEMENT = 0x1000,
+                /// Should make the model high quality? This will generate tangents, etc
+                HIGH_QUALITY = 0x2000,
+                /// Should generate tangents? (High quality model/mesh)
+                GENERATE_TANGENTS = 0x2000,
             };
 
         public:
@@ -526,6 +530,20 @@ namespace fg {
              */
             inline void setSaveDisplacement(fgBool toggle = FG_TRUE) {
                 setFlag(SAVE_DISPLACEMENT, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isHighQuality(void) const {
+                return (fgBool)!!(m_modelFlags & HIGH_QUALITY);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setHighQuality(fgBool toggle = FG_TRUE) {
+                setFlag(HIGH_QUALITY, toggle);
             }
             //------------------------------------------------------------------
             /**

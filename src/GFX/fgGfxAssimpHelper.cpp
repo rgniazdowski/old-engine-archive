@@ -133,6 +133,36 @@ void gfx::assimp_helper::copyMatrix4x4(aiMatrix4x4& dest, const Matrix4f& source
 }
 //------------------------------------------------------------------------------
 
+void gfx::assimp_helper::copyMatrix3x3(Matrix3f& dest, const aiMatrix3x3& source) {
+    dest[0].x = source.a1;
+    dest[0].y = source.b1;
+    dest[0].z = source.c1;
+
+    dest[1].x = source.a2;
+    dest[1].y = source.b2;
+    dest[1].z = source.c2;
+
+    dest[2].x = source.a3;
+    dest[2].y = source.b3;
+    dest[2].z = source.c3;
+}
+//------------------------------------------------------------------------------
+
+void gfx::assimp_helper::copyMatrix3x3(aiMatrix3x3& dest, const Matrix3f& source) {
+    dest.a1 = source[0].x;
+    dest.b1 = source[0].y;
+    dest.c1 = source[0].z;
+
+    dest.a2 = source[1].x;
+    dest.b2 = source[1].y;
+    dest.c2 = source[1].z;
+
+    dest.a3 = source[2].x;
+    dest.b3 = source[2].y;
+    dest.c3 = source[2].z;
+}
+//------------------------------------------------------------------------------
+
 void gfx::assimp_helper::decompose(const aiMatrix4x4& source,
                                    Vector3f& scale,
                                    Quaternionf& rotation,

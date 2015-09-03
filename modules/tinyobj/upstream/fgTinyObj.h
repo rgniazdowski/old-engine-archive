@@ -10,7 +10,7 @@
     #include <vector>
     #include <map>
 
-    #include "GFX/fgGfxModelTypes.h"
+    #include "GFX/fgGfxMesh.h"
     #include "Util/fgFile.h"
 
 namespace fgTinyObj {

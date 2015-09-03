@@ -8,7 +8,7 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
-#include "fgGfxModelTypes.h"
+#include "fgGfxMesh.h"
 #include "fgGfxPlatform.h"
 #include "Util/fgMemory.h"
 
@@ -287,6 +287,17 @@ fgGFXboolean gfx::SMeshSoA::destroyBuffers(void) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::SMeshSoA::translate(const Vector3f& diff) {
+    const unsigned int n = this->vertices.size();
+    const unsigned int count = n / 3;
+    for(unsigned int i = 0; i < count; i++) {
+        this->vertices[i * 3 + 0] += diff.x;
+        this->vertices[i * 3 + 1] += diff.y;
+        this->vertices[i * 3 + 2] += diff.z;
+    }
+}
+//------------------------------------------------------------------------------
+
 /******************************************************************************
  * MESH AOS FUNCTION - ARRAY OF STRUCTURES
  ******************************************************************************/
@@ -300,21 +311,126 @@ const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
 
 //------------------------------------------------------------------------------
 
-void gfx::SMeshAoS::fixCenter(fgBool saveDisplacement) {
-    const unsigned int n = this->vertices.size();
-    if(!n)
+gfx::SMeshAoS::SMeshAoS() :
+base_type(),
+vertices(NULL),
+indices() {
+    //vertices.reserve(4);
+    convertVertexData(VERTEX_3);
+    indices.reserve(4);
+}
+
+gfx::SMeshAoS::SMeshAoS(VertexType vertexType) :
+base_type(),
+vertices(NULL),
+indices() {
+    convertVertexData(vertexType);
+    indices.reserve(4);
+}
+//------------------------------------------------------------------------------
+
+gfx::SMeshAoS::SMeshAoS(AttributeMask attribMask) :
+base_type(),
+vertices(NULL),
+indices() {
+    convertVertexData(attribMask);
+    indices.reserve(4);
+}
+//------------------------------------------------------------------------------
+
+gfx::SMeshAoS::~SMeshAoS() {
+    destroyBuffers();
+    clear();
+    if(vertices)
+        delete vertices;
+    vertices = NULL;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SMeshAoS::convertVertexData(AttributeMask attribMask) {
+    CVertexData* pNewVertexData = NULL;
+
+    if(this->attribMask() == attribMask)
+        return FG_TRUE;
+
+    if(attribMask == Vertex5HQv::attribMask() || (attribMask & ATTRIBUTE_BITANGENT_BIT)
+       || (attribMask & ATTRIBUTE_TANGENT_BIT)) {
+        pNewVertexData = new CVertexData5HQv();
+    } else if(attribMask == Vertex4v::attribMask() || (attribMask & ATTRIBUTE_COLOR_BIT)) {
+        pNewVertexData = new CVertexData4v();
+    } else if(attribMask == Vertex3v::attribMask() || (attribMask & ATTRIBUTE_NORMAL_BIT)) {
+        pNewVertexData = new CVertexData3v();
+    } else {
+        pNewVertexData = new CVertexData2v();
+    }
+
+    if(pNewVertexData && this->vertices) {
+        delete this->vertices;
+        this->vertices = NULL;
+    }
+    // #TODO - copy data procedures
+    if(pNewVertexData) {
+        this->vertices = pNewVertexData;
+    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SMeshAoS::convertVertexData(VertexType vertexType) {
+    if(vertexType == VERTEX_INVALID)
+        return FG_FALSE;
+    if(this->getVertexType() == vertexType)
+        return FG_TRUE;
+    CVertexData* pNewVertexData = NULL;
+    if(vertexType == VERTEX_5_HQ) {
+        pNewVertexData = new CVertexData5HQv();
+    } else if(vertexType == VERTEX_4) {
+        pNewVertexData = new CVertexData4v();
+    } else if(vertexType == VERTEX_3) {
+        pNewVertexData = new CVertexData3v();
+    } else if(vertexType == VERTEX_2) {
+        pNewVertexData = new CVertexData2v();
+    }
+    if(pNewVertexData && this->vertices) {
+        delete this->vertices;
+        this->vertices = NULL;
+    }
+    // #TODO - copy data procedures
+    if(pNewVertexData) {
+        this->vertices = pNewVertexData;
+    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+gfx::VertexType gfx::SMeshAoS::getVertexType(void) const {
+    if(!this->vertices)
+        return VertexType::VERTEX_INVALID;
+    VertexType result = VertexType::VERTEX_INVALID;
+    unsigned int attribMask = this->vertices->attribMask();
+    if(attribMask == Vertex5HQv::attribMask()) {
+        result = VERTEX_5_HQ; // pos, norm, uv, tangent, bitangent
+    } else if(attribMask == Vertex4v::attribMask()) {
+        result = VERTEX_4; // pos, norm, uv, color
+    } else if(attribMask == Vertex3v::attribMask()) {
+        result = VERTEX_3; // pos, norm, uv
+    } else if(attribMask == Vertex2v::attribMask()) {
+        result = VERTEX_2; // pos, uv
+    }
+    return result;
+}
+//------------------------------------------------------------------------------
+
+void gfx::SMeshAoS::fixCenter(fgBool saveDisplacement) {    
+    if(!this->vertices || this->vertices->empty())
         return;
     const Vector3f center = this->aabb.getCenter();
-    //const void *data = this->vertices.front();
-    for(unsigned int i = 0; i < n; i++) {
-        this->vertices[i].position -= center;
-    }
+    this->vertices->translate(-center);
     if(saveDisplacement) {
         this->displacement += center;
     }
     this->aabb.min -= center;
     this->aabb.max -= center;
-    //this->aabb.setBoundsFromData(data, vertices.stride(), n);
 }
 //------------------------------------------------------------------------------
 
