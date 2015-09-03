@@ -213,6 +213,8 @@
         <itemPath>../../../src/GFX/fgGfxProjection.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxSimpleDrawer.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxSimpleDrawer.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxSkinnedMesh.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxSkinnedMesh.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxStdInc.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxTextureID.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxTypes.h</itemPath>
@@ -1432,6 +1434,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3210,6 +3222,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
@@ -4950,6 +4972,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
@@ -6672,6 +6704,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -8421,6 +8463,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
@@ -10154,6 +10206,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxSkinnedMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
