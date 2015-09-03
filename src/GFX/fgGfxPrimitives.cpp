@@ -13,7 +13,7 @@
 #include "GFX/Shaders/fgGfxShaderProgram.h"
 #include "fgGfxAABoundingBox.h"
 #include "GFX/fgGfxVertexData.h"
-#include "fgGfxModelTypes.h"
+#include "fgGfxMesh.h"
 #include "fgGfxDrawCall.h"
 
 using namespace fg;
@@ -994,7 +994,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
 
 void gfx::primitives::applyAttributeData(SAttributeData *attrData,
                                          SDrawingInfo& drawingInfo,
-                                         const unsigned int attribMask) {
+                                         const unsigned int attribMask,
+                                         unsigned int count) {
     if(!attrData)
         return;
     context::diffVertexAttribArrayMask(attribMask);
@@ -1003,7 +1004,9 @@ void gfx::primitives::applyAttributeData(SAttributeData *attrData,
     } else {
         context::bindBuffer(gfx::ARRAY_BUFFER, 0);
     }
-    for(int i = 0; i < NUM_ATTRIBUTE_TYPES; i++) {
+    if(!count)
+        count = NUM_ATTRIBUTE_TYPES;
+    for(unsigned int i = 0; i < count; i++) {
         if(attrData[i].isEnabled) {
             if(attrData[i].isInterleaved == FG_FALSE && attrData[i].isBO) {
                 context::bindBuffer(gfx::ARRAY_BUFFER, attrData[i].buffer);

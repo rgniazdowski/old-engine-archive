@@ -37,6 +37,89 @@
 namespace fg {
     namespace gfx {
 
+        enum VertexType {
+            VERTEX_5_HQ = 5,
+            VERTEX_4 = 4,
+            VERTEX_3 = 3,
+            VERTEX_2 = 2,
+            VERTEX_INVALID = 0
+        };
+
+        /**
+         * Vertex5HQv - high quality vertex
+         * pos, norm, uv, tangent, bi-tangent
+         */
+        struct Vertex5HQv {
+           typedef Vertex5HQv type;
+           typedef Vertex5HQv self_type;
+           
+           fg::Vector3f position;
+           fg::Vector3f normal;
+           fg::Vector2f uv;
+           fg::Vector3f tangent;
+           fg::Vector3f bitangent;
+
+           /**
+            *
+            * @return
+            */
+           static unsigned int size(void) {
+               return 5;
+           }
+           /**
+            *
+            * @return
+            */
+           static unsigned int attribMask(void) {
+               return (unsigned int)ATTRIBUTE_HIGH_QUALITY_MASK;
+           }
+           /**
+             *
+             * @return
+             */
+            static unsigned int stride(void) {
+                return sizeof (self_type);
+            }
+            /**
+             *
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static self_type interpolate(const self_type& v1,
+                                         const self_type& v2,
+                                         float factor = 0.5f) {
+                self_type result;
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.normal = math::mix(v1.normal, v2.normal, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+
+                result.tangent = math::mix(v1.tangent, v2.tangent, factor);
+                result.bitangent = math::mix(v1.bitangent, v2.bitangent, factor);
+                return result;
+            }
+            /**
+             *
+             * @param result
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static void interpolate(self_type& result,
+                                    const self_type& v1,
+                                    const self_type& v2,
+                                    float factor = 0.5f) {
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.normal = math::mix(v1.normal, v2.normal, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+                
+                result.tangent = math::mix(v1.tangent, v2.tangent, factor);
+                result.bitangent = math::mix(v1.bitangent, v2.bitangent, factor);
+            }
+        }; // struct Vertex5HQv
+
         /**
          * Vertex4v - pos, norm, uv, color
          */
@@ -369,8 +452,9 @@ namespace fg {
                 return sizeof (self_type);
             }
         };
-    };
-};
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_VERTEX_BLOCK
 #endif	/* FG_INC_GFX_VERTEX */

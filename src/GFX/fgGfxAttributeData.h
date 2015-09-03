@@ -81,13 +81,48 @@ namespace fg {
          */
         const char* getTextFromAttributeType(AttributeType value);
 
+        /**
+         *
+         * @param value
+         * @return
+         */
         AttributeLocation getAttributeLocationFromType(AttributeType value);
+        /**
+         *
+         * @param location
+         * @param value
+         */
         void getAttributeLocationFromType(unsigned int& location, AttributeType value);
+        /**
+         *
+         * @param location
+         * @return
+         */
         AttributeType getAttributeTypeFromLocation(AttributeLocation location);
+        /**
+         *
+         * @param location
+         * @return
+         */
         AttributeType getAttributeTypeFromLocation(unsigned int location);
 
+        /**
+         *
+         * @param value
+         * @return
+         */
         fgGFXenum getDataTypeFromAttributeType(AttributeType value);
+        /**
+         *
+         * @param location
+         * @return
+         */
         fgGFXenum getDataTypeFromAttributeLocation(AttributeLocation location);
+        /**
+         *
+         * @param location
+         * @return
+         */
         fgGFXenum getDataTypeFromAttributeLocation(unsigned int location);
         //----------------------------------------------------------------------
 

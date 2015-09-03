@@ -42,7 +42,23 @@ namespace fg {
              */
             void applyAttributeData(SAttributeData *attrData,
                                     SDrawingInfo& drawingInfo,
-                                    const unsigned int attribMask);
+                                    const unsigned int attribMask,
+                                    unsigned int count = 0);
+
+            /**
+             * 
+             * @param attrData
+             * @param drawingInfo
+             * @param attribMask
+             */
+            inline void applyAttributeData(CVector<SAttributeData>& attrData,
+                                           SDrawingInfo& drawingInfo,
+                                           const unsigned int attribMask) {
+                unsigned int count = attrData.size();
+                if(!count)
+                    return;
+                applyAttributeData(&attrData.front(), drawingInfo, attribMask, count);
+            }
 
             /**
              * 

@@ -175,34 +175,23 @@ namespace fg {
              * 
              * @param pos
              */
-            virtual void append(const Vector3f &pos) = 0;
+            virtual void append(const Vector3f& pos) = 0;
             /**
              * 
              * @param pos
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector2f &uv) = 0;
-            /**
-             * 
-             * @param pos
-             * @param normal
-             * @param uv
-             */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv) = 0;
+            virtual void append(const Vector3f& pos,
+                                const Vector2f& uv) = 0;
             /**
              * 
              * @param pos
              * @param normal
              * @param uv
-             * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color3f &color) = 0;
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv) = 0;
             /**
              * 
              * @param pos
@@ -210,10 +199,35 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color4f &color) = 0;
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color3f& color) = 0;
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param color
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color4f& color) = 0;
+
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) = 0;
 
             /**
              * 
@@ -268,6 +282,16 @@ namespace fg {
              */
             virtual fgGFXuint getNumIndices(void) const = 0;
             /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumTangents(void) const = 0;
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumBitangents(void) const = 0;
+            /**
              *
              */
             virtual void appendIndice(fgGFXushort indice) = 0;
@@ -283,6 +307,12 @@ namespace fg {
             virtual void resize(const unsigned int newSize) = 0;
 
             /**
+             *
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff) = 0;
+
+            /**
              * 
              * @return 
              */
@@ -295,11 +325,19 @@ namespace fg {
             virtual fgGFXuint attribMask(void) const = 0;
 
             /**
+             *
+             * @return
+             */
+            virtual fgGFXuint components(void) const = 0;
+
+            /**
              * 
              * @return 
              */
             virtual bool empty(void) const = 0;
-        };
+        }; // class CVertexData
+
+        //----------------------------------------------------------------------
 
         /**
          *
@@ -380,7 +418,7 @@ namespace fg {
              * 
              * @param pos
              */
-            virtual void append(const Vector3f &pos) {
+            virtual void append(const Vector3f& pos) {
                 Vertex2v vertex;
                 vertex.position = pos;
                 vertex.uv = Vector2f(1.0f, 1.0f);
@@ -391,8 +429,8 @@ namespace fg {
              * @param pos
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector2f &uv) {
+            virtual void append(const Vector3f& pos,
+                                const Vector2f& uv) {
                 Vertex2v vertex;
                 vertex.position = pos;
                 vertex.uv = uv;
@@ -404,9 +442,9 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv) {
                 append(pos, uv);
             }
             /**
@@ -416,10 +454,10 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color3f &color) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color3f& color) {
                 append(pos, uv);
             }
             /**
@@ -429,10 +467,25 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color4f &color) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color4f& color) {
+                append(pos, uv);
+            }
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) {
                 append(pos, uv);
             }
             /**
@@ -509,6 +562,20 @@ namespace fg {
             }
             /**
              *
+             * @return
+             */
+            virtual fgGFXuint getNumTangents(void) const {
+                return 0;
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumBitangents(void) const {
+                return 0;
+            }
+            /**
+             *
              */
             virtual void appendIndice(fgGFXushort indice) { }
             /**
@@ -526,6 +593,16 @@ namespace fg {
                 base_vec_type::resize(newSize);
             }
             /**
+             *
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff) {
+                const unsigned int n = this->size();
+                for(unsigned int i = 0; i < n; i++) {
+                    base_vec_type::at(i).position += diff;
+                }
+            }
+            /**
              * 
              * @return
              */
@@ -541,12 +618,21 @@ namespace fg {
             }
             /**
              * 
+             * @return
+             */
+            virtual fgGFXuint components(void) const {
+                return (fgGFXuint)vertex_type::size();
+            }
+            /**
+             * 
              * @return 
              */
             virtual bool empty(void) const {
                 return (bool) base_vec_type::empty();
             }
-        };
+        }; // class CVertexData3v
+
+        //----------------------------------------------------------------------
 
         /**
          *
@@ -627,8 +713,8 @@ namespace fg {
              * 
              * @param pos
              */
-            virtual void append(const Vector3f &pos) {
-                Vertex3v vertex;
+            virtual void append(const Vector3f& pos) {
+                vertex_type vertex;
                 vertex.position = pos;
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
                 vertex.uv = Vector2f(1.0f, 1.0f);
@@ -639,9 +725,9 @@ namespace fg {
              * @param pos
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector2f &uv) {
-                Vertex3v vertex;
+            virtual void append(const Vector3f& pos,
+                                const Vector2f& uv) {
+                vertex_type vertex;
                 vertex.position = pos;
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
                 vertex.uv = uv;
@@ -653,10 +739,10 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv) {
-                Vertex3v vertex;
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv) {
+                vertex_type vertex;
                 vertex.position = pos;
                 vertex.normal = normal;
                 vertex.uv = uv;
@@ -669,10 +755,10 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color3f &color) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color3f& color) {
                 append(pos, normal, uv);
             }
             /**
@@ -682,10 +768,25 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color4f &color) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color4f& color) {
+                append(pos, normal, uv);
+            }
+            /**
+             * 
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) {
                 append(pos, normal, uv);
             }
             /**
@@ -762,6 +863,20 @@ namespace fg {
             }
             /**
              *
+             * @return
+             */
+            virtual fgGFXuint getNumTangents(void) const {
+                return 0;
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumBitangents(void) const {
+                return 0;
+            }
+            /**
+             *
              */
             virtual void appendIndice(fgGFXushort indice) { }
             /**
@@ -779,6 +894,16 @@ namespace fg {
                 base_vec_type::resize(newSize);
             }
             /**
+             *
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff) {
+                const unsigned int n = this->size();
+                for(unsigned int i = 0; i < n; i++) {
+                    base_vec_type::at(i).position += diff;
+                }
+            }
+            /**
              * 
              * @return 
              */
@@ -793,13 +918,22 @@ namespace fg {
                 return (fgGFXuint)vertex_type::attribMask();
             }
             /**
+             *
+             * @return
+             */
+            virtual fgGFXuint components(void) const {
+                return (fgGFXuint)vertex_type::size();
+            }
+            /**
              * 
              * @return 
              */
             virtual bool empty(void) const {
                 return (bool) base_vec_type::empty();
             }
-        };
+        }; // class CVertexData3v
+
+        //----------------------------------------------------------------------
 
         /**
          *
@@ -880,7 +1014,7 @@ namespace fg {
              * 
              * @param pos
              */
-            virtual void append(const Vector3f &pos) {
+            virtual void append(const Vector3f& pos) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.uv = Vector2f(1.0f, 1.0f);
@@ -893,8 +1027,8 @@ namespace fg {
              * @param pos
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector2f &uv) {
+            virtual void append(const Vector3f& pos,
+                                const Vector2f& uv) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.uv = uv;
@@ -908,9 +1042,9 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.normal = normal;
@@ -925,10 +1059,10 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color3f &color) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color3f& color) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.normal = normal;
@@ -943,16 +1077,31 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(const Vector3f &pos,
-                                const Vector3f &normal,
-                                const Vector2f &uv,
-                                const Color4f &color) {
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color4f& color) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.normal = normal;
                 vertex.uv = uv;
                 vertex.color = color;
                 base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) {
+                append(pos, normal, uv);
             }
             /**
              * 
@@ -1028,6 +1177,20 @@ namespace fg {
             }
             /**
              *
+             * @return
+             */
+            virtual fgGFXuint getNumTangents(void) const {
+                return 0;
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumBitangents(void) const {
+                return 0;
+            }
+            /**
+             *
              */
             virtual void appendIndice(fgGFXushort indice) {
                 // empty
@@ -1047,6 +1210,16 @@ namespace fg {
                 base_vec_type::resize(newSize);
             }
             /**
+             *
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff) {
+                const unsigned int n = this->size();
+                for(unsigned int i = 0; i < n; i++) {
+                    base_vec_type::at(i).position += diff;
+                }
+            }
+            /**
              * 
              * @return 
              */
@@ -1061,15 +1234,340 @@ namespace fg {
                 return (fgGFXuint)vertex_type::attribMask();
             }
             /**
+             *
+             * @return
+             */
+            virtual fgGFXuint components(void) const {
+                return (fgGFXuint)vertex_type::size();
+            }
+            /**
              * 
              * @return 
              */
             virtual bool empty(void) const {
                 return (bool) base_vec_type::empty();
             }
-        };
-    };
-};
+        }; // class CVertexData4v
+
+        //----------------------------------------------------------------------
+
+        /**
+         *
+         */
+        class CVertexData5HQv : public CVertexData, public CVector<Vertex5HQv> {
+        public:
+            typedef CVertexData5HQv type;
+            typedef CVertexData5HQv self_type;
+            typedef CVertexData base_type;
+            typedef Vertex5HQv vertex_type;
+            typedef CVector<Vertex5HQv> base_vec_type;
+
+        public:
+            /**
+             *
+             */
+            CVertexData5HQv() : CVertexData(), CVector() {
+                reserve(4);
+            }
+            /**
+             *
+             */
+            virtual ~CVertexData5HQv() {
+                destroyBuffers();
+                base_vec_type::clear_optimised();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgBool supportsVBO(void) const {
+                return FG_TRUE;
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgBool isSoA(void) const {
+                return FG_FALSE;
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgBool isAoS(void) const {
+                return FG_TRUE;
+            }
+
+            /**
+             *
+             * @param pDataArray
+             * @return
+             */
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const;
+            /**
+             *
+             * @param pDataArray
+             * @return
+             */
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const;
+
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXboolean genBuffers(void);
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXboolean deleteBuffers(void);
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXboolean destroyBuffers(void);
+            /**
+             *
+             * @param pos
+             */
+            virtual void append(const Vector3f& pos) {
+                vertex_type vertex;
+                vertex.position = pos;
+                vertex.uv = Vector2f(1.0f, 1.0f);
+                vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
+                base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             * @param pos
+             * @param uv
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector2f& uv) {
+                vertex_type vertex;
+                vertex.position = pos;
+                vertex.uv = uv;
+                vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
+                base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             * @param pos
+             * @param normal
+             * @param uv
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv) {
+                vertex_type vertex;
+                vertex.position = pos;
+                vertex.normal = normal;
+                vertex.uv = uv;
+                base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param color
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color3f& color) {
+                vertex_type vertex;
+                vertex.position = pos;
+                vertex.normal = normal;
+                vertex.uv = uv;
+                base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param color
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Color4f& color) {
+                vertex_type vertex;
+                vertex.position = pos;
+                vertex.normal = normal;
+                vertex.uv = uv;
+                base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             * @param pos
+             * @param normal
+             * @param uv
+             * @param tangent
+             * @param bitangent
+             */
+            virtual void append(const Vector3f& pos,
+                                const Vector3f& normal,
+                                const Vector2f& uv,
+                                const Vector3f& tangent,
+                                const Vector3f& bitangent) {
+                vertex_type vertex;
+                vertex.position = pos;
+                vertex.normal = normal;
+                vertex.uv = uv;
+                vertex.tangent = tangent;
+                vertex.bitangent = bitangent;
+                base_vec_type::push_back(vertex);
+            }
+            /**
+             *
+             */
+            virtual void pop_back(void) {
+                base_vec_type::pop_back();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXvoid *back(void) const {
+                return (fgGFXvoid *)(&base_vec_type::back());
+            }
+            /**
+             *
+             */
+            virtual void clear(void) {
+                base_vec_type::clear();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXvoid *front(void) const {
+    #if defined(FG_USING_MARMALADE)
+                return (fgGFXvoid *)(base_vec_type::begin());
+    #else
+                return (fgGFXvoid *)(&base_vec_type::front());
+    #endif /* FG_USING_MARMALADE */
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint size(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumVertices(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumNormals(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumUVs(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumColors(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumIndices(void) const {
+                return 0;
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumTangents(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint getNumBitangents(void) const {
+                return base_vec_type::size();
+            }
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) {
+                // empty
+            }
+            /**
+             *
+             * @param newSize
+             */
+            virtual void reserve(const unsigned int newSize) {
+                base_vec_type::reserve(newSize);
+            }
+            /**
+             *
+             * @param newSize
+             */
+            virtual void resize(const unsigned int newSize) {
+                base_vec_type::resize(newSize);
+            }
+            /**
+             *
+             * @param diff
+             */
+            virtual void translate(const Vector3f& diff) {
+                const unsigned int n = this->size();
+                for(unsigned int i = 0; i < n; i++) {
+                    base_vec_type::at(i).position += diff;
+                }
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXsizei stride(void) const {
+                return sizeof (vertex_type);
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint attribMask(void) const {
+                return (fgGFXuint)vertex_type::attribMask();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXuint components(void) const {
+                return (fgGFXuint)vertex_type::size();
+            }
+            /**
+             *
+             * @return
+             */
+            virtual bool empty(void) const {
+                return (bool) base_vec_type::empty();
+            }
+        }; // class CVertexData5HQv
+
+    } // namespace gfxx
+} // namespace fg
 
     #undef FG_INC_GFX_VERTEX_DATA_BLOCK
 #endif	/* FG_INC_GFX_VERTEX_DATA */
