@@ -16,7 +16,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CDrawingBatch::CDrawingBatch(const unsigned int reservedSize,
-                                  const fgGfxDrawCallType drawCallType,
+                                  const DrawCallType drawCallType,
                                   const fgGFXuint attribMask) :
 m_numDrawCalls(0),
 m_reservedSize(0),
@@ -86,7 +86,7 @@ void gfx::CDrawingBatch::setDefaultShader(const std::string& nameTag) {
 //------------------------------------------------------------------------------
 
 gfx::CDrawCall* gfx::CDrawingBatch::requestDrawCall(int& index,
-                                                    const fgGfxDrawCallType type,
+                                                    const DrawCallType type,
                                                     const fgGFXuint attribMask,
                                                     gfx::CShaderProgram* pProgram) {
     CDrawCall *drawCall = NULL;

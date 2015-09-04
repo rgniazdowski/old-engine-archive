@@ -109,7 +109,7 @@ int gui::CFontDrawer::print(float x0, float y0, const char *string, float charSi
 
 void gui::CFontDrawer::setColor(const Color4f &color) {
     m_color = color;
-    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = base_type::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -118,7 +118,7 @@ void gui::CFontDrawer::setColor(const Color4f &color) {
 
 void gui::CFontDrawer::setColor(const Color3f &color) {
     m_color = Color4f(color.r, color.g, color.g, 1.0f);
-    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = base_type::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -127,7 +127,7 @@ void gui::CFontDrawer::setColor(const Color3f &color) {
 
 void fg::gui::CFontDrawer::setColor(void) {
     m_color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
-    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = base_type::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -136,9 +136,9 @@ void fg::gui::CFontDrawer::setColor(void) {
 
 gfx::CDrawCall *gui::CFontDrawer::setupDrawCall(gfx::CTexture *texture) {
     int index;
-    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::requestDrawCall(index,
-                                                                   FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
-                                                                   FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
+    gfx::CDrawCall *drawCall = base_type::requestDrawCall(index,
+                                                          gfx::DRAW_CALL_INTERNAL_ARRAY,
+                                                          FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
     drawCall->setTexture(texture->getRefGfxID());
     drawCall->setDrawAppendMode(gfx::DRAW_APPEND_ABSOLUTE);
@@ -192,7 +192,7 @@ float gui::CFontDrawer::placeChar(float xRel0,
     relPos.x += charInfo.p0f.x*scale;
     relPos.y += charInfo.p0f.y*scale;
     Vector2f rectSize = (charInfo.p1f - charInfo.p0f) * scale;
-    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = base_type::getLastDrawCall();
     if(!drawCall) {
         drawCall = setupDrawCall(m_currentFont);
     }
@@ -260,8 +260,7 @@ float gui::CFontDrawer::width(CFontResource *font, const char *string, float cha
 
 float gui::CFontDrawer::height(CFontResource *font,
                                float charSize,
-                               const char *fmt,
-                               ...) {
+                               const char *fmt, ...) {
     if(!font)
         return 0.0f;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];

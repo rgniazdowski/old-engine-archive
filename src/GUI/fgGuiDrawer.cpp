@@ -100,7 +100,7 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     int index = 0;
     gfx::CTexture *pTexture = NULL;
     SBackground &background = style.getBackground();
-    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_INTERNAL_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     if(!background.texture.empty()) {
@@ -167,7 +167,7 @@ void gui::CDrawer::appendBorder2D(const Vec2f &pos,
     }
     int index;
     float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
-    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_INTERNAL_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
@@ -211,7 +211,7 @@ void gui::CDrawer::appendBorder2D(const gfx::AABB2Df& box, CStyleContent& style)
     }
     int index;
     float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
-    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_INTERNAL_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
@@ -263,7 +263,7 @@ void gui::CDrawer::appendBorder2D(const gfx::BB2Df& box, CStyleContent& style) {
     }
     float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
     int index;
-    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_INTERNAL_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
@@ -310,7 +310,7 @@ void gui::CDrawer::appendCircleBorder2D(const Vec2f &pos,
         return;
     SBorderGroup &border = style.getBorder();
     int index;
-    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_INTERNAL_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
     drawCall->setPrimitiveMode(gfx::PrimitiveMode::LINE_STRIP);

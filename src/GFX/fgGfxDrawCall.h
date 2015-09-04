@@ -16,12 +16,6 @@
         #include "fgGfxPrimitives.h"
     #endif
 
-    #define FG_GFX_DRAW_CALL_INVALID        0
-    #define FG_GFX_DRAW_CALL_VERTEX_BUFFER  1
-    #define FG_GFX_DRAW_CALL_INTERNAL_ARRAY   2
-    #define FG_GFX_DRAW_CALL_EXTERNAL_ARRAY 3
-    #define FG_GFX_DRAW_CALL_MESH           4
-
     #ifndef FG_INC_GFX_SHADER_DEFS
         #include "GFX/Shaders/fgGFXShaderDefs.h"
     #endif
@@ -41,19 +35,20 @@
         #include "fgGfxDrawable.h"
     #endif
 
-// Draw call type
-typedef unsigned int fgGfxDrawCallType;
-
     #include "Util/fgFastCmp.h"
+    #include "Textures/fgTextureTypes.h"
 
 namespace fg {
     namespace gfx {
-
-        const unsigned int Z_INDEX_DEFAULT = 127; // center / zero
-        const unsigned int Z_INDEX_MIN = 0; // it's like -127
-        const unsigned int Z_INDEX_MAX = 255; // +127
-
+        /// Default Z index - center/zero
+        const unsigned int Z_INDEX_DEFAULT = 127;
+        /// Minimal Z index
+        const unsigned int Z_INDEX_MIN = 0;
+        /// Maximal Z index
+        const unsigned int Z_INDEX_MAX = 255;
+        /// Default Z index for particles
         const unsigned int Z_INDEX_PARTICLES = 100;
+        /// Default Z index for 3D objects
         const unsigned int Z_INDEX_OBJECTS_3D = 120;
 
         /**
@@ -64,7 +59,16 @@ namespace fg {
             DRAW_APPEND_ABSOLUTE,
             ///
             DRAW_APPEND_RELATIVE
-        };
+        }; // enum DrawAppendMode
+
+
+        enum DrawCallType {
+            DRAW_CALL_INVALID = 0,
+            DRAW_CALL_VERTEX_BUFFER = 1,
+            DRAW_CALL_INTERNAL_ARRAY = 2,
+            DRAW_CALL_EXTERNAL_ARRAY = 3,
+            DRAW_CALL_MESH = 4
+        }; // enum DrawCallType
 
         class CDrawingBatch;
         struct SMaterial;
@@ -77,96 +81,20 @@ namespace fg {
         class CDrawCall : public CDrawable {
             friend class ::fg::gfx::CDrawingBatch;
 
-        public:
-            ///
-            typedef CDrawable base_type;
-            ///
-            typedef CDrawCall self_type;
-            ///
+        public:            
+            typedef CDrawable base_type;            
+            typedef CDrawCall self_type;            
             typedef CDrawCall type;
 
-        public:
-            ///
+        public:            
             static const unsigned char CMP_SLOT_ATTRIB_MASK = 0;
             static const unsigned char CMP_SLOT_TEXTURE = 1;
             static const unsigned char CMP_SLOT_SHADER_PROGRAM = 2;
             static const unsigned char CMP_SLOT_Z_INDEX = 3;
 
-        private:
-            /// Attribute binding data
-            SAttributeData m_attrData[NUM_ATTRIBUTE_TYPES];
-            /// Information on indices used in this draw call
-            /// Pointers within must be always valid
-            SDrawingInfo m_drawingInfo;
-            /// Special vector data
-            CVertexData *m_vecDataBase;
-            ///
-            CVertexData *m_vecData2v;
-            ///
-            CVertexData *m_vecData3v;
-            ///
-            CVertexData *m_vecData4v;
-            /// Pointer to the shader program used in this draw call
-            /// It can be set to NULL, then the draw call will use
-            /// last active shader program. The pointer to the shader
-            /// program is required for updating uniform variables
-            CShaderProgram *m_program;
-            /// Pointer to the used texture - this will require also pointer
-            /// to the shader program (so the proper uniform sampler variable
-            /// can be updated). However this is not always required.
-            /// If there is no multitexturing then there's always one
-            /// texture active (TEXTURE0).
-            STextureID m_textureID;
-            /// Pointer to external MVP matrix to use
-            /// this will need to be updated for every drawcall made
-            /// because the model matrix would change
-            /// view and projection matrix parameters stay the same (mostly)
-            /// through all drawing batch
-            CMVPMatrix *m_MVP;
-            /// Pointer to external material struct - can be NULL
-            SMaterial *m_material;
-            /// Used vertex data will depend on the attribute mask used
-            /// Appending specific data however may alter this and make 
-            /// other buffers invalid
-            fgGFXuint m_attribMask;
-            /// What kind of draw call is this?
-            fgGfxDrawCallType m_drawCallType;
-            /// Append mode
-            DrawAppendMode m_drawAppendMode;
-            /// Primitive mode used for drawing the vertex buffer
-            /// It defaults to FG_GFX_TRIANGLES, however the most
-            /// optimal is the Triangle Strip - this requires however
-            /// modification of the vertex data after loading
-            PrimitiveMode m_primMode;
-            /// Current color used
-            Color4f m_color;
-            /// Holds the value for the relative move
-            Vector3f m_relMove;
-            /// Scissor box for current draw call
-            Vector4i m_scissorBox;
-            ///
-            util::CFastCmp m_fastCmp;
-            /// Holds value for special Z index used for more direct sorting
-            int m_zIndex;
-            /// Is this draw call managed by the drawing batch? 
-            /// Or any other mechanism? If true then when on drawing batch flush
-            /// this draw call will be destroyed. If false no destructor will be called.
-            /// Use with caution, if set to false wrongfully it may cause overallocation
-            /// and memory leaks.
-            fgBool m_isManaged;
-
-        private:
-            /**
-             * 
-             * @param attribMask
-             */
-            void setupVertexData(fgGFXuint attribMask);
-            /**
-             * 
-             */
-    #if 0
-            fgBool applyAttributeData(void);
-    #endif
+            typedef CVector<STextureID> TextureSlotsVec;
+            typedef TextureSlotsVec::iterator TextureSlotsVecItor;
+            typedef TextureSlotsVec::const_iterator TextureSlotsVecConstItor;
 
         protected:
             /**
@@ -185,7 +113,7 @@ namespace fg {
              * @param type
              * @param attribMask
              */
-            CDrawCall(const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_INTERNAL_ARRAY,
+            CDrawCall(const DrawCallType type = DRAW_CALL_INTERNAL_ARRAY,
                       const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
             /**
              * Default destructor for the draw call object
@@ -222,7 +150,7 @@ namespace fg {
              */
             void setupMaterial(const SMaterial* pMaterial);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -264,7 +192,7 @@ namespace fg {
              * Returns the draw call type identifier
              * @return 
              */
-            fgGfxDrawCallType getDrawCallType(void) const;
+            DrawCallType getDrawCallType(void) const;
             /**
              * Returns the append mode for the current draw call
              * @return 
@@ -280,6 +208,8 @@ namespace fg {
              * @return 
              */
             CVertexData *getVertexData(void) const;
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -327,7 +257,7 @@ namespace fg {
              * Sets the draw call type
              * @param type
              */
-            void setDrawCallType(const fgGfxDrawCallType type);
+            void setDrawCallType(const DrawCallType type);
             /**
              * Sets the append mode
              * @param mode
@@ -346,7 +276,7 @@ namespace fg {
              */
             void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * Set active color for the next data
@@ -363,7 +293,7 @@ namespace fg {
              */
             virtual void resetColor(void);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * Sets the pointer to given MVP matrix
@@ -386,25 +316,26 @@ namespace fg {
              */
             CShaderProgram* getShaderProgram(void) const;
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * Sets the texture pointer
              * @param textureID
              */
-            void setTexture(const STextureID& textureID);
+            void setTexture(const STextureID& textureID,
+                            const unsigned int slot = (unsigned int)texture::UNIT_DEFAULT);
             /**
              * Returns the texture ID reference
              * @return 
              */
-            STextureID const& getTexture(void) const;
+            STextureID const& getTexture(const unsigned int slot = (unsigned int)texture::UNIT_DEFAULT) const;
             /**
              * Returns the texture ID reference
              * @return 
              */
-            STextureID& getTexture(void);
+            STextureID& getTexture(const unsigned int slot = (unsigned int)texture::UNIT_DEFAULT);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * Clear the buffers
@@ -434,7 +365,7 @@ namespace fg {
                               const Vector2f &uv1, const Vector2f &uv2,
                               const fgBool rewind = FG_FALSE);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -445,241 +376,150 @@ namespace fg {
              * @param relPos
              */
             virtual inline void draw(const Vector2f & relPos) {
-                CDrawCall::draw(math::translate(Matrix4f(), Vector3f(relPos.x, relPos.y, 0.0f)));
+                self_type::draw(math::translate(Matrix4f(), Vector3f(relPos.x, relPos.y, 0.0f)));
             }
             /**
              * Draw with relative 3D position
              * @param relPos
              */
             virtual inline void draw(const Vector3f & relPos) {
-                CDrawCall::draw(math::translate(Matrix4f(), relPos));
+                self_type::draw(math::translate(Matrix4f(), relPos));
             }
             /**
              * Draw with given model matrix
              * @param modelMat
              */
             virtual inline void draw(const Matrix4f & modelMat) {
-                if(m_MVP && m_program) {
-                    m_MVP->calculate(modelMat);
+                if(m_pMVP && m_pProgram) {
+                    m_pMVP->calculate(modelMat);
                 }
-                CDrawCall::draw();
+                self_type::draw();
+            }
+            //------------------------------------------------------------------
+            /**
+             *
+             * @param drawCall
+             * @return
+             */
+            inline int operator ==(const CDrawCall& drawCall) const {
+                return util::CFastCmp::equal32(this->m_fastCmp, drawCall.m_fastCmp);
+            }
+            /**
+             * 
+             * @param drawCall
+             * @return
+             */
+            inline int operator !=(const CDrawCall& drawCall) const {
+                return !util::CFastCmp::equal32(this->m_fastCmp, drawCall.m_fastCmp);
+            }
+            /**
+             *
+             * @param drawCall
+             * @return
+             */
+            inline bool operator <(const CDrawCall& drawCall) const {
+                return util::CFastCmp::less32(this->m_fastCmp, drawCall.m_fastCmp);
+            }
+            /**
+             *
+             * @param drawCall
+             * @return
+             */
+            inline bool operator >(const CDrawCall& drawCall) const {
+                return util::CFastCmp::greater32(this->m_fastCmp, drawCall.m_fastCmp);
+            }
+            /**
+             *
+             * @param drawCall
+             * @return
+             */
+            inline bool operator <=(const CDrawCall& drawCall) const {
+                return util::CFastCmp::less_eq32(this->m_fastCmp, drawCall.m_fastCmp);
+            }
+            /**
+             *
+             * @param drawCall
+             * @return
+             */
+            inline bool operator >=(const CDrawCall& drawCall) const {
+                return util::CFastCmp::greater_eq32(this->m_fastCmp, drawCall.m_fastCmp);
             }
 
-            ////////////////////////////////////////////////////////////////////
-            // COMPARISON OPERATORS
+        private:
+            /**
+             *
+             * @param attribMask
+             */
+            void setupVertexData(fgGFXuint attribMask);
 
-            //
-            inline int operator ==(const CDrawCall & b) const {
-                if(b.m_program == this->m_program) {
-                    if(b.m_textureID == this->m_textureID) {
-                        if(b.m_attribMask == this->m_attribMask) {
-                            return 1;
-                        }
-                    }
-                }
-                return 0;
-            }
+        private:
+            /// Attribute binding data #FIXME
+            SAttributeData m_attrData[NUM_ATTRIBUTE_TYPES];
+            /// Information on indices used in this draw call
+            /// Pointers within must be always valid
+            SDrawingInfo m_drawingInfo;
+            /// Special vector data
+            CVertexData *m_vecDataBase;
+            ///
+            CVertexData *m_vecData2v;
+            ///
+            CVertexData *m_vecData3v;
+            ///
+            CVertexData *m_vecData4v;
+            /// Pointer to the shader program used in this draw call
+            /// It can be set to NULL, then the draw call will use
+            /// last active shader program. The pointer to the shader
+            /// program is required for updating uniform variables
+            CShaderProgram *m_pProgram;
+            /// Pointer to the used texture - this will require also pointer
+            /// to the shader program (so the proper uniform sampler variable
+            /// can be updated). However this is not always required.
+            /// If there is no multitexturing then there's always one
+            /// texture active (TEXTURE0).
+            TextureSlotsVec m_textureIDs;
+            ///
+            CVector<unsigned char> m_textureSlots;
+            /// Pointer to external MVP matrix to use
+            /// this will need to be updated for every drawcall made
+            /// because the model matrix would change
+            /// view and projection matrix parameters stay the same (mostly)
+            /// through all drawing batch
+            CMVPMatrix *m_pMVP;
+            /// Pointer to external material struct - can be NULL
+            SMaterial *m_pMaterial;
+            /// Used vertex data will depend on the attribute mask used
+            /// Appending specific data however may alter this and make
+            /// other buffers invalid
+            fgGFXuint m_attribMask;
+            /// What kind of draw call is this?
+            DrawCallType m_drawCallType;
+            /// Append mode
+            DrawAppendMode m_drawAppendMode;
+            /// Primitive mode used for drawing the vertex buffer
+            /// It defaults to FG_GFX_TRIANGLES, however the most
+            /// optimal is the Triangle Strip - this requires however
+            /// modification of the vertex data after loading
+            PrimitiveMode m_primMode;
+            /// Current color used
+            Color4f m_color;
+            /// Holds the value for the relative move
+            Vector3f m_relMove;
+            /// Scissor box for current draw call
+            Vector4i m_scissorBox;
+            ///
+            util::CFastCmp m_fastCmp;
+            /// Holds value for special Z index used for more direct sorting
+            int m_zIndex;
+            /// Is this draw call managed by the drawing batch?
+            /// Or any other mechanism? If true then when on drawing batch flush
+            /// this draw call will be destroyed. If false no destructor will be called.
+            /// Use with caution, if set to false wrongfully it may cause overallocation
+            /// and memory leaks.
+            fgBool m_isManaged;
+        }; // class CDrawCall
 
-            //
-            inline int operator !=(const CDrawCall & b) const {
-                if(b.m_program != this->m_program)
-                    return 1;
-
-                if(b.m_textureID != this->m_textureID)
-                    return 1;
-
-                if(b.m_attribMask != this->m_attribMask)
-                    return 1;
-
-                return 0;
-            }
-
-            //
-            inline bool operator <(const CDrawCall & a) const {
-                return fg::util::CFastCmp::less32(this->m_fastCmp, a.m_fastCmp);
-            }
-
-            //
-            inline bool operator >(const CDrawCall & a) const {
-                return fg::util::CFastCmp::greater32(this->m_fastCmp, a.m_fastCmp);
-            }
-
-            //
-            inline bool operator <=(const CDrawCall & a) const {
-                return fg::util::CFastCmp::less_eq32(this->m_fastCmp, a.m_fastCmp);
-            }
-
-            //
-            inline bool operator >=(const CDrawCall & a) const {
-                return fg::util::CFastCmp::greater_eq32(this->m_fastCmp, a.m_fastCmp);
-            }
-
-            //
-    #if 0
-            inline bool operator <(const CDrawCall & a) const {
-                if(this->m_program < a.m_program)
-                    return true;
-                else if(this->m_program > a.m_program)
-                    return false;
-                else {
-                    if(this->m_zIndex < a.m_zIndex)
-                        return true;
-                    else if(this->m_zIndex > a.m_zIndex)
-
-                        return false;
-                    else {
-                        if(this->m_textureID < a.m_textureID)
-                            return true;
-                        else if(this->m_textureID > a.m_textureID)
-                            return false;
-                        else {
-                            if(this->m_attribMask < a.m_attribMask)
-                                return true;
-                            else
-                                return false;
-                        }
-                    }
-                }
-                return false;
-            }
-
-            //
-            inline bool operator >(const CDrawCall & a) const {
-                if(this->m_program < a.m_program)
-                    return false;
-                else if(this->m_program > a.m_program)
-                    return true;
-                else {
-                    if(this->m_zIndex < a.m_zIndex)
-                        return false;
-                    else if(this->m_zIndex > a.m_zIndex)
-                        return true;
-                    else {
-                        if(this->m_textureID < a.m_textureID)
-                            return false;
-                        else if(this->m_textureID > a.m_textureID)
-                            return true;
-                        else {
-                            if(this->m_attribMask < a.m_attribMask)
-                                return false;
-                            else
-                                return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-            //
-            inline bool operator <=(const CDrawCall & a) const {
-                if(this->m_program < a.m_program)
-                    return true;
-                else if(this->m_program > a.m_program)
-                    return false;
-                else {
-                    if(this->m_zIndex < a.m_zIndex)
-                        return true;
-                    else if(this->m_zIndex > a.m_zIndex)
-                        return false;
-                    else {
-                        if(this->m_textureID < a.m_textureID)
-                            return true;
-                        else if(this->m_textureID > a.m_textureID)
-                            return false;
-                        else {
-                            if(this->m_attribMask < a.m_attribMask)
-                                return true;
-                            else if(this->m_attribMask > a.m_attribMask)
-                                return false;
-                        }
-                    }
-                }
-                return true;
-            }
-
-            //
-            inline bool operator >=(const CDrawCall & a) const {
-                if(this->m_program < a.m_program)
-                    return false;
-                else if(this->m_program > a.m_program)
-                    return true;
-                else {
-                    if(this->m_zIndex < a.m_zIndex)
-                        return false;
-                    else if(this->m_zIndex > a.m_zIndex)
-                        return true;
-                    else {
-                        if(this->m_textureID < a.m_textureID)
-                            return false;
-                        else if(this->m_textureID > a.m_textureID)
-                            return true;
-                        else {
-                            if(this->m_attribMask < a.m_attribMask)
-                                return false;
-                            else if(this->m_attribMask > a.m_attribMask)
-                                return true;
-                        }
-                    }
-                }
-                return true;
-            }
-    #endif
-        };
-    };
-};
-    #if 0
-        #ifndef FG_PTR_COMPARE_DRAWABLE_DEFINED_
-            #define FG_PTR_COMPARE_DRAWABLE_DEFINED_
-
-template <>
-class fgPtrLess<CDrawable *> {
-public:
-    inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
-            return *(static_cast<CDrawCall *>(left)) < *(static_cast<CDrawCall *>(right));
-        }
-        //return ((*left) < (*right));
-        return false;
-    }
-};
-
-template <>
-class fgPtrGreater<CDrawable *> {
-public:
-    inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
-            return !(*(static_cast<CDrawCall *>(left)) < *(static_cast<CDrawCall *>(right)));
-        }
-        //return !((*left) < (*right));
-        return false;
-    }
-};
-
-template <>
-class fgPtrLessEq<CDrawable *> {
-public:
-    inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
-            return *(static_cast<CDrawCall *>(left)) <= *(static_cast<CDrawCall *>(right));
-        }
-        //return ((*left) <= (*right));
-        return false;
-    }
-};
-
-template <>
-class fgPtrGreaterEq<CDrawable *> {
-public:
-    inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
-            return !(*(static_cast<CDrawCall *>(left)) <= *(static_cast<CDrawCall *>(right)));
-        }
-        return false;
-        //return !((*left) <= (*right));
-    }
-};
-        #endif /* FG_PTR_COMPARE_DRAWABLE_DEFINED_ */
-    #endif
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_DRAW_CALL_BLOCK
 #endif /* FG_INC_GFX_DRAW_CALL */

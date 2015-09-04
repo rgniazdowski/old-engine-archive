@@ -17,16 +17,17 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-gfx::CDrawCall::CDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
+gfx::CDrawCall::CDrawCall(const DrawCallType type, const fgGFXuint attribMask) :
 base_type(DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
 m_vecData2v(NULL),
 m_vecData3v(NULL),
 m_vecData4v(NULL),
-m_program(NULL),
-m_textureID(),
-m_MVP(NULL),
-m_material(NULL),
+m_pProgram(NULL),
+m_textureIDs(),
+m_textureSlots(),
+m_pMVP(NULL),
+m_pMaterial(NULL),
 m_attribMask(attribMask),
 m_drawCallType(type),
 m_drawAppendMode(DRAW_APPEND_ABSOLUTE),
@@ -39,7 +40,7 @@ m_zIndex(Z_INDEX_DEFAULT),
 m_isManaged(0) {
     resetAttributeData();
 
-    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+    if(m_drawCallType == DRAW_CALL_INTERNAL_ARRAY) {
         m_vecData2v = new CVertexData2v();
         m_vecData3v = new CVertexData3v();
         m_vecData4v = new CVertexData4v();
@@ -51,12 +52,14 @@ m_isManaged(0) {
 
     setZIndex(m_zIndex);
     setupVertexData(m_attribMask);
+    m_textureIDs.reserve(6);
+    m_textureSlots.reserve(6);
 }
 //------------------------------------------------------------------------------
 
 gfx::CDrawCall::~CDrawCall() {
-    m_program = NULL;
-    m_MVP = NULL;
+    m_pProgram = NULL;
+    m_pMVP = NULL;
     if(m_vecData2v) {
         m_vecData2v->clear();
         delete m_vecData2v;
@@ -73,7 +76,7 @@ gfx::CDrawCall::~CDrawCall() {
         m_vecData4v = NULL;
     }
     m_vecDataBase = NULL;
-    m_material = NULL;
+    m_pMaterial = NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -146,7 +149,7 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     } else {
         m_vecDataBase = m_vecData2v; //new fgVertexData2v();
     }
-    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY && m_vecDataBase) {
+    if(m_drawCallType == DRAW_CALL_INTERNAL_ARRAY && m_vecDataBase) {
         m_vecDataBase->setupAttributes(m_attrData);
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
@@ -159,7 +162,7 @@ void gfx::CDrawCall::setupFromVertexData(const CVertexData* pVertexData) {
     if(!pVertexData)
         return;
     pVertexData->setupAttributes(m_attrData);
-    setDrawCallType(FG_GFX_DRAW_CALL_EXTERNAL_ARRAY);
+    setDrawCallType(DRAW_CALL_EXTERNAL_ARRAY);
     m_attribMask = pVertexData->attribMask();
     m_fastCmp.setPart(CMP_SLOT_ATTRIB_MASK, (util::CFastCmp::data_type_32)m_attribMask);
     refreshDrawingInfo(pVertexData);
@@ -189,7 +192,7 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     if(!pMesh)
         return;
     pMesh->setupAttributes(m_attrData);
-    setDrawCallType(FG_GFX_DRAW_CALL_MESH);
+    setDrawCallType(DRAW_CALL_MESH);
     m_primMode = pMesh->primMode;
     m_attribMask = pMesh->attribMask();
     m_fastCmp.setPart(CMP_SLOT_ATTRIB_MASK, (util::CFastCmp::data_type_32)m_attribMask);
@@ -215,19 +218,24 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
 
     unsigned int sortingValue = pMaterial->getSortingValue();
     // how to get texture?
-    m_material = (SMaterial *)pMaterial;
+    m_pMaterial = (SMaterial *)pMaterial;
     if(pMaterial->shaderProgram) {
         //m_program = pMaterial->shaderProgram;
         setShaderProgram(pMaterial->shaderProgram);
     }
+    m_textureIDs.clear();
+    m_textureSlots.clear();
     if(pMaterial->diffuseTex) {
-        setTexture(pMaterial->diffuseTex->getRefGfxID());
-    } else if(pMaterial->ambientTex) {
-        //setTexture(pMaterial->ambientTex->getRefGfxID());
-    } else if(pMaterial->specularTex) {
-
-    } else if(pMaterial->normalTex) {
-
+        setTexture(pMaterial->diffuseTex->getRefGfxID(), texture::UNIT_DIFFUSE);
+    }
+    if(pMaterial->ambientTex) {
+        setTexture(pMaterial->ambientTex->getRefGfxID(), texture::UNIT_AMBIENT);
+    }
+    if(pMaterial->specularTex) {
+        setTexture(pMaterial->specularTex->getRefGfxID(), texture::UNIT_SPECULAR);
+    }
+    if(pMaterial->normalTex) {
+        setTexture(pMaterial->normalTex->getRefGfxID(), texture::UNIT_NORMAL);
     }
     // This replaces value in sorting slot
     m_fastCmp.setPart(CMP_SLOT_TEXTURE, (fg::util::CFastCmp::data_type_32)sortingValue);
@@ -235,7 +243,7 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
 //------------------------------------------------------------------------------
 
 gfx::SMaterial* gfx::CDrawCall::getMaterial(void) const {
-    return m_material;
+    return m_pMaterial;
 }
 //------------------------------------------------------------------------------
 
@@ -264,7 +272,7 @@ fgGFXuint gfx::CDrawCall::getAttribMask(void) const {
 }
 //------------------------------------------------------------------------------
 
-fgGfxDrawCallType gfx::CDrawCall::getDrawCallType(void) const {
+gfx::DrawCallType gfx::CDrawCall::getDrawCallType(void) const {
     return m_drawCallType;
 }
 //------------------------------------------------------------------------------
@@ -342,8 +350,8 @@ void gfx::CDrawCall::downZIndex(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
-    if(m_drawCallType != type && type == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+void gfx::CDrawCall::setDrawCallType(const DrawCallType type) {
+    if(m_drawCallType != type && type == DRAW_CALL_INTERNAL_ARRAY) {
 
         if(!m_vecData2v) {
             m_vecData2v = new CVertexData2v();
@@ -361,7 +369,7 @@ void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
         m_vecData3v->clear();
         m_vecData4v->clear();
         setupVertexData(m_attribMask);
-    } else if(m_drawCallType != type && m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+    } else if(m_drawCallType != type && m_drawCallType == DRAW_CALL_INTERNAL_ARRAY) {
         if(m_vecData2v) {
             delete m_vecData2v;
             m_vecData2v = NULL;
@@ -404,8 +412,14 @@ void gfx::CDrawCall::setComponentActive(unsigned int component,
         m_attribMask |= FG_GFX_UVS_BIT;
     if(component & FG_GFX_COLOR_BIT)
         m_attribMask |= FG_GFX_COLOR_BIT;
-    //if(component & FG_GFX_TANGENT_BIT)
-    //	m_attribMask |= FG_GFX_TANGENT_BIT;
+    if(component & FG_GFX_TANGENT_BIT)
+        m_attribMask |= FG_GFX_TANGENT_BIT;
+    if(component & FG_GFX_BITANGENT_BIT)
+        m_attribMask |= FG_GFX_BITANGENT_BIT;
+    if(component & FG_GFX_BLEND_WEIGHTS_BIT)
+        m_attribMask |= FG_GFX_BLEND_WEIGHTS_BIT;
+    if(component & FG_GFX_BLEND_INDICES_BIT)
+        m_attribMask |= FG_GFX_BLEND_INDICES_BIT;
     setupVertexData(m_attribMask);
 }
 //------------------------------------------------------------------------------
@@ -426,19 +440,19 @@ void gfx::CDrawCall::resetColor(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::setMVP(CMVPMatrix *MVP) {
-    m_MVP = MVP;
+    m_pMVP = MVP;
 }
 //------------------------------------------------------------------------------
 
 gfx::CMVPMatrix *gfx::CDrawCall::getMVP(void) const {
-    return m_MVP;
+    return m_pMVP;
 }
 //------------------------------------------------------------------------------
 
 void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
-    m_program = pProgram;
-    if(m_program) {
-        m_fastCmp.setPart(CMP_SLOT_SHADER_PROGRAM, (fg::util::CFastCmp::data_type_32)m_program->getHandle().getIndex());
+    m_pProgram = pProgram;
+    if(m_pProgram) {
+        m_fastCmp.setPart(CMP_SLOT_SHADER_PROGRAM, (fg::util::CFastCmp::data_type_32)m_pProgram->getHandle().getIndex());
     } else {
         m_fastCmp.setPart(CMP_SLOT_SHADER_PROGRAM, (fg::util::CFastCmp::data_type_32)0);
     }
@@ -446,23 +460,39 @@ void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
 //------------------------------------------------------------------------------
 
 gfx::CShaderProgram* gfx::CDrawCall::getShaderProgram(void) const {
-    return m_program;
+    return m_pProgram;
 }
 //------------------------------------------------------------------------------
 
-void gfx::CDrawCall::setTexture(const STextureID& textureID) {
-    m_textureID = textureID;
-    m_fastCmp.setPart(CMP_SLOT_TEXTURE, (fg::util::CFastCmp::data_type_32)m_textureID.id);
+void gfx::CDrawCall::setTexture(const STextureID& textureID, const unsigned int slot) {
+    int sIdx = m_textureSlots.find(slot);
+    if(sIdx < 0) {
+        m_textureIDs.push_back(textureID);
+        m_textureSlots.resize(m_textureIDs.size());
+        m_textureSlots[m_textureIDs.size() - 1] = slot;
+    } else {
+        m_textureIDs[sIdx] = textureID;
+        m_textureSlots[sIdx] = slot;
+    }
+    m_fastCmp.setPart(CMP_SLOT_TEXTURE, (fg::util::CFastCmp::data_type_32)textureID.id);
 }
 //------------------------------------------------------------------------------
 
-gfx::STextureID const& gfx::CDrawCall::getTexture(void) const {
-    return m_textureID;
+gfx::STextureID const& gfx::CDrawCall::getTexture(const unsigned int slot) const {
+    int index = m_textureSlots.find(slot);
+    if(index < 0)
+        return m_textureIDs[0];
+    else
+        return m_textureIDs.at(index);
 }
 //------------------------------------------------------------------------------
 
-gfx::STextureID& gfx::CDrawCall::getTexture(void) {
-    return m_textureID;
+gfx::STextureID& gfx::CDrawCall::getTexture(const unsigned int slot) {
+    int index = m_textureSlots.find(slot);
+    if(index < 0)
+        return m_textureIDs[0];
+    else
+        return m_textureIDs.at(index);
 }
 //------------------------------------------------------------------------------
 
@@ -498,10 +528,11 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
 }
 //------------------------------------------------------------------------------
 #if 0
+
 fgBool gfx::CDrawCall::applyAttributeData(void) {
-    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
-       m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY ||
-       m_drawCallType == FG_GFX_DRAW_CALL_EXTERNAL_ARRAY) {
+    if(m_drawCallType == DRAW_CALL_MESH ||
+       m_drawCallType == DRAW_CALL_INTERNAL_ARRAY ||
+       m_drawCallType == DRAW_CALL_EXTERNAL_ARRAY) {
         context::diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
             context::bindBuffer(gfx::ARRAY_BUFFER, m_attrData[0].buffer);
@@ -537,10 +568,10 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
 void gfx::CDrawCall::draw(void) {
     // Internal array uses vertex data objects allocated inside of this draw call
     // If it's not set - nothing to draw
-    if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+    if(!m_vecDataBase && m_drawCallType == DRAW_CALL_INTERNAL_ARRAY) {
         return;
     }
-    if(m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY) {
+    if(m_drawCallType == DRAW_CALL_INTERNAL_ARRAY) {
         m_vecDataBase->refreshAttributes(m_attrData);
         m_drawingInfo.count = m_vecDataBase->size();
     }
@@ -553,39 +584,44 @@ void gfx::CDrawCall::draw(void) {
         context::scissor(m_scissorBox);
         scissorSet = FG_TRUE;
     }
-    if(m_MVP && m_program) {
+    if(m_pMVP && m_pProgram) {
         // force use program?
-        m_program->use();
-        m_program->setUniform(m_MVP);
+        m_pProgram->use();
+        m_pProgram->setUniform(m_pMVP);
     }
-    if(m_program) {
-        if(context::isTexture(m_textureID.id)) {
-            context::bindTexture(m_textureID);
-            m_program->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
-        } else {
-            m_program->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
+    if(m_pProgram) {
+        float useTexture = 0.0f;
+        const unsigned int n = m_textureSlots.size();
+        for(unsigned int i = 0; i < n; i++) {
+            if(context::isTexture(m_textureIDs[i].id)) {
+                useTexture = 1.0f;
+                context::activeTexture(GL_TEXTURE0 + m_textureSlots[i]);
+                context::bindTexture(m_textureIDs[i]);
+            }
         }
-        if(m_material) {
-            if(m_material->isCustomColor()) {
-                m_program->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
-                                      m_material->customColor.r,
-                                      m_material->customColor.g,
-                                      m_material->customColor.b,
-                                      m_material->customColor.a);
+        //m_pProgram->setUniform(shaders::UNIFORM_NORMAL_MAP)
+        m_pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, useTexture);
+        if(m_pMaterial) {
+            if(m_pMaterial->isCustomColor()) {
+                m_pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
+                                       m_pMaterial->customColor.r,
+                                       m_pMaterial->customColor.g,
+                                       m_pMaterial->customColor.b,
+                                       m_pMaterial->customColor.a);
             }
         }
     }
     // Will now draw data    
-    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
-       m_drawCallType == FG_GFX_DRAW_CALL_INTERNAL_ARRAY ||
-       m_drawCallType == FG_GFX_DRAW_CALL_EXTERNAL_ARRAY) {
+    if(m_drawCallType == DRAW_CALL_MESH ||
+       m_drawCallType == DRAW_CALL_INTERNAL_ARRAY ||
+       m_drawCallType == DRAW_CALL_EXTERNAL_ARRAY) {
         primitives::applyAttributeData(m_attrData, m_drawingInfo, m_attribMask);
-        if(m_material) {
-            context::setCullFace(m_material->isCullFace());
-            context::setDepthTest(m_material->isDepthTest());
-            context::setBlend(m_material->isBlend());
-            context::frontFace((fgGFXenum)m_material->getGfxFrontFace());
-            context::setCapability(gfx::DEPTH_WRITEMASK, m_material->isDepthWriteMask());
+        if(m_pMaterial) {
+            context::setCullFace(m_pMaterial->isCullFace());
+            context::setDepthTest(m_pMaterial->isDepthTest());
+            context::setBlend(m_pMaterial->isBlend());
+            context::frontFace((fgGFXenum)m_pMaterial->getGfxFrontFace());
+            context::setCapability(gfx::DEPTH_WRITEMASK, m_pMaterial->isDepthWriteMask());
         }
         // attribute data array is set
         // unsigned short is mainly because of ES
