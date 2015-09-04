@@ -16,6 +16,7 @@
 
 #ifndef FG_INC_GFX_SHADER_MANAGER
 #include "fgGfxShaderManager.h"
+#include "GFX/Textures/fgTextureTypes.h"
 #endif
 
 using namespace fg;
@@ -26,8 +27,7 @@ m_stateFlags(NO_FLAGS),
 m_shaders(),
 m_uniformBinds(),
 m_attrBinds(),
-m_config(NULL),
-m_manager(NULL) {
+m_config(NULL) {
     // this needs to depend on some global array GFX config #FIXME
     m_shaders.reserve(6);
     for(int i = 0; i < (int)m_shaders.capacity(); i++) {
@@ -46,7 +46,7 @@ m_manager(NULL) {
 //------------------------------------------------------------------------------
 
 gfx::CShaderProgram::~CShaderProgram() {
-    gfx::CShaderProgram::clearAll();
+    self_type::clearAll();
 }
 //------------------------------------------------------------------------------
 
@@ -58,9 +58,13 @@ void gfx::CShaderProgram::clearAll(void) {
     for(int i = 0; i < (int)m_shaders.size(); i++) {
         if(m_shaders[i]) {
             m_shaders[i]->detach(m_gfxID);
-            CShader *shader = m_shaders[i];
+            CShader *pShader = m_shaders[i];
             m_shaders[i] = NULL;
-            delete shader;
+            if(!pShader->isManaged() || !pShader->getManager()) {
+                // destroy the shader if it is not managed
+                // should not cause leaks
+                delete pShader;
+            }
         }
     }
     m_uniformBinds.clear_optimised();
@@ -97,55 +101,87 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
         return FG_FALSE;
     }
     CShaderConfig::ShaderTypeVec shaderTypes = m_config->getShaderTypes();
-    m_nameTag = m_config->getProgramName();
-
+    CShaderConfig::FileNameVec fileNames = m_config->getFiles();
     CShaderConfig::ConstantVec shaderConstants = m_config->getRefConstants();
+    m_nameTag = m_config->getProgramName();
 
     for(int i = 0; i < (int)shaderTypes.size(); i++) {
         std::string newPath;
-        newPath.append(filePathNoExt).append(".").append(getShaderConfigSuffix(shaderTypes[i]));
-
-        if(!m_config->load(newPath.c_str(), context::getSLVersion())) {
-            FG_LOG_ERROR("GFX: Failed to load shader program config: '%s'", newPath.c_str());
+        if(!m_config->load(fileNames[i].c_str(), context::getSLVersion())) {
+            FG_LOG_ERROR("GFX: Failed to load shader program config: '%s'", fileNames[i].c_str());
             return FG_FALSE;
         }
         shaders::ShaderType shaderType = shaderTypes[i];
         int spID = shaderTypeToSpID(shaderType);
+        gfx::CShader *pShader = NULL;
+        //fgBool isNew = FG_FALSE;
         if(m_shaders[spID]) {
-            // ?? shader already initialized lol
-        }
-        m_shaders[spID] = new gfx::CShader(shaderType);
-        gfx::CShader *shader = m_shaders[spID];
-        // File quality mapping omg
-        // Need to find a way :D for now supporting only one file / quality universal
-        // #TODO #FILEMAPPING
-        newPath = path::dirName(fullPath);
-        newPath.append(m_config->getFiles()[0]);
-        shader->setFilePath(newPath);
-        newPath.clear();
-        shader->setVersion(FG_GFX_ESSL_100);
-        //m_config->getProgramName();
-        {
-            CShaderConfig::ConstantVec & _vec = m_config->getRefConstants();
-            for(int i = 0; i < (int)_vec.size(); i++)
-                shader->appendDefine(_vec[i]);
-            for(int i = 0; i < (int)shaderConstants.size(); i++)
-                shader->appendDefine(shaderConstants[i]);
-        }
-        {
-            CShaderConfig::IncludeNameVec& _vec = m_config->getIncludes();
-            for(int i = 0; i < (int)_vec.size(); i++) {
-                shader->appendInclude(_vec[i]);
+            // ?? shader already initialized ?
+            if(m_shaders[spID]->getType() == shaderType) {
+                // the same, proper type
+                // need to check whether or not it has the same name
+                if(m_shaders[spID]->getName().compare(m_config->getShaderName()) == 0) {
+                    // the same name - need to skip it
+                    continue; // ?
+                }
+            } else {
+                // need to do here something...
             }
         }
-        appendAttributeBinds(m_config->getAttributeBinds());
-        appendUniformBinds(m_config->getUniformBinds());
+
+        if(this->isManaged() && this->getManager()) {
+            // now check if the requested shader object is already present and managed
+            CShaderManager* pShaderMgr = static_cast<CShaderManager*>(this->getManager());
+            pShader = pShaderMgr->getShader(m_config->getShaderName());
+            if(pShader) {
+                // found already existing shader object
+                // name fits, it will be used
+                //isNew = FG_FALSE;
+            } else {
+                // could not find such, try again
+                pShader = pShaderMgr->getShaderByPath(path::fileName(m_config->getFiles()[0].c_str()));
+            }
+        }
+        if(!pShader) {
+            m_shaders[spID] = new gfx::CShader(shaderType);
+            pShader = m_shaders[spID];
+            pShader->setName(m_config->getShaderName());
+            pShader->setVersion(context::getSLVersion());
+            // File quality mapping
+            // Need to find a way :D for now supporting only one file / quality universal
+            newPath = path::dirName(fullPath);
+            newPath.append(m_config->getFiles()[0]);
+            pShader->setFilePath(newPath);
+            newPath.clear();
+
+            {
+                CShaderConfig::ConstantVec& _vec = m_config->getRefConstants();
+                for(int i = 0; i < (int)_vec.size(); i++)
+                    pShader->appendDefine(_vec[i]);
+                for(int i = 0; i < (int)shaderConstants.size(); i++)
+                    pShader->appendDefine(shaderConstants[i]);
+            }
+            {
+                CShaderConfig::IncludeNameVec& _vec = m_config->getIncludes();
+                for(int i = 0; i < (int)_vec.size(); i++) {
+                    pShader->appendInclude(_vec[i]);
+                }
+            }
+            appendAttributeBinds(m_config->getAttributeBinds());
+            appendUniformBinds(m_config->getUniformBinds());
+
+            // the shader is new - force add it to shader manager (parent)
+            if(this->isManaged() && this->getManager()) {
+                CShaderManager* pShaderMgr = static_cast<CShaderManager*>(this->getManager());
+                pShaderMgr->insertShader(pShader);
+            }
+        }
     }
     delete m_config;
     m_config = NULL;
     setPreloaded(FG_TRUE);
     FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "Shader program loaded successfully: '%s'", m_nameTag.c_str());
-    FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);    
+    FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -264,6 +300,15 @@ fgBool gfx::CShaderProgram::link(void) {
         }
     }
     detachShaders();
+    // Set default texture unit's for various uniform variables
+    this->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, texture::UNIT_DIFFUSE);
+    this->setUniform(shaders::UNIFORM_AMBIENT_MAP, texture::UNIT_AMBIENT);
+    this->setUniform(shaders::UNIFORM_SPECULAR_MAP, texture::UNIT_SPECULAR);
+    this->setUniform(shaders::UNIFORM_NORMAL_MAP, texture::UNIT_NORMAL);
+    this->setUniform(shaders::UNIFORM_BUMP_MAP, texture::UNIT_BUMP);
+    this->setUniform(shaders::UNIFORM_ENVIRONMENT_MAP, texture::UNIT_ENVIRONMENT);
+    this->setUniform(shaders::UNIFORM_CUBE_TEXTURE, texture::UNIT_CUBE);
+    //this->setUniform(shaders::UNIFORM_3D_TEXTURE, texture::UNIT_3D);
     return status;
 }
 //------------------------------------------------------------------------------
@@ -271,8 +316,8 @@ fgBool gfx::CShaderProgram::link(void) {
 fgBool gfx::CShaderProgram::isUsed(void) {
     if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !isPreloaded())
         return FG_FALSE;
-    if(m_manager) {
-        CShaderManager *shaderMgr = (CShaderManager *)m_manager;
+    if(m_pManager) {
+        CShaderManager *shaderMgr = (CShaderManager *)m_pManager;
         if(shaderMgr->isProgramUsed(this))
             return FG_TRUE;
     }
@@ -284,8 +329,8 @@ fgBool gfx::CShaderProgram::use(void) {
     // call to glIsProgram may be a slowdown, this shouldn't be necessary at some point
     if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !isPreloaded())
         return FG_FALSE;
-    if(m_manager) {
-        CShaderManager *shaderMgr = static_cast<CShaderManager *>(m_manager);
+    if(m_pManager) {
+        CShaderManager *shaderMgr = static_cast<CShaderManager *>(m_pManager);
         if(shaderMgr->isProgramUsed(this))
             return FG_FALSE;
         shaderMgr->setInternalCurrentProgram(this);
@@ -441,7 +486,7 @@ fgGFXint gfx::CShaderProgram::updateValidateStatus(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::releaseGFX(void) {    
+fgBool gfx::CShaderProgram::releaseGFX(void) {
     fgBool status = FG_TRUE;
     if(!deleteProgram())
         status = FG_FALSE; // errors? meh
@@ -476,7 +521,7 @@ fgBool gfx::CShaderProgram::setManager(::fg::base::CManager *pManager) {
     if(!pManager)
         return FG_FALSE;
     setManaged(FG_TRUE);
-    m_manager = pManager;
+    m_pManager = pManager;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

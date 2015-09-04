@@ -19,6 +19,8 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CShaderManager::CShaderManager() :
+base_type(),
+m_shaderObjectsHolder(),
 m_currentProgram(NULL),
 m_shadersDir(NULL),
 m_shadersPath(),
@@ -32,7 +34,7 @@ m_isLinkOnUse(FG_FALSE) {
 //------------------------------------------------------------------------------
 
 gfx::CShaderManager::~CShaderManager() {
-    destroy();
+    destroy();    
 }
 //------------------------------------------------------------------------------
 
@@ -44,11 +46,12 @@ void gfx::CShaderManager::clear(void) {
     m_shadersDir = NULL;
     m_init = FG_FALSE;
     m_isPreloadDone = FG_FALSE;
+    m_shaderObjectsHolder.clear();
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::destroy(void) {
-    ProgramVec & data = getRefDataVector();
+    ProgramVec& data = getRefDataVector();
     DataVecItor begin = data.begin(), end = data.end(), itor = begin;
     for(; itor != end; ++itor) {
         if((*itor).data == NULL)
@@ -58,7 +61,8 @@ fgBool gfx::CShaderManager::destroy(void) {
     }
     if(m_shadersDir)
         delete m_shadersDir;
-    CShaderManager::clear();
+    m_shaderObjectsHolder.destroy();
+    self_type::clear();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -183,6 +187,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     }
 
     m_init = FG_TRUE;
+    m_shaderObjectsHolder.initialize();
     return m_init;
 }
 //------------------------------------------------------------------------------
@@ -229,6 +234,9 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
     itor = begin;
     for(; itor != end; itor++) {
         CShaderProgram *pProgram = new CShaderProgram();
+        // force manage flags - for pushing CShader* objects
+        pProgram->setManaged(FG_TRUE);
+        pProgram->setManager(this);
         if(!pProgram->preLoadConfig(*itor)) {
             delete pProgram;
             pProgram = NULL;
@@ -239,6 +247,10 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
             delete pProgram;
             pProgram = NULL;
             continue;
+        }
+        {
+            // special operation so that shader program will check
+            // if it can push it's shader objects into the manager
         }
         count++;
     }
@@ -257,7 +269,6 @@ fgBool gfx::CShaderManager::insert(CShaderProgram *pProgram, const std::string& 
     if(!pProgram)
         return FG_FALSE;
     if(base_type::insert(pProgram, nameTag)) {
-        pProgram->setName(nameTag); // ?
         pProgram->setManaged(FG_TRUE);
         pProgram->setManager(this);
         return FG_TRUE;
@@ -267,11 +278,245 @@ fgBool gfx::CShaderManager::insert(CShaderProgram *pProgram, const std::string& 
 //------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::insertProgram(CShaderProgram *pProgram) {
+    if(!pProgram)
+        return FG_FALSE;
     return insert(pProgram, pProgram->getName());
 }
 //------------------------------------------------------------------------------
 
-gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
+fgBool gfx::CShaderManager::remove(const ShaderHandle& rhUniqueID) {
+    return remove(base_type::get(rhUniqueID));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::remove(const std::string& nameTag) {
+    return remove(base_type::get(nameTag));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::remove(const char *nameTag) {
+    return remove(base_type::get(nameTag));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::remove(CShaderProgram* pProgram) {
+    if(!base_type::isManaged(pProgram))
+        return FG_FALSE;
+    releaseHandle(pProgram->getHandle());
+    pProgram->setManaged(FG_FALSE);
+    pProgram->setManager(NULL);
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+gfx::CShaderManager::CShaderObjectManager::CShaderObjectManager() {
+    m_managerType = FG_MANAGER_GFX_SHADER;
+    m_init = FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+gfx::CShaderManager::CShaderObjectManager::~CShaderObjectManager() {
+    destroy();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CShaderManager::CShaderObjectManager::clear(void) {
+    releaseAllHandles();
+    m_managerType = FG_MANAGER_GFX_SHADER;
+    m_init = FG_FALSE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::destroy(void) {
+    ShaderVec& data = getRefDataVector();
+    ShaderVecItor begin = data.begin(), end = data.end(), itor = begin;
+    for(; itor != end; ++itor) {
+        if((*itor).data == NULL)
+            continue;
+        delete (*itor).data;
+        (*itor).clear();
+    }
+    self_type::clear();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::initialize(void) {
+    // nothing to initialize here
+    m_init = FG_TRUE;
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::insert(CShader* pShader, const std::string& nameTag) {
+    if(!pShader)
+        return FG_FALSE;
+    if(nameTag.empty())
+        return FG_FALSE;
+    if(base_type::insert(pShader, nameTag)) {
+        pShader->setManaged(FG_TRUE);
+        pShader->setManager(this);
+        return FG_TRUE;
+    }
+    return FG_FALSE;
+
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::insertShader(CShader* pShader) {
+    if(!pShader)
+        return FG_FALSE;
+    return insert(pShader, pShader->getName());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::remove(const ShaderHandle& rhUniqueID) {
+    return remove(base_type::get(rhUniqueID));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::remove(const std::string& nameTag) {
+    return remove(base_type::get(nameTag));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::remove(const char *nameTag) {
+    return remove(base_type::get(nameTag));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::CShaderObjectManager::remove(CShader* pShader) {
+    if(!base_type::isManaged(pShader))
+        return FG_FALSE;
+    releaseHandle(pShader->getHandle());
+    pShader->setManaged(FG_FALSE);
+    pShader->setManager(NULL);
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::CShaderObjectManager::request(const std::string& info) {
+    // #TODO - implementation
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::CShaderObjectManager::request(const char* info) {
+    if(!info)
+        return NULL;
+    if(!info[0])
+        return NULL;
+    return this->request(std::string(info));
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::CShaderObjectManager::getShaderByPath(const std::string& filePath) {
+    if(filePath.empty())
+        return NULL;
+    CShader* pResult = NULL;
+    const char *iext = path::fileExt(filePath.c_str(), FG_TRUE);
+    ShaderVec& data = getRefDataVector();
+    ShaderVecItor begin = data.begin(), end = data.end(), itor = begin;
+    for(; itor != end; ++itor) {
+        if((*itor).data == NULL)
+            continue;
+
+        CShader* pShader = (*itor).data;
+        if(pShader->getFilePath().compare(filePath) == 0) {
+            pResult = pShader;
+            break;
+        }
+        const char* pFileName = path::fileName(filePath.c_str());
+        if(!pFileName)
+            continue;
+        if(strings::endsWith(pShader->getFilePath(), pFileName)) {
+            pResult = pShader;
+            break;
+        }
+        CShader::FileMapping &files = pShader->getFileMapping();
+        CShader::FileMappingItor fit = files.begin(), fend = files.end();
+        for(; fit != fend; fit++) {
+            // Comparing using endsWith - resource contains relative file paths
+            // not just file name - this request function takes in just file names
+            // resource names or patterns (wildcards for extensions)
+            if(strings::stristr(fit->second, pFileName)) {
+                const char *shext = path::fileExt(fit->second.c_str(), FG_TRUE);
+                if(strings::isEqual(shext, iext, FG_FALSE)) {
+                    //if(fit->second.compare(pattern) == 0) {
+                    // Found shader prox containing specified file
+                    pResult = pShader;
+                    break;
+                }
+            }
+        }
+        if(pResult)
+            break;
+    }
+
+    return pResult;
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::CShaderObjectManager::getShaderByPath(const char* filePath) {
+    if(!filePath)
+        return NULL;
+    return getShaderByPath(std::string(filePath));
+}
+
+fgBool gfx::CShaderManager::insertShader(CShader* pShader) {
+    if(m_shaderObjectsHolder.isManaged(pShader)) {
+        return FG_FALSE;
+    }
+    if(pShader->getName().empty()) {
+        return FG_FALSE;
+    }
+    return m_shaderObjectsHolder.insert(pShader, pShader->getName());
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::getShaderByPath(const std::string& filePath) {
+    return m_shaderObjectsHolder.getShaderByPath(filePath);
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::getShaderByPath(const char* filePath) {
+    if(!filePath)
+        return NULL;
+    return m_shaderObjectsHolder.getShaderByPath(std::string(filePath));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::isManaged(CShader* pShader) {
+    return m_shaderObjectsHolder.isManaged(pShader);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::remove(CShader* pShader) {
+    return m_shaderObjectsHolder.remove(pShader);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderManager::destroyData(CShader*& pShader) {
+    return m_shaderObjectsHolder.destroyData(pShader);
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::getShader(const ShaderHandle& dhUniqueID) {
+    return m_shaderObjectsHolder.get(dhUniqueID);
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::getShader(const std::string& nameTag) {
+    return m_shaderObjectsHolder.get(nameTag);
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::getShader(const char* nameTag) {
+    return m_shaderObjectsHolder.get(nameTag);
+}
+//------------------------------------------------------------------------------
+
+gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
     if(!m_shadersDir || !m_init || info.empty())
         return NULL;
     CShaderProgram *pRequestedShader = NULL;
@@ -350,6 +595,8 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
         return NULL;
     if(isConfig) {
         pRequestedShader = new CShaderProgram();
+        pRequestedShader->setManaged(FG_TRUE);
+        pRequestedShader->setManager(this);
         if(!pRequestedShader->preLoadConfig(filePath)) {
             delete pRequestedShader;
             pRequestedShader = NULL;
@@ -375,7 +622,11 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CShaderProgram *gfx::CShaderManager::request(const char *info) {
+gfx::CShaderProgram* gfx::CShaderManager::request(const char* info) {
+    if(!info)
+        return NULL;
+    if(!info[0])
+        return NULL;
     return request(std::string(info));
 }
 //------------------------------------------------------------------------------
@@ -387,7 +638,7 @@ void gfx::CShaderManager::setInternalCurrentProgram(CShaderProgram* pProgram) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CShaderProgram *gfx::CShaderManager::getCurrentProgram(void) const {
+gfx::CShaderProgram* gfx::CShaderManager::getCurrentProgram(void) const {
     return m_currentProgram;
 }
 //------------------------------------------------------------------------------
@@ -408,7 +659,7 @@ void gfx::CShaderManager::setShadersPath(const std::string &path) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CShaderManager::setShadersPath(const char *path) {
+void gfx::CShaderManager::setShadersPath(const char* path) {
     if(!path) {
         m_shadersPath = "./";
         return;
@@ -528,7 +779,7 @@ fgBool gfx::CShaderManager::allReleaseGFX(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderManager::useProgram(CShaderProgram *pProgram) {
+fgBool gfx::CShaderManager::useProgram(CShaderProgram* pProgram) {
     if(!pProgram) {
         return FG_FALSE;
     }

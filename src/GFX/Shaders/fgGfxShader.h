@@ -169,6 +169,13 @@ namespace fg {
             }
             /**
              * 
+             * @return
+             */
+            shaders::ShaderType getType(void) const {
+                return m_type;
+            }
+            /**
+             * 
              * @param sourceBuffer
              */
             void setSourceBuffer(char *sourceBuffer) {

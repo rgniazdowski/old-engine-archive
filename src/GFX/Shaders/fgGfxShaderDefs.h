@@ -113,12 +113,18 @@ namespace fg {
                 UNFIROM_MODEL_VIEW_PROJECTION_MATRIX = UNIFORM_MVP_MATRIX,
                 /// Environment map (texture)
                 UNIFORM_ENVIRONMENT_MAP,
+                /// Ambient map (texture)
+                UNIFORM_AMBIENT_MAP,
+                /// Special specular map
+                UNIFORM_SPECULAR_MAP,
                 /// Normal map
                 UNIFORM_NORMAL_MAP,
                 /// Bump map
                 UNIFORM_BUMP_MAP,
-                /// First (plain) texture
+                /// First (plain) texture // diffuse
                 UNIFORM_PLAIN_TEXTURE,
+                /// First (plain) texture
+                UNIFORM_DIFFUSE_TEXTURE = UNIFORM_PLAIN_TEXTURE,
                 /// Some cube texture
                 UNIFORM_CUBE_TEXTURE,
                 /// Directional light (need probably a little more of those)
@@ -142,7 +148,7 @@ namespace fg {
                 /// Custom uniform - can be any type (only one per shader program)
                 UNIFORM_CUSTOM,
 
-                NUM_UNIFORM_TYPES = 18
+                NUM_UNIFORM_TYPES = 20
             }; // enum UniformType
 
             //------------------------------------------------------------------

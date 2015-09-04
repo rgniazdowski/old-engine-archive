@@ -88,42 +88,14 @@ namespace fg {
             typedef CShaderConfig type;
             typedef ShaderConfigTag tag_type;
 
-            typedef CVector<shaders::ShaderType> ShaderTypeVec;
             typedef CVector<SUniformBind> UniformBindVec;
             typedef CVector<SAttributeBind> AttributeBindVec;
-            typedef CVector<std::string> IncludeNameVec;
-            typedef CVector<std::string> FileNameVec;
-            typedef CVector<Quality> QualityVec;
             typedef CVector<SShaderConstantDef> ConstantVec;
+            typedef CVector<shaders::ShaderType> ShaderTypeVec;
 
-        protected:
-            ///
-            ShaderConfigType m_configType;
-            ///
-            ShaderTypeVec m_shaderTypes;
-
-            /// 
-            UniformBindVec m_uniformBinds;
-            ///
-            AttributeBindVec m_attributeBinds;
-            ///
-            IncludeNameVec m_includes;
-            ///
-            FileNameVec m_files;
-            ///
-            QualityVec m_qualities;
-            ///
-            ConstantVec m_constants;
-
-            ///
-            std::string m_selectedConfigName;
-            ///
-            std::string m_programName;
-
-            ShadingLangVersion m_preferredSLVersion; // FIXME - this sould be probably somewhere else
-
-            ///
-            shaders::ShaderPrecision m_defaultPrecision;
+            typedef CVector<Quality> QualityVec;
+            typedef CStringVector IncludeNameVec;
+            typedef CStringVector FileNameVec;            
 
         public:
             /**
@@ -282,6 +254,27 @@ namespace fg {
              * 
              * @return 
              */
+            inline std::string& getShaderName(void) {
+                return m_shaderName;
+            }
+            /**
+             *
+             * @return
+             */
+            inline std::string const& getShaderName(void) const {
+                return m_shaderName;
+            }
+            /**
+             *
+             * @return
+             */
+            inline const char* getShaderNameStr(void) const {
+                return m_shaderName.c_str();
+            }
+            /**
+             * 
+             * @return 
+             */
             inline std::string& getSelectedConfigName(void) {
                 return m_selectedConfigName;
             }
@@ -306,6 +299,39 @@ namespace fg {
             inline void setPreferredSLVersion(ShadingLangVersion version) {
                 m_preferredSLVersion = version;
             }
+
+        protected:
+            /// Current shader config type
+            ShaderConfigType m_configType;
+            /// Vector holding shader types linked with shader program or
+            /// single shader type (for shader object)
+            ShaderTypeVec m_shaderTypes;
+
+            /// Array with list of uniform binds
+            UniformBindVec m_uniformBinds;
+            /// Array with list of attribute binds
+            AttributeBindVec m_attributeBinds;
+            /// List if includes (parts of special code to compile with)
+            IncludeNameVec m_includes;
+            /// List of file paths (names)
+            FileNameVec m_files;
+            /// List of qualities
+            QualityVec m_qualities;
+            /// List of constants
+            ConstantVec m_constants;
+
+            /// Currently selected configuration name (internal)
+            std::string m_selectedConfigName;
+            /// Program name
+            std::string m_programName;
+            /// Shader name
+            std::string m_shaderName;
+
+            ///
+            ShadingLangVersion m_preferredSLVersion;
+
+            /// Default precision for current shader/shader program
+            shaders::ShaderPrecision m_defaultPrecision;
 
         private:
             /**

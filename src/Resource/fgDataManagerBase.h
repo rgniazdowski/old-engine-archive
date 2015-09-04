@@ -229,6 +229,7 @@ fgBool fg::resource::CDataManagerBase<DataType, HandleType, TagType>::insert(Dat
     }
     // This is important - on addition need to update the handle
     pData->setHandle(dhUniqueID);
+    pData->setName(nameTag);
     if(!handle_mgr_type::setupName(nameTag, dhUniqueID)) {
         // Could not setup handle string tag/name for the resource
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_SETUP_HANDLE_NAME, FG_MSG_IN_FUNCTION);

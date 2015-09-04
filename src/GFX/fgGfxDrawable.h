@@ -94,9 +94,9 @@ namespace fg {
         private:
             ///
             DrawableType m_drawableType;
-        };
-    };
-};
+        }; // class CDrawable
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_DRAWABLE_BLOCK
 #endif	/* FG_INC_GFX_DRAWABLE */

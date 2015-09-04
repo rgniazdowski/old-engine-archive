@@ -42,7 +42,7 @@ namespace fg {
                 CUBE_MAP_POSITIVE_Z_ID = 4,
                 CUBE_MAP_NEGATIVE_Z_ID = 5,
                 NUM_CUBE_MAPS = 6
-            };
+            }; // enum CubeMapID
 
             // Texture file type enumeration. Supported file formats (current & future):
             // bmp, raw, jpg, png, tga
@@ -59,26 +59,45 @@ namespace fg {
                 FILE_OTHER,
 
                 FG_NUM_TEXTURE_FILE_TYPES
-            };
+            }; // enum FileType
 
             /**
              * Texture type enumeration, defines the type of the texture and
-             * possible usage because of this
+             * possible usage because of this,
              */
             enum Type {
-                INVALID = 0,
-                PLAIN = 1,
+                INVALID = -1,
+                PLAIN = 0,
                 T_2D = PLAIN,
                 DIFFUSE = PLAIN,
-                BUMP = 2,
+                AMBIENT = 1,
+                SPECULAR = 2,
                 NORMAL = 3,
-                RAW = 4,
-                FONT = 5,
+                BUMP = 4,
+                ENVIRONMENT = 5,
                 CUBE = 6,
                 T_3D = 7,
+                RAW = 8,
+                FONT = 9,
 
-                NUM_TEXTURE_TYPES = 8
-            };
+                NUM_TEXTURE_TYPES = 10
+            }; // enum Type
+
+            /**
+             * Texture unit slot number
+             */
+            enum UnitSlot {
+                UNIT_DEFAULT = 0,
+                UNIT_DIFFUSE = 0,
+                UNIT_AMBIENT = 1,
+                UNIT_SPECULAR = 2,
+                UNIT_NORMAL = 3,
+                UNIT_BUMP = 4,
+                UNIT_ENVIRONMENT = 5,
+                UNIT_CUBE = 6,
+                UNIT_3D = 7,
+                UNIT_FONT = 0 // ?
+            }; // enum UnitSlot
 
             /**
              * Texture internal pixel format
@@ -102,10 +121,11 @@ namespace fg {
     #endif
 
                 FG_NUM_TEXTURE_INTERNAL_PIXEL_FORMATS
-            };
+            }; // enum InternalPixelFormat
 
-            // Texture pixel format (data storage)
-
+            /**
+             * Texture pixel format (data storage)
+             */
             enum PixelFormat {
                 PIXEL_INVALID = 0,
 
@@ -134,7 +154,7 @@ namespace fg {
     #endif
 
                 NUM_PIXEL_FORMATS
-            };
+            }; // enum PixelFormat
 
         } // namespace texture
     } // namespace gfx

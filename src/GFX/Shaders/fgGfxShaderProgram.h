@@ -74,9 +74,9 @@ namespace fg {
         class CShaderProgram : public ::fg::gfx::base::CShader {
             friend class ::fg::gfx::CShaderManager;
         public:
-            ///
             typedef gfx::base::CShader base_type;
-            ///
+            typedef CShaderProgram self_type;
+            typedef CShaderProgram type;
             typedef ShaderProgramTag tag_type;
 
         public:
@@ -173,9 +173,6 @@ namespace fg {
             AttributeBindVec m_attrBinds;
             /// Helper class for loading special shader configs
             CShaderConfig* m_config;
-
-            /// Pointer to the managing class
-            fg::base::CManager *m_manager;
 
         public:
             /**
@@ -425,7 +422,7 @@ namespace fg {
              * @param type
              * @return 
              */
-            inline CShader *getShader(shaders::ShaderType type) const {
+            inline CShader* getShader(shaders::ShaderType type) const {
                 fgGFXint id = shaderTypeToSpID(type);
                 if(id != -1)
                     return m_shaders[id];

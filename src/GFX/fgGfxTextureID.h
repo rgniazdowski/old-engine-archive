@@ -103,9 +103,10 @@ namespace fg {
             inline bool operator >=(const STextureID& a) const {
                 return (bool)(this->id >= a.id);
             }
-        };
-    }
-}
+        }; // struct STextureID
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_TEXTUREID_BLOCK
 #endif	/* FG_INC_GFX_TEXTUREID */

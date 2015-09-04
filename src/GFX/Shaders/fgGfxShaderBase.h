@@ -100,7 +100,7 @@ namespace fg {
                  * 
                  * @return 
                  */
-                fgGFXuint & getRefGfxID(void) {
+                fgGFXuint& getRefGfxID(void) {
                     return m_gfxID;
                 }
                 /**

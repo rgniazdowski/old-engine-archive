@@ -44,6 +44,8 @@
 #define FG_GFX_MV_MATRIX_TEXT           "ModelViewMatrix"
 #define FG_GFX_MVP_MATRIX_TEXT          "ModelViewProjectionMatrix"
 #define FG_GFX_ENVIRONMENT_MAP_TEXT     "EnvironmentMap"
+#define FG_GFX_AMBIENT_MAP_TEXT         "AmbientMap"
+#define FG_GFX_SPECULAR_MAP_TEXT        "SpecularMap"
 #define FG_GFX_NORMAL_MAP_TEXT          "NormalMap"
 #define FG_GFX_BUMP_MAP_TEXT            "BumpMap"
 #define FG_GFX_PLAIN_TEXTURE_TEXT       "PlainTexture"
@@ -136,6 +138,8 @@ namespace fg {
                                                   UNIFORM_MV_MATRIX,
                                                   UNIFORM_MVP_MATRIX,
                                                   UNIFORM_ENVIRONMENT_MAP,
+                                                  UNIFORM_AMBIENT_MAP,
+                                                  UNIFORM_SPECULAR_MAP,
                                                   UNIFORM_NORMAL_MAP,
                                                   UNIFORM_BUMP_MAP,
                                                   UNIFORM_PLAIN_TEXTURE,
@@ -157,6 +161,8 @@ namespace fg {
                                                        FG_GFX_MV_MATRIX_TEXT,
                                                        FG_GFX_MVP_MATRIX_TEXT,
                                                        FG_GFX_ENVIRONMENT_MAP_TEXT,
+                                                       FG_GFX_AMBIENT_MAP_TEXT,
+                                                       FG_GFX_SPECULAR_MAP_TEXT,
                                                        FG_GFX_NORMAL_MAP_TEXT,
                                                        FG_GFX_BUMP_MAP_TEXT,
                                                        FG_GFX_PLAIN_TEXTURE_TEXT,

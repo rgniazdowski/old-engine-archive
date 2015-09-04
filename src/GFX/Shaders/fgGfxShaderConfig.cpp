@@ -188,6 +188,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
+    std::string filePathNoExt = m_configPath.substr(0, m_configPath.length() - 1 - strlen(ext));
 
     m_configType = getShaderConfigTypeFromSuffix(ext);
     if(m_configType == SHADER_CONFIG_INVALID) {
@@ -269,8 +270,23 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
             return FG_FALSE;
         }
+
         m_shaderTypes.push_back(_shadertype);
         const char *shortPrefix = shaders::getShaderShortPrefix(_shadertype);
+
+        // Find shader name (name-tag, used in handle/data manager)
+        param = mainSection->getParameter("shaderName", util::SCfgParameter::STRING);
+        if(param) {
+            // found shader name
+            m_shaderName.clear();
+            m_shaderName.append(param->string);
+        } else {
+            // no shader name specified
+            // will add it automatically
+            m_shaderName.clear();
+            m_shaderName.append(path::fileName(filePathNoExt.c_str())).append(".");
+            m_shaderName.append(shaders::getTextFromShaderType(_shadertype));
+        }
 
         // Parse defines
         std::string _tmp;
@@ -417,29 +433,60 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         util::SCfgParameter *param = NULL;
         param = mainSection->getParameter("programName", util::SCfgParameter::STRING);
         if(!param) {
-            // this is kinda big error, the program name (string handle ID) is not specified
+            // this is a big error, the program name (string handle ID) is not specified
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_PROG_NAME);
             return FG_FALSE;
         }
         m_programName = param->string;
-        int nmax = 0;
-        if(FG_BUILD_CONFIG.usingOpenGLES)
-            nmax = 2;
-        else if(FG_BUILD_CONFIG.usingOpenGL)
-            nmax = 6; // #FIXME - need global GFX config array (like with build config)
         // for various runtime / etc info on GFX subsystem (no of shader types supported ?)
-        if(nmax > (int)sizeof (shaders::g_SupportedShaderTypes) / (int)sizeof (shaders::ShaderType))
-            nmax = (int)sizeof (shaders::g_SupportedShaderTypes) / (int)sizeof (shaders::ShaderType); // #FIXME - ugly...
+        int nmax = shaders::NUM_SHADER_TYPES;
+        // Get file config names and types attached to this shader program
         for(int i = 0; i < nmax; i++) {
+            fgBool _found = FG_FALSE;
             std::string qstr = "has";
             qstr.append(shaders::g_SupportedShaderTypesText[i]);
             param = mainSection->getParameter(qstr, util::SCfgParameter::BOOL);
             if(param) {
                 if(param->bool_val == FG_TRUE) {
                     m_shaderTypes.push_back(shaders::g_SupportedShaderTypes[i]);
+                    _found = FG_TRUE;
                 }
             }
+            qstr = qstr.substr(3);
+
+            param = mainSection->getParameter(qstr, util::SCfgParameter::STRING);
+            if(param) {
+                if(param->string[0]) {
+                    std::string newShaderPath;
+                    newShaderPath.append(path::dirName(filePathNoExt));
+                    if(newShaderPath[newShaderPath.length()-1] != path::DELIMITER_CHAR)
+                        newShaderPath.append(path::DELIMITER);
+                    newShaderPath.append(param->string);
+                    m_files.push_back(newShaderPath); // joined path
+                    if(!_found) {
+                        m_shaderTypes.push_back(shaders::g_SupportedShaderTypes[i]);
+                    }
+                }
+            }
+            // need to check file names and shadertypes vector
+            // if for example hasVertexShader is true
+            // but it's file path (config) is not in the array
+            // the name will be chosen automatically
+            // based on a program name
+            if(!param && _found) {
+                // the file path was not found
+                // need to add it manually
+                std::string newShaderPath;
+                // automatic name, use shader program config name
+                // and add config extension based on shader type
+                newShaderPath.append(filePathNoExt).
+                        append(".").
+                        append(shaders::getShaderConfigSuffix(shaders::g_SupportedShaderTypes[i]));
+
+                m_files.push_back(newShaderPath);
+            }
         }
+
         // Check for valid number of shaders to bind into one shader program #FIXME
         if(m_shaderTypes.size() == 2 && 0) {
             // #TODO

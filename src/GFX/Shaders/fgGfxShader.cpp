@@ -107,13 +107,13 @@ fgBool gfx::CShader::loadSource(void) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_ENOMEM);
         return FG_FALSE;
     }
-    //std::string _version;
-    //_version.append("#version ");
-    if(m_version == FG_GFX_ESSL_100)
+    
+    if(m_version == FG_GFX_ESSL_100) {
         m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
-    else
+    } else {
         m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
-    //_version.append("100 es\n");
+    }
+    
     //m_sources[0] = _version.c_str();
     int n = 1;
     // include constant definitions (#define) into the shader source
