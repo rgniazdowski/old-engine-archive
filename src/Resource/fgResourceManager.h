@@ -63,17 +63,14 @@ namespace fg {
             friend class fg::gfx::CTextureManager;
 
         public:
-            ///
             typedef CDataManagerBase<CResource*, ResourceHandle, ResourceManagerTag> base_type;
-            ///
+            typedef CResourceManager self_type;
+            typedef CResourceManager type;
             typedef ResourceHandle handle_type;
-            ///
             typedef ResourceManagerTag tag_type;
 
         protected:
-            ///
             typedef fg::CVector<ResourceHandle> HandleVec;
-            ///
             typedef HandleVec::iterator HandleVecItor;
 
         public:

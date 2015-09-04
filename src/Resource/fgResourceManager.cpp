@@ -108,7 +108,7 @@ fgBool resource::CResourceManager::destroy(void) {
             (*itor).clear();
         }
     }
-    CResourceManager::clear();
+    self_type::clear();
     if(m_dataDir)
         delete m_dataDir;
     m_dataDir = NULL;
@@ -229,7 +229,7 @@ fgBool resource::CResourceManager::reserveMemory(size_t nMem) {
 fgBool resource::CResourceManager::goToNext(ResourceType resType) {
     if(resType == resource::INVALID)
         return goToNext();
-    
+
     while(FG_TRUE) {
         m_currentResource++;
         if(!isValid()) {
@@ -368,11 +368,13 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
 
 fgBool resource::CResourceManager::insertResourceGroup(const ResourceHandle& rhUniqueID,
                                                        CResource* pResource) {
-    if(!CDataManagerBase::isManaged(pResource)) {
+    if(!base_type::isManaged(pResource)) {
         return FG_FALSE;
     }
     if(m_resourceGroupHandles.find(rhUniqueID) != -1) {
-        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_GROUP_IN_VECTOR, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(),
+                                         FG_ERRNO_RESOURCE_GROUP_IN_VECTOR,
+                                         FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     m_resourceGroupHandles.push_back(rhUniqueID);
@@ -381,22 +383,22 @@ fgBool resource::CResourceManager::insertResourceGroup(const ResourceHandle& rhU
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::remove(const ResourceHandle& rhUniqueID) {
-    return CResourceManager::remove(CDataManagerBase::get(rhUniqueID));
+    return remove(base_type::get(rhUniqueID));
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::remove(const std::string& nameTag) {
-    return CResourceManager::remove(CDataManagerBase::get(nameTag));
+    return remove(base_type::get(nameTag));
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::remove(const char *nameTag) {
-    return CResourceManager::remove(CDataManagerBase::get(nameTag));
+    return remove(base_type::get(nameTag));
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::remove(CResource* pResource) {
-    if(!CDataManagerBase::isManaged(pResource))
+    if(!base_type::isManaged(pResource))
         return FG_FALSE;
     // if the resource was found, check to see that it's not locked
     if(pResource->isLocked()) {
@@ -407,27 +409,29 @@ fgBool resource::CResourceManager::remove(CResource* pResource) {
     // Get the memory and subtract it from the manager total
     removeMemory(pResource->getSize());
     releaseHandle(pResource->getHandle());
+    pResource->setManaged(FG_FALSE);
+    pResource->setManager(NULL);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::dispose(const ResourceHandle& rhUniqueID) {
-    return dispose(CDataManagerBase::get(rhUniqueID));
+    return dispose(base_type::get(rhUniqueID));
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::dispose(const std::string& nameTag) {
-    return dispose(CDataManagerBase::get(nameTag));
+    return dispose(base_type::get(nameTag));
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::dispose(const char *nameTag) {
-    return dispose(CDataManagerBase::get(nameTag));
+    return dispose(base_type::get(nameTag));
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::dispose(CResource* pResource) {
-    if(!CDataManagerBase::isManaged(pResource))
+    if(!base_type::isManaged(pResource))
         return FG_FALSE;
     // if the resource was found, check to see that it's not locked
     if(pResource->isLocked()) {
@@ -490,29 +494,29 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::get(const ResourceHandle& rhUniqueID) {
-    resource::CResource *pResource = CDataManagerBase::get(rhUniqueID);
+    resource::CResource *pResource = base_type::get(rhUniqueID);
     if(!pResource) {
         return NULL;
     }
-    resource::CResourceManager::refreshResource(pResource);
+    self_type::refreshResource(pResource);
     // return the object pointer
     return pResource;
 }
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::get(const std::string& nameTag) {
-    CResource *pResource = CDataManagerBase::get(nameTag);
+    CResource *pResource = base_type::get(nameTag);
     if(!pResource) {
         return NULL;
     }
-    CResourceManager::refreshResource(pResource);
+    self_type::refreshResource(pResource);
     // return the object pointer
     return pResource;
 }
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::get(const char *nameTag) {
-    return CResourceManager::get(std::string(nameTag));
+    return get(std::string(nameTag));
 }
 //------------------------------------------------------------------------------
 
@@ -711,7 +715,7 @@ resource::CResource* resource::CResourceManager::request(const char *info, const
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::lockResource(const ResourceHandle& rhUniqueID) {
-    CResource *pResource = CDataManagerBase::get(rhUniqueID);
+    CResource *pResource = base_type::get(rhUniqueID);
     lockResource(pResource);
     // return the object pointer
     return pResource;
@@ -719,7 +723,7 @@ resource::CResource* resource::CResourceManager::lockResource(const ResourceHand
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::lockResource(resource::CResource *pResource) {
-    if(!CDataManagerBase::isManaged(pResource)) {
+    if(!base_type::isManaged(pResource)) {
         return FG_FALSE;
     }
     // increment the object's count
@@ -736,14 +740,14 @@ fgBool resource::CResourceManager::lockResource(resource::CResource *pResource) 
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::unlockResource(const ResourceHandle& rhUniqueID) {
-    CResource *pResource = CDataManagerBase::get(rhUniqueID);
+    CResource *pResource = base_type::get(rhUniqueID);
     pResource->Unlock();
     return pResource;
 }
 //------------------------------------------------------------------------------
 
 fgBool resource::CResourceManager::unlockResource(resource::CResource *pResource) {
-    if(!CDataManagerBase::isManaged(pResource)) {
+    if(!base_type::isManaged(pResource)) {
         return FG_FALSE;
     }
     if(pResource->getReferenceCount() == 0) {
