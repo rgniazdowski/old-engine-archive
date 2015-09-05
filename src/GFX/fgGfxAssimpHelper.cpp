@@ -17,7 +17,6 @@
 #include "fgGfxAssimpHelper.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 #if defined(FG_USING_ASSIMP)
 
@@ -83,7 +82,86 @@ void gfx::assimp_helper::setupMaterial(struct SMaterial* pNewMaterial,
             pNewMaterial->setCullFace(FG_FALSE);
     }
 }
+//------------------------------------------------------------------------------
 
+void gfx::assimp_helper::copyBone(anim::SBone* pDest, aiBone* pSource) {
+    if(!pDest || !pSource)
+        return;
+    pDest->name.clear();
+    pDest->name.append(pSource->mName.C_Str());
+
+    pDest->weights.clear();
+    unsigned int n = pSource->mNumWeights;
+    for(unsigned int i = 0; i < n; i++) {
+        pDest->weights
+                .push_back(anim::SVertexWeight(pSource->mWeights[i].mVertexId,
+                                               pSource->mWeights[i].mWeight
+                                               ));
+    }
+    copyMatrix4x4(pDest->offset, pSource->mOffsetMatrix);
+    // There is more information to copy,
+    // like children, parent pointer and other stuff.
+    // However this information is stored in aiNode...
+    // So complete conversion is made gradually, in few steps.
+}
+//------------------------------------------------------------------------------
+
+void gfx::assimp_helper::copyAnimation(anim::CAnimation* pDest, aiAnimation* pSource) {
+    if(!pDest || !pSource)
+        return;
+    pDest->setName(pSource->mName.C_Str());
+    pDest->setTimeData(pSource->mDuration, pSource->mTicksPerSecond);
+    const unsigned int n = pSource->mNumChannels;
+    for(unsigned int i = 0; i < n; i++) {
+        anim::SAnimationChannel channel;
+        copyAnimationChannel(&channel, pSource->mChannels[i]);
+        pDest->addChannel(channel);
+        channel.clearKeys();
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::assimp_helper::copyAnimationChannel(anim::SAnimationChannel* pDest, aiNodeAnim* pSource) {
+    if(!pDest || !pSource)
+        return;
+
+    pDest->targetName.clear();
+    pDest->targetName.reserve(pSource->mNodeName.length);
+    pDest->targetName.append(pSource->mNodeName.C_Str());
+    
+    unsigned int n = pSource->mNumPositionKeys;
+    pDest->positionKeys.reserve(n);
+    pDest->positionKeys.resize(n);
+    for(unsigned int i = 0; i < n; i++) {
+        copyVectorKey(pDest->positionKeys[i], pSource->mPositionKeys[i]);
+    }
+
+    n = pSource->mNumRotationKeys;
+    pDest->rotationKeys.reserve(n);
+    pDest->rotationKeys.resize(n);
+    for(unsigned int i = 0; i < n; i++) {
+        copyRotationKey(pDest->rotationKeys[i], pSource->mRotationKeys[i]);
+    }
+
+    n = pSource->mNumScalingKeys;
+    pDest->scalingKeys.reserve(n);
+    pDest->scalingKeys.resize(n);
+    for(unsigned int i = 0; i < n; i++) {
+        copyVectorKey(pDest->scalingKeys[i], pSource->mScalingKeys[i]);
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::assimp_helper::copyVectorKey(anim::SVectorKeyf& dest, const aiVectorKey& source) {
+    dest.elapsed = source.mTime;
+    copyVector(dest.value, source.mValue);
+}
+//------------------------------------------------------------------------------
+
+void gfx::assimp_helper::copyRotationKey(anim::SQuatKeyf& dest, const aiQuatKey& source) {
+    dest.elapsed = source.mTime;
+    copyQuat(dest.value, source.mValue);
+}
 //------------------------------------------------------------------------------
 
 void gfx::assimp_helper::copyMatrix4x4(Matrix4f& dest, const aiMatrix4x4& source) {

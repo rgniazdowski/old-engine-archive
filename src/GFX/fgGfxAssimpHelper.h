@@ -27,7 +27,12 @@
         #include "assimp/matrix4x4.inl"
         #include "assimp/vector2.inl"
         #include "assimp/vector3.inl"
+        #include "assimp/anim.h"
+        #include "assimp/mesh.h"
     #endif
+
+    #include "Animation/fgGfxBone.h"
+    #include "Animation/fgGfxAnimation.h"
 
     #if defined(FG_USING_ASSIMP)
 namespace fg {
@@ -119,6 +124,66 @@ namespace fg {
                 dest.z = source.z;
                 dest.w = source.w;
             }
+
+            //------------------------------------------------------------------
+
+            /**
+             *
+             * @param pDest
+             * @param pSource
+             */
+            void copyBone(anim::SBone* pDest, aiBone* pSource);
+            /**
+             *
+             * @param pSource
+             * @return
+             */
+            inline anim::SBone* convertBone(aiBone* pSource) {
+                anim::SBone* pResult = NULL;
+                if(!pSource)
+                    return pResult;
+                pResult = new anim::SBone();
+                copyBone(pResult, pSource);
+                return pResult;
+            }
+            /**
+             *
+             * @param pDest
+             * @param pSource
+             */
+            void copyAnimation(anim::CAnimation* pDest, aiAnimation* pSource);
+
+            /**
+             *
+             * @param pDest
+             * @param pSource
+             */
+            void copyAnimationChannel(anim::SAnimationChannel* pDest, aiNodeAnim* pSource);
+            /**
+             * 
+             * @param pSource
+             * @return 
+             */
+            inline anim::SAnimationChannel* convertAnimationChannel(aiNodeAnim* pSource) {
+                anim::SAnimationChannel* pResult = NULL;
+                if(!pSource)
+                    return pResult;
+                pResult = new anim::SAnimationChannel();
+                copyAnimationChannel(pResult, pSource);
+                return pResult;
+            }
+            /**
+             *
+             * @param dest
+             * @param source
+             */
+            void copyVectorKey(anim::SVectorKeyf& dest, const aiVectorKey& source);
+            /**
+             * 
+             * @param dest
+             * @param source
+             */
+            void copyRotationKey(anim::SQuatKeyf& dest, const aiQuatKey& source);
 
             //------------------------------------------------------------------
 
