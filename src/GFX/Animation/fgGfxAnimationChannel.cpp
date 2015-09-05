@@ -259,3 +259,10 @@ void gfx::anim::SAnimationChannel::getInterpolated(Vector3f& outPosition,
     getScaleInterpolated(outScale, currentTime);
 }
 //------------------------------------------------------------------------------
+
+void gfx::anim::SAnimationChannel::clearKeys(void) {
+    positionKeys.clear();
+    rotationKeys.clear();
+    scalingKeys.clear();
+}
+//------------------------------------------------------------------------------

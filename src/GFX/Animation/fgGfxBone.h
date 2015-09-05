@@ -36,11 +36,17 @@ namespace fg {
                 int vertexIdx;
                 ///
                 float weight;
-
                 /**
                  *
                  */
                 SVertexWeight() : vertexIdx(0), weight(0.0f) { }
+                /**
+                 * 
+                 * @param _vertexIdx
+                 * @param _weight
+                 */
+                SVertexWeight(int _vertexIdx, float _weight) :
+                vertexIdx(_vertexIdx), weight(_weight) { }
                 /**
                  *
                  * @param other
@@ -63,8 +69,13 @@ namespace fg {
              */
             struct SBone {
                 typedef SBone self_type;
+                typedef SBone type;
                 typedef CVector<SVertexWeight> WeightsVec;
                 typedef WeightsVec::iterator WeightsVecItor;
+
+                typedef CVector<SBone*> BonesVec;
+                typedef BonesVec::iterator BonesVecItor;
+                typedef BonesVec::const_iterator BonesVecConstItor;
 
                 /**
                  *
@@ -79,11 +90,48 @@ namespace fg {
                  *
                  */
                 virtual ~SBone();
-                
+
                 /**
                  *
                  */
                 void clear(void);
+
+                /**
+                 *
+                 */
+                void destroyChildren(void);
+
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                SBone* findBone(const std::string& name);
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                SBone* findBone(const char* name);
+
+                /**
+                 *
+                 * @param pBone
+                 * @return
+                 */
+                fgBool hasChild(SBone* pBone);
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                fgBool hasChild(const std::string& name);
+                /**
+                 * 
+                 * @param name
+                 * @return
+                 */
+                fgBool hasChild(const char* name);
 
             public:
                 ///
@@ -100,6 +148,8 @@ namespace fg {
                 Matrix4f offset;
                 ///
                 WeightsVec weights;
+                ///
+                BonesVec children;
             }; // struct SBone
 
         } // namespace anim

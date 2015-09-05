@@ -210,6 +210,11 @@ namespace fg {
 
                 //--------------------------------------------------------------
 
+                /**
+                 *
+                 */
+                void clearKeys(void);
+
             public:
                 ///
                 std::string targetName;

@@ -115,7 +115,7 @@ namespace fg {
                  * @param pChannel
                  * @return
                  */
-                fgBool addChannel(SAnimationChannel* pChannel);
+                //fgBool addChannel(SAnimationChannel* pChannel);
                 /**
                  *
                  * @param channel

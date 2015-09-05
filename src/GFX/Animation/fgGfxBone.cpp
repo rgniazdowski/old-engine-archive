@@ -14,6 +14,8 @@
  * Created on September 2, 2015, 3:52 PM
  */
 
+#include <stack>
+
 #include "fgGfxBone.h"
 #include "fgVector.h"
 
@@ -27,7 +29,11 @@ parentIdx(-1),
 index(0),
 bindPoseMatrix(),
 offset(),
-weights() { }
+weights(),
+children() {
+    weights.reserve(8);
+    children.reserve(2);
+}
 //------------------------------------------------------------------------------
 
 gfx::anim::SBone::SBone(const SBone& orig) {
@@ -42,6 +48,12 @@ gfx::anim::SBone::SBone(const SBone& orig) {
 //------------------------------------------------------------------------------
 
 gfx::anim::SBone::~SBone() {
+    if(pParent) {
+        int index = pParent->children.find(this);
+        if(index >= 0)
+            pParent->children[index] = NULL;
+    }
+    destroyChildren();
     clear();
 }
 //------------------------------------------------------------------------------
@@ -54,5 +66,84 @@ void gfx::anim::SBone::clear(void) {
     bindPoseMatrix = Matrix4f();
     offset = Matrix4f();
     weights.clear();
+}
+//------------------------------------------------------------------------------
+
+void gfx::anim::SBone::destroyChildren(void) {
+    const unsigned int n = children.size();
+    for(unsigned int i = 0; i < n; i++) {
+        SBone* pBone = children[i];
+        if(!pBone)
+            continue;
+        delete pBone;
+        pBone = NULL;
+    }
+    children.clear();
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SBone* gfx::anim::SBone::findBone(const std::string& name) {
+    if(name.empty())
+        return NULL;
+    SBone* pBone = NULL;
+    std::stack<SBone* > stack;
+    stack.push(this);
+    while(!stack.empty()) {
+        pBone = stack.top();
+        stack.pop();
+        if(!pBone)
+            continue;
+        if(pBone->name.compare(name) == 0) {
+            break;
+        }
+        const unsigned int n = pBone->children.size();
+        for(unsigned int i = 0; i < n; i++) {
+            stack.push(pBone->children[i]);
+        }
+    }
+    return pBone;
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SBone* gfx::anim::SBone::findBone(const char* name) {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
+    return findBone(std::string(name));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::hasChild(SBone* pBone) {
+    if(!pBone)
+        return FG_FALSE;
+    return (fgBool)children.contains(pBone);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::hasChild(const std::string& name) {
+    if(name.empty())
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    const unsigned int n = children.size();
+    for(unsigned int i = 0; i < n; i++) {
+        SBone* pBone = children[i];
+        if(!pBone)
+            continue;
+        if(pBone->name.compare(name) == 0) {
+            status = FG_TRUE;
+            break;
+        }
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::hasChild(const char* name) {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    return hasChild(std::string(name));
 }
 //------------------------------------------------------------------------------

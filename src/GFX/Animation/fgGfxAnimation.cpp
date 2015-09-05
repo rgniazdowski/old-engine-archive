@@ -101,14 +101,14 @@ fgBool gfx::anim::CAnimation::hasChannel(const char* name) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::anim::CAnimation::addChannel(gfx::anim::SAnimationChannel* pChannel) {
+/*fgBool gfx::anim::CAnimation::addChannel(gfx::anim::SAnimationChannel* pChannel) {
     if(!pChannel)
         return FG_FALSE;
     if(pChannel->targetName.empty())
         return FG_FALSE;
     m_channels.push_back(*pChannel);
     return FG_TRUE;
-}
+}*/
 //------------------------------------------------------------------------------
 
 fgBool gfx::anim::CAnimation::addChannel(const gfx::anim::SAnimationChannel& channel) {
