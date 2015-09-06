@@ -233,10 +233,12 @@ void gfx::SSkinnedMeshAoS::refreshSkinningInfo(void) {
         const unsigned int nWeights = pBone->weights.size();
         for(unsigned int j = 0; j < nWeights; j++) {
             anim::SVertexWeight& weight = pBone->weights[j];
-            countVec[weight.vertexIdx]++;
             unsigned int subIdx = (unsigned int)countVec[weight.vertexIdx];
-            blendWeights[weight.vertexIdx][subIdx] = weight.weight;
-            blendIndices[weight.vertexIdx][subIdx] = pBone->index;
+            countVec[weight.vertexIdx]++;
+            if(subIdx <= 3) {
+                blendWeights[weight.vertexIdx][subIdx] = weight.weight;
+                blendIndices[weight.vertexIdx][subIdx] = pBone->index;
+            }
         }
     }
     countVec.clear();
