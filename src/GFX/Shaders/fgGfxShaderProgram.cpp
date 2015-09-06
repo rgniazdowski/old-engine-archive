@@ -300,6 +300,7 @@ fgBool gfx::CShaderProgram::link(void) {
         }
     }
     detachShaders();
+    this->use();
     // Set default texture unit's for various uniform variables
     this->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, texture::UNIT_DIFFUSE);
     this->setUniform(shaders::UNIFORM_AMBIENT_MAP, texture::UNIT_AMBIENT);
