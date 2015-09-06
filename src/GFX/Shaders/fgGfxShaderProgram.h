@@ -355,7 +355,7 @@ namespace fg {
             // Create the shader program with direct GL calls
             // Gfx ID will become valid if this function is successful
             fgGFXuint create(void);
-            
+
             // Try to compile the shaders for this shader program
             // If needed the source code files will be loaded
             fgBool compile(void);
@@ -458,7 +458,9 @@ namespace fg {
              * @param type
              * @return 
              */
-            SUniformBind *getUniformBind(shaders::UniformType type);
+            SUniformBind* getUniformBind(shaders::UniformType type);
+
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -472,6 +474,34 @@ namespace fg {
              * @return 
              */
             fgBool setUniform(CMVMatrix* matrix);
+
+            //------------------------------------------------------------------
+
+            /**
+             *
+             * @param type
+             * @param matrix
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const Matrix4f& matrix);
+            /**
+             *
+             * @param type
+             * @param matrices
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const Matrix4f* matrices,
+                              const unsigned int count);
+            /**
+             *
+             * @param type
+             * @param matrices
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const CVector<Matrix4f>& matrices);
 
             //------------------------------------------------------------------
 

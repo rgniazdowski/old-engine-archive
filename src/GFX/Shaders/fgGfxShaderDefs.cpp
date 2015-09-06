@@ -59,6 +59,7 @@
 #define FG_GFX_ATTRIB_MASK_TEXT         "AttribMask"
 #define FG_GFX_USE_TEXTURE_TEXT         "UseTexture"
 #define FG_GFX_DRAW_SKYBOX_TEXT         "DrawSkyBox"
+#define FG_GFX_BONE_MATRICES_TEXT       "BoneMatrices"
 #define FG_GFX_CUSTOM_TEXT              "Custom"
 
 namespace fg {
@@ -153,6 +154,7 @@ namespace fg {
                                                   UNIFORM_ATTRIB_MASK,
                                                   UNIFORM_USE_TEXTURE,
                                                   UNIFORM_DRAW_SKYBOX,
+                                                  UNIFORM_BONE_MATRICES,
                                                   UNIFORM_CUSTOM
             };
 
@@ -176,6 +178,7 @@ namespace fg {
                                                        FG_GFX_ATTRIB_MASK_TEXT,
                                                        FG_GFX_USE_TEXTURE_TEXT,
                                                        FG_GFX_DRAW_SKYBOX_TEXT,
+                                                       FG_GFX_BONE_MATRICES_TEXT,
                                                        FG_GFX_CUSTOM_TEXT
             };
 

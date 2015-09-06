@@ -145,10 +145,12 @@ namespace fg {
                 UNIFORM_USE_TEXTURE,
                 /// Whether the skybox is being drawn (#FIXME)
                 UNIFORM_DRAW_SKYBOX,
+                /// Special array with bone matrices - used for mesh skinning
+                UNIFORM_BONE_MATRICES,
                 /// Custom uniform - can be any type (only one per shader program)
                 UNIFORM_CUSTOM,
 
-                NUM_UNIFORM_TYPES = 20
+                NUM_UNIFORM_TYPES = 21
             }; // enum UniformType
 
             //------------------------------------------------------------------
