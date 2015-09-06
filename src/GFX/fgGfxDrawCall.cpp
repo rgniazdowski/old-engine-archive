@@ -118,6 +118,28 @@ void gfx::CDrawCall::resetAttributeData(void) {
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].index = FG_GFX_ATTRIB_BITANGENT_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].size = 3;
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].type = ATTRIBUTE_BITANGENT;
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].stride = 0; // Stride when using tangent?
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].index = FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].size = 4;
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].type = ATTRIBUTE_BLEND_WEIGHTS;
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].stride = 0;
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].isEnabled = FG_GFX_FALSE;
+
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].index = FG_GFX_ATTRIB_BLEND_INDICES_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].size = 4;
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].type = ATTRIBUTE_BLEND_INDICES;
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].dataType = FG_GFX_FLOAT;
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].stride = 0;
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].isEnabled = FG_GFX_FALSE;
+    
 }
 //------------------------------------------------------------------------------
 

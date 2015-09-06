@@ -2011,6 +2011,12 @@ void gfx::context::updateAttribMask(const fgGFXuint index) {
         g_attribMask ^= FG_GFX_COLOR_BIT;
     } else if(index == FG_GFX_ATTRIB_TANGENT_LOCATION) {
         g_attribMask ^= FG_GFX_TANGENT_BIT;
+    } else if(index == FG_GFX_ATTRIB_BITANGENT_LOCATION) {
+        g_attribMask ^= FG_GFX_BITANGENT_BIT;
+    } else if(index == FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION) {
+        g_attribMask ^= FG_GFX_BLEND_WEIGHTS_BIT;
+    } else if(index == FG_GFX_ATTRIB_BLEND_INDICES_LOCATION) {
+        g_attribMask ^= FG_GFX_BLEND_INDICES_BIT;
     }
 }
 //------------------------------------------------------------------------------
@@ -2052,6 +2058,12 @@ void gfx::context::enableVertexAttribArrayMask(const fgGFXuint mask) {
         enableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
     if(mask & FG_GFX_TANGENT_BIT)
         enableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
+    if(mask & FG_GFX_BITANGENT_BIT)
+        enableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
+    if(mask & FG_GFX_BLEND_WEIGHTS_BIT)
+        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+    if(mask & FG_GFX_BLEND_INDICES_BIT)
+        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
     g_attribMask = mask;
 }
 //------------------------------------------------------------------------------
@@ -2069,6 +2081,12 @@ void gfx::context::disableVertexAttribArrayMask(const fgGFXuint mask) {
         disableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
     if(!(mask & FG_GFX_TANGENT_BIT))
         disableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
+    if(!(mask & FG_GFX_BITANGENT_BIT))
+        disableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
+    if(!(mask & FG_GFX_BLEND_WEIGHTS_BIT))
+        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+    if(!(mask & FG_GFX_BLEND_INDICES_BIT))
+        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
     g_attribMask = mask;
 }
 //------------------------------------------------------------------------------
@@ -2100,6 +2118,21 @@ void gfx::context::diffVertexAttribArrayMask(const fgGFXuint mask) {
         enableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
     else
         disableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
+
+    if(mask & FG_GFX_BITANGENT_BIT)
+        enableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
+    else
+        disableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
+
+    if(mask & FG_GFX_BLEND_WEIGHTS_BIT)
+        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+    else
+        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+
+    if(mask & FG_GFX_BLEND_INDICES_BIT)
+        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
+    else
+        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
     g_attribMask = mask;
 }
 //------------------------------------------------------------------------------
