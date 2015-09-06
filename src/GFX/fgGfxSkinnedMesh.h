@@ -24,6 +24,12 @@
 namespace fg {
     namespace gfx {
 
+        namespace anim {
+            class CAnimation;
+            struct SAnimationFrameInfo;
+            struct SAnimationFrame;
+        } // namespace anim
+
         /**
          *
          */
@@ -103,6 +109,16 @@ namespace fg {
              *
              */
             void refreshSkinningInfo(void);
+
+            /**
+             * Helper function for calculating current animation frame
+             * @param pAnimation    Animation object to use (must be bone subtype)
+             * @param frameInfo     Reference to special frame info structure
+             * @param elapsed       Elapsed time (since app init) - not animation time
+             */
+            void calculate(anim::CAnimation* pAnimation,
+                           anim::SAnimationFrameInfo& frameInfo,
+                           float elapsed = 0.0f);
 
         }; // SSkinnedMeshAoS
 

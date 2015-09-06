@@ -68,10 +68,10 @@ void gfx::anim::SAnimationChannel::getPositionInterpolated(Vector3f& result,
             mixIndex = index;
             break;
         }
-        if(positionKeys[index+1].elapsed > currentTime) {
-            mixIndex = index+1;
+        if(positionKeys[index + 1].elapsed > currentTime) {
+            mixIndex = index + 1;
             // the next key lies in the future, need to mix it with proper proportion
-            const float keyDiff = positionKeys[index+1].elapsed - positionKeys[index].elapsed;
+            const float keyDiff = positionKeys[mixIndex].elapsed - positionKeys[index].elapsed;
             const float currentDiff = currentTime - positionKeys[index].elapsed;
             mixFactor = currentDiff / keyDiff;
             break;
@@ -81,7 +81,7 @@ void gfx::anim::SAnimationChannel::getPositionInterpolated(Vector3f& result,
     if(mixIndex == index) {
         result = positionKeys[index].value;
     } else {
-        result = math::mix(positionKeys[index].value, 
+        result = math::mix(positionKeys[index].value,
                            positionKeys[mixIndex].value,
                            mixFactor);
     }
@@ -121,10 +121,10 @@ void gfx::anim::SAnimationChannel::getScaleInterpolated(Vector3f& result,
             mixIndex = index;
             break;
         }
-        if(scalingKeys[index+1].elapsed > currentTime) {
-            mixIndex = index+1;
+        if(scalingKeys[index + 1].elapsed > currentTime) {
+            mixIndex = index + 1;
             // the next key lies in the future, need to mix it with proper proportion
-            const float keyDiff = scalingKeys[index+1].elapsed - scalingKeys[index].elapsed;
+            const float keyDiff = scalingKeys[mixIndex].elapsed - scalingKeys[index].elapsed;
             const float currentDiff = currentTime - scalingKeys[index].elapsed;
             mixFactor = currentDiff / keyDiff;
             break;
@@ -174,10 +174,10 @@ void gfx::anim::SAnimationChannel::getRotationInterpolated(Quaternionf& result,
             mixIndex = index;
             break;
         }
-        if(rotationKeys[index+1].elapsed > currentTime) {
-            mixIndex = index+1;
+        if(rotationKeys[index + 1].elapsed > currentTime) {
+            mixIndex = index + 1;
             // the next key lies in the future, need to mix it with proper proportion
-            const float keyDiff = rotationKeys[index+1].elapsed - rotationKeys[index].elapsed;
+            const float keyDiff = rotationKeys[mixIndex].elapsed - rotationKeys[index].elapsed;
             const float currentDiff = currentTime - rotationKeys[index].elapsed;
             mixFactor = currentDiff / keyDiff;
             break;
@@ -187,9 +187,9 @@ void gfx::anim::SAnimationChannel::getRotationInterpolated(Quaternionf& result,
     if(mixIndex == index) {
         result = rotationKeys[index].value;
     } else {
-        result = math::mix(rotationKeys[index].value,
-                           rotationKeys[mixIndex].value,
-                           mixFactor);
+        result = math::slerp(rotationKeys[index].value,
+                             rotationKeys[mixIndex].value,
+                             mixFactor);
     }
 }
 //------------------------------------------------------------------------------
@@ -208,7 +208,6 @@ void gfx::anim::SAnimationChannel::getMatrix(Matrix4f& result, float currentTime
     // translate - rotate - scale
 
     result = math::translate(Matrix4f(), position);
-    //result = math::rotate(result, rotation);
     result *= math::toMat4(rotation);
     result = math::scale(result, scale);
 }
@@ -229,7 +228,7 @@ void gfx::anim::SAnimationChannel::getMatrixInterpolated(Matrix4f& result,
     // translate - rotate - scale
     result = math::translate(Matrix4f(), position);
     result *= math::toMat4(rotation);
-    result = math::scale(result, scale);
+    result = math::scale(result, scale);    
 }
 //------------------------------------------------------------------------------
 
@@ -247,7 +246,7 @@ void gfx::anim::SAnimationChannel::get(Vector3f& outPosition,
     outPosition = getPosition(currentTime);
     outRotation = getRotation(currentTime);
     outScale = getScale(currentTime);
- }
+}
 //------------------------------------------------------------------------------
 
 void gfx::anim::SAnimationChannel::getInterpolated(Vector3f& outPosition,

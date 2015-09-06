@@ -15,6 +15,8 @@
  */
 
 #include "fgGfxSkinnedMesh.h"
+#include "Animation/fgGfxAnimation.h"
+#include "Animation/fgGfxBoneAnimation.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -224,7 +226,7 @@ void gfx::SSkinnedMeshAoS::refreshSkinningInfo(void) {
     blendWeights.resize(this->size());
     blendIndices.resize(this->size());
     countVec.resize(this->size());
-    // ?
+
     const unsigned int n = bones.size();
     for(unsigned int i = 0; i < n; i++) {
         anim::SBone* pBone = bones[i];
@@ -237,10 +239,25 @@ void gfx::SSkinnedMeshAoS::refreshSkinningInfo(void) {
             countVec[weight.vertexIdx]++;
             if(subIdx <= 3) {
                 blendWeights[weight.vertexIdx][subIdx] = weight.weight;
-                blendIndices[weight.vertexIdx][subIdx] = pBone->index;
+                blendIndices[weight.vertexIdx][subIdx] = i; //pBone->index;
             }
         }
     }
     countVec.clear();
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMeshAoS::calculate(anim::CAnimation* pAnimation,
+                                     anim::SAnimationFrameInfo& frameInfo,
+                                     float elapsed) {
+    if(!pAnimation) {
+        return;
+    }
+    if(pAnimation->getType() != anim::Type::BONE) {
+        return;
+    }
+    anim::CBoneAnimation* pBoneAnimation = NULL;
+    pBoneAnimation = static_cast<anim::CBoneAnimation*>(pAnimation);
+    pBoneAnimation->calculate(frameInfo, this->bones, elapsed);
 }
 //------------------------------------------------------------------------------

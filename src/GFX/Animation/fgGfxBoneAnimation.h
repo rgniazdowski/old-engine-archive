@@ -24,6 +24,7 @@ namespace fg {
     namespace gfx {
         namespace anim {
 
+            struct SBone;
             class CArmature;
 
             /**
@@ -34,6 +35,9 @@ namespace fg {
                 typedef CBoneAnimation self_type;
                 typedef CBoneAnimation type;
                 typedef CAnimation base_type;
+
+                typedef CVector<SBone*> BonesVec;
+                typedef BonesVec::iterator BonesVecItor;
 
             public:
                 /**
@@ -52,10 +56,17 @@ namespace fg {
 
                 /**
                  * 
+                 * @param pArmature
+                 */
+                virtual void calculate(SAnimationFrameInfo& frameInfo,
+                                       float elapsed = 0.0f);
+                /**
+                 * 
                  * @param frameInfo
                  * @param elapsed
                  */
                 virtual void calculate(SAnimationFrameInfo& frameInfo,
+                                       const BonesVec& bones,
                                        float elapsed = 0.0f);
 
             public:
