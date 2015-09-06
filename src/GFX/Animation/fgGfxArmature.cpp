@@ -33,8 +33,14 @@ gfx::anim::CArmature::CArmature(const CArmature& orig) {
         m_bonesMap.insert(std::make_pair(pBone->name, pBone));
     }
     for(unsigned int i = 0; i < n; i++) {
-        m_bones[i]->pParent = m_bones[m_bones[i]->parentIdx];
-        m_bones[i]->index = i;
+        SBone* pBone = m_bones[i];
+        if(pBone->parentIdx >= 0 && pBone->parentIdx < (int)n) {
+            pBone->pParent = m_bones[pBone->parentIdx];
+        }
+        pBone->index = i;
+        if(pBone->pParent) {
+            pBone->pParent->children.push_back(pBone);
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -82,21 +88,64 @@ gfx::anim::SBone* gfx::anim::CArmature::get(const std::string& name) {
 }
 //------------------------------------------------------------------------------
 
+fgBool gfx::anim::CArmature::add(SBone* pBone) {
+    if(!pBone)
+        return FG_FALSE;
+    if(get(pBone->name) != NULL) {
+        // Such bone already exists
+        return FG_FALSE;
+    }
+    // Take ownership of the bone object
+    m_bones.push_back(pBone);
+    if(pBone->pParent) {
+        // pointer to parent already set?
+        int parentIdx = m_bones.find(pBone->pParent);
+        if(parentIdx < 0) {
+            // parent does not exist
+            pBone->pParent = NULL;
+        } else {
+            pBone->parentIdx = parentIdx;
+        }
+    }
+    const unsigned int n = m_bones.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_bones[i]->parentIdx >= 0 && m_bones[i]->parentIdx < (int)n)
+            m_bones[i]->pParent = m_bones[m_bones[i]->parentIdx];
+        m_bones[i]->index = i;
+    }
+    if(pBone->pParent) {
+        pBone->pParent->children.push_back(pBone);
+    }
+    m_bonesMap.insert(std::make_pair(pBone->name, pBone));
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::anim::CArmature::add(const SBone& bone) {
     if(get(bone.name) != NULL) {
         // Such bone already exists
         return FG_FALSE;
     }
-    if(bone.name.empty()) {
-        // empty name not allowed
-        return FG_FALSE;
-    }
     SBone* pBone = new SBone(bone);
     m_bones.push_back(pBone);
+    if(pBone->pParent) {
+        // pointer to parent already set?
+        int parentIdx = m_bones.find(pBone->pParent);
+        if(parentIdx < 0) {
+            // parent does not exist
+            pBone->pParent = NULL;
+        } else {
+            pBone->parentIdx = parentIdx;
+        }
+    }
     const unsigned int n = m_bones.size();
     for(unsigned int i = 0; i < n; i++) {
-        m_bones[i]->pParent = m_bones[m_bones[i]->parentIdx];
+        if(m_bones[i]->parentIdx >= 0 && m_bones[i]->parentIdx < (int)n)
+            m_bones[i]->pParent = m_bones[m_bones[i]->parentIdx];
         m_bones[i]->index = i;
+    }
+    if(pBone->pParent) {
+        pBone->pParent->children.push_back(pBone);
     }
     m_bonesMap.insert(std::make_pair(pBone->name, pBone));
     return FG_TRUE;
@@ -115,14 +164,14 @@ fgBool gfx::anim::CArmature::remove(const char* name) {
 fgBool gfx::anim::CArmature::remove(const std::string& name) {
     if(name.empty() || isEmpty())
         return FG_FALSE;
-    fgBool status = FG_TRUE;
+    fgBool status = FG_FALSE;
     BonesMapItor itor = m_bonesMap.find(name);
     if(itor != m_bonesMap.end()) {
         m_bonesMap.erase(itor);
     }
     unsigned int n = m_bones.size();
-    for(unsigned int i = 0;i<n;i++) {
-        if(m_bones[i]->name.compare(name) == 0) {
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_bones[i]->name.compare(name) == 0) {            
             delete m_bones[i];
             m_bones[i] = NULL;
             m_bones.remove(i, n);

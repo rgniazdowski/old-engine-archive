@@ -87,6 +87,12 @@ namespace fg {
 
                 /**
                  * 
+                 * @param pBone
+                 * @return 
+                 */
+                fgBool add(SBone* pBone);
+                /**
+                 * 
                  * @return
                  */
                 fgBool add(const SBone& bone);

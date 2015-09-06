@@ -82,7 +82,9 @@ namespace fg {
                 }
 
             private:
+                /// Pointer to the external Armature object
                 CArmature* m_pArmature;
+                /// Intermediate matrices vector (helper in calculations)
                 MatricesVec m_intermediate;
             }; // class CBoneAnimation
 

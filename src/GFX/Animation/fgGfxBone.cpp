@@ -53,8 +53,18 @@ gfx::anim::SBone::~SBone() {
         if(index >= 0)
             pParent->children[index] = NULL;
     }
-    destroyChildren();
+    // this node is being removed
+    // need to nullify pointers to parent for every child
+    const unsigned int n = children.size();
+    for(unsigned int i = 0;i<n;i++) {
+        if(children[i] == NULL)
+            continue;
+        children[i]->pParent = NULL;
+        children[i]->parentIdx = -1;
+    }
+    //destroyChildren();
     clear();
+    children.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -85,6 +95,15 @@ void gfx::anim::SBone::destroyChildren(void) {
 gfx::anim::SBone* gfx::anim::SBone::findBone(const std::string& name) {
     if(name.empty())
         return NULL;
+    return findBone(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SBone* gfx::anim::SBone::findBone(const char* name) {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
     SBone* pBone = NULL;
     std::stack<SBone* > stack;
     stack.push(this);
@@ -105,15 +124,6 @@ gfx::anim::SBone* gfx::anim::SBone::findBone(const std::string& name) {
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::SBone* gfx::anim::SBone::findBone(const char* name) {
-    if(!name)
-        return NULL;
-    if(!name[0])
-        return NULL;
-    return findBone(std::string(name));
-}
-//------------------------------------------------------------------------------
-
 fgBool gfx::anim::SBone::hasChild(SBone* pBone) {
     if(!pBone)
         return FG_FALSE;
@@ -123,6 +133,15 @@ fgBool gfx::anim::SBone::hasChild(SBone* pBone) {
 
 fgBool gfx::anim::SBone::hasChild(const std::string& name) {
     if(name.empty())
+        return FG_FALSE;
+    return hasChild(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::hasChild(const char* name) {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
         return FG_FALSE;
     fgBool status = FG_FALSE;
     const unsigned int n = children.size();
@@ -139,11 +158,33 @@ fgBool gfx::anim::SBone::hasChild(const std::string& name) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::anim::SBone::hasChild(const char* name) {
+fgBool gfx::anim::SBone::removeChild(SBone* pBone) {
+    if(!pBone)
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    int index = children.find(pBone);
+    if(index >= 0)
+        children.remove(index);
+    return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::removeChild(const std::string& name) {
+    if(name.empty())
+        return FG_FALSE;
+    return removeChild(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::removeChild(const char* name) {
     if(!name)
         return FG_FALSE;
     if(!name[0])
         return FG_FALSE;
-    return hasChild(std::string(name));
+    SBone* pBone = findBone(name);
+    if(!pBone)
+        return FG_FALSE;
+    return removeChild(pBone);
 }
+
 //------------------------------------------------------------------------------

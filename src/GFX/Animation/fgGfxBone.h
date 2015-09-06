@@ -133,6 +133,25 @@ namespace fg {
                  */
                 fgBool hasChild(const char* name);
 
+                /**
+                 * 
+                 * @param pBone
+                 * @return
+                 */
+                fgBool removeChild(SBone* pBone);
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                fgBool removeChild(const std::string& name);
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                fgBool removeChild(const char* name);
+
             public:
                 ///
                 std::string name;

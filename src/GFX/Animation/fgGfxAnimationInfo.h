@@ -32,16 +32,18 @@ namespace fg {
              */
             struct SAnimationFrameInfo {
                 typedef SAnimationFrameInfo self_type;
+                typedef SAnimationFrameInfo type;
 
                 typedef CVector<Matrix4f> MatricesVec;
                 typedef MatricesVec::iterator MatricesVecItor;
                 typedef MatricesVec::const_iterator MatricesVecConstItor;
 
-                ///
+                /// Current frame index 
                 int index;
-                ///
+                /// Current elapsed time
                 float elapsed;
-                ///
+                /// Array of up-to-date transformations;
+                /// each matrix represents bone or node transformation matrix.
                 MatricesVec transformations;
 
                 //--------------------------------------------------------------
@@ -87,18 +89,19 @@ namespace fg {
                 inline fgBool isEmpty(void) const {
                     return (fgBool)transformations.empty();
                 }
-            };
+            }; // struct SAnimationFrameInfo
 
             /**
              *
              */
             struct SAnimationInfo {
                 typedef SAnimationInfo self_type;
+                typedef SAnimationInfo type;
 
             public:
-                ///
+                /// External pointer to the currently used animation
                 CAnimation* pAnimation;
-                ///
+                /// Information on currently calculated frame
                 SAnimationFrameInfo currentFrame;
 
             public:
