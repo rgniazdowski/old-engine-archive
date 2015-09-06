@@ -1547,7 +1547,7 @@ fgGFXboolean gfx::context::genBuffers(const int count,
     if(!buffers) {
         buffers = fgMalloc<SBufferID>(count);
     } else {
-        buffers = fgRealloc<SBufferID>(buffers, count);
+        buffers = fgRealloc<SBufferID>(buffers, count, FG_FALSE); // do not clear
     }
     for(int i = 0; i < count; i++) {
         SBufferID &buffer = buffers[i];
