@@ -52,6 +52,7 @@
             <word>aabb</word>
             <word>Accel</word>
             <word>Accessor</word>
+            <word>anim</word>
             <word>antialiased</word>
             <word>antialiasing</word>
             <word>aos</word>
@@ -231,6 +232,7 @@
             <word>sfactor</word>
             <word>sfx</word>
             <word>shaders</word>
+            <word>shadertypes</word>
             <word>sizeof</word>
             <word>skybox</word>
             <word>sliderboth</word>

@@ -9,6 +9,10 @@
  ******************************************************************************/
 
 #include "fgGfxModelResource.h"
+#include "fgGfxSkinnedMesh.h"
+#include "Animation/fgGfxArmature.h"
+#include "Animation/fgGfxBoneAnimation.h"
+#include "fgGfxSkinnedMesh.h"
 #include "fgTinyObj.h"
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceErrorCodes.h"
@@ -29,8 +33,55 @@ int gfx::CModelResource::s_cmrInstanceCount = 0;
 
 //------------------------------------------------------------------------------
 
+gfx::CModelResource::SModelSkinning::SModelSkinning() :
+animations(),
+pArmature(NULL) { }
+//------------------------------------------------------------------------------
+
+gfx::CModelResource::SModelSkinning::SModelSkinning(const SModelSkinning& orig) {
+    if(orig.pArmature) {
+        pArmature = new anim::CArmature(*orig.pArmature);
+    }
+    const unsigned int n = orig.animations.size();
+    if(!n)
+        return;
+    animations.reserve(n);
+    for(unsigned int i = 0; i < n; i++) {
+        if(orig.animations[i]->getType() == anim::Type::BONE) {
+            anim::CAnimation* pAnimation = new anim::CBoneAnimation(*(static_cast<anim::CBoneAnimation*>(orig.animations[i])));
+            animations.push_back(pAnimation);
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+gfx::CModelResource::SModelSkinning::~SModelSkinning() {
+    destroy();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CModelResource::SModelSkinning::deleteAnimations(void) {
+    const unsigned int n = animations.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(animations[i])
+            delete animations[i];
+        animations[i] = NULL;
+    }
+    animations.clear();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CModelResource::SModelSkinning::destroy(void) {
+    deleteAnimations();
+    if(pArmature)
+        delete pArmature;
+    pArmature = NULL;
+}
+//------------------------------------------------------------------------------
+
 gfx::CModelResource::CModelResource() :
 base_type(),
+m_skinning(),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
@@ -50,6 +101,7 @@ m_modelFlags(NO_FLAGS) {
 
 gfx::CModelResource::CModelResource(const char *path) :
 base_type(path),
+m_skinning(),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
@@ -68,6 +120,7 @@ m_modelFlags(NO_FLAGS) {
 
 gfx::CModelResource::CModelResource(std::string& path) :
 base_type(path),
+m_skinning(),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
@@ -425,7 +478,86 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     std::stack<aiNode*> stack;
     aiMatrix4x4 aiTransform;
 
-    stack.push(pScene->mRootNode);    
+    anim::CArmature* pArmature = NULL;
+    aiNode* pNodeArmature = NULL;
+    if(!isDropBones()) {
+        // should load armature?
+        // creating armature and bones from aiNode structure
+        // It is required that for given model there is only one Armature structure
+        // and there is a node named exactly 'Armature';
+        pNodeArmature = pScene->mRootNode->FindNode("Armature");
+    }
+    if(pNodeArmature) {
+        stack.push(pNodeArmature);
+        pArmature = new anim::CArmature();
+    }
+    // traverse the 'Armature' node
+    while(!stack.empty()) {
+        aiNode* pNode = stack.top();
+        stack.pop();
+        const fgBool isRoot = (fgBool)(pNode->mParent == NULL); // should be false
+        // push children in reverse order
+        if(pNode->mNumChildren) {
+            for(int i = pNode->mNumChildren - 1; i >= 0; i--) {
+                if(i >= 0)
+                    stack.push(pNode->mChildren[i]);
+            }
+        }
+        // skip node if it has meshes
+        // bone nodes should not have mesh info
+        if(isRoot || pNode->mNumMeshes > 0) {
+            continue;
+        }
+        if(pNode == pNodeArmature) {
+            // Nothing to do
+            //continue; // ?
+        }
+        // first child here
+        anim::SBone* pBone = new anim::SBone();
+        pBone->name.append(pNode->mName.C_Str());
+        if(pNode->mParent) {
+            // this node has parent
+            pBone->pParent = pArmature->get(pNode->mParent->mName.C_Str());
+            // parent index will be set upon addition
+        }
+        const char* pFatherName = NULL;
+        if(pBone->pParent)
+            pFatherName = pBone->pParent->name.c_str();
+        printf("Adding bone '%s' | it has a father: '%s'\n", pBone->name.c_str(), pFatherName);
+        assimp_helper::copyMatrix4x4(pBone->bindPoseMatrix, pNode->mTransformation);
+        // add bone to the armature, parent idx/ptr and children vectors
+        // will be updated automatically
+        pArmature->add(pBone);
+    }
+    if(!isDropAnimations()) {
+        // should load animations?
+        unsigned int n = pScene->mNumAnimations;
+        for(unsigned int i = 0; i < n; i++) {
+            aiAnimation* pAiAnimation = pScene->mAnimations[i];
+            // need to check whether or not this animation targets only bone nodes
+            unsigned int nChannels = pAiAnimation->mNumChannels;
+            for(unsigned int channelIdx = 0; channelIdx < nChannels && pArmature; channelIdx++) {
+                const char* targetName = pAiAnimation->mChannels[channelIdx]->mNodeName.C_Str();
+                if(!targetName) {
+                    nChannels = 0;
+                    break;
+                }
+                if(!pArmature->get(targetName)) {
+                    // such bone does not exist
+                    nChannels = 0;
+                    break;
+                }
+            }
+            if(!nChannels) // skip
+                continue;
+            anim::CAnimation* pAnimation = new anim::CBoneAnimation(pArmature);
+            assimp_helper::copyAnimation(pAnimation, pAiAnimation);
+            m_skinning.animations.push_back(pAnimation);
+        }
+    }
+
+    // Traverse the structure from node, search for meshes and additional bone info
+    stack.push(pScene->mRootNode);
     while(!stack.empty()) {
         aiQuaternion quat;
         aiVector3D matPos, matScale;
@@ -445,6 +577,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                    matScale.x, matScale.y, matScale.z);
             continue;
         }
+        unsigned int n = 0;
         std::string spacing;
         spacing.reserve(32);
         // need to generate modelMatrix and transform vertices accordingly
@@ -456,9 +589,13 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 spacing.append("  ");
         }
         nodeTransVec.reverse();
+        if(!pNode->mNumMeshes) {
+            printf("%s%p: %s [no mesh]\n", spacing.c_str(), pNode, pNode->mName.C_Str());
+            continue;
+        }
         aiTransform = aiMatrix4x4();
-        unsigned int n = nodeTransVec.size();
-        for(unsigned int i = 0; i < n; i++) {            
+        n = nodeTransVec.size();
+        for(unsigned int i = 0; i < n; i++) {
             aiTransform *= nodeTransVec[i]->mTransformation;
         }
         nodeTransVec.clear();
@@ -472,15 +609,15 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                matPos.x, matPos.y, matPos.z,
                quat.w, quat.x, quat.y, quat.z,
                matScale.x, matScale.y, matScale.z);
-        if(!pNode->mNumMeshes) {
-            printf("NO MESH AT NODE: %s\n", pNode->mName.C_Str());
-        }
+
         for(unsigned int i = 0; i < pNode->mNumMeshes; i++) {
             aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
-            if(!pMesh) {                
+            if(!pMesh) {
                 continue;
             }
             SShape* pShape = new SShape();
+            SSkinnedMeshAoS* pSkinnedMesh = NULL;
+            //SSkinnedMeshSoA* pSkinnedMeshSoA = NULL;
             pShape->name.reserve(pNode->mName.length);
             pShape->name.append(pNode->mName.C_Str());
             m_shapes.push_back(pShape);
@@ -490,9 +627,36 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 vertexType = VERTEX_5_HQ;
             }
             if(isInterleaved()) {
-                pShape->mesh = new SMeshAoS(vertexType); // mesh - array of structures
+                if(shouldDropBones()) {
+                    pShape->mesh = new SMeshAoS(vertexType); // mesh - array of structures
+                } else {
+                    pSkinnedMesh = new SSkinnedMeshAoS(vertexType);
+                    pShape->mesh = pSkinnedMesh;
+                }
             } else {
-                pShape->mesh = new SMeshSoA(); // mesh - structure of arrays
+                if(shouldDropBones()) {
+                    pShape->mesh = new SMeshSoA(); // mesh - structure of arrays
+                } else {
+                    //pSkinnedMeshSoA = new SSkinnedMeshSoA(vertexType); // ?
+                    //pShape->mesh = pSkinnedMeshSoA;
+                }
+            }
+
+            if(!shouldDropBones()) {
+                // update bone structure with offsets and weights
+                n = pMesh->mNumBones;
+                for(unsigned int boneIdx = 0; boneIdx < n; boneIdx++) {
+                    aiBone* pAiBone = pMesh->mBones[boneIdx];
+                    anim::SBone* pOriginalBone = pArmature->get(pAiBone->mName.C_Str());
+                    if(!pOriginalBone) {
+                        // could not find the bone? this should not happen
+                        continue;
+                    }
+
+                    assimp_helper::copyBone(pOriginalBone, pAiBone);
+                    if(pSkinnedMesh)
+                        pSkinnedMesh->bones.push_back(pOriginalBone);
+                }
             }
 
             for(unsigned int fn = 0; fn < pMesh->mNumFaces; fn++) {
@@ -525,9 +689,9 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                     assimp_helper::copyVector(uv, pMesh->mTextureCoords[0][vidx]);
                 }
                 // aiVector3D is a little problematic (make some transform functions?)
-                aiVector3D transPos = pMesh->mVertices[vidx];                
+                aiVector3D transPos = pMesh->mVertices[vidx];
                 transPos *= aiTransform;
-                
+
                 assimp_helper::copyVector(pos, transPos);
                 if(pMesh->HasTangentsAndBitangents()) {
                     assimp_helper::copyVector(tangent, pMesh->mTangents[vidx]);
@@ -536,7 +700,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                     bitangent = transformIT * bitangent;
                 }
                 normal = transformIT * normal;
-                
                 pShape->mesh->append(pos, normal, uv, tangent, bitangent);
             }
             struct aiMaterial* pMaterial = pScene->mMaterials[pMesh->mMaterialIndex];
@@ -544,10 +707,12 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             // copy aiMaterial data to gfx::SMaterial
             assimp_helper::setupMaterial(pNewMaterial, pMaterial);
             pShape->material = pNewMaterial;
-
+            if(pSkinnedMesh) {
+                pSkinnedMesh->refreshSkinningInfo();
+            }
         } // for (mNumMeshes)
     } // while (stack not empty)
-
+    m_skinning.pArmature = pArmature;
     s_objImporter->FreeScene();
     // reset the ready flag
     this->m_isReady = FG_FALSE;
@@ -765,5 +930,85 @@ fgBool gfx::CModelResource::deleteBuffers(void) {
         }
     }
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::addAnimation(anim::CAnimation* pAnimation) {
+    if(!pAnimation)
+        return FG_FALSE;
+    int index = m_skinning.animations.find(pAnimation);
+    if(index >= 0)
+        return FG_FALSE; // already exists
+    if(pAnimation->getName().empty())
+        return FG_FALSE; // name is required
+    m_skinning.animations.push_back(pAnimation);
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::hasAnimation(anim::CAnimation* pAnimation) const {
+    if(!pAnimation)
+        return FG_FALSE;
+    int index = m_skinning.animations.find(pAnimation);
+    return (fgBool)(index >= 0);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::hasAnimation(const std::string& name) const {
+    if(name.empty())
+        return FG_FALSE;
+    return hasAnimation(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::hasAnimation(const char* name) const {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    const unsigned int n = m_skinning.animations.size();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::CAnimation* pAnimation = m_skinning.animations[i];
+        if(!pAnimation)
+            continue; // ?
+        if(pAnimation->getName().compare(name) == 0) {
+            status = FG_TRUE;
+            break;
+        }
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::CAnimation* gfx::CModelResource::getAnimation(const std::string& name) {
+    if(name.empty())
+        return NULL;
+    return getAnimation(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::CAnimation* gfx::CModelResource::getAnimation(const char* name) {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
+    anim::CAnimation* pResult = NULL;
+    const unsigned int n = m_skinning.animations.size();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::CAnimation* pAnimation = m_skinning.animations[i];
+        if(!pAnimation)
+            continue;
+        if(pAnimation->getName().compare(name) == 0) {
+            pResult = pAnimation;
+            break;
+        }
+    }
+    return pResult;
+}
+//------------------------------------------------------------------------------
+
+void refreshSkinningInfo(void) {
+    // TODO
 }
 //------------------------------------------------------------------------------

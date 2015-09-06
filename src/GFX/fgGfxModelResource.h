@@ -31,9 +31,15 @@ namespace Assimp {
 namespace fg {
     namespace resource {
         class CResource;
-    };
+    } // namespace resource
 
     namespace gfx {
+
+        namespace anim {
+            class CArmature;
+            class CAnimation;
+            class CBoneAnimation;
+        } // namespace anim
 
         /**
          *
@@ -69,7 +75,7 @@ namespace fg {
             /// Built-in data - from static memory (compiled with vertices or
             /// auto-generated with some algorithm)
             MODEL_BUILTIN = 0x0FA
-        };
+        }; // enum ModelType
 
         /*
          * Class definition for Model Resource
@@ -124,7 +130,44 @@ namespace fg {
                 HIGH_QUALITY = 0x2000,
                 /// Should generate tangents? (High quality model/mesh)
                 GENERATE_TANGENTS = 0x2000,
-            };
+            }; // enum ModelFlags
+
+        protected:
+
+            struct SModelSkinning {
+                typedef SModelSkinning self_type;
+                typedef SModelSkinning type;
+
+                typedef CVector<anim::CAnimation*> AnimationsVec;
+                typedef AnimationsVec::iterator AnimationsVecItor;
+
+                /// Array with all animations associated with this model
+                AnimationsVec animations;
+                /// Original Armature instance
+                anim::CArmature* pArmature;
+
+                /**
+                 *
+                 */
+                SModelSkinning();
+                /**
+                 *
+                 * @param orig
+                 */
+                SModelSkinning(const SModelSkinning& orig);
+                /**
+                 *
+                 */
+                virtual ~SModelSkinning();
+                /**
+                 *
+                 */
+                void deleteAnimations(void);
+                /**
+                 *
+                 */
+                void destroy(void);
+            }; // protected struct SModelSkinning
 
         public:
             /**
@@ -609,8 +652,75 @@ namespace fg {
             inline const fgGFXuint* getNumData(void) const {
                 return m_numData;
             }
+            //------------------------------------------------------------------
+            /**
+             *
+             * @return
+             */
+            inline fgBool hasAnimations(void) const {
+                return (fgBool)!(m_skinning.animations.empty());
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool hasArmature(void) const {
+                return (fgBool)(m_skinning.pArmature != NULL);
+            }
+            /**
+             *
+             * @return
+             */
+            inline anim::CArmature* getArmature(void) const {
+                return m_skinning.pArmature;
+            }
+            /**
+             * Add new animation into mesh skinning info. No additional checks
+             * are made (only for duplicates). Model resource takes ownership.
+             * @param pAnimation    Animation object to add into skinning info.
+             * @return              FG_TRUE if the animation was successfully
+             *                      added, FG_FALSE otherwise;
+             */
+            fgBool addAnimation(anim::CAnimation* pAnimation);
+            /**
+             * 
+             * @param pAnimation
+             * @return
+             */
+            fgBool hasAnimation(anim::CAnimation* pAnimation) const;
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool hasAnimation(const std::string& name) const;
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool hasAnimation(const char* name) const;
+            /**
+             *
+             * @param name
+             * @return
+             */
+            anim::CAnimation* getAnimation(const std::string& name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            anim::CAnimation* getAnimation(const char* name);
+            /**
+             *
+             */
+            void refreshSkinningInfo(void);
+            //------------------------------------------------------------------
 
         protected:
+            /// Model animation information (armature & animations)
+            SModelSkinning m_skinning;
             /// Global material override definition
             SMaterial *m_materialOverride;
             /// Array holding all basic shapes of the model
