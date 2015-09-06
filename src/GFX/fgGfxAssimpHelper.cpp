@@ -114,9 +114,9 @@ void gfx::assimp_helper::copyAnimation(anim::CAnimation* pDest, aiAnimation* pSo
     const unsigned int n = pSource->mNumChannels;
     for(unsigned int i = 0; i < n; i++) {
         anim::SAnimationChannel channel;
-        copyAnimationChannel(&channel, pSource->mChannels[i]);
+        channel.targetName.append(pSource->mChannels[i]->mNodeName.C_Str());
         pDest->addChannel(channel);
-        channel.clearKeys();
+        copyAnimationChannel(pDest->getChannel(channel.targetName), pSource->mChannels[i]);
     }
 }
 //------------------------------------------------------------------------------
