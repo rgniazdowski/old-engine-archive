@@ -22,6 +22,7 @@
     #include "fgVector.h"
 
     #include "GFX/fgGfxMVPMatrix.h"
+    #include "Math/fgDualQuaternion.h"
 
     #ifndef FG_INC_MANAGER_BASE
         #include "fgManagerBase.h"
@@ -33,8 +34,8 @@ namespace fg {
         class CShaderProgram;
         /// Forward declaration of class CShaderManager
         class CShaderManager;
-    };
-};
+    } // namespace gfx
+} // namespace fg
     #define FG_TAG_GFX_SHADER_PROGRAM_NAME      "GfxShaderProgram"
     #define FG_TAG_GFX_SHADER_PROGRAM           FG_TAG_TYPE(fg::gfx::CShaderProgram)
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShaderProgram, FG_TAG_GFX_SHADER_PROGRAM_NAME);
@@ -502,6 +503,69 @@ namespace fg {
              */
             fgBool setUniform(shaders::UniformType type,
                               const CVector<Matrix4f>& matrices);
+
+            //------------------------------------------------------------------
+
+            /**
+             *
+             * @param type
+             * @param matrix
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const Matrix3f& matrix);
+            /**
+             *
+             * @param type
+             * @param matrices
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const Matrix3f* matrices,
+                              const unsigned int count);
+            /**
+             *
+             * @param type
+             * @param matrices
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const CVector<Matrix3f>& matrices);
+
+            //------------------------------------------------------------------
+
+            /**
+             *
+             * @param type
+             * @param dualquat
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const DualQuaternionf& dualquat);
+            /**
+             *
+             * @param type
+             * @param dquats
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const DualQuaternionf* dquats,
+                              const unsigned int count);
+            /**
+             *
+             * @param type
+             * @param dquats
+             * @return
+             */
+            fgBool setUniform(shaders::UniformType type,
+                              const CVector<DualQuaternionf>& dquats);
+
+            /**
+             * 
+             * @param dquats
+             * @return
+             */
+            fgBool setUniform(const CVector<DualQuaternionf>& dquats);
 
             //------------------------------------------------------------------
 

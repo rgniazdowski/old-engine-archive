@@ -657,6 +657,8 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
         return FG_FALSE;
     if(bind->location == -1)
         return FG_FALSE;
+
+    math::rotate(matrix, 0.0f, Vec3f(0.0f, 0.0f, 0.0f));
     glUniformMatrix4fv(bind->location, 1, GL_FALSE, math::value_ptr(matrix));
     GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
@@ -692,9 +694,85 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
     glUniformMatrix4fv(bind->location,
                        matrices.size(),
                        GL_FALSE,
-                       (const float*)&matrices.front());
+                       (const fgGFXfloat*)&matrices.front());
     GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
+                                       const Matrix3f& matrix) {
+    SUniformBind* bind = getUniformBind(type);
+    if(!bind)
+        return FG_FALSE;
+    if(bind->location == -1)
+        return FG_FALSE;
+    glUniformMatrix3fv(bind->location, 1, GL_FALSE, math::value_ptr(matrix));
+    GLCheckError("glUniformMatrix3fv");
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
+                                       const Matrix3f* matrices,
+                                       const unsigned int count) {
+    if(!matrices || !count)
+        return FG_FALSE;
+    SUniformBind* bind = getUniformBind(type);
+    if(!bind)
+        return FG_FALSE;
+    if(bind->location == -1)
+        return FG_FALSE;
+    glUniformMatrix3fv(bind->location, count,
+                       GL_FALSE, (const fgGFXfloat*)matrices);
+    GLCheckError("glUniformMatrix3fv");
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
+                                       const CVector<Matrix3f>& matrices) {
+    if(matrices.empty())
+        return FG_FALSE;
+    SUniformBind* bind = getUniformBind(type);
+    if(!bind)
+        return FG_FALSE;
+    if(bind->location == -1)
+        return FG_FALSE;
+    glUniformMatrix3fv(bind->location,
+                       matrices.size(),
+                       GL_FALSE,
+                       (const fgGFXfloat*)&matrices.front());
+    GLCheckError("glUniformMatrix3fv");
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
+                                       const DualQuaternionf& dualquat) {
+    return setUniform(type, dualquat.length(), math::value_ptr(dualquat));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
+                                       const DualQuaternionf* dquats,
+                                       const unsigned int count) {
+    return setUniform(type, dquats[0].length() * count,
+                      (const fgGFXfloat*)&dquats[0][0]);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
+                                       const CVector<DualQuaternionf>& dquats) {
+    return setUniform(type, dquats[0].length() * dquats.size(),
+                      (const fgGFXfloat*)&dquats.front());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(const CVector<DualQuaternionf>& dquats) {
+    return setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
+                      dquats[0].length() * dquats.size(),
+                      (const fgGFXfloat*)&dquats.front());
 }
 //------------------------------------------------------------------------------
 
@@ -822,7 +900,19 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
         return FG_FALSE;
     if(bind->location == -1)
         return FG_FALSE;
-    // NEED MORE IFS :D
+    if(bind->dataType == FG_GFX_FLOAT_VEC4) {
+        glUniform4fv(bind->location, count / 4, value);
+        GLCheckError("glUniform4fv");
+    } else if(bind->dataType == FG_GFX_FLOAT_VEC3) {
+        glUniform3fv(bind->location, count / 3, value);
+        GLCheckError("glUniform3fv");
+    } else if(bind->dataType == FG_GFX_FLOAT_VEC2) {
+        glUniform2fv(bind->location, count / 2, value);
+        GLCheckError("glUniform2fv");
+    } else if(bind->dataType == FG_GFX_FLOAT) {
+        glUniform1fv(bind->location, count, value);
+        GLCheckError("glUniform1fv");
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -835,7 +925,19 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
         return FG_FALSE;
     if(bind->location == -1)
         return FG_FALSE;
-    // NEED MORE IFS :D
+    if(bind->dataType == FG_GFX_INT_VEC4) {
+        glUniform4iv(bind->location, count / 4, value);
+        GLCheckError("glUniform4iv");
+    } else if(bind->dataType == FG_GFX_INT_VEC3) {
+        glUniform3iv(bind->location, count / 3, value);
+        GLCheckError("glUniform3iv");
+    } else if(bind->dataType == FG_GFX_INT_VEC2) {
+        glUniform2iv(bind->location, count / 2, value);
+        GLCheckError("glUniform2iv");
+    } else if(bind->dataType == FG_GFX_INT) {
+        glUniform1iv(bind->location, count, value);
+        GLCheckError("glUniform1iv");
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
