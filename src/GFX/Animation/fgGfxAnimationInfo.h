@@ -20,6 +20,7 @@
 
     #include "fgVector.h"
     #include "Math/fgMathLib.h"
+    #include "Math/fgDualQuaternion.h"
 
 namespace fg {
     namespace gfx {
@@ -38,13 +39,19 @@ namespace fg {
                 typedef MatricesVec::iterator MatricesVecItor;
                 typedef MatricesVec::const_iterator MatricesVecConstItor;
 
+                typedef CVector<DualQuaternionf> DualQuatsVec;
+                typedef DualQuatsVec::iterator DualQuatsVecItor;
+                typedef DualQuatsVec::const_iterator DualQuatsVecConstItor;
+
                 /// Current frame index 
-                int index;
+                float index;
                 /// Current elapsed time
                 float elapsed;
                 /// Array of up-to-date transformations;
                 /// each matrix represents bone or node transformation matrix.
                 MatricesVec transformations;
+                ///
+                DualQuatsVec dualQuaternions;
 
                 //--------------------------------------------------------------
 
@@ -66,14 +73,31 @@ namespace fg {
                  */
                 inline void clear(void) {
                     transformations.clear();
+                    dualQuaternions.clear();
                 }
                 /**
                  * 
                  */
                 inline void reset(void) {
-                    index = 0;
+                    index = 0.0f;
                     elapsed = 0.0f;
                     clear();
+                }
+                /**
+                 * 
+                 * @param n
+                 */
+                inline void reserve(unsigned int n) {
+                    transformations.reserve(n);
+                    dualQuaternions.reserve(n);
+                }
+                /**
+                 * 
+                 * @param n
+                 */
+                inline void resize(unsigned int n) {
+                    transformations.resize(n);
+                    dualQuaternions.resize(n);
                 }
                 /**
                  *
@@ -87,7 +111,14 @@ namespace fg {
                  * @return
                  */
                 inline fgBool isEmpty(void) const {
-                    return (fgBool)transformations.empty();
+                    return (fgBool)transformations.empty() && dualQuaternions.empty();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline int getIndex(void) {
+                    return (int)index;
                 }
             }; // struct SAnimationFrameInfo
 

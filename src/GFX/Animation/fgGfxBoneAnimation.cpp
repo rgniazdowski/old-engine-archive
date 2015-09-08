@@ -70,11 +70,10 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
     //CArmature::BonesVec const& bones = m_pArmature->getBones();
     const unsigned int nBones = bones.size();
     if(!nBones) {
-        frameInfo.transformations.clear();
+        frameInfo.clear();
         return;
     }
-    frameInfo.transformations.reserve(nBones);
-    frameInfo.transformations.resize(nBones);    
+    frameInfo.resize(nBones);
     // frameInfo.transformations contains final bone matrices;
     // this vector will hold node transformation matrices #LOCK
     if(m_intermediate.capacity() < nBones)
@@ -111,6 +110,10 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
             frameInfo.transformations[i] = m_intermediate[pTmp->index] * frameInfo.transformations[i];
             pTmp = pTmp->pParent;
         }
+        // now frameInfo contains proper matrix transformations
+        // these matrices are not optimal (4x4 is too big)
+        // convert mat4 to dual quaternion
+        frameInfo.dualQuaternions[i].initializeFrom(frameInfo.transformations[i]);
     }
 }
 //------------------------------------------------------------------------------

@@ -60,6 +60,7 @@
 #define FG_GFX_USE_TEXTURE_TEXT         "UseTexture"
 #define FG_GFX_DRAW_SKYBOX_TEXT         "DrawSkyBox"
 #define FG_GFX_BONE_MATRICES_TEXT       "BoneMatrices"
+#define FG_GFX_BONE_DUAL_QUATS_TEXT     "BoneDualQuats"
 #define FG_GFX_CUSTOM_TEXT              "Custom"
 
 namespace fg {
@@ -155,6 +156,7 @@ namespace fg {
                                                   UNIFORM_USE_TEXTURE,
                                                   UNIFORM_DRAW_SKYBOX,
                                                   UNIFORM_BONE_MATRICES,
+                                                  UNIFORM_BONE_DUAL_QUATERNIONS,
                                                   UNIFORM_CUSTOM
             };
 
@@ -179,6 +181,7 @@ namespace fg {
                                                        FG_GFX_USE_TEXTURE_TEXT,
                                                        FG_GFX_DRAW_SKYBOX_TEXT,
                                                        FG_GFX_BONE_MATRICES_TEXT,
+                                                       FG_GFX_BONE_DUAL_QUATS_TEXT,
                                                        FG_GFX_CUSTOM_TEXT
             };
 

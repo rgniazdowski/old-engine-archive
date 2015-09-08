@@ -147,10 +147,14 @@ namespace fg {
                 UNIFORM_DRAW_SKYBOX,
                 /// Special array with bone matrices - used for mesh skinning
                 UNIFORM_BONE_MATRICES,
+                /// Special array with bone rigid transformations (less space, it's like mat2x4)
+                UNIFORM_BONE_DUAL_QUATERNIONS,
+                /// Shorter name for UNIFORM_BONE_DUAL_QUATERNIONS
+                UNIFORM_BONE_DQUATS = UNIFORM_BONE_DUAL_QUATERNIONS,
                 /// Custom uniform - can be any type (only one per shader program)
                 UNIFORM_CUSTOM,
 
-                NUM_UNIFORM_TYPES = 21
+                NUM_UNIFORM_TYPES = 22
             }; // enum UniformType
 
             //------------------------------------------------------------------
