@@ -522,7 +522,9 @@ fgBool CEngineMain::loadConfiguration(void) {
     path::changeCurrentWorkingDir(m_settings->getDefaultDataPath());
 #endif
     // #FIXME enumeration
-    enum {
+
+    enum
+    {
         OPT_MOD = 0,
         OPT_HELP,
         OPT_VERBOSE_LEVEL,
@@ -622,7 +624,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                 }
                 break;
 
-            case OPT_GUI_BBOX: 
+            case OPT_GUI_BBOX:
                 if(hasArgument) {
                     fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
                     g_DebugConfig.guiBBoxShow = (bool)boolValue;
@@ -631,7 +633,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                 }
                 break;
 
-            case OPT_GFX_BBOX: 
+            case OPT_GFX_BBOX:
                 if(hasArgument) {
                     fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
                     g_DebugConfig.gfxBBoxShow = (bool)boolValue;
@@ -640,7 +642,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                 }
                 break;
 
-            case OPT_GFX_TREE_BBOX: 
+            case OPT_GFX_TREE_BBOX:
                 if(hasArgument) {
                     fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
                     g_DebugConfig.gfxTreeBBoxShow = (bool)boolValue;
@@ -649,7 +651,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                 }
                 break;
 
-            case OPT_GFX_FRUSTUM: 
+            case OPT_GFX_FRUSTUM:
                 if(hasArgument) {
                     fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
                     g_DebugConfig.gfxTreeBBoxShow = (bool)boolValue;
@@ -862,8 +864,8 @@ fgBool CEngineMain::render(void) {
 #endif
     fpsc++;
     //FG_LOG_DEBUG(".......... RENDER [%d] ....................\n", fpsc);
-    if(fpsc % 128 == 0) {
-        //        FG_LOG_INFO("# FPS: %.2f", m_hardwareState->getFPS());
+    if(fpsc % 256 == 0) {
+        FG_LOG_INFO("# FPS: %.2f", m_hardwareState->getFPS());
     }
     if(fpsc > 256) {
         fpsc = 0;
