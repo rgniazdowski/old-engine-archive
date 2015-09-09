@@ -164,6 +164,8 @@
           <itemPath>../../../src/GFX/Textures/fgTextureTypes.h</itemPath>
         </logicalFolder>
         <itemPath>../../../src/GFX/fgGfxAABoundingBox.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAnimated.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAnimated.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAssimpHelper.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxAssimpHelper.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAttribBits.h</itemPath>
@@ -327,6 +329,7 @@
         <itemPath>../../../src/Hardware/fgSensors.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Math" displayName="Math" projectFiles="true">
+        <itemPath>../../../src/Math/fgDualQuaternion.h</itemPath>
         <itemPath>../../../src/Math/fgKalmanFilter.cpp</itemPath>
         <itemPath>../../../src/Math/fgKalmanFilter.h</itemPath>
         <itemPath>../../../src/Math/fgMathLib.h</itemPath>
@@ -1292,6 +1295,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -1840,6 +1847,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgDualQuaternion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -3076,6 +3088,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -3624,6 +3640,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgDualQuaternion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -4826,6 +4847,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -5374,6 +5399,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgDualQuaternion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -6562,6 +6592,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -7110,6 +7144,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgDualQuaternion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -8317,6 +8356,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -8865,6 +8908,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgDualQuaternion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -10064,6 +10112,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -10612,6 +10664,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgDualQuaternion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"

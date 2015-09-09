@@ -18,7 +18,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CDrawCall::CDrawCall(const DrawCallType type, const fgGFXuint attribMask) :
-base_type(DRAWABLE_DRAWCALL),
+base_type(traits::DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
 m_vecData2v(NULL),
 m_vecData3v(NULL),

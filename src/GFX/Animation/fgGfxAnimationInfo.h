@@ -7,7 +7,7 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/* 
+/*
  * File:   fgGfxAnimationInfo.h
  * Author: vigilant
  *
@@ -43,7 +43,7 @@ namespace fg {
                 typedef DualQuatsVec::iterator DualQuatsVecItor;
                 typedef DualQuatsVec::const_iterator DualQuatsVecConstItor;
 
-                /// Current frame index 
+                /// Current frame index
                 float index;
                 /// Current elapsed time
                 float elapsed;
@@ -76,7 +76,7 @@ namespace fg {
                     dualQuaternions.clear();
                 }
                 /**
-                 * 
+                 *
                  */
                 inline void reset(void) {
                     index = 0.0f;
@@ -84,7 +84,7 @@ namespace fg {
                     clear();
                 }
                 /**
-                 * 
+                 *
                  * @param n
                  */
                 inline void reserve(unsigned int n) {
@@ -92,7 +92,7 @@ namespace fg {
                     dualQuaternions.reserve(n);
                 }
                 /**
-                 * 
+                 *
                  * @param n
                  */
                 inline void resize(unsigned int n) {

@@ -78,11 +78,11 @@ namespace fg {
         /**
          * Special class representing a single draw call
          */
-        class CDrawCall : public CDrawable {
+        class CDrawCall : public traits::CDrawable {
             friend class ::fg::gfx::CDrawingBatch;
 
         public:            
-            typedef CDrawable base_type;            
+            typedef traits::CDrawable base_type;
             typedef CDrawCall self_type;            
             typedef CDrawCall type;
 

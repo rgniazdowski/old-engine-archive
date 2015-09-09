@@ -63,9 +63,9 @@ namespace fg {
             /// Pointer to the tree node in which this (3d/2d/abstract)
             /// object resides. This is for spatial partitioning
             STreeNodeBase* m_pTreeNode;
-        };
-    }
-}
+        }; // CTreeNodeObject
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_TREE_NODE_OBJECT_BLOCK
 #endif	/* FG_INC_GFX_TREE_NODE_OBJECT */

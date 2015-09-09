@@ -30,10 +30,10 @@ namespace fg {
         /**
          *
          */
-        class CSceneSkyBox : public CDrawable {
+        class CSceneSkyBox : public traits::CDrawable {
         public:
             ///
-            typedef fg::gfx::CDrawable base_type;
+            typedef traits::CDrawable base_type;
             ///
             typedef CSceneSkyBox type;
             ///

@@ -20,6 +20,9 @@
     #ifndef FG_INC_GFX_DRAWABLE
         #include "GFX/fgGfxDrawable.h"
     #endif
+    #ifndef FG_INC_GFX_ANIMATED
+        #include "GFX/fgGfxAnimated.h"
+    #endif
     #ifndef FG_INC_GFX_DRAW_CALL
         #include "GFX/fgGfxDrawCall.h"
     #endif
@@ -105,7 +108,8 @@ namespace fg {
          */
         class CSceneNode :
         public resource::CManagedObject<SceneNodeHandle>,
-        public CDrawable,
+        public traits::CDrawable,
+        public traits::CAnimated,
         public CTreeNodeObject {
             friend class CSceneManager;
             //friend class CScene3D;
@@ -139,22 +143,24 @@ namespace fg {
             };
 
         public:
+            /// SceneNode type - self
+            typedef CSceneNode self_type;
             /// Scene node tag type
             typedef SceneNodeTag tag_type;
             /// Drawable object type
-            typedef CDrawable drawable_type;
+            typedef traits::CDrawable drawable_type;
+            /// Animated object type
+            typedef traits::CAnimated animated_type;
             /// Base type for scene node
             typedef fg::resource::CManagedObject<SceneNodeHandle> base_type;
             /// Handle type for scene node
             typedef SceneNodeHandle handle_type;
-            /// SceneNode type - self
-            typedef CSceneNode self_type;
+            /// Bounding box type - axis-aligned
+            typedef AABoundingBox3Df box_type;
             /// Special set containing children
             typedef CVector<self_type *> ChildrenVec;
             /// Bidirectional iterator through children set
             typedef ChildrenVec::iterator ChildrenVecItor;
-            /// Bounding box type - axis-aligned
-            typedef AABoundingBox3Df box_type;
 
         private:
             /// Current scene node type - set in the constructors
@@ -225,6 +231,14 @@ namespace fg {
              * @param modelMat
              */
             virtual void draw(const Matrix4f& modelMat);
+
+        public:
+            /**
+             *
+             * @param delta
+             * @return
+             */
+            virtual void animate(float delta = 0.0f);
 
         public:
             /**
@@ -795,7 +809,7 @@ namespace fg {
              */
             virtual void updateAABB(void);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @return 

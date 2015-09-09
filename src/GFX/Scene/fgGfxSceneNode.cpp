@@ -19,7 +19,8 @@ using namespace fg;
 gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
                             self_type *pParent) :
 base_type(), // fgManagedObjectBase init
-drawable_type(DRAWABLE_SCENENODE), // fgGfxDrawable init
+drawable_type(traits::DRAWABLE_SCENENODE), // fgGfxDrawable init
+animated_type(),
 m_nodeType(nodeType), // Current node type
 m_pParent(pParent), // Pointer to the parent node
 m_collisionBody(NULL),
@@ -338,6 +339,9 @@ void gfx::CSceneNode::updateAABB(void) {
         // m_aabb.transform(m_modelMat);
     }
 }
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNode::animate(float delta) { }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::update(float delta) {
