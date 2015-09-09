@@ -100,7 +100,8 @@ modules/SDL2_mixer-2.0.0.zip
 modules/SDL2_image-2.0.0.zip
 modules/SDL2_net-2.0.0.zip
 modules/SDL2_ttf-2.0.12.zip
-modules/bullet/modified/
+modules/bullet/modified
+modules/bullet/bullet3
 modules/bullet/bullet3-master.zip
 modules/lua_514/src
 modules/lua_514/test

@@ -616,8 +616,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 continue;
             }
             SShape* pShape = new SShape();
-            SSkinnedMeshAoS* pSkinnedMesh = NULL;
-            //SSkinnedMeshSoA* pSkinnedMeshSoA = NULL;
+            SSkinnedMesh* pSkinnedMesh = NULL;
             pShape->name.reserve(pNode->mName.length);
             pShape->name.append(pNode->mName.C_Str());
             m_shapes.push_back(pShape);
@@ -631,14 +630,14 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                     pShape->mesh = new SMeshAoS(vertexType); // mesh - array of structures
                 } else {
                     pSkinnedMesh = new SSkinnedMeshAoS(vertexType);
-                    pShape->mesh = pSkinnedMesh;
+                    pShape->mesh = pSkinnedMesh->getMeshBase();
                 }
             } else {
                 if(shouldDropBones()) {
                     pShape->mesh = new SMeshSoA(); // mesh - structure of arrays
                 } else {
-                    //pSkinnedMeshSoA = new SSkinnedMeshSoA(vertexType); // ?
-                    //pShape->mesh = pSkinnedMeshSoA;
+                    pSkinnedMesh = new SSkinnedMeshSoA(); // ? lame-o!
+                    pShape->mesh = pSkinnedMesh->getMeshBase();
                 }
             }
 
@@ -717,6 +716,8 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     // reset the ready flag
     this->m_isReady = FG_FALSE;
     refreshInternalData(); // recalculate internals
+    setFlag(RIGGED, (fgBool)(pArmature != NULL));
+    setFlag(ANIMATED, (fgBool)(m_skinning.animations.size() > 0));
     return FG_TRUE;
 }
 #endif

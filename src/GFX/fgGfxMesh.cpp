@@ -22,6 +22,8 @@ const unsigned short gfx::SMeshSoA::TEX_COORDS_VBO_ARRAY_IDX = 2;
 const unsigned short gfx::SMeshSoA::UVS_VBO_ARRAY_IDX = 2;
 const unsigned short gfx::SMeshSoA::INDICES_VBO_ARRAY_IDX = 3;
 
+const unsigned short gfx::SMeshSoA::VBO_ARRAY_SIZE = 4;
+
 /******************************************************************************
  * MESH SOA FUNCTIONS - STRUCTURE OF ARRAYS
  ******************************************************************************/
@@ -308,6 +310,8 @@ const unsigned short gfx::SMeshAoS::NORMALS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::TEX_COORDS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::UVS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
+
+const unsigned short gfx::SMeshAoS::VBO_ARRAY_SIZE = 2;
 
 //------------------------------------------------------------------------------
 

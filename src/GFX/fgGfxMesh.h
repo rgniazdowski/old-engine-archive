@@ -85,7 +85,15 @@ namespace fg {
              * 
              */
             virtual void fixCenter(fgBool saveDisplacement = FG_TRUE) = 0;
-        };
+
+            /**
+             *
+             * @return
+             */
+            virtual fgBool isSkinnedMesh(void) const {
+                return FG_FALSE;
+            }
+        }; // struct SMeshBase
 
         /**
          * Special class for holding mesh data as SoA
@@ -110,6 +118,8 @@ namespace fg {
             static const unsigned short TEX_COORDS_VBO_ARRAY_IDX;
             static const unsigned short UVS_VBO_ARRAY_IDX;
             static const unsigned short INDICES_VBO_ARRAY_IDX;
+            static const unsigned short VBO_ARRAY_SIZE;
+
             /**
              * 
              */
@@ -474,6 +484,7 @@ namespace fg {
             static const unsigned short TEX_COORDS_VBO_ARRAY_IDX;
             static const unsigned short UVS_VBO_ARRAY_IDX;
             static const unsigned short INDICES_VBO_ARRAY_IDX;
+            static const unsigned short VBO_ARRAY_SIZE;
             /**
              * Default constructor for Mesh AoS object
              */

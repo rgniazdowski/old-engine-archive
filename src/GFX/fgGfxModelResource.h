@@ -96,6 +96,9 @@ namespace fg {
             /// Type definition for special vector iterator
             typedef ShapesVec::iterator ShapesVecItor;
 
+            typedef CVector<anim::CAnimation*> AnimationsVec;
+            typedef AnimationsVec::iterator AnimationsVecItor;
+
         public:
 
             /**
@@ -657,20 +660,6 @@ namespace fg {
              *
              * @return
              */
-            inline fgBool hasAnimations(void) const {
-                return (fgBool)!(m_skinning.animations.empty());
-            }
-            /**
-             *
-             * @return
-             */
-            inline fgBool hasArmature(void) const {
-                return (fgBool)(m_skinning.pArmature != NULL);
-            }
-            /**
-             *
-             * @return
-             */
             inline anim::CArmature* getArmature(void) const {
                 return m_skinning.pArmature;
             }
@@ -712,6 +701,21 @@ namespace fg {
              * @return
              */
             anim::CAnimation* getAnimation(const char* name);
+
+            /**
+             * 
+             * @return
+             */
+            AnimationsVec& getAnimations(void) {
+                return m_skinning.animations;
+            }
+            /**
+             *
+             * @return
+             */
+            AnimationsVec const& getAnimations(void) const {
+                return m_skinning.animations;
+            }
             /**
              *
              */

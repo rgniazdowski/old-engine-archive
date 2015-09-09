@@ -30,13 +30,9 @@ namespace fg {
             struct SAnimationFrame;
         } // namespace anim
 
-        /**
-         *
-         */
-        struct SSkinnedMeshAoS : public SMeshAoS {
-            typedef SSkinnedMeshAoS self_type;
-            typedef SSkinnedMeshAoS type;
-            typedef SMeshAoS base_type;
+        struct SSkinnedMesh {
+            typedef SSkinnedMesh self_type;
+            typedef SSkinnedMesh type;
 
             typedef Vector4f blend_vec_element_type;
 
@@ -48,15 +44,187 @@ namespace fg {
             typedef BonesVec::iterator BonesVecItor;
             typedef BonesVec::const_iterator BonesVecConstItor;
 
-            static const unsigned short BLEND_WEIGHTS_VBO_ARRAY_IDX;
-            static const unsigned short BLEND_INDICES_VBO_ARRAY_IDX;
+        protected:
+            virtual unsigned short internal_getBlendWeightsVboArrayIdx(void) const;
+            virtual unsigned short internal_getBlendIndicesVboArrayIdx(void) const;
 
+        public:
             ///
             BonesVec bones;
             ///
             BlendVec blendWeights;
             ///
             BlendVec blendIndices;
+
+            /**
+             *
+             */
+            SSkinnedMesh();
+
+            /**
+             * 
+             */
+            virtual ~SSkinnedMesh();
+
+            /**
+             *
+             * @return
+             */
+            virtual SMeshSoA* getMeshSoA(void) = 0;
+            /**
+             *
+             * @return
+             */
+            virtual SMeshAoS* getMeshAoS(void) = 0;
+            /**
+             *
+             * @return
+             */
+            virtual SMeshBase* getMeshBase(void) = 0;
+
+            /**
+             *
+             */
+            void clearSkinningInfo(void);
+
+            /**
+             *
+             */
+            virtual void refreshSkinningInfo() = 0;
+
+            /**
+             * Helper function for calculating current animation frame
+             * @param pAnimation    Animation object to use (must be bone subtype)
+             * @param frameInfo     Reference to special frame info structure
+             * @param elapsed       Elapsed time (since app init) - not animation time
+             */
+            void calculate(anim::CAnimation* pAnimation,
+                           anim::SAnimationFrameInfo& frameInfo,
+                           float elapsed = 0.0f);
+
+        protected:
+            /**
+             *
+             */
+            void clear(SMeshBase* pMeshSuper);
+
+            /**
+             *
+             */
+            void refreshSkinningInfo(SMeshBase* pMeshSuper);
+            /**
+             *
+             * @param pDataArray
+             * @return
+             */
+            fgGFXboolean refreshAttributes(const SMeshBase* pMeshSuper, SAttributeData* pDataArray) const;
+            /**
+             *
+             * @param pDataArray
+             * @return
+             */
+            fgGFXboolean setupAttributes(const SMeshBase* pMeshSuper, SAttributeData* pDataArray) const;
+
+            /**
+             *
+             * @return
+             */
+            fgGFXboolean genBuffers(SMeshBase* pMeshSuper);
+
+        }; // struct SSkinnedMesh
+
+        /**
+         *
+         */
+        struct SSkinnedMeshSoA : public SMeshSoA, public SSkinnedMesh {
+        public:
+            typedef SSkinnedMeshSoA self_type;
+            typedef SSkinnedMeshSoA type;
+            typedef SMeshSoA base_type;
+            typedef SSkinnedMesh skinned_base_type;
+
+            /**
+             *
+             */
+            SSkinnedMeshSoA();
+            /**
+             *
+             */
+            virtual ~SSkinnedMeshSoA();
+            /**
+             *
+             * @return
+             */
+            virtual fgBool isSkinnedMesh(void) const {
+                return FG_TRUE;
+            }
+            
+            /**
+             *
+             * @return
+             */
+            virtual SMeshSoA* getMeshSoA(void);
+            /**
+             *
+             * @return
+             */
+            virtual SMeshAoS* getMeshAoS(void);
+            /**
+             *
+             * @return
+             */
+            virtual SMeshBase* getMeshBase(void);
+
+            /**
+             *
+             */
+            virtual void clear(void);
+
+            /**
+             *
+             * @param pDataArray
+             * @return
+             */
+            virtual fgGFXboolean refreshAttributes(SAttributeData* pDataArray) const;
+            /**
+             *
+             * @param pDataArray
+             * @return
+             */
+            virtual fgGFXboolean setupAttributes(SAttributeData* pDataArray) const;
+            /**
+             *
+             * @return
+             */
+            virtual fgGFXboolean genBuffers(void);
+            /**
+             * 
+             */
+            virtual void refreshSkinningInfo(void);
+
+        protected:
+            /**
+             *
+             * @return
+             */
+            virtual unsigned short internal_getBlendWeightsVboArrayIdx(void) const;
+            /**
+             * 
+             * @return
+             */
+            virtual unsigned short internal_getBlendIndicesVboArrayIdx(void) const;
+
+        }; // SSkinnedMeshSoA
+
+        /**
+         *
+         */
+        struct SSkinnedMeshAoS : public SMeshAoS, public SSkinnedMesh {
+        public:
+            typedef SSkinnedMeshAoS self_type;
+            typedef SSkinnedMeshAoS type;
+            typedef SMeshAoS base_type;
+            typedef SSkinnedMesh skinned_base_type;
 
             /**
              *
@@ -76,6 +244,29 @@ namespace fg {
              * 
              */
             virtual ~SSkinnedMeshAoS();
+            /**
+             *
+             * @return
+             */
+            virtual fgBool isSkinnedMesh(void) const {
+                return FG_TRUE;
+            }
+
+            /**
+             *
+             * @return
+             */
+            virtual SMeshSoA* getMeshSoA(void);
+            /**
+             *
+             * @return
+             */
+            virtual SMeshAoS* getMeshAoS(void);
+            /**
+             *
+             * @return
+             */
+            virtual SMeshBase* getMeshBase(void);
 
             /**
              *
@@ -87,38 +278,28 @@ namespace fg {
              * @param pDataArray
              * @return
              */
-            virtual fgGFXboolean refreshAttributes(SAttributeData* pDataArray) const;
+            fgGFXboolean refreshAttributes(SAttributeData* pDataArray) const;
             /**
              *
              * @param pDataArray
              * @return
              */
-            virtual fgGFXboolean setupAttributes(SAttributeData* pDataArray) const;
+            fgGFXboolean setupAttributes(SAttributeData* pDataArray) const;
 
             /**
              *
              * @return
              */
-            virtual fgGFXboolean genBuffers(void);
-            /**
-             *
-             */
-            void clearSkinningInfo(void);
+            fgGFXboolean genBuffers(void);
 
             /**
              *
              */
-            void refreshSkinningInfo(void);
+            virtual void refreshSkinningInfo(void);
 
-            /**
-             * Helper function for calculating current animation frame
-             * @param pAnimation    Animation object to use (must be bone subtype)
-             * @param frameInfo     Reference to special frame info structure
-             * @param elapsed       Elapsed time (since app init) - not animation time
-             */
-            void calculate(anim::CAnimation* pAnimation,
-                           anim::SAnimationFrameInfo& frameInfo,
-                           float elapsed = 0.0f);
+        protected:
+            virtual unsigned short internal_getBlendWeightsVboArrayIdx(void) const;
+            virtual unsigned short internal_getBlendIndicesVboArrayIdx(void) const;
 
         }; // SSkinnedMeshAoS
 
