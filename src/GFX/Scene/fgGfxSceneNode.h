@@ -821,9 +821,8 @@ namespace fg {
              * 
              * @param toggle
              */
-            inline void setVisible(const fgBool toggle = FG_TRUE) {
-                setFlag(VISIBLE, toggle);
-            }
+            void setVisible(const fgBool toggle = FG_TRUE,
+                            const fgBool recursive = FG_TRUE);
             /**
              * 
              * @return 

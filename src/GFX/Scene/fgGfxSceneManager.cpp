@@ -1284,7 +1284,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
         CDrawCall* pDrawCall = pNode->getDrawCall();
         if(pDrawCall) {
             pDrawCall->setMVP(&m_MVP);
-            if(getShaderManager() && !pDrawCall->getShaderProgram()) {
+            if(pShaderMgr && !pDrawCall->getShaderProgram()) {
                 pDrawCall->setShaderProgram(pShaderMgr->getCurrentProgram());
             }
         }
@@ -1301,12 +1301,11 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
         CDrawCall* pDrawCall = pChildNode->getDrawCall();
         if(pDrawCall) {
             pDrawCall->setMVP(&m_MVP);
-            if(getShaderManager() && !pDrawCall->getShaderProgram()) {
+            if(pShaderMgr && !pDrawCall->getShaderProgram()) {
                 pDrawCall->setShaderProgram(pShaderMgr->getCurrentProgram());
             }
         }
     }
-
     pNode->update();
 }
 //------------------------------------------------------------------------------
@@ -1579,12 +1578,14 @@ gfx::CSceneNode *gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
     if(!pModelRes) {
         return NULL;
     }
-    CSceneNode *pNode = new CSceneNodeObject(pModelRes, NULL);
+    CSceneNode *pNode = new CSceneNodeObject(NULL, NULL);
     pNode->setName(nameTag);
     if(!addNode(pNode->getRefHandle(), pNode)) {
         delete pNode;
         pNode = NULL;
     }
+    static_cast<CSceneNodeObject*>(pNode)->setModel(pModelRes);
+    initializeNode(pNode);
     FG_LOG_DEBUG("GFX: SceneManager: Inserted object: '%s'", nameTag.c_str());
     return pNode;
 }

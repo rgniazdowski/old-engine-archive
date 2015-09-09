@@ -114,6 +114,25 @@ void gfx::CSceneNode::refreshGfxInternals(void) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CSceneNode::setVisible(const fgBool toggle, const fgBool recursive) {
+    setFlag(VISIBLE, toggle);
+    if(!recursive) {
+        return;
+    }
+    unsigned int n = m_children.size();
+    for(unsigned int i = 0; i < n; i++) {
+        CSceneNode* pChild = m_children[i];
+        if(!pChild) {
+            m_children.remove(i, n);
+            continue;
+        }
+        // go down the tree and set visible flag
+        pChild->setVisible(toggle, recursive);
+    }
+    // TODO - non recursive version (use stack)
+}
+//------------------------------------------------------------------------------
+
 void gfx::CSceneNode::setPosition(const Vec3f& position) {
     if(m_collisionBody) {
         m_collisionBody->setPosition(position);
@@ -588,7 +607,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
             if(managerValid) {
                 // #FIXME
                 destroyStatus = static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
-            } 
+            }
             if(!destroyStatus) {
                 // the destroyNode function failed, need to delete manually
                 delete pChild;

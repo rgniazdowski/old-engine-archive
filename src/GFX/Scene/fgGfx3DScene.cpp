@@ -102,7 +102,8 @@ void gfx::CScene3D::sortCalls(void) {
             continue; // skip not active node
         }
         SOctreeNode *pTreeNode = static_cast<SOctreeNode *>(pSceneNode->getTreeNode());
-        pSceneNode->setVisible(FG_FALSE);
+        // set as not visible (non-recursive) - the tree is traversed anyway
+        pSceneNode->setVisible(FG_FALSE, FG_FALSE);
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
         pSceneNode->update(timesys::elapsed());
@@ -159,7 +160,9 @@ void gfx::CScene3D::sortCalls(void) {
             } else if(isFrustumCheckSphere()) {
                 visibilityResult = frustum.testSphere(pSceneNode->getBoundingVolume());
             }
-            pSceneNode->setVisible(!!visibilityResult);
+            // Set visibility recursively (for all children also)
+            // The second flag is true by default.
+            pSceneNode->setVisible(!!visibilityResult, FG_TRUE);
 
 #if defined(FG_DEBUG)
             if(g_DebugConfig.isDebugProfiling) {
@@ -180,6 +183,8 @@ void gfx::CScene3D::sortCalls(void) {
                 }
                 getNodeQueue().push(pSceneNode);
             }
+            // this checking should not be here,  nodes have refreshGfxInternals()
+            // function and scene manager initializeNode()
             if(pDrawCall) {
                 if(!pDrawCall->getShaderProgram())
                     pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
