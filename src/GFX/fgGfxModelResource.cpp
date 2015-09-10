@@ -947,6 +947,63 @@ fgBool gfx::CModelResource::isDisposed(void) const {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CModelResource::setFlags(const std::string& flags) {
+    if(flags.empty() || flags.length() < 2)
+        return;
+    // This is important - always call setFlags for the base class
+    base_type::setFlags(flags);
+    fg::CStringVector flagsVec;
+    strings::split(flags, ' ', flagsVec);
+    if(flagsVec.empty())
+        return;
+    unsigned int n = (unsigned int)flagsVec.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(strings::isEqual(flagsVec[i].c_str(), "interleaved", FG_FALSE) ||
+           strings::isEqual(flagsVec[i].c_str(), "aos", FG_FALSE) ||
+           strings::isEqual(flagsVec[i].c_str(), "meshaos", FG_FALSE)) {
+            setInterleaved(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "notinterleaved", FG_FALSE) ||
+                  strings::isEqual(flagsVec[i].c_str(), "soa", FG_FALSE) ||
+                  strings::isEqual(flagsVec[i].c_str(), "meshsoa", FG_FALSE)) {
+            setInterleaved(FG_FALSE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "dropanimations", FG_FALSE)) {
+            setDropAnimations(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "dropbones", FG_FALSE)) {
+            setDropBones(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "mergemeshes", FG_FALSE)) {
+            setMergeMeshes(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "nomergemeshes", FG_FALSE)) {
+            setMergeMeshes(FG_FALSE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "fixcenter", FG_FALSE)) {
+            setFixCenter(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "nofixcenter", FG_FALSE)) {
+            setFixCenter(FG_FALSE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "savedisplacement", FG_FALSE)) {
+            setSaveDisplacement(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "nosavedisplacement", FG_FALSE)) {
+            setSaveDisplacement(FG_FALSE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "pretranslation", FG_FALSE)) {
+            setPreTranslation(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "nopretranslation", FG_FALSE)) {
+            setPreTranslation(FG_FALSE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "highquality", FG_FALSE) ||
+                  strings::isEqual(flagsVec[i].c_str(), "generatetangents", FG_FALSE)) {
+            setHighQuality(FG_TRUE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "nohighquality", FG_FALSE) ||
+                  strings::isEqual(flagsVec[i].c_str(), "lowquality", FG_FALSE)) {
+            setHighQuality(FG_FALSE);
+        } else if(strings::isEqual(flagsVec[i].c_str(), "defaults", FG_FALSE)) {
+            // Set default flags
+            setFlag(INTERLEAVED, FG_TRUE);
+            setFlag(FIX_CENTER, FG_TRUE);
+            setFlag(HIGH_QUALITY, FG_TRUE);
+            setFlag(SAVE_DISPLACEMENT, FG_FALSE);
+            setFlag(PRE_TRANSLATION, FG_FALSE);
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
 void gfx::CModelResource::updateAABB(void) {
     if(m_shapes.empty()) {
         return;

@@ -236,6 +236,12 @@ namespace fg {
              */
             virtual fgBool isDisposed(void) const;
 
+            /**
+             * 
+             * @param flags
+             */
+            virtual void setFlags(const std::string& flags);
+
         protected:
             /**
              * Determines the model type identifier from the file extension
@@ -732,7 +738,6 @@ namespace fg {
              * @return
              */
             anim::CAnimation* getAnimation(const char* name);
-
             /**
              * 
              * @return
@@ -770,7 +775,9 @@ namespace fg {
             ModelFlags m_modelFlags;
 
             union {
+
                 struct {
+
                     union {
                         /// Number of vertices in the model
                         fgGFXuint m_numVertices;
