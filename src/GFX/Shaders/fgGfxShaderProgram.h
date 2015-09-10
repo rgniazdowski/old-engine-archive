@@ -149,7 +149,7 @@ namespace fg {
             }
 
         public:
-            ///
+            /// 
             typedef CVector<fg::gfx::CShader *> ShaderVec;
             ///
             typedef ShaderVec::iterator ShaderVecItor;
@@ -396,28 +396,50 @@ namespace fg {
              */
             fgBool isUsed(void);
 
-        public:
+        private:
             /**
              * 
              * @return 
              */
-            inline ShaderVec& getRefShaderVec(void) {
+            inline ShaderVec& getShaders(void) {
                 return m_shaders;
             }
             /**
              * 
              * @return 
              */
-            inline AttributeBindVec& getRefAttrBinds(void) {
+            inline ShaderVec const& getShaders(void) const {
+                return m_shaders;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline AttributeBindVec& getAttributeBinds(void) {
+                return m_attrBinds;
+            }
+            /**
+             *
+             * @return
+             */
+            inline AttributeBindVec const& getAttributeBinds(void) const {
                 return m_attrBinds;
             }
             /**
              * 
              * @return 
              */
-            inline UniformBindVec& getRefUniformBinds(void) {
+            inline UniformBindVec& getUniformBinds(void) {
                 return m_uniformBinds;
             }
+            /**
+             * 
+             * @return 
+             */
+            inline UniformBindVec const& getUniformBinds(void) const {
+                return m_uniformBinds;
+            }
+        public:
             /**
              * 
              * @param type

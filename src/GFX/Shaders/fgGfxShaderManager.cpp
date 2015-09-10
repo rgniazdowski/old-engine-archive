@@ -80,11 +80,13 @@ fgBool gfx::CShaderManager::initialize(void) {
     CShaderProgram *defaultProgram = new CShaderProgram();
     defaultProgram->setName("DefaultShader"); // #FIXME - const name
     defaultProgram->setFilePath("DefaultShader");
-    CShaderProgram::AttributeBindVec &attrBinds = defaultProgram->getRefAttrBinds();
-    CShaderProgram::UniformBindVec &uniformBinds = defaultProgram->getRefUniformBinds();
-    CShaderProgram::ShaderVec & shaderVec = defaultProgram->getRefShaderVec();
+    CShaderProgram::AttributeBindVec attrBinds;
+    CShaderProgram::UniformBindVec uniformBinds;
+    CShaderProgram::ShaderVec& shaderVec = defaultProgram->getShaders();
     char *sourceFragment = fgMalloc<char>(2048);
     char *sourceVertex = fgMalloc<char>(2048);
+    attrBinds.reserve(4);
+    uniformBinds.reserve(4);
 
     // DEFAULT FRAGMENT SHADER SOURCE BUFFER
     strcpy(sourceFragment, "#ifdef FG_GFX_ESSL_PRECISION_DEF\n"
@@ -139,7 +141,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     ////////////////////////////////////////////////////////////////////////////
     // FRAGMENT SHADER
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setVersion(slVersion);
-    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setName("DefaultShader");
+    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setName("DefaultShader.Fragment");
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setFilePath("no_path");
     if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
         shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->appendDefine(SShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
@@ -149,7 +151,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     ////////////////////////////////////////////////////////////////////////////
     // VERTEX SHADER
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setVersion(slVersion);
-    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setName("DefaultShader");
+    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setName("DefaultShader.Vertex");
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setFilePath("no_path");
     if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
         shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->appendDefine(SShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
@@ -159,12 +161,14 @@ fgBool gfx::CShaderManager::initialize(void) {
     attrBinds.push_back(SAttributeBind("a_position", AttributeType::ATTRIBUTE_POSITION));
     attrBinds.push_back(SAttributeBind("a_texCoord", AttributeType::ATTRIBUTE_TEXTURE_COORD));
     attrBinds.push_back(SAttributeBind("a_color", AttributeType::ATTRIBUTE_COLOR));
+    defaultProgram->appendAttributeBinds(attrBinds);
 
     uniformBinds.push_back(SUniformBind("u_mvpMatrix", shaders::UNIFORM_MVP_MATRIX));
     uniformBinds.push_back(SUniformBind("u_CustomColor", shaders::UNIFORM_CUSTOM_COLOR));
     uniformBinds.push_back(SUniformBind("u_useTexture", shaders::UNIFORM_USE_TEXTURE));
     uniformBinds.push_back(SUniformBind("s_texture", shaders::UNIFORM_PLAIN_TEXTURE));
-
+    defaultProgram->appendUniformBinds(uniformBinds);
+    
     defaultProgram->setPreloaded(FG_TRUE);
 
     if(!defaultProgram->compile()) {

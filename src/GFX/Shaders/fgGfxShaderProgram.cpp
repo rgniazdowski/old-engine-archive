@@ -42,6 +42,11 @@ m_config(NULL) {
     m_params[FG_GFX_PROGRAM_ACTIVE_ATTRIBUTE_MAX_LENGTH] = 0;
     m_params[FG_GFX_PROGRAM_ACTIVE_UNIFORMS] = 0;
     m_baseType = BASE_TYPE_PROGRAM;
+
+    m_uniformBinds.resize(shaders::NUM_UNIFORM_TYPES+1);
+    for(unsigned int i = 0; i <= (unsigned int)shaders::NUM_UNIFORM_TYPES; i++) {
+        m_uniformBinds[i].type = (shaders::UniformType)i;
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -358,14 +363,18 @@ fgBool gfx::CShaderProgram::deleteProgram(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CShaderProgram::appendUniformBinds(UniformBindVec & binds) {
+fgBool gfx::CShaderProgram::appendUniformBinds(UniformBindVec& binds) {
     if(binds.empty())
         return FG_FALSE;
     const int imax = binds.size();
+    const int tmax = m_uniformBinds.size();
     for(int i = 0; i < imax; i++) {
-        if(m_uniformBinds.contains(binds[i]))
+        int bIdx = (int)binds[i].type;
+        if(bIdx >= tmax)
             continue;
-        m_uniformBinds.push_back(binds[i]);
+        if(binds[i].variableName.empty())
+            continue;
+        m_uniformBinds[bIdx] = binds[i];
     }
     return FG_TRUE;
 }
@@ -572,11 +581,18 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
     itor = begin;
     for(; itor != end; itor++) {
         SUniformBind & bind = *itor;
-        if(bind.type == shaders::UNIFORM_INVALID)
+        if(bind.type == shaders::UNIFORM_INVALID || bind.variableName.empty())
             continue;
-        FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)", bind.variableName.c_str(), getTextFromUniformType(bind.type), (int)bind.type);
-        bind.location = glGetUniformLocation(m_gfxID, bind.variableName.c_str());
-        FG_LOG_DEBUG("GFX: Bound uniform '%s' to location: %d", bind.variableName.c_str(), bind.location);
+        //FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)",
+                     //bind.variableName.c_str(),
+                     //getTextFromUniformType(bind.type),
+                     //(int)bind.type);
+        bind.location = getUniformLocation(bind.variableName);
+        FG_LOG_DEBUG("GFX: Bound uniform '%s' of type: '%s'(%d) to location: %d",
+                     bind.variableName.c_str(),
+                     getTextFromUniformType(bind.type), 
+                     (int)bind.type,
+                     bind.location);
         GLCheckError("glGetUniformLocation");
     }
     return FG_TRUE;
@@ -584,35 +600,23 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
 //------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::getUniformBindIndex(shaders::UniformType type) {
-    if(type == shaders::UNIFORM_INVALID)
-        return -1;
-    fgGFXint foundIndex = -1;
-    int i, n = (int)m_uniformBinds.size();
-    for(i = 0; i < n; i++) {
-        SUniformBind & bind = m_uniformBinds.at(i);
-        if(bind.type == shaders::UNIFORM_INVALID)
-            continue;
-        if(bind.type == type) {
-            foundIndex = i;
-            break;
-        }
-    }
-    return foundIndex;
+    int n = (int)m_uniformBinds.size();
+    if(n <= (int)type)
+        return 0;
+    if(m_uniformBinds[(int)type].type == type)
+        return (int)type;
+    return 0;
 }
 //------------------------------------------------------------------------------
 
 gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(shaders::UniformType type) {
     int index = getUniformBindIndex(type);
-    if(index < 0)
-        return NULL;
     return &m_uniformBinds[index];
 }
 //------------------------------------------------------------------------------
 
 fgGFXint gfx::CShaderProgram::getUniformLocation(shaders::UniformType type) {
     SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return -1;
     return bind->location;
 }
 //------------------------------------------------------------------------------
@@ -627,9 +631,7 @@ fgGFXint gfx::CShaderProgram::getUniformLocation(std::string variableName) {
 fgBool gfx::CShaderProgram::setUniform(CMVPMatrix* matrix) {
     if(!matrix)
         return FG_FALSE;
-    SUniformBind* bind = getUniformBind(shaders::UNIFORM_MVP_MATRIX);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[shaders::UNIFORM_MVP_MATRIX];
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix4fv(bind->location, 1, GL_FALSE, matrix->getModelViewProjMatPtr());
@@ -639,8 +641,8 @@ fgBool gfx::CShaderProgram::setUniform(CMVPMatrix* matrix) {
 //------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(CMVMatrix* matrix) {
-    SUniformBind* bind = getUniformBind(shaders::UNIFORM_MV_MATRIX);
-    if(!bind || !matrix)
+    SUniformBind* bind = &m_uniformBinds[shaders::UNIFORM_MV_MATRIX];
+    if(!matrix)
         return FG_FALSE;
     if(bind->location == -1)
         return FG_FALSE;
@@ -652,9 +654,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVMatrix* matrix) {
 
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        const Matrix4f& matrix) {
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
 
@@ -670,9 +670,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        const unsigned int count) {
     if(!matrices || !count)
         return FG_FALSE;
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix4fv(bind->location, count,
@@ -686,9 +684,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        const CVector<Matrix4f>& matrices) {
     if(matrices.empty())
         return FG_FALSE;
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix4fv(bind->location,
@@ -702,9 +698,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
 
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        const Matrix3f& matrix) {
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix3fv(bind->location, 1, GL_FALSE, math::value_ptr(matrix));
@@ -718,9 +712,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        const unsigned int count) {
     if(!matrices || !count)
         return FG_FALSE;
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix3fv(bind->location, count,
@@ -734,9 +726,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        const CVector<Matrix3f>& matrices) {
     if(matrices.empty())
         return FG_FALSE;
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix3fv(bind->location,
@@ -778,9 +768,7 @@ fgBool gfx::CShaderProgram::setUniform(const CVector<DualQuaternionf>& dquats) {
 
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0) {
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform1f(bind->location, v0);
@@ -792,9 +780,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0,
                                        fgGFXfloat v1) {
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform2f(bind->location, v0, v1);
@@ -807,9 +793,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v0,
                                        fgGFXfloat v1,
                                        fgGFXfloat v2) {
-    SUniformBind* bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform3f(bind->location, v0, v1, v2);
@@ -823,9 +807,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXfloat v1,
                                        fgGFXfloat v2,
                                        fgGFXfloat v3) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform4f(bind->location, v0, v1, v2, v3);
@@ -836,9 +818,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
 
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform1i(bind->location, v0);
@@ -850,9 +830,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0,
                                        fgGFXint v1) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform2i(bind->location, v0, v1);
@@ -865,9 +843,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v0,
                                        fgGFXint v1,
                                        fgGFXint v2) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform3i(bind->location, v0, v1, v2);
@@ -881,9 +857,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXint v1,
                                        fgGFXint v2,
                                        fgGFXint v3) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     glUniform4i(bind->location, v0, v1, v2, v3);
@@ -895,9 +869,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXsizei count,
                                        const fgGFXfloat *value) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     if(bind->dataType == FG_GFX_FLOAT_VEC4) {
@@ -920,9 +892,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
 fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXsizei count,
                                        const fgGFXint *value) {
-    SUniformBind *bind = getUniformBind(type);
-    if(!bind)
-        return FG_FALSE;
+    SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
     if(bind->dataType == FG_GFX_INT_VEC4) {
