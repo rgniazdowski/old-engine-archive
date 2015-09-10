@@ -22,7 +22,7 @@
         #include "fgGfxSceneNode.h"
     #endif
 
-    #ifndef FG_INC_GFX_MODEL_TYPES
+    #ifndef FG_INC_GFX_MESH
         #include "fgGfxModelTypes.h"
     #endif
 namespace fg {

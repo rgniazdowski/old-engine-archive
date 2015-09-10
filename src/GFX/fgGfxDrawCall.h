@@ -27,8 +27,12 @@
         #include "fgGfxMVPMatrix.h"
     #endif
 
-    #ifndef FG_INC_GFX_MODEL_TYPES
+    #ifndef FG_INC_GFX_MESH
         #include "fgGfxMesh.h"
+    #endif
+
+    #ifndef FG_INC_GFX_SHAPE
+        #include "fgGfxShape.h"
     #endif
 
     #ifndef FG_INC_GFX_DRAWABLE

@@ -6,18 +6,16 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
-#ifndef FG_INC_GFX_MODEL_TYPES
-    #define FG_INC_GFX_MODEL_TYPES
-    #define FG_INC_GFX_MODEL_TYPES_BLOCK
+#ifndef FG_INC_GFX_MESH
+    #define FG_INC_GFX_MESH
+    #define FG_INC_GFX_MESH_BLOCK
 
     #ifndef FG_INC_GFX_TYPES
         #include "fgGfxTypes.h"
     #endif
-    #ifndef FG_INC_GFX_MATERIAL
-        #include "fgGfxMaterial.h"
-    #endif
+    
     #ifndef FG_INC_GFX_AA_BOUNDING_BOX
         #include "fgGfxAABoundingBox.h"
     #endif
@@ -871,62 +869,6 @@ namespace fg {
 
         //----------------------------------------------------------------------
 
-        /**
-         *
-         */
-        struct SShape {
-            ///
-            std::string name;
-            ///
-            SMaterial* material;
-            ///
-            SMeshBase* mesh;
-            /**
-             * 
-             */
-            SShape() : name(), material(NULL), mesh(NULL) { }
-            /**
-             *
-             */
-            virtual ~SShape() {
-                clear();
-            }
-            /**
-             * 
-             */
-            void updateAABB(void) {
-                if(mesh)
-                    mesh->updateAABB();
-            }
-            /**
-             * 
-             */
-            void clear(void) {
-                if(material)
-                    delete material;
-                material = NULL;
-
-                if(mesh)
-                    delete mesh;
-                mesh = NULL;
-                name.clear();
-            }
-            /**
-             * 
-             * @return 
-             */
-            size_t getDataSize(void) {
-                size_t size = 0;
-                size += name.length();
-                size += sizeof (SShape);
-                if(material)
-                    size += material->getDataSize();
-                if(mesh)
-                    size += mesh->getDataSize();
-                return size;
-            }
-        }; // struct SShape
-
     } // namespace gfx
 } // namespace fg
 
@@ -951,5 +893,5 @@ namespace fg {
 // X - DirectX 3D Model
     #define	FG_GFX_MODEL_RES_X_EXTENSION		"x"
 
-    #undef FG_INC_GFX_MODEL_TYPES_BLOCK
-#endif /* FG_INC_GFX_MODEL_TYPES */
+    #undef FG_INC_GFX_MESH_BLOCK
+#endif /* FG_INC_GFX_MESH */

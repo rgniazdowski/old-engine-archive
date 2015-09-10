@@ -12,7 +12,6 @@
 #include "fgGfxSkinnedMesh.h"
 #include "Animation/fgGfxArmature.h"
 #include "Animation/fgGfxBoneAnimation.h"
-#include "fgGfxSkinnedMesh.h"
 #include "fgTinyObj.h"
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceErrorCodes.h"
@@ -85,9 +84,13 @@ m_skinning(),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
+    // Set default flags
     setFlag(INTERLEAVED, FG_TRUE);
-    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
     setFlag(FIX_CENTER, FG_TRUE);
+    setFlag(HIGH_QUALITY, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_FALSE);
+    setFlag(PRE_TRANSLATION, FG_FALSE);
+
     memset(m_numData, 0, sizeof (m_numData));
     base_type::m_resType = resource::MODEL3D;
     s_cmrInstanceCount++;
@@ -105,9 +108,12 @@ m_skinning(),
 m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
+    // Set default flags
     setFlag(INTERLEAVED, FG_TRUE);
-    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
     setFlag(FIX_CENTER, FG_TRUE);
+    setFlag(HIGH_QUALITY, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_FALSE);
+    setFlag(PRE_TRANSLATION, FG_FALSE);
     base_type::m_resType = resource::MODEL3D;
     s_cmrInstanceCount++;
 #if defined(FG_USING_ASSIMP)
@@ -125,9 +131,12 @@ m_materialOverride(NULL),
 m_modelType(MODEL_INVALID),
 m_modelFlags(NO_FLAGS) {
     m_modelFlags = NO_FLAGS;
+    // Set default flags
     setFlag(INTERLEAVED, FG_TRUE);
-    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
     setFlag(FIX_CENTER, FG_TRUE);
+    setFlag(HIGH_QUALITY, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_FALSE);
+    setFlag(PRE_TRANSLATION, FG_FALSE);
     base_type::m_resType = resource::MODEL3D;
     s_cmrInstanceCount++;
 #if defined(FG_USING_ASSIMP)
@@ -162,14 +171,17 @@ void gfx::CModelResource::clear(void) {
     m_modelType = MODEL_INVALID;
     m_modelFlags = NO_FLAGS;
     base_type::m_resType = resource::MODEL3D;
+    // Set default flags
     setFlag(INTERLEAVED, FG_TRUE);
-    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
     setFlag(FIX_CENTER, FG_TRUE);
+    setFlag(HIGH_QUALITY, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_FALSE);
+    setFlag(PRE_TRANSLATION, FG_FALSE);
     memset(m_numData, 0, sizeof (m_numData));
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
+fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string&path) {
     if(m_modelType == MODEL_BUILTIN) {
         return FG_TRUE;
     }
@@ -430,10 +442,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     const ::aiScene* pScene = NULL;
     unsigned int defaultFlags = 0;
 
-    setFlag(PRE_TRANSLATION, FG_FALSE);
-    setFlag(FIX_CENTER, FG_TRUE);
-    setFlag(SAVE_DISPLACEMENT, FG_FALSE);
-    setFlag(HIGH_QUALITY, FG_TRUE);
     defaultFlags |= aiProcess_JoinIdenticalVertices;
     // defaultFlags |= aiProcess_MakeLeftHanded; // only for DirectX
     defaultFlags |= aiProcess_Triangulate;
@@ -1159,7 +1167,12 @@ gfx::anim::CAnimation* gfx::CModelResource::getAnimation(const char* name) {
 }
 //------------------------------------------------------------------------------
 
-void refreshSkinningInfo(void) {
-    // TODO
+void gfx::CModelResource::refreshSkinningInfo(void) {
+    const unsigned int n = m_shapes.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(!m_shapes[i]->isSkinned())
+            continue;
+        m_shapes[i]->getSkinnedMesh()->refreshSkinningInfo();
+    }
 }
 //------------------------------------------------------------------------------

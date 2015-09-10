@@ -15,8 +15,11 @@
     #ifndef FG_INC_TYPES
         #include "fgTypes.h"
     #endif
-    #ifndef FG_INC_GFX_MODEL_TYPES
+    #ifndef FG_INC_GFX_MESH
         #include "fgGfxMesh.h"
+    #endif
+    #ifndef FG_INC_GFX_SHAPE
+        #include "fgGfxShape.h"
     #endif
     #ifndef FG_INC_RESOURCE
         #include "Resource/fgResource.h"

@@ -213,6 +213,8 @@
         <itemPath>../../../src/GFX/fgGfxPrimitives.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPrimitives.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxProjection.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxShape.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxShape.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxSimpleDrawer.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxSimpleDrawer.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxSkinnedMesh.cpp</itemPath>
@@ -1434,6 +1436,10 @@
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
@@ -3228,6 +3234,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxShape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
@@ -4987,6 +4997,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxShape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
@@ -6731,6 +6745,10 @@
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
@@ -8496,6 +8514,10 @@
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxShape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
@@ -10251,6 +10273,10 @@
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxShape.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"

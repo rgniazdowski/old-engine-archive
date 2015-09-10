@@ -101,6 +101,8 @@
             <word>drawcall</word>
             <word>drawcall's</word>
             <word>drawcalls</word>
+            <word>dropanimations</word>
+            <word>dropbones</word>
             <word>ds</word>
             <word>eg</word>
             <word>egl</word>
@@ -109,6 +111,7 @@
             <word>fg</word>
             <word>fgets</word>
             <word>fgprivate</word>
+            <word>fixcenter</word>
             <word>flaredouble</word>
             <word>flarefour</word>
             <word>flexi</word>
@@ -124,6 +127,7 @@
             <word>Gainsboro</word>
             <word>gameplay</word>
             <word>gc</word>
+            <word>generatetangents</word>
             <word>getcwd</word>
             <word>gfx</word>
             <word>gl</word>
@@ -137,6 +141,7 @@
             <word>hcenter</word>
             <word>hexangle</word>
             <word>highp</word>
+            <word>highquality</word>
             <word>hslider</word>
             <word>Icosagon</word>
             <word>ids</word>
@@ -161,12 +166,16 @@
             <word>linux</word>
             <word>ll</word>
             <word>losts</word>
+            <word>lowquality</word>
             <word>lu</word>
             <word>Lua</word>
             <word>mainmenu</word>
             <word>malloc</word>
             <word>masse</word>
             <word>mediump</word>
+            <word>mergemeshes</word>
+            <word>meshaos</word>
+            <word>meshsoa</word>
             <word>metadata</word>
             <word>metatable</word>
             <word>metatables</word>
@@ -180,9 +189,15 @@
             <word>mutex</word>
             <word>namespace</word>
             <word>noclip</word>
+            <word>nofixcenter</word>
+            <word>nohighquality</word>
+            <word>nomergemeshes</word>
             <word>nongame</word>
+            <word>nopretranslation</word>
             <word>normalised</word>
+            <word>nosavedisplacement</word>
             <word>noticable</word>
+            <word>notinterleaved</word>
             <word>nx</word>
             <word>ny</word>
             <word>nz</word>
@@ -206,6 +221,7 @@
             <word>pp</word>
             <word>Pragma</word>
             <word>preload</word>
+            <word>pretranslation</word>
             <word>printf</word>
             <word>prox</word>
             <word>ptr</word>
@@ -229,6 +245,7 @@
             <word>rgbaf</word>
             <word>rgbf</word>
             <word>s'</word>
+            <word>savedisplacement</word>
             <word>sfactor</word>
             <word>sfx</word>
             <word>shaders</word>
