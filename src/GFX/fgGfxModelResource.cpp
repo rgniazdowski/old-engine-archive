@@ -16,10 +16,10 @@
 #include "fgTinyObj.h"
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceErrorCodes.h"
+#include "Util/fgStrings.h"
 #include "Util/fgPath.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 #if defined(FG_USING_ASSIMP)
@@ -430,8 +430,9 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     const ::aiScene* pScene = NULL;
     unsigned int defaultFlags = 0;
 
+    setFlag(PRE_TRANSLATION, FG_FALSE);
     setFlag(FIX_CENTER, FG_TRUE);
-    setFlag(SAVE_DISPLACEMENT, FG_TRUE);
+    setFlag(SAVE_DISPLACEMENT, FG_FALSE);
     setFlag(HIGH_QUALITY, FG_TRUE);
     defaultFlags |= aiProcess_JoinIdenticalVertices;
     // defaultFlags |= aiProcess_MakeLeftHanded; // only for DirectX
@@ -490,6 +491,12 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     if(pNodeArmature) {
         stack.push(pNodeArmature);
         pArmature = new anim::CArmature();
+        // first child here
+        anim::SBone* pBone = new anim::SBone();
+        pBone->name.append("ArmatureRoot");
+        assimp_helper::copyMatrix4x4(pBone->bindPoseMatrix, pScene->mRootNode->mTransformation);
+        pArmature->add(pBone);
+        //delete pBone;
     }
     // traverse the 'Armature' node
     while(!stack.empty()) {
@@ -508,21 +515,21 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
         if(isRoot || pNode->mNumMeshes > 0) {
             continue;
         }
-        if(pNode == pNodeArmature) {
-            // Nothing to do
-            //continue; // ?
-        }
         // first child here
         anim::SBone* pBone = new anim::SBone();
         pBone->name.append(pNode->mName.C_Str());
-        if(pNode->mParent) {
+        if(pNode == pNodeArmature) {
+            pBone->pParent = pArmature->get("ArmatureRoot");
+        } else if(pNode->mParent) {
             // this node has parent
             pBone->pParent = pArmature->get(pNode->mParent->mName.C_Str());
             // parent index will be set upon addition
         }
+
         const char* pFatherName = NULL;
         if(pBone->pParent)
             pFatherName = pBone->pParent->name.c_str();
+
         printf("Adding bone '%s' | it has a father: '%s'\n", pBone->name.c_str(), pFatherName);
         assimp_helper::copyMatrix4x4(pBone->bindPoseMatrix, pNode->mTransformation);
         // add bone to the armature, parent idx/ptr and children vectors
@@ -559,7 +566,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     // Traverse the structure from node, search for meshes and additional bone info
     stack.push(pScene->mRootNode);
     while(!stack.empty()) {
-        aiQuaternion quat;
+        aiQuaternion matRot;
         aiVector3D matPos, matScale;
 
         aiNode* pNode = stack.top();
@@ -569,11 +576,11 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             stack.push(pNode->mChildren[i]);
         }
         if(isRoot) {
-            pNode->mTransformation.Decompose(matScale, quat, matPos);
+            pNode->mTransformation.Decompose(matScale, matRot, matPos);
             printf("%p: %s [Root] [t:%.2f;%.2f;%.2f] [rot:%.2f;%.2f;%.2f;%.2f] [scale:%.2f;%.2f;%.2f]\n",
                    pNode, pNode->mName.C_Str(),
                    matPos.x, matPos.y, matPos.z,
-                   quat.w, quat.x, quat.y, quat.z,
+                   matRot.w, matRot.x, matRot.y, matRot.z,
                    matScale.x, matScale.y, matScale.z);
             continue;
         }
@@ -590,7 +597,12 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
         }
         nodeTransVec.reverse();
         if(!pNode->mNumMeshes) {
-            printf("%s%p: %s [no mesh]\n", spacing.c_str(), pNode, pNode->mName.C_Str());
+            pNode->mTransformation.Decompose(matScale, matRot, matPos);
+            printf("%s%p: %s [Bone] [t:%.2f;%.2f;%.2f] [rot:%.2f;%.2f;%.2f;%.2f] [scale:%.2f;%.2f;%.2f]\n",
+                   spacing.c_str(), pNode, pNode->mName.C_Str(),
+                   matPos.x, matPos.y, matPos.z,
+                   matRot.w, matRot.x, matRot.y, matRot.z,
+                   matScale.x, matScale.y, matScale.z);
             continue;
         }
         aiTransform = aiMatrix4x4();
@@ -599,17 +611,68 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             aiTransform *= nodeTransVec[i]->mTransformation;
         }
         nodeTransVec.clear();
-        aiTransform.Decompose(matScale, quat, matPos);
+        aiTransform.Decompose(matScale, matRot, matPos);
+
+        // This may not be working properly for now. #FIXME        
+        if(!isPreTranslation()) {
+            // Zero the transformation: the mesh will now appear at center (local)
+            // mesh still will be moved by armature offset if animated/rigged
+            Vec4f offsetArmature;
+            if(pArmature) {
+                //printf("transform: %.2f %.2f %.2f\n", 1 * aiTransform.a4,
+                //       1 * aiTransform.b4,
+                //       1 * aiTransform.c4);
+                offsetArmature = pArmature->get("Armature")->bindPoseMatrix[3];
+                pArmature->get("Armature")->bindPoseMatrix[3] = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+                /*-= Vec4f(1 * aiTransform.a4,
+                                                               1 * aiTransform.b4,
+                                                               1 * aiTransform.c4,
+                                                               0.0f);*/
+            }
+            // ? basically it means that even with translation
+            // one should not change the offset
+            // just change the translation keys of all animations
+            // this makes sense ?
+            unsigned int nAnims = m_skinning.animations.size();
+            for(unsigned int i = 0; i < nAnims; i++) {
+                anim::CAnimation* pAnim = m_skinning.animations[i];
+                if(!pAnim)
+                    continue;
+                const unsigned int nChannels = pAnim->getChannels().size();
+                for(unsigned int idChannel = 0; idChannel < nChannels; idChannel++) {
+                    anim::SAnimationChannel& refChannel = pAnim->getChannels()[idChannel];
+                    if(refChannel.targetName.compare("Armature") == 0) {
+                        // get Armature channel - ignore the rest
+                        // now pre-translate properly all translation keys
+                        const unsigned int nKeys = refChannel.positionKeys.size();
+                        for(unsigned int idxKey = 0; idxKey < nKeys; idxKey++) {
+                            refChannel.positionKeys[idxKey].value -= Vec3f(offsetArmature); /*Vec3f(aiTransform.a4,
+                                                                           aiTransform.b4,
+                                                                           aiTransform.c4);*/
+                            // so now the model should display properly
+                        }
+                        break;
+                    }
+                }
+            }
+            aiTransform.a4 = 0.0f;
+            aiTransform.b4 = 0.0f;
+            aiTransform.c4 = 0.0f;
+        } else {
+            aiTransform.a4 += m_preTranslation.x;
+            aiTransform.b4 += m_preTranslation.y;
+            aiTransform.c4 += m_preTranslation.z;
+        }
+        Matrix4f transformInv;
+        assimp_helper::copyMatrix4x4(transformInv, aiMatrix4x4(aiTransform).Inverse());
         const aiMatrix3x3 aiTransformIT = aiMatrix3x3(aiTransform).Inverse().Transpose();
         Matrix3f transformIT;
         assimp_helper::copyMatrix3x3(transformIT, aiTransformIT);
-
         printf("%s%p: %s [t:%.2f;%.2f;%.2f] [rot:%.2f;%.2f;%.2f;%.2f] [scale:%.2f;%.2f;%.2f]\n",
                spacing.c_str(), pNode, pNode->mName.C_Str(),
                matPos.x, matPos.y, matPos.z,
-               quat.w, quat.x, quat.y, quat.z,
+               matRot.w, matRot.x, matRot.y, matRot.z,
                matScale.x, matScale.y, matScale.z);
-
         for(unsigned int i = 0; i < pNode->mNumMeshes; i++) {
             aiMesh* pMesh = pScene->mMeshes[pNode->mMeshes[i]];
             if(!pMesh) {
@@ -651,7 +714,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                         // could not find the bone? this should not happen
                         continue;
                     }
-
                     assimp_helper::copyBone(pOriginalBone, pAiBone);
                     if(pSkinnedMesh)
                         pSkinnedMesh->bones.push_back(pOriginalBone);
@@ -664,18 +726,10 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                     pShape->mesh->appendIndice(pFace->mIndices[fidx]);
                 }
             }
-            // Fix center and save displacement should be used together
             // In most cases using only save displacement may cause artifacts
             // as the objects will be moved twice: once by the model matrix
             // transformation, the second time because of the transformation
-            // of vertices.
-            // This may not be working properly for now. #FIXME
-            if(isFixCenter()) {
-                // Zero the transformation: the mesh will now appear at center (local)
-                aiTransform.a4 = 0.0f;
-                aiTransform.b4 = 0.0f;
-                aiTransform.c4 = 0.0f;
-            }
+            // of vertices. - should use with PreTranslation(false)
             if(isSaveDisplacement()) {
                 // Save the displacement info (off-center transformation)
                 assimp_helper::copyVector(pShape->mesh->displacement, matPos);
@@ -710,6 +764,12 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 pSkinnedMesh->refreshSkinningInfo();
             }
         } // for (mNumMeshes)
+        if(pNode->mNumMeshes && pArmature) {
+            for(unsigned int i = 0; i < pArmature->count(); i++) {
+                anim::SBone *pBone = pArmature->getBones()[i];
+                pBone->offset *= transformInv;
+            }
+        }
     } // while (stack not empty)
     m_skinning.pArmature = pArmature;
     s_objImporter->FreeScene();
@@ -857,7 +917,7 @@ void gfx::CModelResource::destroy(void) {
 
 fgBool gfx::CModelResource::recreate(void) {
     if(m_modelType != ModelType::MODEL_BUILTIN) {
-        // only dispose on reacreate when modelType is not BuiltIn
+        // only dispose on recreate when modelType is not BuiltIn
         dispose();
     }
     return create();
@@ -894,13 +954,46 @@ void gfx::CModelResource::updateAABB(void) {
     int n = m_shapes.size();
     m_aabb.invalidate();
     for(int i = 0; i < n; i++) {
-        if(m_shapes[i]->mesh) {
-            m_shapes[i]->updateAABB();
-            if(isFixCenter())
-                m_shapes[i]->mesh->fixCenter(isSaveDisplacement());
-            m_aabb.merge(m_shapes[i]->mesh->aabb);
+        SMeshBase* pMesh = m_shapes[i]->mesh;
+        if(pMesh) {
+            pMesh->updateAABB();
+            m_aabb.merge(pMesh->aabb);
         }
     }
+    if(isFixCenter()) {
+        const Vector3f offCenter = m_aabb.getCenter();
+        //        printf("%s: offCenter: %.2f %.2f %.2f\n",
+        //               this->getNameStr(), offCenter.x, offCenter.y, offCenter.z);
+        const Matrix4f offMatInv = math::inverse(math::translate(Matrix4f(), -offCenter));
+        if(m_skinning.pArmature) {
+            const unsigned int nBones = m_skinning.pArmature->getBones().size();
+            for(unsigned int i = 0; i < nBones; i++) {
+                anim::SBone* pBone = m_skinning.pArmature->getBones()[i];
+                if(!pBone) continue;
+                pBone->offset *= offMatInv;
+                //                printf("%.2f %.2f %.2f INV\n",
+                //                       offMatInv[3].x,
+                //                       offMatInv[3].y,
+                //                       offMatInv[3].z);
+            }
+        }
+        m_aabb.min -= offCenter;
+        m_aabb.max -= offCenter;
+        for(int i = 0; i < n; i++) {
+            SMeshBase* pMesh = m_shapes[i]->mesh;
+            if(pMesh) {
+                pMesh->translate(-offCenter);
+                pMesh->aabb.min -= offCenter;
+                pMesh->aabb.max -= offCenter;
+            }
+        }
+    }
+
+    //    printf("aabb:%s: min: %.2f %.2f %.2f | max: %.2f %.2f %.2f | center: %.2f %.2f %.2f\n",
+    //           this->getNameStr(),
+    //           m_aabb.min.x, m_aabb.min.y, m_aabb.min.z,
+    //           m_aabb.max.x, m_aabb.max.y, m_aabb.max.z,
+    //           m_aabb.getCenter().x, m_aabb.getCenter().y, m_aabb.getCenter().z);
 }
 //------------------------------------------------------------------------------
 

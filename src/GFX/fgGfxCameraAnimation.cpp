@@ -25,8 +25,10 @@ m_distance(1.0f) {
     Vector3f position = Vector3f(0, 20.0f, 300.0f);
     m_eye = position;
 }
+//------------------------------------------------------------------------------
 
 gfx::CCameraAnimation::~CCameraAnimation() { }
+//------------------------------------------------------------------------------
 
 float *gfx::CCameraAnimation::update(void) {
     if(m_type == FREE || m_type == FPS_STANDARD) {
@@ -75,6 +77,7 @@ float *gfx::CCameraAnimation::update(void) {
     //       m_direction.x, m_direction.y, m_direction.z);
     return CCamera::update();
 }
+//------------------------------------------------------------------------------
 
 float *gfx::CCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel) {
     if(m_type == FREE || m_type == FPS_STANDARD) {
@@ -83,27 +86,34 @@ float *gfx::CCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel)
     }
     return CCameraAnimation::update();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CCameraAnimation::moveLeft(void) {
     m_eye -= m_right * timesys::elapsed() * m_speed;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CCameraAnimation::moveRight(void) {
     m_eye += m_right * timesys::elapsed() * m_speed;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CCameraAnimation::moveForward(void) {
     m_eye += m_direction * timesys::elapsed() * m_speed;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CCameraAnimation::moveBackward(void) {
     m_eye -= m_direction * timesys::elapsed() * m_speed;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CCameraAnimation::moveUp(void) {
     m_eye += m_up * timesys::elapsed() * m_speed;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CCameraAnimation::moveDown(void) {
     m_eye -= m_up * timesys::elapsed() * m_speed;
 }
+//------------------------------------------------------------------------------

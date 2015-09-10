@@ -127,12 +127,16 @@ namespace fg {
                 MERGE_MESHES = 0x0400,
                 /// All meshes will be moved to their geometric center (based on AABB)
                 FIX_CENTER = 0x0800,
-                /// Write move vector relative to geometric center of each mesh
+                /// Write move vector relative to geometric center of each mesh.
+                /// This is the node displacement while loading hierarchical structure;
                 SAVE_DISPLACEMENT = 0x1000,
+                /// Should pre-translate all shapes on load? (one time only).
+                /// If there is translation stored in model file, it will be ignored
+                PRE_TRANSLATION = 0x2000,
                 /// Should make the model high quality? This will generate tangents, etc
-                HIGH_QUALITY = 0x2000,
+                HIGH_QUALITY = 0x4000,
                 /// Should generate tangents? (High quality model/mesh)
-                GENERATE_TANGENTS = 0x2000,
+                GENERATE_TANGENTS = 0x4000,
             }; // enum ModelFlags
 
         protected:
@@ -579,6 +583,33 @@ namespace fg {
             }
             /**
              * 
+             * @return
+             */
+            inline fgBool isPreTranslation(void) const {
+                return (fgBool)!!(m_modelFlags & PRE_TRANSLATION);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPreTranslation(fgBool toggle = FG_TRUE) {
+                setFlag(PRE_TRANSLATION, toggle);
+                if(!toggle) {
+                    m_preTranslation = Vector3f();
+                }
+            }
+            /**
+             *
+             * @param translation
+             */
+            inline void setPreTranslation(const Vector3f& translation) {
+                if(math::isZero(translation)) {
+                    setFlag(PRE_TRANSLATION, FG_FALSE);
+                }
+                m_preTranslation = translation;
+            }
+            /**
+             * 
              * @return 
              */
             inline fgBool isHighQuality(void) const {
@@ -731,15 +762,15 @@ namespace fg {
             ShapesVec m_shapes;
             /// Main bounding box - it's for whole model (all shapes)
             AABoundingBox3Df m_aabb;
+            /// Amount of pre-translation to do on load
+            Vector3f m_preTranslation;
             /// Identifier of the model type - based on the input data file extension
             ModelType m_modelType;
             /// Model internal flags (on/off info)
             ModelFlags m_modelFlags;
 
             union {
-
                 struct {
-
                     union {
                         /// Number of vertices in the model
                         fgGFXuint m_numVertices;

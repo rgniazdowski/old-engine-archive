@@ -64,7 +64,7 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
     }
 
     // time scale? elapsed is in seconds...
-    const float currentTime = math::mod(elapsed*1000.0f, getDurationInMs());
+    const float currentTime = math::mod(elapsed * 1000.0f, getDurationInMs());
     frameInfo.elapsed = (currentTime / getDurationInMs()) * getDurationInTicks();
 
     //CArmature::BonesVec const& bones = m_pArmature->getBones();
@@ -80,8 +80,8 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
         m_intermediate.reserve(m_pArmature->count());
     m_intermediate.resize(m_pArmature->count());
     for(unsigned int i = 0; i < m_intermediate.size(); i++) {
-        m_intermediate[i] = m_pArmature->getBones()[i]->bindPoseMatrix;        
-    }    
+        m_intermediate[i] = m_pArmature->getBones()[i]->bindPoseMatrix;
+    }
     ChannelsVec& channels = getChannels();
     const unsigned int nChannels = count();
     for(unsigned int i = 0; i < nChannels; i++) {
@@ -97,12 +97,10 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
                               frameInfo.elapsed);
         }
     }
-
     for(unsigned int i = 0; i < nBones; i++) {
         SBone* pBone = bones[i];
         // start with the mesh-to-bone matrix
         frameInfo.transformations[i] = pBone->offset;
-
         const SBone* pTmp = pBone;
         // append all node transformations down the parent chain
         // until we're back at mesh coordinates again
@@ -110,6 +108,7 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
             frameInfo.transformations[i] = m_intermediate[pTmp->index] * frameInfo.transformations[i];
             pTmp = pTmp->pParent;
         }
+        //frameInfo.transformations[i] = Matrix4f();
         // now frameInfo contains proper matrix transformations
         // these matrices are not optimal (4x4 is too big)
         // convert mat4 to dual quaternion
