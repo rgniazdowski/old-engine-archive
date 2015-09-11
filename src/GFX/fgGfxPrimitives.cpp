@@ -1005,8 +1005,10 @@ void gfx::primitives::applyAttributeData(SAttributeData* attrData,
     }
     if(!count)
         count = NUM_ATTRIBUTE_TYPES;
+    fgBool isActive = FG_FALSE;
     for(unsigned int i = 0; i < count; i++) {
-        if(attrData[i].isEnabled) {
+        isActive = (fgBool)!!(attribMask & ((AttributeMask)1 << attrData[i].index));
+        if(attrData[i].isEnabled && isActive) {
             if(attrData[i].isInterleaved == FG_FALSE && attrData[i].isBO) {
                 context::bindBuffer(gfx::ARRAY_BUFFER, attrData[i].buffer);
             }

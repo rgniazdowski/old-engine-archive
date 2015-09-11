@@ -171,13 +171,16 @@ namespace fg {
         protected:
             /// Current state flags for the shader program
             StateFlags m_stateFlags;
+            /// Current attribute mask of the shader program.
+            /// It tells which attributes are activated within the shader.
+            AttributeMask m_attribMask;
             /// Vector holding shaders (vertex/fragment/etc..) that 
             /// will be used to link the shader program
             ShaderVec m_shaders;
             /// Special vector with uniforms binds for this shader program
             UniformBindVec m_uniformBinds;
             /// Vector with attribute binds for this shader program
-            AttributeBindVec m_attrBinds;
+            AttributeBindVec m_attribBinds;
             /// Helper class for loading special shader configs
             CShaderConfig* m_config;
 
@@ -239,6 +242,13 @@ namespace fg {
              */
             inline fgBool wasRecentlyUsed(void) const {
                 return (fgBool)!!(m_stateFlags & RECENTLY_USED);
+            }
+            /**
+             * 
+             * @return
+             */
+            inline AttributeMask getAttribMask(void) const {
+                return m_attribMask;
             }
 
         protected:
@@ -422,14 +432,14 @@ namespace fg {
              * @return 
              */
             inline AttributeBindVec& getAttributeBinds(void) {
-                return m_attrBinds;
+                return m_attribBinds;
             }
             /**
              *
              * @return
              */
             inline AttributeBindVec const& getAttributeBinds(void) const {
-                return m_attrBinds;
+                return m_attribBinds;
             }
             /**
              * 

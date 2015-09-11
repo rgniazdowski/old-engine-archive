@@ -601,6 +601,7 @@ void gfx::CDrawCall::draw(void) {
         return;
     }
     fgBool scissorSet = FG_FALSE;
+    AttributeMask andMask = m_attribMask;
     if(m_scissorBox.z != 0 && m_scissorBox.w != 0) {
         // If scissor box has some kind of size then...
         context::scissor(m_scissorBox);
@@ -610,6 +611,7 @@ void gfx::CDrawCall::draw(void) {
         // force use program?
         m_pProgram->use();
         m_pProgram->setUniform(m_pMVP);
+        andMask &= m_pProgram->getAttribMask();
     }
     if(m_pProgram) {
         float useTexture = 0.0f;
@@ -640,7 +642,7 @@ void gfx::CDrawCall::draw(void) {
     if(m_drawCallType == DRAW_CALL_MESH ||
        m_drawCallType == DRAW_CALL_INTERNAL_ARRAY ||
        m_drawCallType == DRAW_CALL_EXTERNAL_ARRAY) {
-        primitives::applyAttributeData(m_attrData, m_drawingInfo, m_attribMask);
+        primitives::applyAttributeData(m_attrData, m_drawingInfo, andMask);
         if(m_pMaterial) {
             context::setCullFace(m_pMaterial->isCullFace());
             context::setDepthTest(m_pMaterial->isDepthTest());

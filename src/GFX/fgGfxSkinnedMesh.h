@@ -280,6 +280,14 @@ namespace fg {
              */
             virtual void refreshSkinningInfo(void);
 
+            /**
+             * 
+             * @return
+             */
+            virtual AttributeMask attribMask(void) const {
+                return base_type::attribMask() | ATTRIBUTE_BLEND_WEIGHTS_BIT| ATTRIBUTE_BLEND_INDICES_BIT;
+            }
+
         protected:
             /**
              *
@@ -374,6 +382,14 @@ namespace fg {
              *
              */
             virtual void refreshSkinningInfo(void);
+
+            /**
+             *
+             * @return
+             */
+            virtual AttributeMask attribMask(void) const {
+                return base_type::attribMask() | ATTRIBUTE_BLEND_WEIGHTS_BIT| ATTRIBUTE_BLEND_INDICES_BIT;
+            }
 
         protected:
             virtual unsigned short internal_getBlendWeightsVboArrayIdx(void) const;

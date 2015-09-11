@@ -24,9 +24,10 @@ using namespace fg;
 
 gfx::CShaderProgram::CShaderProgram() : base_type(),
 m_stateFlags(NO_FLAGS),
+m_attribMask(ATTRIBUTE_ZERO_BIT),
 m_shaders(),
 m_uniformBinds(),
-m_attrBinds(),
+m_attribBinds(),
 m_config(NULL) {
     // this needs to depend on some global array GFX config #FIXME
     m_shaders.reserve(6);
@@ -73,7 +74,7 @@ void gfx::CShaderProgram::clearAll(void) {
         }
     }
     m_uniformBinds.clear_optimised();
-    m_attrBinds.clear_optimised();
+    m_attribBinds.clear_optimised();
     m_shaders.clear_optimised();
     m_stateFlags = NO_FLAGS;
     deleteProgram();
@@ -180,6 +181,10 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
                 CShaderManager* pShaderMgr = static_cast<CShaderManager*>(this->getManager());
                 pShaderMgr->insertShader(pShader);
             }
+        } else if(!m_shaders[spID]) {
+            m_shaders[spID] = pShader; //
+            appendAttributeBinds(m_config->getAttributeBinds());
+            appendUniformBinds(m_config->getUniformBinds());
         }
     }
     delete m_config;
@@ -288,20 +293,26 @@ fgBool gfx::CShaderProgram::link(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_EINVAL, "GFX: Failed to bind all uniforms in shader program '%s'", getNameStr());
         status = FG_FALSE;
     }
+    m_attribMask = ATTRIBUTE_ZERO_BIT;
     {
         FG_LOG_DEBUG("GFX: Validating bound locations of attributes...");
         AttributeBindVecItor begin, end, itor;
-        begin = m_attrBinds.begin();
-        end = m_attrBinds.end();
+        begin = m_attribBinds.begin();
+        end = m_attribBinds.end();
         itor = begin;
         for(; itor != end; itor++) {
             SAttributeBind & bind = *itor;
             if(bind.location == -1 || bind.type == ATTRIBUTE_INVALID)
                 continue;
-            int boundLoc = glGetAttribLocation(m_gfxID, bind.variableName.c_str());
+            int boundLocation = glGetAttribLocation(m_gfxID, bind.variableName.c_str());
             FG_LOG_DEBUG("GFX: Bound attribute '%s' to location %d (should be %d)",
-                         bind.variableName.c_str(), boundLoc, (int)bind.type);
+                         bind.variableName.c_str(), boundLocation, (int)bind.type);
             GLCheckError("glGetAttribLocation");
+            if(boundLocation >= 0) {
+                // means that this attribute is used and active
+                // light-up proper bits
+                m_attribMask |= (AttributeMask)(1 << boundLocation);
+            }
         }
     }
     detachShaders();
@@ -385,16 +396,16 @@ fgBool gfx::CShaderProgram::appendAttributeBinds(AttributeBindVec & binds) {
         return FG_FALSE;
     const int imax = binds.size();
     for(int i = 0; i < imax; i++) {
-        if(m_attrBinds.contains(binds[i]))
+        if(m_attribBinds.contains(binds[i]))
             continue;
-        m_attrBinds.push_back(binds[i]);
+        m_attribBinds.push_back(binds[i]);
     }
     unsigned int pos = 1;
-    while(pos < m_attrBinds.size()) {
-        if(m_attrBinds[pos] >= m_attrBinds[pos - 1]) {
+    while(pos < m_attribBinds.size()) {
+        if(m_attribBinds[pos] >= m_attribBinds[pos - 1]) {
             pos = pos + 1;
         } else {
-            std::swap<SAttributeBind>(m_attrBinds[pos], m_attrBinds[pos - 1]);
+            std::swap<SAttributeBind>(m_attribBinds[pos], m_attribBinds[pos - 1]);
             if(pos > 1) {
                 pos = pos - 1;
             }
@@ -545,8 +556,8 @@ fgBool gfx::CShaderProgram::bindAttributes(void) {
         return FG_FALSE;
     }
     AttributeBindVecItor begin, end, itor;
-    begin = m_attrBinds.begin();
-    end = m_attrBinds.end();
+    begin = m_attribBinds.begin();
+    end = m_attribBinds.end();
     itor = begin;
     for(; itor != end; itor++) {
         SAttributeBind & bind = *itor;
