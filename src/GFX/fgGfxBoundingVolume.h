@@ -137,10 +137,23 @@ namespace fg {
              */
             virtual inline self_type& merge(self_type const& a) {
                 // Should zero? nope!
-                this->min.x = fg::math::min(this->min.x, a.min.x);
-                this->min.y = fg::math::min(this->min.y, a.min.y);
-                this->max.x = fg::math::max(this->max.x, a.max.x);
-                this->max.y = fg::math::max(this->max.y, a.max.y);
+                this->min.x = math::min(this->min.x, a.min.x);
+                this->min.y = math::min(this->min.y, a.min.y);
+                this->max.x = math::max(this->max.x, a.max.x);
+                this->max.y = math::max(this->max.y, a.max.y);
+                this->refresh();
+                return (*this);
+            }
+            /**
+             * 
+             * @param v
+             * @return 
+             */
+            virtual inline self_type& merge(const vec_type& v) {
+                this->min.x = math::min(this->min.x, v.x);
+                this->min.y = math::min(this->min.y, v.y);
+                this->max.x = math::max(this->max.x, v.x);
+                this->max.y = math::max(this->max.y, v.y);
                 this->refresh();
                 return (*this);
             }
@@ -239,9 +252,9 @@ namespace fg {
             virtual inline void refresh(void) {
                 center = 0.5f * (this->min + this->max);
                 extent = 0.5f * (this->max - this->min);
-                radius = 0.0f;
-                radius = math::max(radius, extent.x);
-                radius = math::max(radius, extent.y);
+                //radius = 0.0f;
+                //radius = math::max(radius, extent.x);
+                //radius = math::max(radius, extent.y);
             }
             /**
              * 
@@ -298,7 +311,7 @@ namespace fg {
                     return FG_FALSE;
                 }
             }
-        };
+        }; // struct SBoundingVolume2DT : SAABoundingBox2DT<TValueType>
 
         ///
         typedef SBoundingVolume2DT<float> BoundingVolume2Df;
@@ -417,12 +430,27 @@ namespace fg {
              */
             virtual inline self_type& merge(self_type const& a) {
                 // Should zero? nope!
-                this->min.x = fg::math::min(this->min.x, a.min.x);
-                this->min.y = fg::math::min(this->min.y, a.min.y);
-                this->min.z = fg::math::min(this->min.z, a.min.z);
-                this->max.x = fg::math::max(this->max.x, a.max.x);
-                this->max.y = fg::math::max(this->max.y, a.max.y);
-                this->max.z = fg::math::max(this->max.z, a.max.z);
+                this->min.x = math::min(this->min.x, a.min.x);
+                this->min.y = math::min(this->min.y, a.min.y);
+                this->min.z = math::min(this->min.z, a.min.z);
+                this->max.x = math::max(this->max.x, a.max.x);
+                this->max.y = math::max(this->max.y, a.max.y);
+                this->max.z = math::max(this->max.z, a.max.z);
+                this->refresh();
+                return (*this);
+            }
+            /**
+             * 
+             * @param v
+             * @return 
+             */
+            virtual inline self_type& merge(const vec_type& v) {
+                this->min.x = math::min(this->min.x, v.x);
+                this->min.y = math::min(this->min.y, v.y);
+                this->min.z = math::min(this->min.z, v.z);
+                this->max.x = math::max(this->max.x, v.x);
+                this->max.y = math::max(this->max.y, v.y);
+                this->max.z = math::max(this->max.z, v.z);
                 this->refresh();
                 return (*this);
             }
@@ -581,7 +609,6 @@ namespace fg {
                 base_type::transform(m);
                 this->refresh();
             }
-
             ////////////////////////////////////////////////////////////////////
 
             using base_type::test;
@@ -603,7 +630,7 @@ namespace fg {
                 }
                 return FG_TRUE;
             }
-        };
+        }; // struct SBoundingVolume3DT : SAABoundingBox3DT<TValueType>
 
         ///
         typedef SBoundingVolume3DT<float> BoundingVolume3Df;
@@ -613,9 +640,8 @@ namespace fg {
         typedef SBoundingVolume3DT<unsigned int> BoundingVolume3Du;
         /// 
         typedef SBoundingVolume3DT<double> BoundingVolume3Dd;
-
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_BOUNDING_VOLUME_BLOCK
 #endif	/* FG_INC_GFX_BOUNDING_VOLUME */

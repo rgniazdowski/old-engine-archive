@@ -627,15 +627,8 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             // mesh still will be moved by armature offset if animated/rigged
             Vec4f offsetArmature;
             if(pArmature) {
-                //printf("transform: %.2f %.2f %.2f\n", 1 * aiTransform.a4,
-                //       1 * aiTransform.b4,
-                //       1 * aiTransform.c4);
                 offsetArmature = pArmature->get("Armature")->bindPoseMatrix[3];
                 pArmature->get("Armature")->bindPoseMatrix[3] = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-                /*-= Vec4f(1 * aiTransform.a4,
-                                                               1 * aiTransform.b4,
-                                                               1 * aiTransform.c4,
-                                                               0.0f);*/
             }
             // ? basically it means that even with translation
             // one should not change the offset
@@ -768,9 +761,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             // copy aiMaterial data to gfx::SMaterial
             assimp_helper::setupMaterial(pNewMaterial, pMaterial);
             pShape->material = pNewMaterial;
-            if(pSkinnedMesh) {
-                pSkinnedMesh->refreshSkinningInfo();
-            }
         } // for (mNumMeshes)
         if(pNode->mNumMeshes && pArmature) {
             for(unsigned int i = 0; i < pArmature->count(); i++) {
@@ -913,6 +903,7 @@ fgBool gfx::CModelResource::create(void) {
 
     if(!this->m_size) return FG_FALSE;
     this->updateAABB();
+    this->refreshSkinningInfo();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

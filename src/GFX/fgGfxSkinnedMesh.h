@@ -36,6 +36,9 @@ namespace fg {
 
             typedef Vector4f blend_vec_element_type;
 
+            typedef CVector<Matrix4f> MatrixVec;
+            typedef CVector<DualQuaternionf> DualQuatsVec;
+
             typedef CVector<Vector4f> BlendVec;
             typedef BlendVec::iterator BlendVecItor;
             typedef BlendVec::const_iterator BlendVecConstItor;
@@ -43,6 +46,75 @@ namespace fg {
             typedef CVector<anim::SBone*> BonesVec;
             typedef BonesVec::iterator BonesVecItor;
             typedef BonesVec::const_iterator BonesVecConstItor;
+
+            typedef CVector<AABoundingBox3Df> BoneBoxesVec;
+            typedef BoneBoxesVec::iterator BoneBoxesVecItor;
+            typedef BoneBoxesVec::const_iterator BoneBoxesVecConstItor;
+
+            /**
+             * This is not a bounding box.
+             * Structure holds information about two points that are
+             * closest to mesh AABB edges; Values are exact.
+             * While merging the length is compared.
+             */
+            struct SEdgeInfo {
+
+                enum {
+                    /// Positive X (max)
+                    PX = 0,
+                    /// Negative X (min)
+                    NX = 1,
+                    /// Positive Y (max)
+                    PY = 2,
+                    /// Negative Y (min)
+                    NY = 3,
+                    /// Positive Z (max)
+                    PZ = 4,
+                    /// Negative Z (min)
+                    NZ = 5
+                };
+
+                struct SEdgePoint {
+                    int index;
+                    float length;
+                    Vector3f value;
+                    SEdgePoint() : index(-1), length(0.0f), value() { }
+                } points[6];
+                SEdgeInfo() {
+                    invalidate();
+                }
+                SEdgeInfo(const SEdgeInfo& orig) {
+                    for(unsigned int i = 0; i < 6; i++) {
+                        points[i].index = orig.points[i].index;
+                        points[i].length = orig.points[i].length;
+                        points[i].value = orig.points[i].value;
+                    }
+                }
+
+                void merge(int index, const Vector3f& value);
+                void invalidate(void);
+                void transform(SSkinnedMesh* pMesh,
+                               const MatrixVec& matrices,
+                               Vector3f& outputMin,
+                               Vector3f& outputMax);
+
+                void transform(SSkinnedMesh* pMesh,
+                               const DualQuatsVec& dquats,
+                               Vector3f& outputMin,
+                               Vector3f& outputMax);
+
+                void transform(SSkinnedMesh* pMesh,
+                               const MatrixVec& matrices,
+                               Vector3f* output);
+
+                void transform(SSkinnedMesh* pMesh,
+                               const DualQuatsVec& dquats,
+                               Vector3f* output);
+            }; // struct SEdgePointInfo
+
+            typedef CVector<SEdgeInfo> BoneEdgesVec;
+            typedef BoneEdgesVec::iterator BoneEdgesVecItor;
+            typedef BoneEdgesVec::const_iterator BoneEdgesVecConstItor;
 
         protected:
             virtual unsigned short internal_getBlendWeightsVboArrayIdx(void) const;
@@ -55,6 +127,10 @@ namespace fg {
             BlendVec blendWeights;
             ///
             BlendVec blendIndices;
+            ///
+            BoneBoxesVec boneBoxes;
+            ///
+            BoneEdgesVec boneEdges;
 
             /**
              *
@@ -158,7 +234,7 @@ namespace fg {
             virtual fgBool isSkinnedMesh(void) const {
                 return FG_TRUE;
             }
-            
+
             /**
              *
              * @return

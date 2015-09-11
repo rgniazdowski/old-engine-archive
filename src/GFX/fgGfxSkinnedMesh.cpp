@@ -32,6 +32,8 @@ blendIndices() {
     bones.reserve(4);
     blendWeights.reserve(8);
     blendIndices.reserve(8);
+    boneBoxes.reserve(4);
+    boneEdges.reserve(4);
 }
 //------------------------------------------------------------------------------
 
@@ -39,6 +41,8 @@ gfx::SSkinnedMesh::~SSkinnedMesh() {
     bones.clear();
     blendWeights.clear();
     blendIndices.clear();
+    boneBoxes.clear();
+    boneEdges.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -46,6 +50,8 @@ void gfx::SSkinnedMesh::clearSkinningInfo(void) {
     bones.clear();
     blendWeights.clear();
     blendIndices.clear();
+    boneBoxes.clear();
+    boneEdges.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -67,6 +73,176 @@ void gfx::SSkinnedMesh::clear(SMeshBase* pMeshSuper) {
 }
 //------------------------------------------------------------------------------
 
+static void getVertexPos(const void* data,
+                         unsigned int stride,
+                         unsigned int index,
+                         Vector3f& result) {
+    if(!data || !stride)
+        return;
+    // need to reset    
+    typedef float value_type;
+    typedef unsigned int size_type;
+
+    uintptr_t offset = (uintptr_t)data;
+    const size_type innerMax = 3;
+    const size_type i = index;
+    const void *cur = (const void *)(offset + i * stride);
+    value_type *values = (value_type *)cur;
+    for(size_type j = 0; j < innerMax; j++) {
+        value_type checkVal = *(values + j); // offset + sizeof(value_type)*j
+        result[j] = checkVal;
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::SEdgeInfo::merge(int index, const Vector3f& value) {
+    float vLen = math::length(value);
+    // max: 0(x/0), 2(y/1), 4(z/2)
+    // min: 1(x/0), 3(y/1), 5(z/2)
+    for(unsigned int p = 0, i = 0; p <= 4; p += 2, i++) {
+        // max
+        if(value[i] > points[p].value[i]) {
+            points[p].value = value;
+            points[p].index = index;
+            points[p].length = vLen;
+        }
+    }
+    for(unsigned int p = 1, i = 0; p <= 5; p += 2, i++) {
+        // min
+        if(value[i] < points[p].value[i]) {
+            points[p].value = value;
+            points[p].index = index;
+            points[p].length = vLen;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::SEdgeInfo::invalidate(void) {
+    const float fmax = std::numeric_limits<float>::max();
+
+    for(unsigned int i = 0; i < 6; i++) {
+        if(i % 2 == 0) {
+            // even - positive
+            this->points[i].value.x = fmax / 2.0f * (-1.0f);
+            this->points[i].value.y = fmax / 2.0f * (-1.0f);
+            this->points[i].value.z = fmax / 2.0f * (-1.0f);
+        } else {
+            // odd - negative
+            this->points[i].value.x = fmax;
+            this->points[i].value.y = fmax;
+            this->points[i].value.z = fmax;
+        }
+        this->points[i].index = -1;
+        this->points[i].length = 0.0f;
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::SEdgeInfo::transform(SSkinnedMesh* pMesh,
+                                             const MatrixVec& matrices,
+                                             Vector3f& outputMin,
+                                             Vector3f& outputMax) {
+
+    // this will basically do the same thing as GPU/CPU skinning
+    // but just for six edge points;
+    Vec3f output[6];
+    AABB3Df aabb;
+    aabb.invalidate();
+    transform(pMesh, matrices, output);
+    for(unsigned int p = 0; p < 6; p++) {
+        aabb.merge(output[p]);
+    }
+    outputMax = aabb.max;
+    outputMin = aabb.min;
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::SEdgeInfo::transform(SSkinnedMesh* pMesh,
+                                             const DualQuatsVec& dquats,
+                                             Vector3f& outputMin,
+                                             Vector3f& outputMax) {
+
+    // this will basically do the same thing as GPU/CPU skinning
+    // but just for six edge points;
+    Vec3f output[6];
+    AABB3Df aabb;
+    aabb.invalidate();
+    transform(pMesh, dquats, output);
+    for(unsigned int p = 0; p < 6; p++) {
+        aabb.merge(output[p]);
+    }
+    outputMax = aabb.max;
+    outputMin = aabb.min;
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::SEdgeInfo::transform(SSkinnedMesh* pMesh,
+                                             const MatrixVec& matrices,
+                                             Vector3f* output) {
+
+    // this will basically do the same thing as GPU/CPU skinning
+    // but just for six edge points;
+    static int jjj = 0;
+    jjj++;
+    int boneIdx = -1, vertexIdx = 0;
+    float weight = 0.0f;
+    for(unsigned int p = 0; p < 6; p++) {
+        vertexIdx = points[p].index;
+        if(vertexIdx < 0)
+            continue;
+        output[p] = Vec3f();
+        const Vec3f& value = points[p].value;
+        for(unsigned int i = 0; i < 4; i++) {
+            boneIdx = pMesh->blendIndices[vertexIdx][i];
+            weight = pMesh->blendWeights[vertexIdx][i];
+            if(i > 0 && boneIdx == 0) {
+                break;
+            }
+            output[p] += Vec3f(matrices[boneIdx] * Vec4f(value, 1.0f)) * weight;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::SEdgeInfo::transform(SSkinnedMesh* pMesh,
+                                             const DualQuatsVec& dquats,
+                                             Vector3f* output) {
+
+    // this will basically do the same thing as GPU/CPU skinning
+    // but just for six edge points;
+    DualQuaternionf blendQuat;
+    Quaternionf q0;
+    int boneIdx = -1, vertexIdx = 0;
+    float weight = 0.0f;
+    for(unsigned int p = 0; p < 6; p++) {
+        vertexIdx = points[p].index;
+        if(vertexIdx < 0)
+            continue;
+        output[p] = Vec3f();
+        const Vec3f& value = points[p].value;
+        for(unsigned int i = 0; i < 4; i++) {
+            boneIdx = pMesh->blendIndices[vertexIdx][i];
+            weight = pMesh->blendWeights[vertexIdx][i];
+            if(i > 0 && boneIdx == 0) {
+                break;
+            }
+            if(i == 0) {
+                q0 = dquats[boneIdx].q0;
+                blendQuat = dquats[boneIdx] * weight;
+                continue;
+            }
+            if(math::dot(dquats[boneIdx].q0, q0) < 0.0f) {
+                weight *= -1.0f;
+            }
+            blendQuat += dquats[boneIdx] * weight;
+        }
+        blendQuat.normalize();
+        output[p] = blendQuat.transform(value);
+    }
+}
+//------------------------------------------------------------------------------
+
 void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
     if(!pMeshSuper)
         return;
@@ -82,18 +258,31 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
     countVec.resize(vCount);
 
     const unsigned int n = bones.size();
+    boneBoxes.resize(n);
+    boneEdges.resize(n);
     for(unsigned int i = 0; i < n; i++) {
         anim::SBone* pBone = bones[i];
         if(!pBone)
             continue;
+        boneBoxes[i].invalidate();
+        boneEdges[i].invalidate();
         const unsigned int nWeights = pBone->weights.size();
         for(unsigned int j = 0; j < nWeights; j++) {
             anim::SVertexWeight& weight = pBone->weights[j];
             unsigned int subIdx = (unsigned int)countVec[weight.vertexIdx];
+            if(subIdx == 0) {
+                blendWeights[weight.vertexIdx] = Vec4f();
+                blendIndices[weight.vertexIdx] = Vec4f();
+            }
             countVec[weight.vertexIdx]++;
             if(subIdx <= 3) {
                 blendWeights[weight.vertexIdx][subIdx] = weight.weight;
                 blendIndices[weight.vertexIdx][subIdx] = i; //pBone->index;
+                Vector3f point;
+                getVertexPos(pMeshSuper->front(), pMeshSuper->stride(),
+                             weight.vertexIdx, point);
+                boneBoxes[i].merge(point);
+                boneEdges[i].merge(weight.vertexIdx, point);
             }
         }
     }
@@ -105,7 +294,7 @@ fgGFXboolean gfx::SSkinnedMesh::refreshAttributes(const SMeshBase* pMeshSuper,
                                                   SAttributeData* pDataArray) const {
     if(!pMeshSuper) {
         return FG_GFX_FALSE;
-    }    
+    }
     const unsigned short BLEND_WEIGHTS_VBO_ARRAY_IDX = internal_getBlendWeightsVboArrayIdx();
     const unsigned short BLEND_INDICES_VBO_ARRAY_IDX = internal_getBlendIndicesVboArrayIdx();
     fgGFXint index = 0;
@@ -145,7 +334,7 @@ fgGFXboolean gfx::SSkinnedMesh::setupAttributes(const SMeshBase* pMeshSuper,
                                                 SAttributeData* pDataArray) const {
     if(!pMeshSuper) {
         return FG_GFX_FALSE;
-    }    
+    }
     const unsigned short BLEND_WEIGHTS_VBO_ARRAY_IDX = internal_getBlendWeightsVboArrayIdx();
     const unsigned short BLEND_INDICES_VBO_ARRAY_IDX = internal_getBlendIndicesVboArrayIdx();
     fgGFXint index = 0;
@@ -199,7 +388,7 @@ fgGFXboolean gfx::SSkinnedMesh::setupAttributes(const SMeshBase* pMeshSuper,
 
 fgGFXboolean gfx::SSkinnedMesh::genBuffers(SMeshBase* pMeshSuper) {
     if(!pMeshSuper)
-        return FG_GFX_FALSE;    
+        return FG_GFX_FALSE;
 
     const unsigned short BLEND_WEIGHTS_VBO_ARRAY_IDX = internal_getBlendWeightsVboArrayIdx();
     const unsigned short BLEND_INDICES_VBO_ARRAY_IDX = internal_getBlendIndicesVboArrayIdx();
@@ -333,7 +522,7 @@ unsigned short gfx::SSkinnedMeshSoA::internal_getBlendWeightsVboArrayIdx(void) c
 //------------------------------------------------------------------------------
 
 unsigned short gfx::SSkinnedMeshSoA::internal_getBlendIndicesVboArrayIdx(void) const {
-    return base_type::VBO_ARRAY_SIZE+1; // default for AoS / 5
+    return base_type::VBO_ARRAY_SIZE + 1; // default for AoS / 5
 }
 //------------------------------------------------------------------------------
 
@@ -414,6 +603,6 @@ unsigned short gfx::SSkinnedMeshAoS::internal_getBlendWeightsVboArrayIdx(void) c
 //------------------------------------------------------------------------------
 
 unsigned short gfx::SSkinnedMeshAoS::internal_getBlendIndicesVboArrayIdx(void) const {
-    return base_type::VBO_ARRAY_SIZE+1; // default for AoS / 3
+    return base_type::VBO_ARRAY_SIZE + 1; // default for AoS / 3
 }
 //------------------------------------------------------------------------------
