@@ -97,22 +97,22 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
                               frameInfo.elapsed);
         }
     }
-    for(unsigned int i = 0; i < nBones; i++) {
-        SBone* pBone = bones[i];
+    for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
+        SBone* pBone = bones[boneIdx];
         // start with the mesh-to-bone matrix
-        frameInfo.transformations[i] = pBone->offset;
+        frameInfo.transformations[boneIdx] = pBone->offset;
         const SBone* pTmp = pBone;
         // append all node transformations down the parent chain
         // until we're back at mesh coordinates again
         while(pTmp) {
-            frameInfo.transformations[i] = m_intermediate[pTmp->index] * frameInfo.transformations[i];
+            frameInfo.transformations[boneIdx] = m_intermediate[pTmp->index] * frameInfo.transformations[boneIdx];
             pTmp = pTmp->pParent;
         }
         //frameInfo.transformations[i] = Matrix4f();
         // now frameInfo contains proper matrix transformations
         // these matrices are not optimal (4x4 is too big)
         // convert mat4 to dual quaternion
-        frameInfo.dualQuaternions[i].initializeFrom(frameInfo.transformations[i]);
+        frameInfo.dualQuaternions[boneIdx].initializeFrom(frameInfo.transformations[boneIdx]);
     }
 }
 //------------------------------------------------------------------------------

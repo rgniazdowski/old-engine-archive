@@ -122,6 +122,8 @@ namespace fg {
 
         public:
             ///
+            unsigned int meshIndex;
+            ///
             BonesVec bones;
             ///
             BlendVec blendWeights;

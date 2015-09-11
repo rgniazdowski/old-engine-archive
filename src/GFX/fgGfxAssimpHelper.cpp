@@ -84,17 +84,21 @@ void gfx::assimp_helper::setupMaterial(struct SMaterial* pNewMaterial,
 }
 //------------------------------------------------------------------------------
 
-void gfx::assimp_helper::copyBone(anim::SBone* pDest, aiBone* pSource) {
+void gfx::assimp_helper::copyBone(anim::SBone* pDest, 
+                                  aiBone* pSource,
+                                  int meshIndex) {
     if(!pDest || !pSource)
         return;
     pDest->name.clear();
     pDest->name.append(pSource->mName.C_Str());
-
-    pDest->weights.clear();
+    //pDest->weights.clear(); // nope
     unsigned int n = pSource->mNumWeights;
+    //pDest->weights.reserve(n+1);
+    pDest->weights.reserve(pDest->weights.size() + n);
     for(unsigned int i = 0; i < n; i++) {
         pDest->weights
-                .push_back(anim::SVertexWeight(pSource->mWeights[i].mVertexId,
+                .push_back(anim::SVertexWeight(meshIndex,
+                                               pSource->mWeights[i].mVertexId,
                                                pSource->mWeights[i].mWeight
                                                ));
     }
@@ -128,7 +132,7 @@ void gfx::assimp_helper::copyAnimationChannel(anim::SAnimationChannel* pDest, ai
     pDest->targetName.clear();
     pDest->targetName.reserve(pSource->mNodeName.length);
     pDest->targetName.append(pSource->mNodeName.C_Str());
-    
+
     unsigned int n = pSource->mNumPositionKeys;
     pDest->positionKeys.reserve(n);
     pDest->positionKeys.resize(n);

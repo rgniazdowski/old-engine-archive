@@ -33,25 +33,31 @@ namespace fg {
                 typedef SVertexWeight type;
 
                 ///
+                int meshIdx;
+                ///
                 int vertexIdx;
                 ///
                 float weight;
                 /**
                  *
                  */
-                SVertexWeight() : vertexIdx(0), weight(0.0f) { }
+                SVertexWeight() : meshIdx(0), vertexIdx(0), weight(0.0f) { }
                 /**
                  * 
                  * @param _vertexIdx
                  * @param _weight
                  */
                 SVertexWeight(int _vertexIdx, float _weight) :
-                vertexIdx(_vertexIdx), weight(_weight) { }
+                meshIdx(0), vertexIdx(_vertexIdx), weight(_weight) { }
+
+                SVertexWeight(int _meshIdx, int _vertexIdx, float _weight) :
+                meshIdx(_meshIdx), vertexIdx(_vertexIdx), weight(_weight) { }
                 /**
                  *
                  * @param other
                  */
                 SVertexWeight(const self_type& other) {
+                    meshIdx = other.meshIdx;
                     vertexIdx = other.vertexIdx;
                     weight = other.weight;
                 }
@@ -59,6 +65,7 @@ namespace fg {
                  *
                  */
                 virtual ~SVertexWeight() {
+                    meshIdx = 0;
                     vertexIdx = 0;
                     weight = 0.0f;
                 }

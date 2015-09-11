@@ -704,10 +704,14 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                     pShape->mesh = pSkinnedMesh->getMeshBase();
                 }
             }
+            if(pSkinnedMesh) {
+                pSkinnedMesh->meshIndex = m_shapes.size() - 1;
+            }
 
             if(!shouldDropBones()) {
                 // update bone structure with offsets and weights
                 n = pMesh->mNumBones;
+                pSkinnedMesh->bones.reserve(n);
                 for(unsigned int boneIdx = 0; boneIdx < n; boneIdx++) {
                     aiBone* pAiBone = pMesh->mBones[boneIdx];
                     anim::SBone* pOriginalBone = pArmature->get(pAiBone->mName.C_Str());
@@ -715,7 +719,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                         // could not find the bone? this should not happen
                         continue;
                     }
-                    assimp_helper::copyBone(pOriginalBone, pAiBone);
+                    assimp_helper::copyBone(pOriginalBone, pAiBone, pSkinnedMesh->meshIndex);
                     if(pSkinnedMesh)
                         pSkinnedMesh->bones.push_back(pOriginalBone);
                 }

@@ -132,18 +132,18 @@ namespace fg {
              * @param pDest
              * @param pSource
              */
-            void copyBone(anim::SBone* pDest, aiBone* pSource);
+            void copyBone(anim::SBone* pDest, aiBone* pSource, int meshIndex = 0);
             /**
              *
              * @param pSource
              * @return
              */
-            inline anim::SBone* convertBone(aiBone* pSource) {
+            inline anim::SBone* convertBone(aiBone* pSource, int meshIndex = 0) {
                 anim::SBone* pResult = NULL;
                 if(!pSource)
                     return pResult;
                 pResult = new anim::SBone();
-                copyBone(pResult, pSource);
+                copyBone(pResult, pSource, meshIndex);
                 return pResult;
             }
             /**

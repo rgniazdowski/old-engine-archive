@@ -249,26 +249,28 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
     blendWeights.clear();
     blendIndices.clear();
     CVector<unsigned char> countVec;
-    const unsigned int vCount = pMeshSuper->size();
-    blendWeights.reserve(vCount);
-    blendIndices.reserve(vCount);
-    countVec.reserve(vCount);
-    blendWeights.resize(vCount);
-    blendIndices.resize(vCount);
-    countVec.resize(vCount);
+    const unsigned int nVertices = pMeshSuper->size();
+    blendWeights.reserve(nVertices);
+    blendIndices.reserve(nVertices);
+    countVec.reserve(nVertices);
+    blendWeights.resize(nVertices);
+    blendIndices.resize(nVertices);
+    countVec.resize(nVertices);
 
-    const unsigned int n = bones.size();
-    boneBoxes.resize(n);
-    boneEdges.resize(n);
-    for(unsigned int i = 0; i < n; i++) {
-        anim::SBone* pBone = bones[i];
+    const unsigned int nBones = bones.size();
+    boneBoxes.resize(nBones);
+    boneEdges.resize(nBones);
+    for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
+        anim::SBone* pBone = bones[boneIdx];
         if(!pBone)
             continue;
-        boneBoxes[i].invalidate();
-        boneEdges[i].invalidate();
+        boneBoxes[boneIdx].invalidate();
+        boneEdges[boneIdx].invalidate();
         const unsigned int nWeights = pBone->weights.size();
         for(unsigned int j = 0; j < nWeights; j++) {
             anim::SVertexWeight& weight = pBone->weights[j];
+            if(this->meshIndex != weight.meshIdx)
+                continue;
             unsigned int subIdx = (unsigned int)countVec[weight.vertexIdx];
             if(subIdx == 0) {
                 blendWeights[weight.vertexIdx] = Vec4f();
@@ -277,12 +279,12 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
             countVec[weight.vertexIdx]++;
             if(subIdx <= 3) {
                 blendWeights[weight.vertexIdx][subIdx] = weight.weight;
-                blendIndices[weight.vertexIdx][subIdx] = i; //pBone->index;
-                Vector3f point;
+                blendIndices[weight.vertexIdx][subIdx] = boneIdx; //pBone->index;
+                Vector3f point(0.0f, 0.0f, 0.0f);
                 getVertexPos(pMeshSuper->front(), pMeshSuper->stride(),
                              weight.vertexIdx, point);
-                boneBoxes[i].merge(point);
-                boneEdges[i].merge(weight.vertexIdx, point);
+                boneBoxes[boneIdx].merge(point);
+                boneEdges[boneIdx].merge(weight.vertexIdx, point);
             }
         }
     }
