@@ -215,7 +215,7 @@ fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
         return FG_FALSE;
     // #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
     const char *ext = fg::path::fileExt(path.c_str(), FG_TRUE);
-    
+
     if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_BMP, FG_FALSE)) {
         this->m_fileType = texture::FILE_BMP;
     } else if(strings::endsWith(ext, FG_TEXTURE_FILE_EXTENSION_RAW, FG_FALSE)) {
@@ -261,24 +261,25 @@ void gfx::CTextureResource::setFlags(const std::string& flags) {
     strings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;
-    //    FG_TEXTURE_BUMP = 2,
-    //    FG_TEXTURE_NORMAL = 3,
-    //    FG_TEXTURE_RAW = 4,
-    //    FG_TEXTURE_FONT = 5,
-    //    FG_TEXTURE_CUBE = 6,
-    //    FG_TEXTURE_3D = 7,
     unsigned int n = (unsigned int)flagsVec.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(strings::isEqual(flagsVec[i].c_str(), "cube", FG_FALSE)) {
-            m_textureType = texture::CUBE;
-        } else if(strings::isEqual(flagsVec[i].c_str(), "2D", FG_FALSE)) {
+        if(strings::isEqual(flagsVec[i].c_str(), "2D", FG_FALSE) ||
+           strings::isEqual(flagsVec[i].c_str(), "diffuse", FG_FALSE)) {
             m_textureType = texture::PLAIN;
-        } else if(strings::isEqual(flagsVec[i].c_str(), "3D", FG_FALSE)) {
-            m_textureType = texture::T_3D;
-        } else if(strings::isEqual(flagsVec[i].c_str(), "bump", FG_FALSE)) {
-            m_textureType = texture::BUMP;
+        } else if(strings::isEqual(flagsVec[i].c_str(), "ambient", FG_FALSE)) {
+            m_textureType = texture::AMBIENT;
+        } else if(strings::isEqual(flagsVec[i].c_str(), "specular", FG_FALSE)) {
+            m_textureType = texture::SPECULAR;
         } else if(strings::isEqual(flagsVec[i].c_str(), "normal", FG_FALSE)) {
             m_textureType = texture::NORMAL;
+        } else if(strings::isEqual(flagsVec[i].c_str(), "bump", FG_FALSE)) {
+            m_textureType = texture::BUMP;
+        } else if(strings::isEqual(flagsVec[i].c_str(), "environment", FG_FALSE)) {
+            m_textureType = texture::ENVIRONMENT;
+        } else if(strings::isEqual(flagsVec[i].c_str(), "cube", FG_FALSE)) {
+            m_textureType = texture::CUBE;
+        } else if(strings::isEqual(flagsVec[i].c_str(), "3D", FG_FALSE)) {
+            m_textureType = texture::T_3D;
         }
     }
 }
