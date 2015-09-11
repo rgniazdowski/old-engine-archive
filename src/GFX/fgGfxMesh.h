@@ -441,8 +441,8 @@ namespace fg {
              * Returns the attribute mask
              * @return 
              */
-            virtual fgGFXuint attribMask(void) const {
-                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
+            virtual AttributeMask attribMask(void) const {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT);
             }
             /**
              *
@@ -715,11 +715,11 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGFXuint attribMask(void) const {
+            virtual AttributeMask attribMask(void) const {
                 if(this->vertices)
                     return this->vertices->attribMask();
                 else
-                    return 0;
+                    return ATTRIBUTE_ZERO_BIT;
             }
             /**
              *

@@ -70,8 +70,8 @@ namespace fg {
             *
             * @return
             */
-           static unsigned int attribMask(void) {
-               return (unsigned int)ATTRIBUTE_HIGH_QUALITY_MASK;
+           static AttributeMask attribMask(void) {
+               return ATTRIBUTE_HIGH_QUALITY_MASK;
            }
            /**
              *
@@ -148,8 +148,8 @@ namespace fg {
              * 
              * @return 
              */
-            static unsigned int attribMask(void) {
-                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT;
+            static AttributeMask attribMask(void) {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT | ATTRIBUTE_COLOR_BIT);
             }
             /**
              * 
@@ -220,8 +220,8 @@ namespace fg {
              * 
              * @return 
              */
-            static unsigned int attribMask(void) {
-                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
+            static AttributeMask attribMask(void) {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT);
             }
             /**
              * 
@@ -288,8 +288,8 @@ namespace fg {
              * 
              * @return 
              */
-            static unsigned int attribMask(void) {
-                return FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT;
+            static AttributeMask attribMask(void) {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT);
             }
             /**
              * 
@@ -363,8 +363,8 @@ namespace fg {
              *
              * @return
              */
-            static unsigned int attribMask(void) {
-                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT;
+            static AttributeMask attribMask(void) {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT | ATTRIBUTE_COLOR_BIT);
             }
             /**
              *
@@ -403,8 +403,8 @@ namespace fg {
              *
              * @return
              */
-            static unsigned int attribMask(void) {
-                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
+            static AttributeMask attribMask(void) {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT);
             }
             /**
              *
@@ -441,8 +441,8 @@ namespace fg {
              *
              * @return
              */
-            static unsigned int attribMask(void) {
-                return FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT;
+            static AttributeMask attribMask(void) {
+                return (ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT);
             }
             /**
              *

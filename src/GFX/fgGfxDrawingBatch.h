@@ -60,7 +60,7 @@ namespace fg {
             ///
             DrawCallType m_defaultDrawCallType;
             ///
-            fgGFXuint m_defaultAttribMask;
+            AttributeMask m_defaultAttribMask;
             ///
             Vector4i m_scissorBox;
 
@@ -105,7 +105,7 @@ namespace fg {
              */
             CDrawingBatch(const unsigned int reservedSize = FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE,
                           const DrawCallType drawCallType = DRAW_CALL_INTERNAL_ARRAY,
-                          const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+                          const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT);
             /**
              * 
              */
@@ -161,7 +161,7 @@ namespace fg {
              */
             CDrawCall* requestDrawCall(int& index,
                                        const DrawCallType type = DRAW_CALL_INTERNAL_ARRAY,
-                                       const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                       const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT,
                                        CShaderProgram* pProgram = NULL);
             /**
              * 

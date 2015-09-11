@@ -1948,7 +1948,7 @@ namespace fg {
 
             // This function will set or unset given attrib bits
             // depending on the current mask value
-            void updateAttribMask(const fgGFXuint index);
+            void toggleAttribMask(const AttributeLocation location);
 
             /**
              * 
@@ -2389,13 +2389,19 @@ namespace fg {
              * Returns the currently active vertex attribute mask
              * @return 
              */
-            fgGFXuint activeVertexAttribArrayMask(void);
+            AttributeMask activeVertexAttribArrayMask(void);
             /**
              * Returns whether given index vertex attrib array is activated
              * @param index
              * @return 
              */
             fgBool isVertexAttribArrayActive(const fgGFXuint index);
+            /**
+             * 
+             * @param location
+             * @return
+             */
+            fgBool isVertexAttribArrayActive(const AttributeLocation location);
 
             /**
              * Enable the given vertex attrib array index and also by default update the current attrib mask
@@ -2403,30 +2409,32 @@ namespace fg {
              * @param index
              * @param updateMask
              */
-            void enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
+            void enableVertexAttribArray(const AttributeLocation index,
+                                         const fgBool updateMask = FG_TRUE);
             /**
              * Disable the given vertex attrib array index and also by default update the current attrib mask
              * @param index
              * @param updateMask
              */
-            void disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
+            void disableVertexAttribArray(const AttributeLocation index,
+                                          const fgBool updateMask = FG_TRUE);
             /**
              * Enable the vertex attrib arrays based on the given attrib mask
              * Attributes not in the mask will not be deactivated
              * @param mask
              */
-            void enableVertexAttribArrayMask(const fgGFXuint mask);
+            void enableVertexAttribArrayMask(const AttributeMask mask);
             /**
              * Disable the vertex attrib arrays based on the given attrib mask
              * @param mask
              */
-            void disableVertexAttribArrayMask(const fgGFXuint mask);
+            void disableVertexAttribArrayMask(const AttributeMask mask);
             /**
              * Disable or enable given vertex attrib arrays based on the given mask
              * Attributes not in the mask will be deactivated
              * @param mask
              */
-            void diffVertexAttribArrayMask(const fgGFXuint mask);
+            void diffVertexAttribArrayMask(const AttributeMask mask);
 
             /**
              * Returns the buffer (VBO) index currently bound to given vertex attrib index

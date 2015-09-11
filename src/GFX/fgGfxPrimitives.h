@@ -42,7 +42,7 @@ namespace fg {
              */
             void applyAttributeData(SAttributeData *attrData,
                                     SDrawingInfo& drawingInfo,
-                                    const unsigned int attribMask,
+                                    const AttributeMask attribMask,
                                     unsigned int count = 0);
 
             /**
@@ -53,7 +53,7 @@ namespace fg {
              */
             inline void applyAttributeData(CVector<SAttributeData>& attrData,
                                            SDrawingInfo& drawingInfo,
-                                           const unsigned int attribMask) {
+                                           const AttributeMask attribMask) {
                 unsigned int count = attrData.size();
                 if(!count)
                     return;
@@ -138,7 +138,7 @@ namespace fg {
              * @param mode
              */
             void drawVertexData(const CVertexData *inputData,
-                                const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT,
                                 const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
@@ -156,7 +156,7 @@ namespace fg {
              * @param mode
              */
             void drawArray(const CVector<Vertex2v> &inputData,
-                           const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                           const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT,
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
@@ -166,7 +166,7 @@ namespace fg {
              * @param mode
              */
             void drawArray(const CVector<Vertex3v> &inputData,
-                           const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
+                           const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT,
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
@@ -176,10 +176,10 @@ namespace fg {
              * @param mode
              */
             void drawArray(const CVector<Vertex4v> &inputData,
-                           const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
+                           const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT | ATTRIBUTE_COLOR_BIT,
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -190,7 +190,7 @@ namespace fg {
              */
             void drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                   const CVector<fgGFXushort>& indices,
-                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                  const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT,
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
@@ -202,7 +202,7 @@ namespace fg {
              */
             void drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                   const CVector<fgGFXushort>& indices,
-                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
+                                  const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT,
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
@@ -214,7 +214,7 @@ namespace fg {
              */
             void drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                   const CVector<fgGFXushort>& indices,
-                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
+                                  const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_NORMAL_BIT | ATTRIBUTE_UVS_BIT | ATTRIBUTE_COLOR_BIT,
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /* ***************** 2 component vertex struct - pos, uv **********/

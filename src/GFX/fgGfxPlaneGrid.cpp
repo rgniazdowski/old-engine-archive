@@ -103,7 +103,7 @@ void gfx::SPlaneGridf::render(CShaderProgram* pProgram, CMVPMatrix* pMVP) {
         }
     }
     primitives::drawVertexData(&gridLines,
-                               FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT,
+                               ATTRIBUTE_POSITION_BIT | ATTRIBUTE_COLOR_BIT,
                                PrimitiveMode::LINES);
 }
 //------------------------------------------------------------------------------

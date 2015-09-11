@@ -322,7 +322,7 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGFXuint attribMask(void) const = 0;
+            virtual AttributeMask attribMask(void) const = 0;
 
             /**
              *
@@ -613,8 +613,8 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)vertex_type::attribMask();
+            virtual AttributeMask attribMask(void) const {
+                return vertex_type::attribMask();
             }
             /**
              * 
@@ -914,8 +914,8 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)vertex_type::attribMask();
+            virtual AttributeMask attribMask(void) const {
+                return vertex_type::attribMask();
             }
             /**
              *
@@ -1230,8 +1230,8 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)vertex_type::attribMask();
+            virtual AttributeMask attribMask(void) const {
+                return vertex_type::attribMask();
             }
             /**
              *
@@ -1547,8 +1547,8 @@ namespace fg {
              *
              * @return
              */
-            virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)vertex_type::attribMask();
+            virtual AttributeMask attribMask(void) const {
+                return vertex_type::attribMask();
             }
             /**
              *

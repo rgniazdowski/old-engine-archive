@@ -49,9 +49,9 @@ namespace fg {
             fgGFXuint g_scissorAreaQ;
 
             /// Currently used attribute mask
-            fgGFXuint g_attribMask;
+            AttributeMask g_attribMask;
             ///
-            SAttributeData g_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
+            SAttributeData g_attribInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
             /// Currently bound texture ID
             fgGFXuint g_boundTexture;
             /// Supported shading language version
@@ -979,7 +979,7 @@ fgBool gfx::context::initialize(void)
 #endif
     g_viewportAreaQ = 0;
     g_scissorAreaQ = 0;
-    g_attribMask = 0;
+    g_attribMask = ATTRIBUTE_ZERO_BIT;
     g_boundTexture = 0;
     g_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
     g_contextInit = FG_FALSE;
@@ -1259,7 +1259,7 @@ fgBool gfx::context::initialize(void)
 
     FG_LOG_DEBUG("GFX: Currently monitoring %d context parameters", g_params.size());
 
-    memset(g_attrInfo, 0, sizeof (g_attrInfo));
+    memset(g_attribInfo, 0, sizeof (g_attribInfo));
 
     std::string glVendor = (const char*)glGetString(GL_VENDOR);
     std::string glRenderer = (const char *)glGetString(GL_RENDERER);
@@ -1990,34 +1990,21 @@ void gfx::context::clearStencil(const fgGFXint s) {
 }
 //------------------------------------------------------------------------------
 
-fgGFXuint gfx::context::activeVertexAttribArrayMask(void) {
+gfx::AttributeMask gfx::context::activeVertexAttribArrayMask(void) {
     return g_attribMask;
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::context::isVertexAttribArrayActive(const fgGFXuint index) {
-    return g_attrInfo[index].isEnabled;
+    return g_attribInfo[index].isEnabled;
+}
+fgBool gfx::context::isVertexAttribArrayActive(const AttributeLocation location) {
+    return g_attribInfo[location].isEnabled;
 }
 //------------------------------------------------------------------------------
 
-void gfx::context::updateAttribMask(const fgGFXuint index) {
-    if(index == FG_GFX_ATTRIB_POS_LOCATION) {
-        g_attribMask ^= FG_GFX_POSITION_BIT;
-    } else if(index == FG_GFX_ATTRIB_NORM_LOCATION) {
-        g_attribMask ^= FG_GFX_NORMAL_BIT;
-    } else if(index == FG_GFX_ATTRIB_UVS_LOCATION) {
-        g_attribMask ^= FG_GFX_UVS_BIT;
-    } else if(index == FG_GFX_ATTRIB_COLOR_LOCATION) {
-        g_attribMask ^= FG_GFX_COLOR_BIT;
-    } else if(index == FG_GFX_ATTRIB_TANGENT_LOCATION) {
-        g_attribMask ^= FG_GFX_TANGENT_BIT;
-    } else if(index == FG_GFX_ATTRIB_BITANGENT_LOCATION) {
-        g_attribMask ^= FG_GFX_BITANGENT_BIT;
-    } else if(index == FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION) {
-        g_attribMask ^= FG_GFX_BLEND_WEIGHTS_BIT;
-    } else if(index == FG_GFX_ATTRIB_BLEND_INDICES_LOCATION) {
-        g_attribMask ^= FG_GFX_BLEND_INDICES_BIT;
-    }
+void gfx::context::toggleAttribMask(const AttributeLocation location) {
+    g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << location);
 }
 //------------------------------------------------------------------------------
 
@@ -2025,114 +2012,116 @@ void gfx::context::updateAttribMask(const fgGFXuint index) {
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
  */
 
-void gfx::context::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
-    if(!g_attrInfo[index].isEnabled) {
-        g_attrInfo[index].isEnabled = FG_GFX_TRUE;
+void gfx::context::enableVertexAttribArray(const AttributeLocation index, const fgBool updateMask) {
+    if(!g_attribInfo[index].isEnabled) {
+        g_attribInfo[index].isEnabled = FG_GFX_TRUE;
         glEnableVertexAttribArray(index);
-        if(updateMask)
-            updateAttribMask(index);
+        if(updateMask) {
+            g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << index);
+        }
     }
 }
 //------------------------------------------------------------------------------
 
-void gfx::context::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
-    if(g_attrInfo[index].isEnabled) {
-        g_attrInfo[index].isEnabled = FG_GFX_FALSE;
+void gfx::context::disableVertexAttribArray(const AttributeLocation index, const fgBool updateMask) {
+    if(g_attribInfo[index].isEnabled) {
+        g_attribInfo[index].isEnabled = FG_GFX_FALSE;
         glDisableVertexAttribArray(index);
-        if(updateMask)
-            updateAttribMask(index);
+        if(updateMask) {
+            g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << index);
+        }
     }
 }
 //------------------------------------------------------------------------------
 
-void gfx::context::enableVertexAttribArrayMask(const fgGFXuint mask) {
+void gfx::context::enableVertexAttribArrayMask(const AttributeMask mask) {
     if(mask == g_attribMask)
         return;
-    if(mask & FG_GFX_POSITION_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_NORMAL_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_UVS_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_COLOR_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_TANGENT_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_BITANGENT_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_BLEND_WEIGHTS_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
-    if(mask & FG_GFX_BLEND_INDICES_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_POSITION_BIT)
+        enableVertexAttribArray(ATTRIBUTE_POSITION_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_NORMAL_BIT)
+        enableVertexAttribArray(ATTRIBUTE_NORMAL_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_TEXTURE_COORD_BIT)
+        enableVertexAttribArray(ATTRIBUTE_TEXTURE_COORD_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_COLOR_BIT)
+        enableVertexAttribArray(ATTRIBUTE_COLOR_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_TANGENT_BIT)
+        enableVertexAttribArray(ATTRIBUTE_TANGENT_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_BITANGENT_BIT)
+        enableVertexAttribArray(ATTRIBUTE_BITANGENT_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_BLEND_WEIGHTS_BIT)
+        enableVertexAttribArray(ATTRIBUTE_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_BLEND_INDICES_BIT)
+        enableVertexAttribArray(ATTRIBUTE_BLEND_INDICES_LOCATION, FG_FALSE);
     g_attribMask = mask;
 }
 //------------------------------------------------------------------------------
 
-void gfx::context::disableVertexAttribArrayMask(const fgGFXuint mask) {
+void gfx::context::disableVertexAttribArrayMask(const AttributeMask mask) {
     if(mask == g_attribMask)
         return;
-    if(!(mask & FG_GFX_POSITION_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_NORMAL_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_UVS_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_COLOR_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_TANGENT_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_BITANGENT_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_BLEND_WEIGHTS_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
-    if(!(mask & FG_GFX_BLEND_INDICES_BIT))
-        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_POSITION_BIT))
+        disableVertexAttribArray(ATTRIBUTE_POSITION_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_NORMAL_BIT))
+        disableVertexAttribArray(ATTRIBUTE_NORMAL_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_TEXTURE_COORD_BIT))
+        disableVertexAttribArray(ATTRIBUTE_TEXTURE_COORD_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_COLOR_BIT))
+        disableVertexAttribArray(ATTRIBUTE_COLOR_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_TANGENT_BIT))
+        disableVertexAttribArray(ATTRIBUTE_TANGENT_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_BITANGENT_BIT))
+        disableVertexAttribArray(ATTRIBUTE_BITANGENT_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_BLEND_WEIGHTS_BIT))
+        disableVertexAttribArray(ATTRIBUTE_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+    if(!(mask & ATTRIBUTE_BLEND_INDICES_BIT))
+        disableVertexAttribArray(ATTRIBUTE_BLEND_INDICES_LOCATION, FG_FALSE);
     g_attribMask = mask;
 }
 //------------------------------------------------------------------------------
 
-void gfx::context::diffVertexAttribArrayMask(const fgGFXuint mask) {
+void gfx::context::diffVertexAttribArrayMask(const AttributeMask mask) {
     if(mask == g_attribMask)
         return;
-    if(mask & FG_GFX_POSITION_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_POSITION_BIT)
+        enableVertexAttribArray(ATTRIBUTE_POSITION_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_POSITION_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_NORMAL_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_NORMAL_BIT)
+        enableVertexAttribArray(ATTRIBUTE_NORMAL_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_NORMAL_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_UVS_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_TEXTURE_COORD_BIT)
+        enableVertexAttribArray(ATTRIBUTE_TEXTURE_COORD_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_TEXTURE_COORD_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_COLOR_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_COLOR_BIT)
+        enableVertexAttribArray(ATTRIBUTE_COLOR_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_COLOR_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_TANGENT_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_TANGENT_BIT)
+        enableVertexAttribArray(ATTRIBUTE_TANGENT_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_TANGENT_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_BITANGENT_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_BITANGENT_BIT)
+        enableVertexAttribArray(ATTRIBUTE_BITANGENT_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_BITANGENT_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_BITANGENT_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_BLEND_WEIGHTS_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_BLEND_WEIGHTS_BIT)
+        enableVertexAttribArray(ATTRIBUTE_BLEND_WEIGHTS_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_BLEND_WEIGHTS_LOCATION, FG_FALSE);
 
-    if(mask & FG_GFX_BLEND_INDICES_BIT)
-        enableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
+    if(mask & ATTRIBUTE_BLEND_INDICES_BIT)
+        enableVertexAttribArray(ATTRIBUTE_BLEND_INDICES_LOCATION, FG_FALSE);
     else
-        disableVertexAttribArray(FG_GFX_ATTRIB_BLEND_INDICES_LOCATION, FG_FALSE);
+        disableVertexAttribArray(ATTRIBUTE_BLEND_INDICES_LOCATION, FG_FALSE);
     g_attribMask = mask;
 }
 //------------------------------------------------------------------------------
@@ -2141,26 +2130,26 @@ void gfx::context::diffVertexAttribArrayMask(const fgGFXuint mask) {
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
  */
 fgGFXuint gfx::context::getVertexAttribBufferBinding(const fgGFXuint index) {
-    return g_attrInfo[index].buffer;
+    return g_attribInfo[index].buffer;
 }
 //------------------------------------------------------------------------------
 
 fgGFXuint gfx::context::getVertexAttribSize(const fgGFXuint index) {
-    return g_attrInfo[index].size;
+    return g_attribInfo[index].size;
 }
 //------------------------------------------------------------------------------
 
 fgGFXuint gfx::context::getVertexAttribStride(const fgGFXuint index) {
     if(index >= 12)
         return 0;
-    return g_attrInfo[index].stride;
+    return g_attribInfo[index].stride;
 }
 //------------------------------------------------------------------------------
 
 fgGFXenum gfx::context::getVertexAttribType(const fgGFXuint index) {
     if(index >= 12)
         return (fgGFXenum)0;
-    return g_attrInfo[index].type;
+    return g_attribInfo[index].type;
 }
 //------------------------------------------------------------------------------
 
@@ -2168,7 +2157,7 @@ fgGFXboolean gfx::context::getVertexAttribNormalized(const fgGFXuint index) {
     // #FIXME checks
     if(index >= 12)
         return FG_GFX_FALSE;
-    return g_attrInfo[index].isNormalized;
+    return g_attribInfo[index].isNormalized;
 }
 //------------------------------------------------------------------------------
 
@@ -2189,7 +2178,7 @@ void gfx::context::vertexAttribPointer(fgGFXuint index,
     // # mirror
     // # usage of main attrib array in other places
     //
-    SAttributeData &attr = g_attrInfo[index];
+    SAttributeData &attr = g_attribInfo[index];
     attr.index = index;
     attr.size = size;
     attr.dataType = type;
@@ -2206,10 +2195,10 @@ void gfx::context::vertexAttribPointer(SAttributeData& attrData) {
     fgGFXint index = attrData.index;
     if(index < 0)
         return;
-    fgGFXboolean isEnabled = g_attrInfo[index].isEnabled;
-    g_attrInfo[index] = attrData;
-    g_attrInfo[index].isEnabled = isEnabled;
-    g_attrInfo[index].buffer = g_params[gfx::ARRAY_BUFFER_BINDING];
+    fgGFXboolean isEnabled = g_attribInfo[index].isEnabled;
+    g_attribInfo[index] = attrData;
+    g_attribInfo[index].isEnabled = isEnabled;
+    g_attribInfo[index].buffer = g_params[gfx::ARRAY_BUFFER_BINDING];
 
     glVertexAttribPointer(attrData.index,
                           attrData.size,

@@ -111,7 +111,7 @@ namespace fg {
              *
              * @return
              */
-            fgGFXuint attribMask(void) const;
+            AttributeMask attribMask(void) const;
 
             /**
              *

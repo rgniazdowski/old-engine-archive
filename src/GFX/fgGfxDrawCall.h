@@ -118,7 +118,7 @@ namespace fg {
              * @param attribMask
              */
             CDrawCall(const DrawCallType type = DRAW_CALL_INTERNAL_ARRAY,
-                      const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+                      const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT | ATTRIBUTE_TEXTURE_COORD_BIT);
             /**
              * Default destructor for the draw call object
              */
@@ -278,7 +278,7 @@ namespace fg {
              * @param component
              * @param reset
              */
-            void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
+            void setComponentActive(AttributeMask component, const fgBool reset = FG_FALSE);
 
             //------------------------------------------------------------------
 
@@ -454,7 +454,7 @@ namespace fg {
              *
              * @param attribMask
              */
-            void setupVertexData(fgGFXuint attribMask);
+            void setupVertexData(AttributeMask attribMask);
 
         private:
             /// Attribute binding data #FIXME
@@ -494,7 +494,7 @@ namespace fg {
             /// Used vertex data will depend on the attribute mask used
             /// Appending specific data however may alter this and make
             /// other buffers invalid
-            fgGFXuint m_attribMask;
+            AttributeMask m_attribMask;
             /// What kind of draw call is this?
             DrawCallType m_drawCallType;
             /// Append mode

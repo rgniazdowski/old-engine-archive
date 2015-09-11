@@ -17,7 +17,7 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-gfx::CDrawCall::CDrawCall(const DrawCallType type, const fgGFXuint attribMask) :
+gfx::CDrawCall::CDrawCall(const DrawCallType type, const AttributeMask attribMask) :
 base_type(traits::DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
 m_vecData2v(NULL),
@@ -84,56 +84,56 @@ void gfx::CDrawCall::resetAttributeData(void) {
 
     memset(m_attrData, 0, sizeof (m_attrData));
 
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = ATTRIBUTE_POSITION_LOCATION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].type = ATTRIBUTE_POSITION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].stride = sizeof (Vertex3v);
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].index = FG_GFX_ATTRIB_NORM_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].index = ATTRIBUTE_NORMAL_LOCATION;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].size = 3;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].type = ATTRIBUTE_NORMAL;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].stride = sizeof (Vertex3v);
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].index = FG_GFX_ATTRIB_UVS_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].size = 2;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].type = ATTRIBUTE_TEXTURE_COORD;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].stride = sizeof (Vertex3v);
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].index = FG_GFX_ATTRIB_COLOR_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].index = ATTRIBUTE_COLOR_LOCATION;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].size = 4;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].type = ATTRIBUTE_COLOR;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].stride = sizeof (Vertex4v);
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].index = FG_GFX_ATTRIB_TANGENT_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].index = ATTRIBUTE_TANGENT_LOCATION;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].size = 3;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].type = ATTRIBUTE_TANGENT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].index = FG_GFX_ATTRIB_BITANGENT_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].index = ATTRIBUTE_BITANGENT_LOCATION;
     m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].size = 3;
     m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].type = ATTRIBUTE_BITANGENT;
     m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].stride = 0; // Stride when using tangent?
     m_attrData[FG_GFX_ATTRIB_BITANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].index = FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].index = ATTRIBUTE_BLEND_WEIGHTS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].size = 4;
     m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].type = ATTRIBUTE_BLEND_WEIGHTS;
     m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].stride = 0;
     m_attrData[FG_GFX_ATTRIB_BLEND_WEIGHTS_LOCATION].isEnabled = FG_GFX_FALSE;
 
-    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].index = FG_GFX_ATTRIB_BLEND_INDICES_LOCATION;
+    m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].index = ATTRIBUTE_BLEND_INDICES_LOCATION;
     m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].size = 4;
     m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].type = ATTRIBUTE_BLEND_INDICES;
     m_attrData[FG_GFX_ATTRIB_BLEND_INDICES_LOCATION].dataType = FG_GFX_FLOAT;
@@ -153,7 +153,7 @@ fgBool gfx::CDrawCall::isManaged(void) const {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
+void gfx::CDrawCall::setupVertexData(AttributeMask attribMask) {
     if(!attribMask)
         return;
     if(m_vecDataBase) {
@@ -164,9 +164,9 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
         }
     }
 
-    if(attribMask & FG_GFX_COLOR_BIT) {
+    if(attribMask & ATTRIBUTE_COLOR_BIT) {
         m_vecDataBase = m_vecData4v; //new fgVertexData4v();
-    } else if(attribMask & FG_GFX_NORMAL_BIT) {
+    } else if(attribMask & ATTRIBUTE_NORMAL_BIT) {
         m_vecDataBase = m_vecData3v; //new fgVertexData3v();
     } else {
         m_vecDataBase = m_vecData2v; //new fgVertexData2v();
@@ -422,26 +422,26 @@ void gfx::CDrawCall::setPrimitiveMode(const PrimitiveMode mode) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CDrawCall::setComponentActive(unsigned int component,
+void gfx::CDrawCall::setComponentActive(AttributeMask component,
                                         const fgBool reset) {
-    if(!component || reset)
-        m_attribMask = 0;
-    if(component & FG_GFX_POSITION_BIT)
-        m_attribMask |= FG_GFX_POSITION_BIT;
-    if(component & FG_GFX_NORMAL_BIT)
-        m_attribMask |= FG_GFX_NORMAL_BIT;
-    if(component & FG_GFX_UVS_BIT)
-        m_attribMask |= FG_GFX_UVS_BIT;
-    if(component & FG_GFX_COLOR_BIT)
-        m_attribMask |= FG_GFX_COLOR_BIT;
-    if(component & FG_GFX_TANGENT_BIT)
-        m_attribMask |= FG_GFX_TANGENT_BIT;
-    if(component & FG_GFX_BITANGENT_BIT)
-        m_attribMask |= FG_GFX_BITANGENT_BIT;
-    if(component & FG_GFX_BLEND_WEIGHTS_BIT)
-        m_attribMask |= FG_GFX_BLEND_WEIGHTS_BIT;
-    if(component & FG_GFX_BLEND_INDICES_BIT)
-        m_attribMask |= FG_GFX_BLEND_INDICES_BIT;
+    if(!((int)component) || reset)
+        m_attribMask = ATTRIBUTE_ZERO_BIT;
+    if(component & ATTRIBUTE_POSITION_BIT)
+        m_attribMask |= ATTRIBUTE_POSITION_BIT;
+    if(component & ATTRIBUTE_NORMAL_BIT)
+        m_attribMask |= ATTRIBUTE_NORMAL_BIT;
+    if(component & ATTRIBUTE_UVS_BIT)
+        m_attribMask |= ATTRIBUTE_UVS_BIT;
+    if(component & ATTRIBUTE_COLOR_BIT)
+        m_attribMask |= ATTRIBUTE_COLOR_BIT;
+    if(component & ATTRIBUTE_TANGENT_BIT)
+        m_attribMask |= ATTRIBUTE_TANGENT_BIT;
+    if(component & ATTRIBUTE_BITANGENT_BIT)
+        m_attribMask |= ATTRIBUTE_BITANGENT_BIT;
+    if(component & ATTRIBUTE_BLEND_WEIGHTS_BIT)
+        m_attribMask |= ATTRIBUTE_BLEND_WEIGHTS_BIT;
+    if(component & ATTRIBUTE_BLEND_INDICES_BIT)
+        m_attribMask |= ATTRIBUTE_BLEND_INDICES_BIT;
     setupVertexData(m_attribMask);
 }
 //------------------------------------------------------------------------------

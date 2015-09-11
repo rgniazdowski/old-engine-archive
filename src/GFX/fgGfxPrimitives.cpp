@@ -14,7 +14,6 @@
 #include "fgGfxAABoundingBox.h"
 #include "GFX/fgGfxVertexData.h"
 #include "fgGfxMesh.h"
-#include "fgGfxDrawCall.h"
 
 using namespace fg;
 
@@ -420,14 +419,14 @@ void gfx::primitives::drawSkyBoxOptimized(void) {
     context::diffVertexAttribArrayMask(Vertex4v::attribMask());
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSkyBoxOptimized[0]);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
                                  sizeof (Vertex4v),
                                  reinterpret_cast<fgGFXvoid*>(offset));
     offset += sizeof (Vector3f); // Move offset to Normals
-    context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_NORMAL_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -435,7 +434,7 @@ void gfx::primitives::drawSkyBoxOptimized(void) {
                                  reinterpret_cast<fgGFXvoid*>(offset));
 
     offset += sizeof (Vector3f); // Move offset to UVS
-    context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                  2,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -443,7 +442,7 @@ void gfx::primitives::drawSkyBoxOptimized(void) {
                                  reinterpret_cast<fgGFXvoid*>(offset));
 
     offset += sizeof (Vector2f); // Move offset to Color
-    context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_COLOR_LOCATION,
                                  4,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -646,7 +645,7 @@ void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* mesh,
  * Osmioscian foremny (inaczej oktaedr) - octahedron: rings 3 | sectors 5 ? 
  */
 void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f& color) {
-    context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
+    context::diffVertexAttribArrayMask(ATTRIBUTE_POSITION_BIT | ATTRIBUTE_COLOR_BIT);
 
     const Vec3f center = aabb.getCenter();
     const Vec3f extent = aabb.getExtent();
@@ -738,10 +737,10 @@ void gfx::primitives::drawArray(const CVector<Vector3f>& inputData,
                                 const PrimitiveMode mode) {
     if(inputData.empty())
         return;
-    const unsigned int attribMask = FG_GFX_POSITION_BIT;
+    const AttributeMask attribMask = ATTRIBUTE_POSITION_BIT;
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -753,15 +752,15 @@ void gfx::primitives::drawArray(const CVector<Vector3f>& inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArray(const CVector<Vertex2v> &inputData,
-                                const unsigned int attribMask,
+                                const AttributeMask attribMask,
                                 const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
     context::diffVertexAttribArrayMask(attribMask);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    if(attribMask & FG_GFX_POSITION_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    if(attribMask & ATTRIBUTE_POSITION_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -769,8 +768,8 @@ void gfx::primitives::drawArray(const CVector<Vertex2v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_UVS_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    if(attribMask & ATTRIBUTE_TEXTURE_COORD_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                      2,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -783,7 +782,7 @@ void gfx::primitives::drawArray(const CVector<Vertex2v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
-                                const unsigned int attribMask,
+                                const AttributeMask attribMask,
                                 const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
@@ -793,8 +792,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
     // state of the active attribute arrays...
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     context::diffVertexAttribArrayMask(attribMask);
-    if(attribMask & FG_GFX_POSITION_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    if(attribMask & ATTRIBUTE_POSITION_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -802,8 +801,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_NORMAL_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+    if(attribMask & ATTRIBUTE_NORMAL_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_NORMAL_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -811,8 +810,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_UVS_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    if(attribMask & ATTRIBUTE_TEXTURE_COORD_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                      2,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -825,15 +824,15 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
-                                const unsigned int attribMask,
+                                const AttributeMask attribMask,
                                 const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     context::diffVertexAttribArrayMask(attribMask);
-    if(attribMask & FG_GFX_POSITION_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    if(attribMask & ATTRIBUTE_POSITION_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -841,8 +840,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_NORMAL_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+    if(attribMask & ATTRIBUTE_NORMAL_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_NORMAL_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -850,8 +849,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_UVS_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    if(attribMask & ATTRIBUTE_TEXTURE_COORD_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                      2,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -859,8 +858,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector2f);
-    if(attribMask & FG_GFX_COLOR_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+    if(attribMask & ATTRIBUTE_COLOR_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_COLOR_LOCATION,
                                      4,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -874,7 +873,7 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
 
 void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                        const CVector<fgGFXushort>& indices,
-                                       const unsigned int attribMask,
+                                       const AttributeMask attribMask,
                                        const PrimitiveMode mode) {
 
     if(inputData.empty() || !attribMask || indices.empty())
@@ -882,8 +881,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
     context::diffVertexAttribArrayMask(attribMask);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    if(attribMask & FG_GFX_POSITION_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    if(attribMask & ATTRIBUTE_POSITION_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -891,8 +890,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_UVS_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    if(attribMask & ATTRIBUTE_TEXTURE_COORD_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                      2,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -906,14 +905,14 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
 
 void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                        const CVector<fgGFXushort>& indices,
-                                       const unsigned int attribMask,
+                                       const AttributeMask attribMask,
                                        const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask || indices.empty())
         return;
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     context::diffVertexAttribArrayMask(attribMask);
-    if(attribMask & FG_GFX_POSITION_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    if(attribMask & ATTRIBUTE_POSITION_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -921,8 +920,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_NORMAL_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+    if(attribMask & ATTRIBUTE_NORMAL_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_NORMAL_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -930,8 +929,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_UVS_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    if(attribMask & ATTRIBUTE_TEXTURE_COORD_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                      2,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -945,15 +944,15 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
 
 void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                        const CVector<fgGFXushort>& indices,
-                                       const unsigned int attribMask,
+                                       const AttributeMask attribMask,
                                        const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask || indices.empty())
         return;
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     context::diffVertexAttribArrayMask(attribMask);
-    if(attribMask & FG_GFX_POSITION_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    if(attribMask & ATTRIBUTE_POSITION_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -961,8 +960,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_NORMAL_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+    if(attribMask & ATTRIBUTE_NORMAL_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_NORMAL_LOCATION,
                                      3,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -970,8 +969,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
-    if(attribMask & FG_GFX_UVS_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    if(attribMask & ATTRIBUTE_TEXTURE_COORD_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                      2,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -979,8 +978,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector2f);
-    if(attribMask & FG_GFX_COLOR_BIT) {
-        context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+    if(attribMask & ATTRIBUTE_COLOR_BIT) {
+        context::vertexAttribPointer(ATTRIBUTE_COLOR_LOCATION,
                                      4,
                                      FG_GFX_FLOAT,
                                      FG_GFX_FALSE,
@@ -992,9 +991,9 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::applyAttributeData(SAttributeData *attrData,
+void gfx::primitives::applyAttributeData(SAttributeData* attrData,
                                          SDrawingInfo& drawingInfo,
-                                         const unsigned int attribMask,
+                                         const AttributeMask attribMask,
                                          unsigned int count) {
     if(!attrData)
         return;
@@ -1028,13 +1027,13 @@ void gfx::primitives::applyAttributeData(SAttributeData *attrData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawVertexData(const CVertexData *inputData,
-                                     const unsigned int attribMask,
+                                     const AttributeMask attribMask,
                                      const PrimitiveMode mode) {
     if(!inputData)
         return;
     if(inputData->empty() || !attribMask)
         return;
-    unsigned int andMask = (attribMask & inputData->attribMask());
+    AttributeMask andMask = (attribMask & inputData->attribMask());
     SAttributeData attrData[NUM_ATTRIBUTE_TYPES];
     SDrawingInfo drawingInfo;
     inputData->setupAttributes(attrData);
@@ -1062,60 +1061,12 @@ void gfx::primitives::drawVertexData(const CVertexData *inputData,
     // #FIXME
     context::bindBuffer(GL_ARRAY_BUFFER, 0);
     context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-#if 0
-    if(0) {
-
-        context::diffVertexAttribArrayMask(andMask);
-        uintptr_t offset = (uintptr_t)((unsigned int*)inputData->front());
-        if(andMask & FG_GFX_POSITION_BIT) {
-            context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                         3,
-                                         FG_GFX_FLOAT,
-                                         FG_GFX_FALSE,
-                                         inputData->stride(),
-                                         reinterpret_cast<fgGFXvoid*>(offset));
-        }
-        if(inputData->attribMask() & FG_GFX_POSITION_BIT)
-            offset += sizeof (Vector3f);
-        if(andMask & FG_GFX_NORMAL_BIT) {
-            context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                         3,
-                                         FG_GFX_FLOAT,
-                                         FG_GFX_FALSE,
-                                         inputData->stride(),
-                                         reinterpret_cast<fgGFXvoid*>(offset));
-        }
-        if(inputData->attribMask() & FG_GFX_UVS_BIT)
-            offset += sizeof (Vector3f);
-        if(andMask & FG_GFX_UVS_BIT) {
-            context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                         2,
-                                         FG_GFX_FLOAT,
-                                         FG_GFX_FALSE,
-                                         inputData->stride(),
-                                         reinterpret_cast<fgGFXvoid*>(offset));
-        }
-        if(inputData->attribMask() & FG_GFX_COLOR_BIT)
-            offset += sizeof (Vector2f);
-        if(andMask & FG_GFX_COLOR_BIT) {
-            context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                         4,
-                                         FG_GFX_FLOAT,
-                                         FG_GFX_FALSE,
-                                         inputData->stride(),
-                                         reinterpret_cast<fgGFXvoid*>(offset));
-        }
-        context::drawArrays((fgGFXenum)mode, 0, inputData->size());
-        GLCheckError("glDrawArrays");
-    }
-#endif
-
 }
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawSquare2D(void) {
-    context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    context::diffVertexAttribArrayMask(ATTRIBUTE_POSITION_BIT | ATTRIBUTE_TEXTURE_COORD_BIT);
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -1123,7 +1074,7 @@ void gfx::primitives::drawSquare2D(void) {
                                  (fgGFXvoid *)c_stripSquare1x1);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSquare1x1[0]) + sizeof (Vector3f) * 2;
-    context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                  2,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -1134,8 +1085,8 @@ void gfx::primitives::drawSquare2D(void) {
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawRect2D(void) {
-    context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    context::diffVertexAttribArrayMask(ATTRIBUTE_POSITION_BIT | ATTRIBUTE_TEXTURE_COORD_BIT);
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -1143,7 +1094,7 @@ void gfx::primitives::drawRect2D(void) {
                                  (fgGFXvoid *)c_stripRect3x1);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripRect3x1[0]) + sizeof (fgGFXfloat) * 6;
-    context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_TEXTURE_COORD_LOCATION,
                                  2,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,

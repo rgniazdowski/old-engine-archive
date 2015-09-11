@@ -97,7 +97,7 @@ void gfx::CBspCompiler::display(const Vector3f& camPos, CFrustum& frustum, fgBoo
             if(!isVisible) {
                 gfx::primitives::drawAABBLines(pPolyh->bbox, fg::colors::getColor("red"));
                 if(is3D || 1) {
-                    // gfx::CPrimitives::drawVertexData(pPolyh->m_vertexData, FG_GFX_POSITION_BIT, gfx::PrimitiveMode::TRIANGLE_STRIP);
+                    // gfx::CPrimitives::drawVertexData(pPolyh->m_vertexData, ATTRIBUTE_POSITION_BIT, gfx::PrimitiveMode::TRIANGLE_STRIP);
                     //p_dlg->gl_3d.DrawPolyVertexes(*pPolyh);
                 } else {
                     if((pPolyh)->n.y < .9 && (pPolyh)->n.y>-.9) {
@@ -123,7 +123,7 @@ void gfx::CBspCompiler::render(void) {
         }
         if(1) {            
             gfx::primitives::drawVertexData(polygon->getVertexData(),
-                                            FG_GFX_POSITION_BIT,
+                                            ATTRIBUTE_POSITION_BIT,
                                             gfx::PrimitiveMode::TRIANGLE_FAN);
         } else {
             if(polygon->n.y < 0.9f && polygon->n.y>-0.9f) {

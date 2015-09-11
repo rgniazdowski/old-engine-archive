@@ -40,10 +40,11 @@ namespace fg {
         }; // enum AttributeLocation
 
         enum AttributeMask {
+            ATTRIBUTE_ZERO_BIT = 0x0000,
             ATTRIBUTE_POSITION_BIT = 0x0001,
             ATTRIBUTE_NORMAL_BIT = 0x0002,
             ATTRIBUTE_UVS_BIT = 0x0004,
-            ATTRIBUTE_TEXTURE_LOCATION_BIT = ATTRIBUTE_UVS_BIT,
+            ATTRIBUTE_TEXTURE_COORD_BIT = ATTRIBUTE_UVS_BIT,
             ATTRIBUTE_COLOR_BIT = 0x0008,
             ATTRIBUTE_TANGENT_BIT = 0x0010,
             ATTRIBUTE_BITANGENT_BIT = 0x0020,
@@ -111,38 +112,6 @@ namespace fg {
 
     #ifndef FG_GFX_ATTRIB_BLEND_INDICES_LOCATION
         #define FG_GFX_ATTRIB_BLEND_INDICES_LOCATION    7
-    #endif
-
-    #ifndef FG_GFX_POSITION_BIT
-        #define FG_GFX_POSITION_BIT		0x0001
-    #endif
-
-    #ifndef FG_GFX_NORMAL_BIT
-        #define FG_GFX_NORMAL_BIT		0x0002
-    #endif
-
-    #ifndef FG_GFX_UVS_BIT
-        #define FG_GFX_UVS_BIT                 0x0004
-    #endif
-
-    #ifndef FG_GFX_COLOR_BIT
-        #define FG_GFX_COLOR_BIT               0x0008
-    #endif
-
-    #ifndef FG_GFX_TANGENT_BIT
-        #define FG_GFX_TANGENT_BIT             0x0010
-    #endif
-
-    #ifndef FG_GFX_BITANGENT_BIT
-        #define FG_GFX_BITANGENT_BIT            0x0020
-    #endif
-
-    #ifndef FG_GFX_BLEND_WEIGHTS_BIT
-        #define FG_GFX_BLEND_WEIGHTS_BIT        0x0040
-    #endif
-
-    #ifndef FG_GFX_BLEND_INDICES_BIT
-        #define FG_GFX_BLEND_INDICES_BIT        0x0080
     #endif
 
     #undef FG_INC_GFX_ATTRIB_BITS_BLOCK

@@ -1058,7 +1058,7 @@ void gfx::CSceneManager::render(void) {
                 pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
                                      1.0f, 0.8f, 0.15f, 1.0f);
                 primitives::drawVertexData(sphereMesh,
-                                           FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                           ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT,
                                            PrimitiveMode::LINES);
             }
 #endif
@@ -1091,7 +1091,7 @@ void gfx::CSceneManager::render(void) {
         pos = m_pickSelection.groundIntersectionPoint[1];
         gridLines.append(pos, Vec3f(), Vec2f(), color);
         primitives::drawVertexData(&gridLines,
-                                   FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT,
+                                   ATTRIBUTE_POSITION_BIT | ATTRIBUTE_COLOR_BIT,
                                    PrimitiveMode::LINES);
         {
             m_groundGrid.snapTo(m_pickSelection.groundIntersectionPoint[1], pos,

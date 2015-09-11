@@ -29,7 +29,7 @@ CSceneNode(SCENE_NODE_MESH, pParent) {
         m_drawCall = NULL;
     }
     // #FIXME - still draw call management needs some fixing - this is so awkward, I mean... srsly?
-    m_drawCall = new CDrawCall(DRAW_CALL_MESH, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_NORMAL_BIT);
+    m_drawCall = new CDrawCall(DRAW_CALL_MESH, ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT | ATTRIBUTE_NORMAL_BIT);
     m_drawCall->setZIndex(Z_INDEX_OBJECTS_3D);
     setMesh(pMesh);
 }
@@ -39,7 +39,7 @@ gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) : base_type(orig
     if(this != &orig) {
         this->m_drawCall = NULL;
         CSceneNode::setNodeType(SCENE_NODE_MESH);
-        this->m_drawCall = new CDrawCall(DRAW_CALL_MESH, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_NORMAL_BIT);
+        this->m_drawCall = new CDrawCall(DRAW_CALL_MESH, ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT | ATTRIBUTE_NORMAL_BIT);
         this->m_drawCall->setZIndex(Z_INDEX_OBJECTS_3D);
         this->setMesh(orig.m_pMesh);
         this->setMaterial(orig.m_pMaterial);

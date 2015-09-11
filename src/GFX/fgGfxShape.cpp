@@ -105,11 +105,11 @@ fgGFXsizei gfx::SShape::stride(void) const {
 }
 //------------------------------------------------------------------------------
 
-fgGFXuint gfx::SShape::attribMask(void) const {
+gfx::AttributeMask gfx::SShape::attribMask(void) const {
     if(mesh)
         return mesh->attribMask();
     else
-        return 0;
+        return ATTRIBUTE_ZERO_BIT;
 }
 //------------------------------------------------------------------------------
 

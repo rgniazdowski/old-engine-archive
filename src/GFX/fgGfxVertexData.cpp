@@ -28,7 +28,7 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     pDataArray[index].index = index;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
@@ -41,13 +41,13 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Normals - there are no normals, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(ATTRIBUTE_NORMAL);
+    pDataArray[ATTRIBUTE_NORMAL_LOCATION] = SAttributeData(ATTRIBUTE_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     pDataArray[index].index = index;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
@@ -60,10 +60,10 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
+    pDataArray[ATTRIBUTE_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
+    pDataArray[ATTRIBUTE_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -79,7 +79,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_POSITION;
@@ -99,13 +99,13 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Normals - there are no normals, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(ATTRIBUTE_NORMAL);
+    pDataArray[ATTRIBUTE_NORMAL_LOCATION] = SAttributeData(ATTRIBUTE_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
     pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
@@ -125,10 +125,10 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
+    pDataArray[ATTRIBUTE_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
+    pDataArray[ATTRIBUTE_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -182,7 +182,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -197,7 +197,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Normals coords - activated
-    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    index = ATTRIBUTE_NORMAL_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -212,7 +212,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -225,10 +225,10 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
+    pDataArray[ATTRIBUTE_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
+    pDataArray[ATTRIBUTE_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -244,7 +244,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_POSITION;
@@ -267,7 +267,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Normals coords - activated
-    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    index = ATTRIBUTE_NORMAL_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_NORMAL;
@@ -290,7 +290,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
     pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
@@ -310,10 +310,10 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
+    pDataArray[ATTRIBUTE_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
+    pDataArray[ATTRIBUTE_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -367,7 +367,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates - always present (at least at the moment)
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -382,7 +382,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Normals coords - activated
-    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    index = ATTRIBUTE_NORMAL_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -397,7 +397,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -413,7 +413,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     pointer += sizeof (Vector2f);
 
     // Colors = there are no colors, this attribute will be disabled
-    index = FG_GFX_ATTRIB_COLOR_LOCATION;
+    index = ATTRIBUTE_COLOR_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -425,7 +425,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     }
 
     // Tangents - this attribute will be disabled - not yet supported
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
+    pDataArray[ATTRIBUTE_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -441,7 +441,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates - always present (at least at the moment)
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_POSITION;
@@ -464,7 +464,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Normals coords - activated
-    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    index = ATTRIBUTE_NORMAL_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_NORMAL;
@@ -487,7 +487,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
     pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
@@ -511,7 +511,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     pointer += sizeof (Vector2f);
 
     // Colors = there are no colors, this attribute will be disabled
-    index = FG_GFX_ATTRIB_COLOR_LOCATION;
+    index = ATTRIBUTE_COLOR_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 4;
     pDataArray[index].type = ATTRIBUTE_COLOR;
@@ -531,7 +531,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     }
 
     // Tangents - this attribute will be disabled - not yet supported
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
+    pDataArray[ATTRIBUTE_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -585,7 +585,7 @@ fgGFXboolean gfx::CVertexData5HQv::refreshAttributes(SAttributeData *pDataArray)
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates - always present (at least at the moment)
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -600,7 +600,7 @@ fgGFXboolean gfx::CVertexData5HQv::refreshAttributes(SAttributeData *pDataArray)
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Normals coords - activated
-    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    index = ATTRIBUTE_NORMAL_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -615,7 +615,7 @@ fgGFXboolean gfx::CVertexData5HQv::refreshAttributes(SAttributeData *pDataArray)
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -630,7 +630,7 @@ fgGFXboolean gfx::CVertexData5HQv::refreshAttributes(SAttributeData *pDataArray)
     offset += sizeof (Vector2f); // 2UVs
     pointer += sizeof (Vector2f);
    
-    index = FG_GFX_ATTRIB_TANGENT_LOCATION;
+    index = ATTRIBUTE_TANGENT_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -645,7 +645,7 @@ fgGFXboolean gfx::CVertexData5HQv::refreshAttributes(SAttributeData *pDataArray)
     offset += sizeof (Vector3f); // 3 floats
     pointer += sizeof (Vector3f);
 
-    index = FG_GFX_ATTRIB_BITANGENT_LOCATION;
+    index = ATTRIBUTE_BITANGENT_LOCATION;
     if(b_hasVBO) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -670,7 +670,7 @@ fgGFXboolean gfx::CVertexData5HQv::setupAttributes(SAttributeData *pDataArray) c
     uintptr_t offset = 0;
     const fgBool b_hasVBO = hasVBO();
     // Position coordinates - always present (at least at the moment)
-    index = FG_GFX_ATTRIB_POS_LOCATION;
+    index = ATTRIBUTE_POSITION_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_POSITION;
@@ -693,7 +693,7 @@ fgGFXboolean gfx::CVertexData5HQv::setupAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Normals coords - activated
-    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    index = ATTRIBUTE_NORMAL_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_NORMAL;
@@ -716,7 +716,7 @@ fgGFXboolean gfx::CVertexData5HQv::setupAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f);
     pointer += sizeof (Vector3f);
     // Texture coordinates
-    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    index = ATTRIBUTE_TEXTURE_COORD_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 2;
     pDataArray[index].type = ATTRIBUTE_TEXTURE_COORD;
@@ -736,14 +736,14 @@ fgGFXboolean gfx::CVertexData5HQv::setupAttributes(SAttributeData *pDataArray) c
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
+    pDataArray[ATTRIBUTE_COLOR_LOCATION] = SAttributeData(ATTRIBUTE_COLOR);
 
     // Move offset to Tangents (last one was uv of type fgVector2f)
     offset += sizeof (Vector2f); // 2UVs
     pointer += sizeof (Vector2f);
     
     // Tangents - this attribute will be disabled - not yet supported
-    index = FG_GFX_ATTRIB_TANGENT_LOCATION;
+    index = ATTRIBUTE_TANGENT_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_TANGENT;
@@ -766,7 +766,7 @@ fgGFXboolean gfx::CVertexData5HQv::setupAttributes(SAttributeData *pDataArray) c
     offset += sizeof (Vector3f); // 3 floats
     pointer += sizeof (Vector3f);
     
-    index = FG_GFX_ATTRIB_BITANGENT_LOCATION;
+    index = ATTRIBUTE_BITANGENT_LOCATION;
     pDataArray[index].index = index;
     pDataArray[index].size = 3;
     pDataArray[index].type = ATTRIBUTE_BITANGENT;
@@ -823,4 +823,3 @@ fgGFXboolean gfx::CVertexData5HQv::destroyBuffers(void) {
     return FG_GFX_TRUE;
 }
 //------------------------------------------------------------------------------
-
