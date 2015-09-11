@@ -108,9 +108,9 @@ fgBool gfx::CShaderManager::initialize(void) {
            "	if(u_useTexture > 0.5) {\n"
            "		texel = texture2D(s_texture, v_texCoord);\n"
            "	} else {\n"
-           "		texel = vec4(1.0, 1.0, 1.0, 1.0);\n"
+           "		texel = v_color;\n"
            "	}\n"
-           "	gl_FragColor = texel; \n"
+           "	gl_FragColor = texel * u_CustomColor; \n"
            "}\n\0");
 
     // DEFAULT VERTEX SHADER SOURCE BUFFER
@@ -812,9 +812,9 @@ fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
         }
         pProgram->link();
     }
-    if(pProgram == m_currentProgram)
+    if(pProgram == m_currentProgram) {
         return FG_FALSE;
-    m_currentProgram = pProgram;
+    }
     return pProgram->use();
 }
 //------------------------------------------------------------------------------
@@ -833,7 +833,6 @@ fgBool gfx::CShaderManager::useProgram(const std::string &nameTag) {
     if(pProgram == m_currentProgram) {
         return FG_FALSE;
     }
-    m_currentProgram = pProgram;
     return pProgram->use();
 }
 //------------------------------------------------------------------------------
@@ -849,9 +848,9 @@ fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
         }
         pProgram->link();
     }
-    if(pProgram == m_currentProgram)
+    if(pProgram == m_currentProgram) {
         return FG_FALSE;
-    m_currentProgram = pProgram;
+    }
     return pProgram->use();
 }
 //------------------------------------------------------------------------------

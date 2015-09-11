@@ -205,6 +205,7 @@ void gfx::CScene3D::render(void) {
     // at the current render frame
     // This node queue was updated in CScene3D::sortCalls
     CSceneManager::render();
+    static_cast<gfx::CShaderManager *>(m_pShaderMgr)->useProgram("DefaultShader");
     CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
     pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
     pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);

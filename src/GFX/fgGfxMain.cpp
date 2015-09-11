@@ -370,7 +370,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     SMeshAoS *builtin_hex_prism_mesh = new SMeshAoS();
     SShape *builtin_hex_prism_shape = new SShape();
     primitives::createHexagonalPrismMesh(builtin_hex_prism_mesh, 1.0f, FG_TRUE,
-                                         M_PIF/2.0f, Vec3f(1.0f, 0.0f, 0.0f));
+                                         M_PIF / 2.0f, Vec3f(1.0f, 0.0f, 0.0f));
     CModel *hexPrismModel = new CModelResource();
     hexPrismModel->setModelType(ModelType::MODEL_BUILTIN);
     hexPrismModel->setName("builtinHexagonalPrism");
@@ -391,7 +391,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     SMeshAoS *builtin_oct_prism_mesh = new SMeshAoS();
     SShape *builtin_oct_prism_shape = new SShape();
     primitives::createOctagonalPrismMesh(builtin_oct_prism_mesh, 1.0f, FG_TRUE,
-                                         M_PIF/2.0f, Vec3f(1.0f, 0.0f, 0.0f));
+                                         M_PIF / 2.0f, Vec3f(1.0f, 0.0f, 0.0f));
     CModel *octPrismModel = new CModelResource();
     octPrismModel->setModelType(ModelType::MODEL_BUILTIN);
     octPrismModel->setName("builtinOctagonalPrism");
@@ -446,8 +446,8 @@ gfx::CGfxMain::CLoader::~CLoader() {
 void gfx::CGfxMain::CLoader::update(const float diff) {
     if(!m_pGfxMain || !m_pSplashTex || !context::isInit())
         return;
-    if(!m_pGfxMain->getShaderManager()->getCurrentProgram())
-        return;
+    m_pGfxMain->getShaderManager()->useProgram("DefaultShader");
+    CShaderProgram* pProgram = m_pGfxMain->getShaderManager()->getCurrentProgram();
     setupMVP();
     m_pGfxMain->getMainWindow()->clearColor();
     m_progress += diff;
@@ -465,6 +465,7 @@ void gfx::CGfxMain::CLoader::update(const float diff) {
     /// Get the lower dimensions
     float mextent = (float)glm::min((int)ww, (int)wh)*0.9f;
     /// Bind the splash texture
+    context::activeTexture(GL_TEXTURE0);
     context::bindTexture(m_pSplashTex->getRefGfxID());
     // Centered on screen, aspect ratio 1:1 regardless of texture dimensions (for now)
     m_mat = math::translate(Matrix4f(),
@@ -474,7 +475,15 @@ void gfx::CGfxMain::CLoader::update(const float diff) {
     m_mat = math::rotate(m_mat, (float)ratio * M_PIF * (70.0f / (float)FG_RAND(100, 110)), Vec3f(0.0f, 0.0f, 1.0f));
     m_mat = math::scale(m_mat, Vec3f(mextent, mextent, 0.0f));
     m_mvp.calculate(m_mat);
-    m_pGfxMain->getShaderManager()->getCurrentProgram()->setUniform(&m_mvp);
+
+    pProgram->setUniform(shaders::UNIFORM_DIFFUSE_TEXTURE, 0);
+    pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
+    pProgram->setUniform(&m_mvp);
+    pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
+                         1.0f,
+                         1.0f,
+                         1.0f,
+                         1.0f);
     primitives::drawSquare2D();
 
     if(!m_pProgressTex || m_progress < FG_EPSILON) {
@@ -492,12 +501,11 @@ void gfx::CGfxMain::CLoader::update(const float diff) {
                                   0.0f));
     m_mat = math::scale(m_mat, Vec3f(pw, ph, 0.0f));
     m_mvp.calculate(m_mat);
-    m_pGfxMain->getShaderManager()->getCurrentProgram()->setUniform(&m_mvp);
+    pProgram->setUniform(&m_mvp);
     primitives::drawSquare2D();
     m_pGfxMain->getMainWindow()->swapBuffers();
 }
-
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::setupLoader(void) {
     if(!m_pResourceMgr)
@@ -534,7 +542,7 @@ void gfx::CGfxMain::setupLoader(void) {
     m_textureMgr->uploadToVRAM(texture, FG_TRUE);
     // DEVICE YIELD
     m_loader->setProgressTexture(texture);
-
+    m_shaderMgr->useProgram("DefaultShader");
 }
 //------------------------------------------------------------------------------
 

@@ -1011,20 +1011,31 @@ void gfx::CSceneManager::render(void) {
             }
 #endif
             pSceneNode->draw();
-            pProgram = pShaderMgr->getCurrentProgram();
 #if defined(FG_DEBUG)
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->end("GFX::Scene::DrawNode");
             }
 #endif
+        } // for(node queue iteration)
+        //----------------------------------------------------------------------
+        nodesItor = m_nodeQueue.begin();
+        pShaderMgr->useProgram("DefaultShader");
+        pProgram = pShaderMgr->getCurrentProgram();
+        for(; nodesItor != nodesEnd; nodesItor++) {
+            CSceneNode* pSceneNode = *nodesItor;
+            if(!pSceneNode)
+                continue;
             pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
             pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+            
 #if defined(FG_DEBUG)
             CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
             SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;
             if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
                 CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
                 if(pSceneObj->getModel()) {
+                    m_MVP.calculate(pSceneObj->getModelMatrix());
+                    pProgram->setUniform(&m_MVP);
                     // Current aabb - it's in model space (local)
                     AABB3Df& modelBox = pSceneObj->getModel()->getRefAABB();
                     // Initial Bounding box
@@ -1044,7 +1055,11 @@ void gfx::CSceneManager::render(void) {
                 mat = math::scale(mat, Vec3f(radius, radius, radius));
                 m_MVP.calculate(mat);
                 pProgram->setUniform(&m_MVP);
-                primitives::drawVertexData(sphereMesh, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT, PrimitiveMode::LINES);
+                pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
+                                     1.0f, 0.8f, 0.15f, 1.0f);
+                primitives::drawVertexData(sphereMesh,
+                                           FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                           PrimitiveMode::LINES);
             }
 #endif
             //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
@@ -1058,8 +1073,10 @@ void gfx::CSceneManager::render(void) {
             }
         } // for(node queue iteration)
     }
+    pProgram = pShaderMgr->getCurrentProgram();
     if(isShowGroundGrid()) {
         pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
+        pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
         m_groundGrid.render(pProgram, &m_MVP);
         CVertexData4v gridLines;
         Vector3f pos;
