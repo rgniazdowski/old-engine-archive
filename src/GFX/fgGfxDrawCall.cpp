@@ -621,9 +621,12 @@ void gfx::CDrawCall::draw(void) {
                 context::bindTexture(m_textureIDs[i]);
             }
         }
+        if(useTexture < 1.0f)
+            context::activeTexture(GL_TEXTURE0);
         //m_pProgram->setUniform(shaders::UNIFORM_NORMAL_MAP)
         m_pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, useTexture);
         if(m_pMaterial) {
+            m_pProgram->setUniform(*m_pMaterial);
             if(m_pMaterial->isCustomColor()) {
                 m_pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR,
                                        m_pMaterial->customColor.r,

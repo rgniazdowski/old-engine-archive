@@ -43,7 +43,7 @@ m_config(NULL) {
     m_params[FG_GFX_PROGRAM_ACTIVE_UNIFORMS] = 0;
     m_baseType = BASE_TYPE_PROGRAM;
 
-    m_uniformBinds.resize(shaders::NUM_UNIFORM_TYPES+1);
+    m_uniformBinds.resize(shaders::NUM_UNIFORM_TYPES + 1);
     for(unsigned int i = 0; i <= (unsigned int)shaders::NUM_UNIFORM_TYPES; i++) {
         m_uniformBinds[i].type = (shaders::UniformType)i;
     }
@@ -583,14 +583,30 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
         SUniformBind & bind = *itor;
         if(bind.type == shaders::UNIFORM_INVALID || bind.variableName.empty())
             continue;
-        //FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)",
-                     //bind.variableName.c_str(),
-                     //getTextFromUniformType(bind.type),
-                     //(int)bind.type);
-        bind.location = getUniformLocation(bind.variableName);
+        std::string variableName;
+        variableName.append(bind.variableName);
+        if(bind.type == shaders::UNIFORM_DIRECTIONAL_LIGHT) {
+            // cant bind to just a variable name
+            // need to find... first item in struct;
+            //variableName.append(".direction");
+            variableName.append(".ambient");
+            // #FIXME - if this is an array (need to have info on that
+            // need also to add [N], array access)
+            //printf("SDirLight.direction: %d\n", getUniformLocation(std::string("u_directionalLight.direction")));
+            //printf("SDirLight.ambient: %d\n", getUniformLocation(std::string("u_directionalLight.ambient")));
+            //printf("SDirLight.diffuse: %d\n", getUniformLocation(std::string("u_directionalLight.diffuse")));
+            //printf("SDirLight.specular: %d\n", getUniformLocation(std::string("u_directionalLight.specular")));
+        } else if(bind.type == shaders::UNIFORM_MATERIAL) {
+            variableName.append(".ambient"); // 4f
+            //printf("SMaterial.ambient: %d\n", getUniformLocation(std::string("u_material.ambient")));
+            //printf("SMaterial.diffuse: %d\n", getUniformLocation(std::string("u_material.diffuse")));
+            //printf("SMaterial.specular: %d\n", getUniformLocation(std::string("u_material.specular")));
+            //printf("SMaterial.shininess: %d\n", getUniformLocation(std::string("u_material.shininess")));
+        }
+        bind.location = getUniformLocation(variableName);
         FG_LOG_DEBUG("GFX: Bound uniform '%s' of type: '%s'(%d) to location: %d",
                      bind.variableName.c_str(),
-                     getTextFromUniformType(bind.type), 
+                     getTextFromUniformType(bind.type),
                      (int)bind.type,
                      bind.location);
         GLCheckError("glGetUniformLocation");
@@ -636,6 +652,12 @@ fgBool gfx::CShaderProgram::setUniform(CMVPMatrix* matrix) {
         return FG_FALSE;
     glUniformMatrix4fv(bind->location, 1, GL_FALSE, matrix->getModelViewProjMatPtr());
     GLCheckError("glUniformMatrix4fv");
+
+    // MVP also contains MV matrix, can set it also
+    bind = &m_uniformBinds[shaders::UNIFORM_MV_MATRIX];
+    if(bind->location != -1) {
+        glUniformMatrix4fv(bind->location, 1, GL_FALSE, matrix->getModelViewMatPtr());
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -648,6 +670,45 @@ fgBool gfx::CShaderProgram::setUniform(CMVMatrix* matrix) {
         return FG_FALSE;
     glUniformMatrix4fv(bind->location, 1, GL_FALSE, matrix->getModelViewMatPtr());
     GLCheckError("glUniformMatrix4fv");
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(const SDirectionalLight& light) {
+    SUniformBind* bind = &m_uniformBinds[shaders::UNIFORM_DIRECTIONAL_LIGHT];
+    if(bind->location == -1)
+        return FG_FALSE;
+
+    //glUniform3fv(bind->location + 1, 1, math::value_ptr(light.halfPlane));
+    glUniform4fv(bind->location + 0, 1, math::value_ptr(light.ambient));
+    glUniform4fv(bind->location + 1, 1, math::value_ptr(light.diffuse));
+    glUniform3fv(bind->location + 2, 1, math::value_ptr(light.direction));
+    glUniform4fv(bind->location + 3, 1, math::value_ptr(light.specular));
+
+    //SDirLight.ambient: 1 | 0
+    //SDirLight.diffuse: 2 | 1
+    //SDirLight.direction: 3 | 2
+    //SDirLight.specular: 4 | 3
+
+    GLCheckError("glUniform4fv");
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CShaderProgram::setUniform(const SMaterial& material) {
+    SUniformBind* bind = &m_uniformBinds[shaders::UNIFORM_MATERIAL];
+    if(bind->location == -1)
+        return FG_FALSE;
+
+    //SMaterial.ambient : 5 | 0
+    //SMaterial.diffuse : 6 | 1
+    //SMaterial.shininess : 7 | 2
+    //SMaterial.specular : 8 | 3
+
+    glUniform4fv(bind->location + 0, 1, math::value_ptr(material.ambient));
+    glUniform4fv(bind->location + 1, 1, math::value_ptr(material.diffuse));
+    glUniform1f(bind->location + 2, material.shininess);
+    glUniform4fv(bind->location + 3, 1, math::value_ptr(material.specular));
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------

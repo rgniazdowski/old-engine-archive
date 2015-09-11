@@ -48,6 +48,16 @@ namespace fg {
             ///
             typedef IncludeStrVec::iterator IncludeStrVecItor;
 
+        private:
+            enum {
+                INCLUDE_MATERIAL,
+                INCLUDE_LIGHT,
+                INCLUDE_DIRECTIONAL_LIGHT,
+
+                INCLUDE_COUNT
+            };
+            static const char * s_includeSources[INCLUDE_COUNT];
+
         public:
             /**
              * 

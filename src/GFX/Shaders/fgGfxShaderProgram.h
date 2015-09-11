@@ -12,6 +12,10 @@
     #define FG_INC_GFX_SHADER_PROGRAM
     #define FG_INC_GFX_SHADER_PROGRAM_BLOCK
 
+    #ifdef FG_INC_GFX_MATERIAL_BLOCK
+        #error "FG_INC_GFX_MATERIAL_BLOCK constant is defined. Do not include GfxShaderProgram inside of GfxMaterial header."
+    #endif
+
     #include "fgGfxShaderDefs.h"
     #include "fgGfxShader.h"
     #include "fgGfxShaderBase.h"
@@ -22,6 +26,8 @@
     #include "fgVector.h"
 
     #include "GFX/fgGfxMVPMatrix.h"
+    #include "GFX/fgGfxLight.h"
+    #include "GFX/fgGfxMaterial.h"
     #include "Math/fgDualQuaternion.h"
 
     #ifndef FG_INC_MANAGER_BASE
@@ -497,6 +503,31 @@ namespace fg {
              * @return 
              */
             fgBool setUniform(CMVMatrix* matrix);
+
+            //------------------------------------------------------------------
+
+            /**
+             * 
+             * @param light
+             * @return
+             */
+            fgBool setUniform(const SDirectionalLight& light);
+            /**
+             *
+             * @param material
+             * @return
+             */
+            fgBool setUniform(const SMaterial& material);
+            /**
+             *
+             * @param pMaterial
+             * @return
+             */
+            inline fgBool setUniform(const SMaterial* pMaterial) {
+                if(!pMaterial)
+                    return FG_FALSE;
+                return setUniform(*pMaterial);
+            }
 
             //------------------------------------------------------------------
 

@@ -16,6 +16,12 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
+const char* gfx::CShader::s_includeSources[gfx::CShader::INCLUDE_COUNT] = {
+  "struct SMaterial {\nvec4 ambient;\nvec4 diffuse;\nfloat shininess;\nvec4 specular;\n};\n",
+  "struct SLight {\nvec4 ambient;\nvec4 diffuse;\nvec4 specular;\n};\n",
+  "struct SDirectionalLight {\n/*vec3 halfPlane;*/\nvec4 ambient;\nvec4 diffuse;\nvec3 direction;\nvec4 specular;\n};\n"
+};
+
 gfx::CShader::CShader(shaders::ShaderType type) :
 m_type(type),
 m_version(FG_GFX_SHADING_LANGUAGE_INVALID),
@@ -33,7 +39,6 @@ m_isSourceLoaded(FG_FALSE) {
     m_params[FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
     m_params[FG_GFX_SHADER_SOURCE_LENGTH] = 0;
     m_baseType = BASE_TYPE_SHADER;
-    //FG_LOG_DEBUG("gfx::CShader::CShader();");
 }
 //------------------------------------------------------------------------------
 
@@ -122,7 +127,17 @@ fgBool gfx::CShader::loadSource(void) {
     }
     // append additional includes (these are structure definitions)
     for(int i = 0; i < (int)m_includeStrVec.size(); i++, n++) {
-        m_sources[n] = "\n"; // #FIXME
+        //m_sources[n] = "\n"; // #FIXME
+        const std::string& includeName = m_includeStrVec.at(i);
+        if(includeName.compare("fgGfxMaterial") == 0) {
+            m_sources[n] = s_includeSources[INCLUDE_MATERIAL];
+        } else if(includeName.compare("fgGfxLight") == 0) {
+            m_sources[n] = s_includeSources[INCLUDE_LIGHT];
+        } else if(includeName.compare("fgGfxDirectionalLight") == 0) {
+            m_sources[n] = s_includeSources[INCLUDE_DIRECTIONAL_LIGHT];
+        } else {
+            m_sources[n] = "\n\0";
+        }
     }
     m_sources[n] = m_fileSource;
 #if defined(FG_DEBUG)
