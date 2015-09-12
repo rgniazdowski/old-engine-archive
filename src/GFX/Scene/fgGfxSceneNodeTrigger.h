@@ -182,7 +182,7 @@ namespace fg {
              */
             virtual void setScale(const Vector3f& scale);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
         public:
 
             /**
@@ -240,10 +240,10 @@ namespace fg {
         private:
             ///
             CallbacksVec m_callbacks;
-        };
+        }; // class CSceneNodeTrigger
 
-    }
-}
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SCENE_NODE_TRIGGER_BLOCK
 #endif	/* FG_INC_GFX_SCENE_NODE_TRIGGER */

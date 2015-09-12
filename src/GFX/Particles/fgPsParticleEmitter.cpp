@@ -317,7 +317,7 @@ void gfx::CParticleEmitter::calculate(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CParticleEmitter::draw(void) {
+void gfx::CParticleEmitter::draw(const Matrix4f& modelMat) {
     //glEnable(GL_POLYGON_OFFSET_FILL);
     //glPolygonOffset(1.0f, 2.0f);
 
@@ -327,7 +327,7 @@ void gfx::CParticleEmitter::draw(void) {
     context::setCullFace(FG_FALSE);
     context::disable(gfx::DEPTH_WRITEMASK);
 
-    base_type::draw();
+    base_type::draw(modelMat);
 
     context::enable(gfx::DEPTH_WRITEMASK);
     context::setCullFace(FG_TRUE);

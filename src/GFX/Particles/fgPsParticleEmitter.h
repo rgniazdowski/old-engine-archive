@@ -156,15 +156,17 @@ namespace fg {
              * 
              */
             virtual void calculate(void);
-            
+
+            using base_type::draw;
             /**
              * 
              */
-            virtual void draw(void);
+            virtual void draw(const Matrix4f& modelMat);
 
-        };
-    };
-};
+        }; // class CParticleEmitter
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_PS_PARTICLE_EMITTER_BLOCK
 #endif	/* FG_INC_PS_PARTICLE_EMITTER */

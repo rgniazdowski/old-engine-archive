@@ -587,7 +587,7 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
 #endif
 //------------------------------------------------------------------------------
 
-void gfx::CDrawCall::draw(void) {
+void gfx::CDrawCall::draw(const Matrix4f& modelMat) {
     // Internal array uses vertex data objects allocated inside of this draw call
     // If it's not set - nothing to draw
     if(!m_vecDataBase && m_drawCallType == DRAW_CALL_INTERNAL_ARRAY) {
@@ -608,6 +608,7 @@ void gfx::CDrawCall::draw(void) {
         scissorSet = FG_TRUE;
     }
     if(m_pMVP && m_pProgram) {
+        m_pMVP->calculate(modelMat);
         // force use program?
         m_pProgram->use();
         m_pProgram->setUniform(m_pMVP);

@@ -370,35 +370,12 @@ namespace fg {
                               const fgBool rewind = FG_FALSE);
 
             //------------------------------------------------------------------
-
-            /**
-             * 
-             */
-            virtual void draw(void);
-            /**
-             * Draw with relative 2D position
-             * @param relPos
-             */
-            virtual inline void draw(const Vector2f & relPos) {
-                self_type::draw(math::translate(Matrix4f(), Vector3f(relPos.x, relPos.y, 0.0f)));
-            }
-            /**
-             * Draw with relative 3D position
-             * @param relPos
-             */
-            virtual inline void draw(const Vector3f & relPos) {
-                self_type::draw(math::translate(Matrix4f(), relPos));
-            }
+            using base_type::draw;
             /**
              * Draw with given model matrix
              * @param modelMat
              */
-            virtual inline void draw(const Matrix4f & modelMat) {
-                if(m_pMVP && m_pProgram) {
-                    m_pMVP->calculate(modelMat);
-                }
-                self_type::draw();
-            }
+            virtual void draw(const Matrix4f& modelMat);
             //------------------------------------------------------------------
             /**
              *

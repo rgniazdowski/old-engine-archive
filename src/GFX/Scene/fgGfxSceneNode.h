@@ -211,28 +211,14 @@ namespace fg {
             virtual void refreshGfxInternals(void);
 
         public:
-
+            using drawable_type::draw;
             /**
              * 
-             */
-            virtual void draw(void);
-            /**
-             * Draw with relative 2D position
-             * @param relPos
-             */
-            virtual void draw(const Vec2f& relPos);
-            /**
-             * Draw with relative 3D position
-             * @param relPos
-             */
-            virtual void draw(const Vec3f& relPos);
-            /**
-             * Draw with given model matrix
              * @param modelMat
              */
             virtual void draw(const Matrix4f& modelMat);
 
-        public:
+        protected:
             /**
              *
              * @param delta

@@ -253,58 +253,6 @@ fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNode::draw(void) {
-    if(!isVisible())
-        return;
-    if(m_drawCall) {
-        m_drawCall->draw(m_modelMat);
-    }
-    ChildrenVecItor it = m_children.begin(), end = m_children.end();
-    for(; it != end; it++) {
-        if(!(*it)) {
-            continue;
-        }
-        if(m_drawCall != (*it)->getDrawCall()) {
-            (*it)->draw(m_modelMat);
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNode::draw(const Vec2f& relPos) {
-    if(!isVisible())
-        return;
-    if(m_drawCall) {
-        m_drawCall->draw(relPos);
-    }
-    ChildrenVecItor it = m_children.begin(), end = m_children.end();
-    for(; it != end; it++) {
-        if(!(*it))
-            continue;
-        if(m_drawCall != (*it)->getDrawCall()) {
-            (*it)->draw(relPos);
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNode::draw(const Vec3f& relPos) {
-    if(!isVisible())
-        return;
-    if(m_drawCall) {
-        m_drawCall->draw(relPos);
-    }
-    ChildrenVecItor it = m_children.begin(), end = m_children.end();
-    for(; it != end; it++) {
-        if(!(*it))
-            continue;
-        if(m_drawCall != (*it)->getDrawCall()) {
-            (*it)->draw(relPos);
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
 void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
     if(!isVisible())
         return;
@@ -374,12 +322,13 @@ void gfx::CSceneNode::update(float delta) {
         m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
 
     }
+    animate(delta);
     // The base version of the updateAABB will update it depending on the collision body
     // if no collision body is present - the transformation wont be valid,
     // so it does nothing... - this way this function can be called at the end of 
     // any derived version (extend)
     updateAABB();
-    // Scaling?
+    
 }
 //------------------------------------------------------------------------------
 
