@@ -269,7 +269,7 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
         const unsigned int nWeights = pBone->weights.size();
         for(unsigned int j = 0; j < nWeights; j++) {
             anim::SVertexWeight& weight = pBone->weights[j];
-            if(this->meshIndex != weight.meshIdx)
+            if(this->meshIndex != (unsigned int)weight.meshIdx)
                 continue;
             unsigned int subIdx = (unsigned int)countVec[weight.vertexIdx];
             if(subIdx == 0) {
@@ -445,15 +445,29 @@ fgGFXboolean gfx::SSkinnedMesh::genBuffers(SMeshBase* pMeshSuper) {
 void gfx::SSkinnedMesh::calculate(anim::CAnimation* pAnimation,
                                   anim::SAnimationFrameInfo& frameInfo,
                                   float elapsed) {
-    if(!pAnimation) {
+    if(!isAnimationCompatible(pAnimation))
         return;
-    }
-    if(pAnimation->getType() != anim::Type::BONE) {
-        return;
-    }
     anim::CBoneAnimation* pBoneAnimation = NULL;
     pBoneAnimation = static_cast<anim::CBoneAnimation*>(pAnimation);
     pBoneAnimation->calculate(frameInfo, this->bones, elapsed);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SSkinnedMesh::isAnimationCompatible(const anim::CAnimation* pAnimation) const {
+    if(!pAnimation)
+        return FG_FALSE;
+    fgBool status = FG_TRUE;
+    if(pAnimation->getType() != anim::Type::BONE)
+        return FG_FALSE; // only bone animation type compatible with mesh
+    const unsigned int nBones = this->bones.size();
+    for(unsigned int boneId = 0; boneId < nBones; boneId++) {
+        // now if animations does not have channel with this bone - it's not compatible
+        if(!pAnimation->hasChannel(this->bones[boneId]->name)) {
+            status = FG_FALSE;
+            break;
+        }
+    }
+    return status;
 }
 //------------------------------------------------------------------------------
 

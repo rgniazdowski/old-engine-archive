@@ -180,6 +180,8 @@ namespace fg {
                            anim::SAnimationFrameInfo& frameInfo,
                            float elapsed = 0.0f);
 
+            fgBool isAnimationCompatible(const anim::CAnimation* pAnimation) const;
+
         protected:
             /**
              *
