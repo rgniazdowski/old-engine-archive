@@ -34,7 +34,7 @@ m_isLinkOnUse(FG_FALSE) {
 //------------------------------------------------------------------------------
 
 gfx::CShaderManager::~CShaderManager() {
-    destroy();    
+    destroy();
 }
 //------------------------------------------------------------------------------
 
@@ -168,7 +168,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     uniformBinds.push_back(SUniformBind("u_useTexture", shaders::UNIFORM_USE_TEXTURE));
     uniformBinds.push_back(SUniformBind("s_texture", shaders::UNIFORM_PLAIN_TEXTURE));
     defaultProgram->appendUniformBinds(uniformBinds);
-    
+
     defaultProgram->setPreloaded(FG_TRUE);
 
     if(!defaultProgram->compile()) {
@@ -527,6 +527,13 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
     // This is a fallback
     pRequestedShader = CShaderManager::get(info);
     if(pRequestedShader) {
+        // #FIXME - link on request/use/get should maybe throw some kind of event
+        // this is for the future - compiling/linking should be done in special
+        // place - can also throw proper event SHADER_LINK(?) to react properly
+        if(m_isLinkOnRequest) {
+            pRequestedShader->compile();
+            pRequestedShader->link();
+        }
         return pRequestedShader;
     }
     // info cannot be a path, it has to be resource name or config name

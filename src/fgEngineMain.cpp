@@ -440,7 +440,7 @@ fgBool CEngineMain::initialize(void) {
     // This will preload any required textures and upload them to the GFX
     m_gfxMain->setupLoader();
     // DEVICE YIELD
-    m_gfxMain->getLoader()->update(0.0f);
+    m_gfxMain->getLoader()->update(5.0f); // 5
 
     ////////////////////////////////////////////////////////////////////////////
     // Setup SFX manager external pointer - resource manager
@@ -449,7 +449,7 @@ fgBool CEngineMain::initialize(void) {
     if(!m_soundMgr->initialize()) {
         FG_LOG_ERROR("SFX: Initialization of Sound module finished with errors");
     }
-    m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getLoader()->update(10.0f); // 15
     // Create object for Game Logic Manager
     if(!m_gameMain)
         m_gameMain = new game::CGameMain(this);
@@ -463,7 +463,7 @@ fgBool CEngineMain::initialize(void) {
     }
     if(m_inputHandler)
         m_inputHandler->initialize(m_hardwareState);
-    m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getLoader()->update(15.0f); // 30
     // DEVICE YIELD
     // Setup GUI Main external pointers
     m_guiMain->setResourceManager(m_resourceMgr);
@@ -488,14 +488,14 @@ fgBool CEngineMain::initialize(void) {
     m_scriptSubsystem->setStyleManager(static_cast<fg::base::CManager *>(m_guiMain->getStyleManager()));
     m_scriptSubsystem->setWidgetManager(static_cast<fg::base::CManager *>(m_guiMain->getWidgetManager()));
     m_scriptSubsystem->setGameMainManager(static_cast<fg::base::CManager *>(m_gameMain));
-    m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getLoader()->update(10.0f); // 40
     if(!m_scriptSubsystem->initialize()) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
     // DEVICE YIELD
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
-    m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getLoader()->update(10.0f); // 50
     m_init = FG_TRUE;
     return FG_TRUE;
 }
@@ -756,6 +756,8 @@ fgBool CEngineMain::loadResources(void) {
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
     m_gfxMain->preLoadShaders();
     m_gfxMain->generateBuiltInData();
+    m_gfxMain->getShaderManager()->setLinkOnUse(FG_TRUE);
+    m_gfxMain->getShaderManager()->setLinkOnRequest(FG_TRUE);
 
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
@@ -768,16 +770,15 @@ fgBool CEngineMain::loadResources(void) {
     FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", modScriptPath.c_str());
     m_scriptSubsystem->executeFile(modScriptPath);
 #endif
-    m_gfxMain->getLoader()->update(10.0f);
-    m_gfxMain->getShaderManager()->setLinkOnUse(FG_TRUE);
-    m_gfxMain->getShaderManager()->setLinkOnRequest(FG_TRUE);
-    m_gfxMain->getLoader()->update(15.0f);
+    m_gfxMain->getLoader()->update(10.0f); // 60
+    
+    m_gfxMain->getLoader()->update(15.0f); // 75
     // DEVICE YIELD
     ////////////////////////////////////////////////////////////////////////////
     // Can also create special event for GFX - upload static vertex data
     // Create vertex buffers on event - not explicitly 
     // DEVICE YIELD
-    m_gfxMain->getLoader()->update(15.0f);
+    m_gfxMain->getLoader()->update(15.0f); // 90
     ////////////////////////////////////////////////////////////////////////////
 
     //m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
@@ -794,6 +795,7 @@ fgBool CEngineMain::loadResources(void) {
         plugin->create(); // Loading the shared object | should initialize the plugin
     }
     this->update(FG_TRUE);
+    m_gfxMain->getLoader()->update(10.0f); // 100
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
