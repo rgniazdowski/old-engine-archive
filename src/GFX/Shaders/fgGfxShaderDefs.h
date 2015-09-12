@@ -27,6 +27,31 @@ namespace fg {
             /**
              *
              */
+            enum UsageMask {
+                USAGE_EMPTY_BIT = 0,
+                USAGE_FALLBACK_BIT = (1 << 0),
+                USAGE_DEFAULT_BIT = (1 << 1),
+                USAGE_LOW_QUALITY_BIT = (1 << 2),
+                USAGE_MEDIUM_QUALITY_BIT = (1 << 3),
+                USAGE_HIGH_QUALITY_BIT = (1 << 4),
+                USAGE_VERTEX_LIGHTING_BIT = (1 << 5),
+                USAGE_FRAGMENT_LIGHTING_BIT = (1 << 6),
+                USAGE_FRAGMENT_LIGHTING_MUTLTIPLE_BIT = (1 << 7),
+                USAGE_ENVIRONMENT_MAPPING_BIT = (1 << 8),
+                USAGE_BUMP_MAPPING_BIT = (1 << 9),
+                USAGE_MESH_SKINNING_BIT = (1 << 10),
+                USAGE_MOTION_BLUR_BIT = (1 << 11),
+                USAGE_ANTIALIASING_BIT = (1 << 12),
+                USAGE_GAUSSIAN_BLUR_BIT = (1 << 13),
+                USAGE_CARTOON_EFFECT_BIT = (1 << 14),
+                USAGE_PARTICLE_RENDER_BIT = (1 << 15),
+                USAGE_SKYBOX_RENDER_BIT = (1 << 16)
+            }; // enum CategoryMask
+            FG_ENUM_FLAGS(UsageMask);
+
+            /**
+             *
+             */
             enum ShaderType {
                 ///
                 SHADER_FRAGMENT = (fgGFXenum)GL_FRAGMENT_SHADER,
@@ -160,6 +185,39 @@ namespace fg {
             //------------------------------------------------------------------
 
             const char* getShaderProgramConfigSuffix(void);
+
+            //------------------------------------------------------------------
+
+            /**
+             * 
+             * @param mask
+             * @return 
+             */
+            unsigned int getUsageMaskCount(UsageMask mask);
+            /**
+             *
+             * @param text
+             * @return
+             */
+            UsageMask getUsageMaskFromText(const char* text);
+            /**
+             *
+             * @param text
+             * @return
+             */
+            UsageMask getUsageMaskFromText(const std::string& text);
+            /**
+             *
+             * @param mask
+             * @return
+             */
+            const char* getTextFromUsageMask(UsageMask mask);
+            /**
+             * 
+             * @param mask
+             * @param text
+             */
+            void getTextFromUsageMask(UsageMask mask, std::string& text);
 
             //------------------------------------------------------------------
 

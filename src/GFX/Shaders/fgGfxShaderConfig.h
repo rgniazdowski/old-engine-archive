@@ -133,6 +133,13 @@ namespace fg {
             }
             /**
              * 
+             * @return
+             */
+            inline shaders::UsageMask getUsageMask(void) const {
+                return m_usageMask;
+            }
+            /**
+             * 
              * @return 
              */
             inline ShaderTypeVec& getShaderTypes(void) {
@@ -219,14 +226,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline ConstantVec& getRefConstants(void) {
+            inline ConstantVec& getConstants(void) {
                 return m_constants;
             }
             /**
              * 
              * @return 
              */
-            inline ConstantVec const& getRefConstants(void) const {
+            inline ConstantVec const& getConstants(void) const {
                 return m_constants;
             }
             /**
@@ -328,8 +335,9 @@ namespace fg {
             std::string m_shaderName;
 
             ///
+            shaders::UsageMask m_usageMask;
+            ///
             ShadingLangVersion m_preferredSLVersion;
-
             /// Default precision for current shader/shader program
             shaders::ShaderPrecision m_defaultPrecision;
 
@@ -352,8 +360,8 @@ namespace fg {
              * @return 
              */
             fgBool private_parseInclude(util::SCfgSection *includeSection);
-
         }; // class CShaderConfig
+
     } // namespace gfx
 } // namespace fg
 

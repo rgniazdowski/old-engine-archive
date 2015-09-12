@@ -84,11 +84,22 @@ gfx::ShaderConfigType gfx::getShaderConfigTypeFromSuffix(const std::string& suff
 
 gfx::CShaderConfig::CShaderConfig() :
 m_configType(SHADER_CONFIG_INVALID),
+m_shaderTypes(),
+m_uniformBinds(),
+m_attributeBinds(),
+m_includes(),
+m_files(),
+m_qualities(),
+m_constants(),
+m_selectedConfigName(),
+m_programName(),
+m_shaderName(),
+m_usageMask(shaders::USAGE_EMPTY_BIT),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_defaultPrecision(shaders::SHADER_PRECISION_DEFAULT) { }
 //------------------------------------------------------------------------------
 
-gfx::CShaderConfig::CShaderConfig(const char *filePath) {
+gfx::CShaderConfig::CShaderConfig(const char *filePath) : self_type() {
     gfx::CShaderConfig::load(filePath);
 }
 //------------------------------------------------------------------------------
@@ -112,6 +123,7 @@ void gfx::CShaderConfig::clearAll(void) {
     m_files.clear_optimised();
     m_qualities.clear_optimised();
     m_constants.clear_optimised();
+    m_usageMask = shaders::USAGE_EMPTY_BIT;
 }
 //------------------------------------------------------------------------------
 
@@ -253,6 +265,13 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
         _tmp.append(m_selectedConfigName);
         definesSection = getSection(_tmp);
         private_parseDefines(definesSection);
+    }
+    {
+        // parse usage flags
+        util::SCfgParameter* param = mainSection->getParameter("usage", util::SCfgParameter::STRING);
+        if(param) {
+            m_usageMask |= shaders::getUsageMaskFromText(param->string);
+        }
     }
     //
     // Parse more wide parameters from specific shader configuration (not program config)
@@ -459,7 +478,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
                 if(param->string[0]) {
                     std::string newShaderPath;
                     newShaderPath.append(path::dirName(filePathNoExt));
-                    if(newShaderPath[newShaderPath.length()-1] != path::DELIMITER_CHAR)
+                    if(newShaderPath[newShaderPath.length() - 1] != path::DELIMITER_CHAR)
                         newShaderPath.append(path::DELIMITER);
                     newShaderPath.append(param->string);
                     m_files.push_back(newShaderPath); // joined path

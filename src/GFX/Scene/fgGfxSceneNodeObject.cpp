@@ -24,7 +24,6 @@
 #include "fgLog.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CSceneNodeObject::CSceneNodeObject(gfx::CModel *pModel, gfx::CSceneNode *pParent) :
@@ -201,12 +200,12 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
             static_cast<CSceneNodeMesh *>(pChildNode)->setMaterial(pShape->material);
             std::string childName = this->getName();
-            sIdx = getChildrenCount()+1;
+            sIdx = getChildrenCount() + 1;
             childName.append("_");
             childName.append(pShape->name);
             childName.append("_");
-            childName.append(1, (char)('0'+(sIdx/10)));
-            childName.append(1, (char)('0'+(sIdx%10)));
+            childName.append(1, (char)('0' + (sIdx / 10)));
+            childName.append(1, (char)('0' + (sIdx % 10)));
             pChildNode->setName(childName);
 
             //pChildNode->getDrawCall()->setupMaterial(pShape->material);
@@ -225,6 +224,7 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             //}
             // No need to check if it's inserted successfully
             getChildren().push_back(pChildNode);
+
         }
         if(shapes.size()) {
             m_drawCall = getChildren()[0]->getDrawCall(); // ?
@@ -237,8 +237,8 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
     }
 }
 //------------------------------------------------------------------------------
+
 fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) {
-    printf("fg::gfx::CSceneNodeObject::setAnimation('%s', %d)\n", name, slot);
     if(!name)
         return FG_FALSE;
     if(!name[0])

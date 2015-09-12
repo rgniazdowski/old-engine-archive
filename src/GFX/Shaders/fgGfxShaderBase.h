@@ -91,6 +91,41 @@ namespace fg {
                 //--------------------------------------------------------------
                 /**
                  * 
+                 * @return
+                 */
+                shaders::UsageMask getUsageMask(void) const {
+                    return m_usageMask;
+                }
+                /**
+                 *
+                 * @param mask
+                 * @param toggle
+                 */
+                void setUsage(shaders::UsageMask mask, fgBool toggle = FG_TRUE) {
+                    if(toggle) {
+                        m_usageMask |= mask;
+                    } else {
+                        m_usageMask |= mask;
+                        m_usageMask ^= mask;
+                    }
+                }
+                /**
+                 *
+                 * @param usage
+                 */
+                inline void setUsage(const char* usage) {
+                    setUsage(shaders::getUsageMaskFromText(usage), FG_TRUE);
+                }
+                /**
+                 *
+                 * @param usage
+                 */
+                inline void setUsage(const std::string& usage) {
+                    setUsage(shaders::getUsageMaskFromText(usage), FG_TRUE);
+                }
+                //--------------------------------------------------------------
+                /**
+                 * 
                  * @return 
                  */
                 fgGFXuint getGfxID(void) const {
@@ -148,6 +183,8 @@ namespace fg {
                 fgGFXuint m_gfxID;
                 ///
                 ShaderBaseType m_baseType;
+                ///
+                shaders::UsageMask m_usageMask;
 
             }; // class CShader
         } // namespace base

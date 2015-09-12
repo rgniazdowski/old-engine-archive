@@ -11,6 +11,25 @@
 #include "fgGfxShaderDefs.h"
 #include "Util/fgStrings.h"
 
+#define FG_GFX_USAGE_EMPTY_TEXT                        "Empty"
+#define FG_GFX_USAGE_FALLBACK_TEXT                     "Fallback"
+#define FG_GFX_USAGE_DEFAULT_TEXT                      "Default"
+#define FG_GFX_USAGE_LOW_QUALITY_TEXT                  "LowQuality"
+#define FG_GFX_USAGE_MEDIUM_QUALITY_TEXT               "MediumQuality"
+#define FG_GFX_USAGE_HIGH_QUALITY_TEXT                 "HighQuality"
+#define FG_GFX_USAGE_VERTEX_LIGHTING_TEXT              "VertexLighting"
+#define FG_GFX_USAGE_FRAGMENT_LIGHTING_TEXT            "FragmentLighting"
+#define FG_GFX_USAGE_FRAGMENT_LIGHTING_MUTLTIPLE_TEXT  "FragmentLightingMultiple"
+#define FG_GFX_USAGE_ENVIRONMENT_MAPPING_TEXT          "EnvironmentMapping"
+#define FG_GFX_USAGE_BUMP_MAPPING_TEXT                 "BumpMapping"
+#define FG_GFX_USAGE_MESH_SKINNING_TEXT                "MeshSkinning"
+#define FG_GFX_USAGE_MOTION_BLUR_TEXT                  "MotionBlur"
+#define FG_GFX_USAGE_ANTIALIASING_TEXT                 "AntiAliasing"
+#define FG_GFX_USAGE_GAUSSIAN_BLUR_TEXT                "GaussianBlur"
+#define FG_GFX_USAGE_CARTOON_EFFECT_TEXT               "CartoonEffect"
+#define FG_GFX_USAGE_PARTICLE_RENDER_TEXT              "ParticleRender"
+#define FG_GFX_USAGE_SKYBOX_RENDER_TEXT                "SkyboxRender"
+
 #define FG_GFX_SHADER_FRAGMENT_TEXT         "FragmentShader"
 #define FG_GFX_SHADER_VERTEX_TEXT           "VertexShader"
 #define FG_GFX_SHADER_TESS_CONTROL_TEXT     "TessellationControlShader"
@@ -185,6 +204,48 @@ namespace fg {
                                                        FG_GFX_CUSTOM_TEXT
             };
 
+            const UsageMask g_UsageMaskTypes[] = {
+                                                  USAGE_EMPTY_BIT,
+                                                  USAGE_FALLBACK_BIT,
+                                                  USAGE_DEFAULT_BIT,
+                                                  USAGE_LOW_QUALITY_BIT,
+                                                  USAGE_MEDIUM_QUALITY_BIT,
+                                                  USAGE_HIGH_QUALITY_BIT,
+                                                  USAGE_VERTEX_LIGHTING_BIT,
+                                                  USAGE_FRAGMENT_LIGHTING_BIT,
+                                                  USAGE_FRAGMENT_LIGHTING_MUTLTIPLE_BIT,
+                                                  USAGE_ENVIRONMENT_MAPPING_BIT,
+                                                  USAGE_BUMP_MAPPING_BIT,
+                                                  USAGE_MESH_SKINNING_BIT,
+                                                  USAGE_MOTION_BLUR_BIT,
+                                                  USAGE_ANTIALIASING_BIT,
+                                                  USAGE_GAUSSIAN_BLUR_BIT,
+                                                  USAGE_CARTOON_EFFECT_BIT,
+                                                  USAGE_PARTICLE_RENDER_BIT,
+                                                  USAGE_SKYBOX_RENDER_BIT
+            };
+
+            const char * const g_UsageMaskTypesText[] = {
+                                                         FG_GFX_USAGE_EMPTY_TEXT,
+                                                         FG_GFX_USAGE_FALLBACK_TEXT,
+                                                         FG_GFX_USAGE_DEFAULT_TEXT,
+                                                         FG_GFX_USAGE_LOW_QUALITY_TEXT,
+                                                         FG_GFX_USAGE_MEDIUM_QUALITY_TEXT,
+                                                         FG_GFX_USAGE_HIGH_QUALITY_TEXT,
+                                                         FG_GFX_USAGE_VERTEX_LIGHTING_TEXT,
+                                                         FG_GFX_USAGE_FRAGMENT_LIGHTING_TEXT,
+                                                         FG_GFX_USAGE_FRAGMENT_LIGHTING_MUTLTIPLE_TEXT,
+                                                         FG_GFX_USAGE_ENVIRONMENT_MAPPING_TEXT,
+                                                         FG_GFX_USAGE_BUMP_MAPPING_TEXT,
+                                                         FG_GFX_USAGE_MESH_SKINNING_TEXT,
+                                                         FG_GFX_USAGE_MOTION_BLUR_TEXT,
+                                                         FG_GFX_USAGE_ANTIALIASING_TEXT,
+                                                         FG_GFX_USAGE_GAUSSIAN_BLUR_TEXT,
+                                                         FG_GFX_USAGE_CARTOON_EFFECT_TEXT,
+                                                         FG_GFX_USAGE_PARTICLE_RENDER_TEXT,
+                                                         FG_GFX_USAGE_SKYBOX_RENDER_TEXT
+            };
+
         } // namespace shaders
     } // namespace gfx
 } // namespace fg
@@ -194,6 +255,92 @@ using namespace fg;
 
 const char* gfx::shaders::getShaderProgramConfigSuffix(void) {
     return FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX;
+}
+//------------------------------------------------------------------------------
+
+unsigned int gfx::shaders::getUsageMaskCount(UsageMask mask) {
+    unsigned int count = 0;
+    if(mask == UsageMask::USAGE_EMPTY_BIT)
+        return 0;
+    const unsigned int n = sizeof (shaders::g_UsageMaskTypes) / sizeof (shaders::UsageMask);
+    for(unsigned int i = 0; i < n; i++) {
+        UsageMask andMask = g_UsageMaskTypes[i] & mask;
+        if(g_UsageMaskTypes[i] == andMask) {
+            count++;
+        }
+    }
+    return count;
+}
+//------------------------------------------------------------------------------
+
+gfx::shaders::UsageMask gfx::shaders::getUsageMaskFromText(const char* text) {
+    if(!text)
+        return UsageMask::USAGE_EMPTY_BIT;
+    if(!text[0])
+        return UsageMask::USAGE_EMPTY_BIT;
+    return getUsageMaskFromText(std::string(text));
+}
+//------------------------------------------------------------------------------
+
+gfx::shaders::UsageMask gfx::shaders::getUsageMaskFromText(const std::string& text) {
+    if(text.empty())
+        return UsageMask::USAGE_EMPTY_BIT;
+    UsageMask mask = USAGE_EMPTY_BIT;
+    CStringVector parts;
+    strings::split(text, ',', parts);
+    if(parts.size() == 1) {
+        parts.clear();
+        strings::split(text, '|', parts);
+    }
+    if(parts.size() == 1) {
+        parts.clear();
+        strings::split(text, ';', parts);
+    }
+    if(parts.size() == 1) {
+        parts.clear();
+        strings::split(text, ' ', parts);
+    }    
+    const unsigned int n = parts.size();
+    const unsigned int nUsages = sizeof (g_UsageMaskTypes) / sizeof (UsageMask);
+    for(unsigned int i = 0; i < n; i++) {
+        std::string usage = strings::trim(parts[i]);
+        for(unsigned int usageId = 0; usageId < nUsages; usageId++) {
+            if(strings::isEqual(g_UsageMaskTypesText[usageId], usage, FG_FALSE)) {
+                mask |= g_UsageMaskTypes[usageId];
+                break;
+            }
+        }
+    }
+    return mask;
+}
+//------------------------------------------------------------------------------
+
+const char* gfx::shaders::getTextFromUsageMask(UsageMask mask) {
+    const unsigned int n = sizeof (shaders::g_UsageMaskTypes) / sizeof (shaders::UsageMask);
+    const char* result = NULL;
+    for(unsigned int i = 0; i < n; i++) {
+        if(shaders::g_UsageMaskTypes[i] == mask) {
+            result = shaders::g_UsageMaskTypesText[i];
+            break;
+        }
+    }
+    return result;
+}
+//------------------------------------------------------------------------------
+
+void gfx::shaders::getTextFromUsageMask(UsageMask mask, std::string& text) {
+    const unsigned int n = sizeof (shaders::g_UsageMaskTypes) / sizeof (shaders::UsageMask);
+    text.clear();
+    for(unsigned int i = 0; i < n; i++) {
+        UsageMask andMask = g_UsageMaskTypes[i] & mask;
+        if(shaders::g_UsageMaskTypes[i] == andMask) {
+            text.append(g_UsageMaskTypesText[i]);
+            text.append(",");
+        }
+    }
+    if(text.length()) {
+        text.erase(text.length()-1); // remove the last separator
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -222,10 +369,10 @@ gfx::shaders::ShaderType gfx::shaders::getShaderTypeFromText(const std::string& 
 const char* gfx::shaders::getTextFromShaderType(ShaderType value) {
     if(value == shaders::SHADER_INVALID)
         return NULL;
-    const unsigned int n = sizeof (gfx::shaders::g_SupportedShaderTypes) / sizeof (gfx::shaders::ShaderType);
+    const unsigned int n = sizeof (g_SupportedShaderTypes) / sizeof (ShaderType);
     const char* result = NULL;
     for(unsigned int i = 0; i < n; i++) {
-        if(gfx::shaders::g_SupportedShaderTypes[i] == value) {
+        if(g_SupportedShaderTypes[i] == value) {
             // shader type as text (VertexShader/FragmentShader/...)
             result = gfx::shaders::g_SupportedShaderTypesText[i];
         }

@@ -18,7 +18,8 @@ using namespace fg;
 gfx::base::CShader::CShader() :
 m_log(NULL),
 m_gfxID(0),
-m_baseType(BASE_TYPE_INVALID) { }
+m_baseType(BASE_TYPE_INVALID),
+m_usageMask(shaders::USAGE_EMPTY_BIT) { }
 //------------------------------------------------------------------------------
 
 gfx::base::CShader::~CShader() {

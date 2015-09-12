@@ -196,6 +196,9 @@ fgBool gfx::CShader::compile(void) {
             return FG_FALSE;
         }
     }
+    if(m_gfxID && glIsShader(m_gfxID)) {
+        return FG_TRUE; // no recompilation
+    }
     if(!create()) {
         // Failed to create shader
         FG_LOG_ERROR("GFX: Failed to create shader '%s'", getNameStr());

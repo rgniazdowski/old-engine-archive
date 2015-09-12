@@ -63,6 +63,9 @@ namespace fg {
         protected:
             typedef resource::CDataManagerBase<CShader*, ShaderHandle, ShaderManagerTag> shader_data_manager_type;
 
+            /**
+             *
+             */
             class CShaderObjectManager : public shader_data_manager_type {
                 friend class CShaderManager;
             public:
@@ -156,6 +159,12 @@ namespace fg {
                  * @return
                  */
                 CShader* request(const char* info);
+                /**
+                 *
+                 * @param usageMask
+                 * @return
+                 */
+                CShader* request(shaders::UsageMask usageMask);
 
                 /**
                  *
@@ -424,6 +433,12 @@ namespace fg {
              * @return 
              */
             virtual CShaderProgram* request(const char* info);
+            /**
+             *
+             * @param usageMask
+             * @return
+             */
+            virtual CShaderProgram* request(shaders::UsageMask usageMask);
 
             /**
              * This will just set the internal pointer, no additional operations

@@ -108,8 +108,9 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
     }
     CShaderConfig::ShaderTypeVec shaderTypes = m_config->getShaderTypes();
     CShaderConfig::FileNameVec fileNames = m_config->getFiles();
-    CShaderConfig::ConstantVec shaderConstants = m_config->getRefConstants();
+    CShaderConfig::ConstantVec shaderConstants = m_config->getConstants();
     m_nameTag = m_config->getProgramName();
+    this->setUsage(m_config->getUsageMask());
 
     for(int i = 0; i < (int)shaderTypes.size(); i++) {
         std::string newPath;
@@ -161,7 +162,7 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
             newPath.clear();
 
             {
-                CShaderConfig::ConstantVec& _vec = m_config->getRefConstants();
+                CShaderConfig::ConstantVec& _vec = m_config->getConstants();
                 for(int i = 0; i < (int)_vec.size(); i++)
                     pShader->appendDefine(_vec[i]);
                 for(int i = 0; i < (int)shaderConstants.size(); i++)
@@ -175,7 +176,8 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
             }
             appendAttributeBinds(m_config->getAttributeBinds());
             appendUniformBinds(m_config->getUniformBinds());
-
+            pShader->setUsage(m_config->getUsageMask());
+            this->setUsage(m_config->getUsageMask());
             // the shader is new - force add it to shader manager (parent)
             if(this->isManaged() && this->getManager()) {
                 CShaderManager* pShaderMgr = static_cast<CShaderManager*>(this->getManager());
@@ -185,6 +187,8 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
             m_shaders[spID] = pShader; //
             appendAttributeBinds(m_config->getAttributeBinds());
             appendUniformBinds(m_config->getUniformBinds());
+            pShader->setUsage(m_config->getUsageMask());
+            this->setUsage(m_config->getUsageMask());
         }
     }
     delete m_config;

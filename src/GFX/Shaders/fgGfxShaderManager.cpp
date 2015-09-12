@@ -79,6 +79,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     ShadingLangVersion slVersion = context::getSLVersion();
     CShaderProgram *defaultProgram = new CShaderProgram();
     defaultProgram->setName("DefaultShader"); // #FIXME - const name
+    defaultProgram->setUsage(shaders::USAGE_FALLBACK_BIT | shaders::USAGE_DEFAULT_BIT);
     defaultProgram->setFilePath("DefaultShader");
     CShaderProgram::AttributeBindVec attrBinds;
     CShaderProgram::UniformBindVec uniformBinds;
@@ -141,6 +142,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     ////////////////////////////////////////////////////////////////////////////
     // FRAGMENT SHADER
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setVersion(slVersion);
+    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setUsage(shaders::USAGE_FALLBACK_BIT | shaders::USAGE_DEFAULT_BIT);
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setName("DefaultShader.Fragment");
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setFilePath("no_path");
     if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
@@ -151,6 +153,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     ////////////////////////////////////////////////////////////////////////////
     // VERTEX SHADER
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setVersion(slVersion);
+    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setUsage(shaders::USAGE_FALLBACK_BIT | shaders::USAGE_DEFAULT_BIT);
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setName("DefaultShader.Vertex");
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setFilePath("no_path");
     if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
@@ -401,6 +404,11 @@ fgBool gfx::CShaderManager::CShaderObjectManager::remove(CShader* pShader) {
 
 gfx::CShader* gfx::CShaderManager::CShaderObjectManager::request(const std::string& info) {
     // #TODO - implementation
+    // here will be specific code that normally is in shader program pre load config
+    // need to merge this stuff up!
+    // #TODO:2 - also now with special UsageMask flags for shader/shader programs
+    // need to check whether the info contains specific usage mask string names
+    // which can be separated by ' '(space) or ';', '|', ','
     return NULL;
 }
 //------------------------------------------------------------------------------
@@ -411,6 +419,12 @@ gfx::CShader* gfx::CShaderManager::CShaderObjectManager::request(const char* inf
     if(!info[0])
         return NULL;
     return this->request(std::string(info));
+}
+//------------------------------------------------------------------------------
+
+gfx::CShader* gfx::CShaderManager::CShaderObjectManager::request(shaders::UsageMask usageMask) {
+    // #TODO - implementation of shader object request feature
+    return NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -531,7 +545,7 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
         // this is for the future - compiling/linking should be done in special
         // place - can also throw proper event SHADER_LINK(?) to react properly
         if(m_isLinkOnRequest) {
-            pRequestedShader->compile();
+            // link will also call compile() if needed
             pRequestedShader->link();
         }
         return pRequestedShader;
@@ -625,7 +639,6 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
         // this is for the future - compiling/linking should be done in special
         // place - can also throw proper event SHADER_LINK(?) to react properly
         if(m_isLinkOnRequest) {
-            pRequestedShader->compile();
             pRequestedShader->link();
         }
     }
@@ -639,6 +652,53 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const char* info) {
     if(!info[0])
         return NULL;
     return request(std::string(info));
+}
+//------------------------------------------------------------------------------
+
+gfx::CShaderProgram* gfx::CShaderManager::request(shaders::UsageMask usageMask) {
+    CShaderProgram* pResultShader = NULL;
+    CShaderProgram* pSecondaryShader = NULL;
+    if(usageMask == shaders::USAGE_EMPTY_BIT)
+        return NULL;
+    ProgramVecItor it = getRefDataVector().begin(), end = getRefDataVector().end();
+    for(; it != end; it++) {
+        CShaderProgram *pProgram = (*it).data;
+        if(!pProgram)
+            continue;
+        // now simply need to check the andMask
+        shaders::UsageMask andMask = usageMask & pProgram->getUsageMask();
+        if(andMask == usageMask) {
+            // found shader program has all needed usage mask flags
+            // the best possible option, can stop search now
+            pResultShader = pProgram;
+            break;
+        } else if(andMask != shaders::USAGE_EMPTY_BIT) {
+            // this is secondary option, will try to find later
+            // a better secondary option (with higher flag number)
+            if(!pSecondaryShader) {
+                pSecondaryShader = pProgram;
+            } else {
+                // already set, need to check flags
+                shaders::UsageMask secondAndMask = pSecondaryShader->getUsageMask() & usageMask;
+                if(shaders::getUsageMaskCount(secondAndMask) < shaders::getUsageMaskCount(andMask)) {
+                    // currently visited program has better usage flags
+                    // difference is lower so flags are more close to 'usageMask' value
+                    // this is not accurate because values are not spread equally.
+                    // Which flag is better? 1 + 2 + 32 OR 1 + 2 + 4 + 8 + 16
+                    // Obviously the second one in this example, more flags by number
+                    // can add counter function...
+                    pSecondaryShader = pProgram;
+                }
+            }
+        }
+    }
+    if(!pResultShader) {
+        pResultShader = pSecondaryShader;
+    }
+    if(pResultShader && m_isLinkOnRequest) {
+        pResultShader->link();
+    }
+    return pResultShader;
 }
 //------------------------------------------------------------------------------
 
