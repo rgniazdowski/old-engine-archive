@@ -98,17 +98,30 @@ namespace fg {
                 SAnimationChannel* getChannel(const char* name);
 
                 /**
-                 *
+                 * 
                  * @param name
                  * @return
                  */
-                fgBool hasChannel(const std::string& name);
+                const SAnimationChannel* getChannel(const std::string& name) const;
                 /**
                  *
                  * @param name
                  * @return
                  */
-                fgBool hasChannel(const char* name);
+                const SAnimationChannel* getChannel(const char* name) const;
+
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                fgBool hasChannel(const std::string& name) const;
+                /**
+                 *
+                 * @param name
+                 * @return
+                 */
+                fgBool hasChannel(const char* name) const;
 
                 /**
                  *

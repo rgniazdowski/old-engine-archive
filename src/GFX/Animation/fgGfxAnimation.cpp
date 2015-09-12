@@ -91,12 +91,42 @@ gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const char* name
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::anim::CAnimation::hasChannel(const std::string& name) {
+const gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const std::string& name) const {
+    if(name.empty() || isEmpty())
+        return NULL;
+    const SAnimationChannel* pChannel = NULL;
+    const unsigned int n = count();
+    for(unsigned int i =0;i<n;i++) {
+        if(m_channels[i].targetName.compare(name) == 0) {
+            pChannel = &m_channels[i];
+            break;
+        }
+    }
+    return pChannel;
+}
+//------------------------------------------------------------------------------
+
+const gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const char* name) const {
+    if(!name || isEmpty())
+        return NULL;
+    const SAnimationChannel* pChannel = NULL;
+    const unsigned int n = count();
+    for(unsigned int i=0;i<n;i++) {
+        if(m_channels[i].targetName.compare(name) == 0) {
+            pChannel = &m_channels[i];
+            break;
+        }
+    }
+    return pChannel;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::CAnimation::hasChannel(const std::string& name) const {
     return (fgBool)(getChannel(name) != NULL);
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::anim::CAnimation::hasChannel(const char* name) {
+fgBool gfx::anim::CAnimation::hasChannel(const char* name) const {
     return (fgBool)(getChannel(name) != NULL);
 }
 //------------------------------------------------------------------------------
