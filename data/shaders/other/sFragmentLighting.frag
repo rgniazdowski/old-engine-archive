@@ -12,7 +12,8 @@
 
 precision highp float;
 
-struct DirectionalLight {
+/*
+struct SDirectionalLight {
     vec3 direction;
     vec3 halfplane;
     vec4 ambientColor;
@@ -20,18 +21,18 @@ struct DirectionalLight {
     vec4 specularColor;
 };
 
-struct Material {
+struct SMaterial {
     vec4 ambientFactor;
     vec4 diffuseFactor;
     vec4 specularFactor;
     float shininess;
 };
-
+*/
 // Light
-uniform DirectionalLight u_directionalLight;
+uniform SDirectionalLight u_directionalLight;
 
 // Material
-uniform Material u_material;
+uniform SMaterial u_material;
 
 varying vec3 v_ecNormal;
 
