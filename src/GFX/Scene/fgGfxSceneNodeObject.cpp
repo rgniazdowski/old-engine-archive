@@ -17,6 +17,10 @@
 #include "fgGfxSceneNodeObject.h"
 #include "fgGfxSceneNodeMesh.h"
 #include "fgGfxSceneManager.h"
+#include "GFX/Shaders/fgGfxShaderManager.h"
+#include "GFX/Animation/fgGfxAnimation.h"
+#include "GFX/fgGfxSkinnedMesh.h"
+#include "Util/fgStrings.h"
 #include "fgLog.h"
 
 using namespace fg;
@@ -126,9 +130,27 @@ void gfx::CSceneNodeObject::updateAABB(void) {
         base_type::updateAABB();
     }
     if(m_pModel) {
-        m_aabb.min = m_pModel->getRefAABB().min;
-        m_aabb.max = m_pModel->getRefAABB().max;
-        m_aabb.transform(m_modelMat);
+        if(!m_pModel->isAnimated()) {
+            m_aabb.min = m_pModel->getRefAABB().min;
+            m_aabb.max = m_pModel->getRefAABB().max;
+            m_aabb.transform(m_modelMat);
+        } else {
+            m_aabb.invalidate();
+            // should now just merge with aabb's of the meshes? lol
+            // this begins to suck beyond comprehension.
+            const unsigned int nChildren = getChildrenCount();
+            for(unsigned int childId = 0; childId < nChildren; childId++) {
+                CSceneNode* pNode = getChild(childId);
+                if(!pNode)
+                    continue;
+                if(pNode->getNodeType() != gfx::SCENE_NODE_MESH) {
+                    continue;
+                }
+                CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+                m_aabb.merge(pNodeMesh->getBoundingVolume());
+            }
+            m_aabb.transform(m_modelMat);
+        }
         if(body && !isAutoScale()) {
             m_aabb.radius = body->getRadius();
         } else {
@@ -167,7 +189,9 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         gfx::CModel::ShapesVec &shapes = pModel->getRefShapes();
         setBoundingVolume(pModel->getRefAABB());
         gfx::CModel::ShapesVecItor sit = shapes.begin(), send = shapes.end();
+        unsigned int sIdx = 0;
         for(; sit != send; sit++) {
+
             if(!(*sit))
                 continue;
             SShape *pShape = (*sit);
@@ -176,6 +200,15 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
                 continue;
             CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
             static_cast<CSceneNodeMesh *>(pChildNode)->setMaterial(pShape->material);
+            std::string childName = this->getName();
+            sIdx = getChildrenCount()+1;
+            childName.append("_");
+            childName.append(pShape->name);
+            childName.append("_");
+            childName.append(1, (char)('0'+(sIdx/10)));
+            childName.append(1, (char)('0'+(sIdx%10)));
+            pChildNode->setName(childName);
+
             //pChildNode->getDrawCall()->setupMaterial(pShape->material);
             // Should register it in a manager? #NOPE
             // There is no need to register this NodeMesh - it's immediate child
@@ -204,3 +237,60 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
     }
 }
 //------------------------------------------------------------------------------
+fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) {
+    printf("fg::gfx::CSceneNodeObject::setAnimation('%s', %d)\n", name, slot);
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    fgBool status = base_type::setAnimation(name, slot);
+    if(status) {
+        // the base type did not fail - ?
+        return FG_TRUE;
+    }
+    // now this function is quite tricky
+    // will need to search for animations inside the armature (if any)
+    if(!m_pModel)
+        return status;
+    if(!m_pModel->isAnimated() || !m_pModel->isRigged())
+        return status;
+    CModel::AnimationsVec& animations = m_pModel->getAnimations();
+    const unsigned int nAnims = animations.size();
+    anim::CAnimation* pAnimation = NULL;
+    for(unsigned int i = 0; i < nAnims; i++) {
+        pAnimation = animations[i];
+        if(!pAnimation)
+            continue;
+        if(pAnimation->getType() != anim::Type::BONE)
+            continue;
+        if(strings::isEqual(pAnimation->getNameStr(), name, FG_FALSE) ||
+           strings::stristr(pAnimation->getNameStr(), name) != NULL) {
+            status = FG_TRUE;
+            break;
+        } else {
+            pAnimation = NULL;
+        }
+    }
+    if(pAnimation) {
+        // now need to set this for all skinned meshes        
+        const unsigned int nChildren = getChildrenCount();
+        for(unsigned int childId = 0; childId < nChildren; childId++) {
+            CSceneNode* pNode = getChild(childId);
+            if(!pNode)
+                continue;
+            if(pNode->getNodeType() != gfx::SCENE_NODE_MESH) {
+                continue;
+            }
+
+            CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+            SSkinnedMesh* pSkinnedMesh = pNodeMesh->getSkinnedMesh();
+            if(!pSkinnedMesh)
+                continue;
+            if(!pSkinnedMesh->isAnimationCompatible(pAnimation))
+                continue;
+            // animation is found and compatible
+            pNodeMesh->setAnimation(pAnimation, slot);
+        }
+    }
+    return status;
+}

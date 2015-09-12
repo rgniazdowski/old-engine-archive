@@ -2071,6 +2071,7 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     typedef Vector3f(gfx::CSceneNode::*SCENENODE_Vec3f_void_const)(void)const;
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_3X)(float, float, float);
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_4X)(float, float, float, float);
+    typedef fgBool (gfx::CSceneNode::*SCENENODE_Bool_C_STR_UINT_IN)(const char*, unsigned int);
 
     const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
     const char* metatableSceneNodeTriggerName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_TRIGGER_MT_ID);
@@ -2081,6 +2082,7 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             .ObjectDirect("isManaged", (gfx::CSceneNode::base_type *)0, &gfx::CSceneNode::base_type::isManaged)
 
             .ObjectDirect("update", (gfx::CSceneNode *)0, &gfx::CSceneNode::update)
+            .ObjectDirect("setAnimation", (gfx::CSceneNode *)0, static_cast<SCENENODE_Bool_C_STR_UINT_IN>(&gfx::CSceneNode::setAnimation))
 
             .ObjectDirect("getPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec4fref_void>(&gfx::CSceneNode::getPosition))
             .ObjectDirect("setPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setPosition))

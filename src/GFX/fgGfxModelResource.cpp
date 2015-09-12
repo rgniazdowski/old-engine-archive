@@ -441,7 +441,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     // are pre-transformed based on nodes' transformation matrix.
     const ::aiScene* pScene = NULL;
     unsigned int defaultFlags = 0;
-
     defaultFlags |= aiProcess_JoinIdenticalVertices;
     // defaultFlags |= aiProcess_MakeLeftHanded; // only for DirectX
     defaultFlags |= aiProcess_Triangulate;
@@ -720,8 +719,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                         continue;
                     }
                     assimp_helper::copyBone(pOriginalBone, pAiBone, pSkinnedMesh->meshIndex);
-                    if(pSkinnedMesh)
-                        pSkinnedMesh->bones.push_back(pOriginalBone);
+                    pSkinnedMesh->bones.push_back(pOriginalBone);
                 }
             }
 

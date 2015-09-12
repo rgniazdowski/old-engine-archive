@@ -71,21 +71,34 @@ namespace fg {
             gfx::CModel *getModel(void) const {
                 return m_pModel;
             }
+
+            using animated_type::setAnimation;
+            /**
+             * 
+             * @param name
+             * @param slot
+             * @return
+             */
+            virtual fgBool setAnimation(const char* name, unsigned int slot);
+
+
             /**
              * 
              */
             virtual void updateAABB(void);
 
-            ///
+            /**
+             * 
+             */
             virtual void refreshGfxInternals(void);
 
         private:
-            /// Pointer to the external model
+            /// Pointer to the external model on which this object is based
             CModel *m_pModel;
-            
-        };
-    };
-};
+        }; // class CSceneNodeObject
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SCENE_NODE_OBJECT_BLOCK
 #endif	/* FG_INC_GFX_SCENE_NODE_OBJECT */

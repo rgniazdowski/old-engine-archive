@@ -23,10 +23,12 @@
     #endif
 
     #ifndef FG_INC_GFX_MESH
-        #include "fgGfxModelTypes.h"
+        #include "fgGfxMesh.h"
     #endif
 namespace fg {
     namespace gfx {
+
+        struct SSkinnedMesh;
 
         /**
          * 
@@ -63,7 +65,24 @@ namespace fg {
             SMeshBase* getMesh(void) const {
                 return m_pMesh;
             }
-            
+            /**
+             *
+             * @return
+             */
+            SSkinnedMesh* getSkinnedMesh(void) const;
+            /**
+             *
+             * @return
+             */
+            fgBool isSkinnedMesh(void) const {
+                if(!m_pMesh)
+                    return FG_FALSE;
+                return m_pMesh->isSkinnedMesh();
+            }
+            /**
+             *
+             * @return
+             */
             SMaterial* getMaterial(void) const {
                 return m_pMaterial;
             }
@@ -82,16 +101,35 @@ namespace fg {
              * 
              */
             virtual void refreshGfxInternals(void);
+            
+        public:
+            using drawable_type::draw;
+            /**
+             * Draw with given model matrix
+             * @param modelMat
+             */
+            virtual void draw(const Matrix4f& modelMat);
+            /**
+             * 
+             */
+            virtual void updateAABB(void);
 
+        protected:
+            /**
+             *
+             * @param delta
+             */
+            virtual void animate(float delta = 0.0f);
 
         private:
             /// Pointer to external mesh that this object represents
             SMeshBase *m_pMesh;
             ///
             SMaterial *m_pMaterial;
-        };
-    };
-};
+        }; // class CSceneNodeMesh
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SCENE_NODE_MESH_BLOCK
 #endif	/* FG_INC_GFX_SCENE_NODE_MESH */

@@ -57,6 +57,16 @@ namespace fg {
                 //--------------------------------------------------------------
 
                 /**
+                 * This function is intentionally left empty. It should be overloaded if needed.
+                 * Mainly such function will be used from scripts on scene node object
+                 * @param pAnimationInfo
+                 * @param slot
+                 * @return 
+                 */
+                virtual fgBool setAnimation(const char* name, unsigned int slot) {
+                    return FG_FALSE;
+                }
+                /**
                  *
                  * @param pAnimation
                  * @param slot
@@ -242,7 +252,7 @@ namespace fg {
                 void restartAnimation(const char* name);
 
                 //--------------------------------------------------------------
-
+            protected:
                 /**
                  *
                  * @param elapsed
@@ -251,6 +261,7 @@ namespace fg {
                 virtual void animate(float delta = 0.0f) = 0;
 
                 //--------------------------------------------------------------
+            protected:
                 /**
                  * 
                  * @return 
@@ -275,7 +286,7 @@ namespace fg {
 
                 //--------------------------------------------------------------
 
-            protected:
+            private:
                 /// Vector holding currently used animations.
                 /// Order is significant.
                 AnimationsVec m_animations;
