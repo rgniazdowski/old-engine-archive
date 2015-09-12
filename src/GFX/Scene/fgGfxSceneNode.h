@@ -503,13 +503,15 @@ namespace fg {
 
             ////////////////////////////////////////////////////////////////////
 
-        public:
+        protected:
             /**
              * 
              * @param flags
              * @param toggle
              */
             void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+
+        public:
             /**
              * 
              * @return 

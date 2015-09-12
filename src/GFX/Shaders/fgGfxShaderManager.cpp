@@ -20,13 +20,11 @@ using namespace fg;
 
 gfx::CShaderManager::CShaderManager() :
 base_type(),
-m_shaderObjectsHolder(),
+m_shaderObjectsHolder(this),
 m_currentProgram(NULL),
 m_shadersDir(NULL),
 m_shadersPath(),
-m_isPreloadDone(FG_FALSE),
-m_isLinkOnRequest(FG_FALSE),
-m_isLinkOnUse(FG_FALSE) {
+m_stateFlags(NO_FLAGS) {
     m_shadersDir = new util::CDirent();
     m_managerType = FG_MANAGER_GFX_SHADER;
     m_init = FG_FALSE;
@@ -45,7 +43,7 @@ void gfx::CShaderManager::clear(void) {
     m_managerType = FG_MANAGER_GFX_SHADER;
     m_shadersDir = NULL;
     m_init = FG_FALSE;
-    m_isPreloadDone = FG_FALSE;
+    setFlag(PRELOAD_DONE, FG_FALSE);
     m_shaderObjectsHolder.clear();
 }
 //------------------------------------------------------------------------------
@@ -202,7 +200,7 @@ fgBool gfx::CShaderManager::initialize(void) {
 fgBool gfx::CShaderManager::preLoadShaders(void) {
     if(!m_init)
         return FG_FALSE;
-    if(m_isPreloadDone)
+    if(isPreloadDone())
         return FG_TRUE;
     if(m_shadersPath.empty()) {
         FG_LOG_ERROR("GFX: Shaders path is not set");
@@ -262,7 +260,7 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
         count++;
     }
     shProgramCfgs.clear_optimised();
-    m_isPreloadDone = FG_TRUE;
+    setFlag(PRELOAD_DONE, FG_TRUE);
     FG_LOG_DEBUG("GFX: ShaderManager: cached %d shader programs", count);
     if(!count) {
         FG_LOG_DEBUG("GFX: ShaderManager: no shader programs found - is there a problem with assets?");
@@ -316,7 +314,9 @@ fgBool gfx::CShaderManager::remove(CShaderProgram* pProgram) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CShaderManager::CShaderObjectManager::CShaderObjectManager() {
+gfx::CShaderManager::CShaderObjectManager::CShaderObjectManager(CShaderManager* pShaderMgr) :
+base_type(),
+m_pShaderMgr(pShaderMgr) {
     m_managerType = FG_MANAGER_GFX_SHADER;
     m_init = FG_FALSE;
 }
@@ -537,109 +537,104 @@ gfx::CShader* gfx::CShaderManager::getShader(const char* nameTag) {
 gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
     if(!m_shadersDir || !m_init || info.empty())
         return NULL;
-    CShaderProgram *pRequestedShader = NULL;
-    // This is a fallback
-    pRequestedShader = CShaderManager::get(info);
-    if(pRequestedShader) {
-        // #FIXME - link on request/use/get should maybe throw some kind of event
-        // this is for the future - compiling/linking should be done in special
-        // place - can also throw proper event SHADER_LINK(?) to react properly
-        if(m_isLinkOnRequest) {
-            // link will also call compile() if needed
-            pRequestedShader->link();
-        }
-        return pRequestedShader;
-    }
+    CShaderProgram *pRequestedShader = CShaderManager::get(info);
     // info cannot be a path, it has to be resource name or config name
     // required file will be found
     if(strings::containsChars(info, std::string("/\\"))) {
         FG_LOG_ERROR("GFX: ShaderManager: Request cannot contain full path: '%s'", info.c_str());
         return NULL;
     }
-
     std::string pattern;
     std::string filePath;
     fgBool infoAsName = FG_FALSE;
     fgBool isFound = FG_FALSE;
     fgBool isConfig = FG_FALSE;
+    const char *iext = NULL;
 
-    const char *iext = path::fileExt(info.c_str(), FG_TRUE);
-    if(!iext) { // no extension given so... search all
-        infoAsName = FG_TRUE;
-        pattern.append(info).append(".*;");
-    } else { // extension is given, search for exact file
-        pattern.append(info);
+    if(!pRequestedShader) {
+        iext = path::fileExt(info.c_str(), FG_TRUE);
+        if(!iext) { // no extension given so... search all
+            infoAsName = FG_TRUE;
+            pattern.append(info).append(".*;");
+        } else { // extension is given, search for exact file
+            pattern.append(info);
+        }
     }
-
     // Search file names of shaders already in cache
-    if(!infoAsName && iext) {
+    if(!infoAsName && iext && !pRequestedShader) {
         // This is special search for filename within already loaded shaders
         ProgramVecItor it = getRefDataVector().begin(), end = getRefDataVector().end();
         for(; it != end; it++) {
-            CShaderProgram *program = (*it).data;
-            if(!program)
+            CShaderProgram *pProgram = (*it).data;
+            if(!pProgram)
                 continue;
-            CShaderProgram::FileMapping &files = program->getFileMapping();
+            CShaderProgram::FileMapping &files = pProgram->getFileMapping();
             CShaderProgram::FileMappingItor fit = files.begin(), fend = files.end();
             for(; fit != fend; fit++) {
                 // Comparing using endsWith - resource contains relative file paths
                 // not just file name - this request function takes in just file names
                 // resource names or patterns (wildcards for extensions)
-                if(strings::stristr(fit->second, pattern)) {
-                    const char *shext = path::fileExt(fit->second.c_str(), FG_TRUE);
-                    if(strings::isEqual(shext, iext, FG_FALSE)) {
-                        //if(fit->second.compare(pattern) == 0) {
-                        // Found shader prox containing specified file
-                        return program;
-                    }
+                if(!strings::stristr(fit->second, pattern)) {
+                    continue;
+                }
+                const char *shext = path::fileExt(fit->second.c_str(), FG_TRUE);
+                if(strings::isEqual(shext, iext, FG_FALSE)) {
+                    //if(fit->second.compare(pattern) == 0) {
+                    // Found shader prox containing specified file
+                    pRequestedShader = pProgram;
+                    break;
                 }
             }
         }
     }
-
-    m_shadersDir->rewind();
-    while(m_shadersDir->searchForFile(filePath, "./", pattern, FG_TRUE).length()) {
-        const char *fext = NULL;
-        if(iext) {
-            fext = iext;
-        } else {
-            fext = path::fileExt(filePath.c_str(), FG_TRUE);
+    if(!pRequestedShader) {
+        m_shadersDir->rewind();
+        while(m_shadersDir->searchForFile(filePath, "./", pattern, FG_TRUE).length()) {
+            const char *fext = NULL;
+            if(iext) {
+                fext = iext;
+            } else {
+                fext = path::fileExt(filePath.c_str(), FG_TRUE);
+            }
+            if(strings::endsWith(fext, shaders::getShaderProgramConfigSuffix(), FG_TRUE)) {
+                isConfig = FG_TRUE;
+            }
+            if(isConfig) {
+                isFound = FG_TRUE;
+                break;
+            }
         }
-
-        if(strings::endsWith(fext, shaders::getShaderProgramConfigSuffix(), FG_TRUE)) {
-            isConfig = FG_TRUE;
-        }
-
-        if(isConfig) {
-            isFound = FG_TRUE;
-            break;
-        }
-    };
-
+    }
     if(!isFound)
         return NULL;
-    if(isConfig) {
-        pRequestedShader = new CShaderProgram();
-        pRequestedShader->setManaged(FG_TRUE);
-        pRequestedShader->setManager(this);
-        if(!pRequestedShader->preLoadConfig(filePath)) {
+    if(!pRequestedShader) {
+        if(isConfig) {
+            pRequestedShader = new CShaderProgram();
+            pRequestedShader->setManaged(FG_TRUE);
+            pRequestedShader->setManager(this);
+            if(!pRequestedShader->preLoadConfig(filePath)) {
+                delete pRequestedShader;
+                pRequestedShader = NULL;
+                return NULL;
+            }
+        }
+        if(pRequestedShader && !insertProgram(pRequestedShader)) {
+            releaseHandle(pRequestedShader->getHandle());
             delete pRequestedShader;
             pRequestedShader = NULL;
             return NULL;
         }
     }
     if(pRequestedShader) {
-        if(!insertProgram(pRequestedShader)) {
-            releaseHandle(pRequestedShader->getHandle());
-            delete pRequestedShader;
-            pRequestedShader = NULL;
-            return NULL;
-        }
         // #FIXME - link on request/use/get should maybe throw some kind of event
         // this is for the future - compiling/linking should be done in special
         // place - can also throw proper event SHADER_LINK(?) to react properly
-        if(m_isLinkOnRequest) {
+        if(isLinkOnRequest()) {
+            // link will also call compile() if needed
             pRequestedShader->link();
+        }
+        if(isUseOnRequest()) {
+            useProgram(pRequestedShader);
         }
     }
     return pRequestedShader;
@@ -695,7 +690,7 @@ gfx::CShaderProgram* gfx::CShaderManager::request(shaders::UsageMask usageMask) 
     if(!pResultShader) {
         pResultShader = pSecondaryShader;
     }
-    if(pResultShader && m_isLinkOnRequest) {
+    if(pResultShader && isLinkOnRequest()) {
         pResultShader->link();
     }
     return pResultShader;
@@ -854,7 +849,7 @@ fgBool gfx::CShaderManager::useProgram(CShaderProgram* pProgram) {
     if(!pProgram) {
         return FG_FALSE;
     }
-    if(m_isLinkOnUse && !pProgram->isLinked()) {
+    if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
@@ -873,7 +868,7 @@ fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
     if(!pProgram) {
         return FG_FALSE;
     }
-    if(m_isLinkOnUse && !pProgram->isLinked()) {
+    if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
@@ -891,7 +886,7 @@ fgBool gfx::CShaderManager::useProgram(const std::string &nameTag) {
     if(!pProgram) {
         return FG_FALSE;
     }
-    if(m_isLinkOnUse && !pProgram->isLinked()) {
+    if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
@@ -909,7 +904,7 @@ fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
     if(!pProgram) {
         return FG_FALSE;
     }
-    if(m_isLinkOnUse && !pProgram->isLinked()) {
+    if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }

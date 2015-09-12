@@ -86,7 +86,7 @@ namespace fg {
                 /**
                  *
                  */
-                CShaderObjectManager();
+                CShaderObjectManager(CShaderManager* pShaderMgr);
                 /**
                  *
                  */
@@ -178,13 +178,35 @@ namespace fg {
                  * @return
                  */
                 CShader* getShaderByPath(const char* filePath);
+
+            private:
+                /// Shader program manager
+                CShaderManager* m_pShaderMgr;
             }; // protected class CShaderObjectManager
+            //------------------------------------------------------------------
 
         protected:
             ///
             typedef DataVec ProgramVec;
             ///
             typedef DataVecItor ProgramVecItor;
+
+        public:
+            /**
+             *
+             */
+            enum StateFlags {
+                /// Empty flags
+                NO_FLAGS = 0x0000,
+                /// Is pre-caching of shaders done?
+                PRELOAD_DONE = 0x0001,
+                /// Should shaders be linked before using?
+                LINK_ON_USE = 0x0002,
+                /// Should shaders be linked when requesting?
+                LINK_ON_REQUEST = 0x0004,
+                /// Should shader be set to current after request?
+                USE_ON_REQUEST = 0x0008
+            }; // enum StateFlags
 
         public:
             /**
@@ -454,63 +476,92 @@ namespace fg {
             CShaderProgram* getCurrentProgram(void) const;
 
             //------------------------------------------------------------------
+        protected:
+            /**
+             * 
+             * @param flags
+             * @param toggle
+             */
+            void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+        public:
             /**
              * 
              * @return 
              */
             fgBool isPreloadDone(void) const {
-                return m_isPreloadDone;
+                return (fgBool)!!(m_stateFlags & PRELOAD_DONE);
             }
             /**
              *
              * @return
              */
             fgBool isLinkOnRequest(void) const {
-                return m_isLinkOnRequest;
+                return (fgBool)!!(m_stateFlags & LINK_ON_REQUEST);
             }
             /**
              *
              * @return
              */
             fgBool isLinkOnUse(void) const {
-                return m_isLinkOnUse;
+                return (fgBool)!!(m_stateFlags & LINK_ON_USE);
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgBool isUseOnRequest(void) const {
+                return (fgBool)!!(m_stateFlags & USE_ON_REQUEST);
             }
             /**
              * 
              * @param toggle
              */
             void setLinkOnRequest(fgBool toggle = FG_TRUE) {
-                m_isLinkOnRequest = toggle;
+                setFlag(LINK_ON_REQUEST, toggle);
             }
             /**
              *
              * @param toggle
              */
             void setLinkOnUse(fgBool toggle = FG_TRUE) {
-                m_isLinkOnUse = toggle;
+                setFlag(LINK_ON_USE, toggle);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            void setUseOnRequest(fgBool toggle = FG_TRUE) {
+                setFlag(USE_ON_REQUEST, toggle);
             }
 
             //------------------------------------------------------------------
 
         private:
-            ///
+            /// Current shader object manager instance
             CShaderObjectManager m_shaderObjectsHolder;
             /// Pointer to shader program object which is being currently used
             /// For double checking - after GFX suspend/resume program ID
             /// will become invalid, need to set this pointer to NULL on suspend
             CShaderProgram* m_currentProgram;
-            ///
+            /// Dirent instance for searching shaders
             util::CDirent* m_shadersDir;
-            ///
-            std::string m_shadersPath;
-            ///
-            fgBool m_isPreloadDone;
-            /// Should shaders be linked on request?
-            fgBool m_isLinkOnRequest;
-            /// Should shaders be linked on get/dereference?
-            fgBool m_isLinkOnUse;
+            /// Current shader search path
+            std::string m_shadersPath;            
+            /// Current flags of the shader manager
+            StateFlags m_stateFlags;
         }; // class CShaderManager
 
+        FG_ENUM_FLAGS(CShaderManager::StateFlags);
+
+        //----------------------------------------------------------------------
+        inline void CShaderManager::setFlag(const StateFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_stateFlags |= flags;
+            } else {
+                m_stateFlags |= flags;
+                m_stateFlags ^= flags;
+            }
+        }
     } // namespace gfx
 } // namespace fg
 
