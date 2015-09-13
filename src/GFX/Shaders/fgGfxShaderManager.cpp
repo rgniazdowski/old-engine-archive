@@ -547,7 +547,7 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
     std::string pattern;
     std::string filePath;
     fgBool infoAsName = FG_FALSE;
-    fgBool isFound = FG_FALSE;
+    fgBool isFound = (fgBool)(pRequestedShader != NULL);
     fgBool isConfig = FG_FALSE;
     const char *iext = NULL;
 
@@ -582,12 +582,13 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
                     //if(fit->second.compare(pattern) == 0) {
                     // Found shader prox containing specified file
                     pRequestedShader = pProgram;
+                    isFound = FG_TRUE;
                     break;
                 }
             }
         }
     }
-    if(!pRequestedShader) {
+    if(!isFound) {
         m_shadersDir->rewind();
         while(m_shadersDir->searchForFile(filePath, "./", pattern, FG_TRUE).length()) {
             const char *fext = NULL;
@@ -604,9 +605,9 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
                 break;
             }
         }
-    }
-    if(!isFound)
-        return NULL;
+        if(!isFound)
+            return NULL;
+    }    
     if(!pRequestedShader) {
         if(isConfig) {
             pRequestedShader = new CShaderProgram();

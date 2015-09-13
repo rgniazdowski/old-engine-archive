@@ -141,6 +141,8 @@ std::string strings::trim(const std::string& str,
     std::string whitespaceStr;
     if(!whitespace)
         whitespaceStr = " \t";
+    else
+        whitespaceStr = whitespace;
     return strings::trim(str, whitespaceStr);
 }
 //------------------------------------------------------------------------------
@@ -152,6 +154,8 @@ std::string strings::trim(const char *str,
     std::string whitespaceStr;
     if(!whitespace)
         whitespaceStr = " \t";
+    else
+        whitespaceStr = whitespace;
     return strings::trim(std::string(str), whitespaceStr);
 }
 //------------------------------------------------------------------------------

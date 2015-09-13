@@ -1644,7 +1644,10 @@ namespace LPCD {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type[fg::gfx::CShaderProgram]", value, (uintptr_t)value, value->getNameStr());
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type[fg::gfx::CShaderProgram]", 
+                         value,
+                         (uintptr_t)value,
+                         value != NULL ? value->getNameStr() : "nil");
         #endif
             fg::script::CMetatables::METAID metaID = fg::script::CMetatables::SCENE_NODE_MT_ID;
             const char *metatableName = fgScriptMT->getMetatableName(metaID);
