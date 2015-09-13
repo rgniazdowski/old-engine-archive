@@ -70,7 +70,15 @@
 #define FG_GFX_PLAIN_TEXTURE_TEXT       "PlainTexture"
 #define FG_GFX_CUBE_TEXTURE_TEXT        "CubeTexture"
 #define FG_GFX_DIRECTIONAL_LIGHT_TEXT   "DirectionalLight"
+#define FG_GFX_DIRECTIONAL_LIGHT_DIRECTION_TEXT   "direction"
+#define FG_GFX_DIRECTIONAL_LIGHT_AMBIENT_TEXT     "ambient"
+#define FG_GFX_DIRECTIONAL_LIGHT_DIFFUSE_TEXT     "diffuse"
+#define FG_GFX_DIRECTIONAL_LIGHT_SPECULAR_TEXT    "specular"
 #define FG_GFX_MATERIAL_TEXT            "Material"
+#define FG_GFX_MATERIAL_AMBIENT_TEXT            "ambient"
+#define FG_GFX_MATERIAL_DIFFUSE_TEXT            "diffuse"
+#define FG_GFX_MATERIAL_SPECULAR_TEXT           "specular"
+#define FG_GFX_MATERIAL_SHININESS_TEXT          "shininess"
 #define FG_GFX_PHASE_TEXT               "Phase"
 #define FG_GFX_DELTA_TIME_TEXT          "DeltaTime"
 #define FG_GFX_TIMESTAMP_TEXT           "Timestamp"
@@ -171,7 +179,15 @@ namespace fg {
                                                   UNIFORM_PLAIN_TEXTURE,
                                                   UNIFORM_CUBE_TEXTURE,
                                                   UNIFORM_DIRECTIONAL_LIGHT,
+                                                  UNIFORM_DIRECTIONAL_LIGHT_DIRECTION,
+                                                  UNIFORM_DIRECTIONAL_LIGHT_AMBIENT,
+                                                  UNIFORM_DIRECTIONAL_LIGHT_DIFFUSE,
+                                                  UNIFORM_DIRECTIONAL_LIGHT_SPECULAR,
                                                   UNIFORM_MATERIAL,
+                                                  UNIFORM_MATERIAL_AMBIENT,
+                                                  UNIFORM_MATERIAL_DIFFUSE,
+                                                  UNIFORM_MATERIAL_SPECULAR,
+                                                  UNIFORM_MATERIAL_SHININESS,
                                                   UNIFORM_PHASE,
                                                   UNIFORM_DELTA_TIME,
                                                   UNIFORM_TIMESTAMP,
@@ -196,7 +212,15 @@ namespace fg {
                                                        FG_GFX_PLAIN_TEXTURE_TEXT,
                                                        FG_GFX_CUBE_TEXTURE_TEXT,
                                                        FG_GFX_DIRECTIONAL_LIGHT_TEXT,
+                                                       FG_GFX_DIRECTIONAL_LIGHT_DIRECTION_TEXT,
+                                                       FG_GFX_DIRECTIONAL_LIGHT_AMBIENT_TEXT,
+                                                       FG_GFX_DIRECTIONAL_LIGHT_DIFFUSE_TEXT,
+                                                       FG_GFX_DIRECTIONAL_LIGHT_SPECULAR_TEXT,
                                                        FG_GFX_MATERIAL_TEXT,
+                                                       FG_GFX_MATERIAL_AMBIENT_TEXT,
+                                                       FG_GFX_MATERIAL_DIFFUSE_TEXT,
+                                                       FG_GFX_MATERIAL_SPECULAR_TEXT,
+                                                       FG_GFX_MATERIAL_SHININESS_TEXT,
                                                        FG_GFX_PHASE_TEXT,
                                                        FG_GFX_DELTA_TIME_TEXT,
                                                        FG_GFX_TIMESTAMP_TEXT,
@@ -268,6 +292,52 @@ namespace fg {
 } // namespace fg
 
 using namespace fg;
+//------------------------------------------------------------------------------
+
+void gfx::shaders::splitVariableName(const char* input,
+                                     char* outVariable,
+                                     char* outMember,
+                                     fgGFXint* subIndex) {
+    if(!input)
+        return;
+    std::string inputStr = input;
+    fgGFXint subIndexTmp;
+    std::string outVariableStr, outMemberStr;
+    splitVariableName(inputStr, outVariableStr, outMemberStr, subIndexTmp);
+    if(subIndex)
+        *subIndex = subIndexTmp;
+    if(outVariable) {
+        memcpy(outVariable, outVariableStr.c_str(), outVariableStr.length());
+    }
+    if(outMember) {
+        memcpy(outMember, outMemberStr.c_str(), outMemberStr.length());
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::shaders::splitVariableName(const std::string& input,
+                                     std::string& outVariable,
+                                     std::string& outMember,
+                                     fgGFXint& subIndex) {
+    CStringVector dotSplits;
+    CStringVector vecSplits;
+    strings::split(input, '.', dotSplits);
+    // assuming only one dot
+    if(dotSplits.size() > 1)
+        outMember = dotSplits[1];
+    else
+        outMember.clear();
+    strings::split(dotSplits[0], '[', vecSplits);
+    outVariable.clear();
+    outVariable.append(vecSplits[0]);
+    if(vecSplits.size() > 1) {
+        // has index
+        std::string vec = strings::trim(vecSplits[1], "[]{}");
+        subIndex = (unsigned int)std::atoi(vec.c_str());
+    } else {
+        subIndex = 0;
+    }
+}
 //------------------------------------------------------------------------------
 
 const char* gfx::shaders::getShaderProgramConfigSuffix(void) {
@@ -552,6 +622,112 @@ gfx::shaders::UniformType gfx::shaders::getUniformTypeFromText(const std::string
 }
 //------------------------------------------------------------------------------
 
+fgGFXenum gfx::shaders::getUniformDataTypeFromText(const char* text) {
+    UniformType uniformType = getUniformTypeFromText(text);
+    if(uniformType == UniformType::UNIFORM_INVALID)
+        return 0;
+    return getUniformDataTypeFromUniformType(uniformType);
+}
+//------------------------------------------------------------------------------
+
+fgGFXenum gfx::shaders::getUniformDataTypeFromText(const std::string& text) {
+    if(text.empty())
+        return 0;
+    return getUniformDataTypeFromText(text.c_str());
+}
+//------------------------------------------------------------------------------
+
+fgGFXenum gfx::shaders::getUniformDataTypeFromUniformType(UniformType uniformType) {
+    fgGFXenum result = 0;
+    switch(uniformType) {
+        case UNIFORM_INVALID:
+            result = 0;
+            break;
+        case UNIFORM_MODEL_MATRIX:
+        case UNIFORM_MODEL_VIEW_MATRIX:
+        case UNIFORM_MVP_MATRIX:
+            result = FG_GFX_FLOAT_MAT4;
+            break;
+        case UNIFORM_AMBIENT_MAP:
+        case UNIFORM_SPECULAR_MAP:
+        case UNIFORM_NORMAL_MAP:
+        case UNIFORM_BUMP_MAP:
+        case UNIFORM_PLAIN_TEXTURE:
+            result = FG_GFX_SAMPLER_2D;
+            break;
+
+        case UNIFORM_CUBE_TEXTURE:
+            result = FG_GFX_SAMPLER_CUBE;
+            break;
+
+        case UNIFORM_ENVIRONMENT_MAP:
+            break;
+
+        case UNIFORM_DIRECTIONAL_LIGHT:
+            break;
+        case UNIFORM_DIRECTIONAL_LIGHT_DIRECTION:
+            result = FG_GFX_FLOAT_VEC3;
+            break;
+
+        case UNIFORM_DIRECTIONAL_LIGHT_AMBIENT:
+        case UNIFORM_DIRECTIONAL_LIGHT_DIFFUSE:
+        case UNIFORM_DIRECTIONAL_LIGHT_SPECULAR:
+            result = FG_GFX_FLOAT_VEC4;
+            break;
+
+        case UNIFORM_MATERIAL:
+            break;
+
+        case UNIFORM_MATERIAL_AMBIENT:
+        case UNIFORM_MATERIAL_DIFFUSE:
+        case UNIFORM_MATERIAL_SPECULAR:
+            result = FG_GFX_FLOAT_VEC4;
+            break;
+
+        case UNIFORM_MATERIAL_SHININESS:
+            result = FG_GFX_FLOAT;
+            break;
+
+        case UNIFORM_PHASE:
+            result = FG_GFX_FLOAT;
+            break;
+        case UNIFORM_DELTA_TIME:
+            result = FG_GFX_FLOAT;
+            break;
+        case UNIFORM_TIMESTAMP:
+            break;
+        case UNIFORM_CUSTOM_COLOR:
+            result = FG_GFX_FLOAT_VEC4;
+            break;
+        case UNIFORM_ATTRIB_MASK:
+            result = FG_GFX_FLOAT;
+            break;
+        case UNIFORM_USE_TEXTURE:
+            result = FG_GFX_FLOAT;
+            break;
+        case UNIFORM_DRAW_SKYBOX:
+            result = FG_GFX_FLOAT;
+            break;
+
+        case UNIFORM_BONE_MATRICES:
+            // array of mat4 (not even close to optimal)
+            result = FG_GFX_FLOAT_MAT4;
+            break;
+
+        case UNIFORM_BONE_DUAL_QUATERNIONS:
+            // array of vec4
+            result = FG_GFX_FLOAT_VEC4;
+            break;
+        case UNIFORM_CUSTOM:
+            break;
+        default:
+            result = FG_GFX_FLOAT_VEC4;
+            break;
+    };
+    return result;
+}
+//------------------------------------------------------------------------------
+
 const char* gfx::shaders::getTextFromUniformType(UniformType value) {
     const char* result = NULL;
     if(value == shaders::UNIFORM_INVALID)
@@ -611,7 +787,21 @@ variableName(""),
 location(-1),
 type(shaders::UNIFORM_INVALID),
 dataType(FG_GFX_FLOAT_VEC4),
+size(1),
+stride(0),
 precision(shaders::PRECISION_DEFAULT) { }
+//------------------------------------------------------------------------------
+
+gfx::SUniformBind::SUniformBind(const self_type& orig) {
+    this->variableName.append(orig.variableName);
+    this->location = orig.location;
+    this->type = orig.type;
+    this->dataType = orig.dataType;
+    this->size = orig.size;
+    this->stride = orig.stride;
+    this->precision = orig.precision;
+    this->nestedLocations.append(orig.nestedLocations);
+}
 //------------------------------------------------------------------------------
 
 gfx::SUniformBind::SUniformBind(const char *_variableName,
@@ -620,9 +810,13 @@ variableName(),
 location(-1),
 type(_type),
 dataType(FG_GFX_FLOAT_VEC4),
+size(1),
+stride(0),
 precision(shaders::PRECISION_DEFAULT) {
     if(_variableName)
         variableName = _variableName;
+    this->dataType = shaders::getUniformDataTypeFromUniformType(this->type);
+
 }
 //------------------------------------------------------------------------------
 
@@ -789,5 +983,93 @@ std::string& gfx::SShaderConstantDef::toString(std::string & buf) {
     else
         buf.append(" 0");
     return buf;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::shaders::appendStandardUniformsToUniformBlock(UniformBlockType blockType,
+                                                          UniformBindVec& uniforms) {
+    if(blockType == shaders::UNIFORM_BLOCK_INVALID) {
+        return FG_FALSE;
+    }
+    SUniformBind bind;
+    int index;
+    UniformBindVec newUniforms;
+    // this function wont clear this uniform vec
+    if(blockType == shaders::UNIFORM_BLOCK_TRANSFORM) {
+        bind.variableName = "modelMatrix";
+        bind.dataType = FG_GFX_FLOAT_MAT4;
+        bind.type = shaders::UNIFORM_MODEL_MATRIX;
+        newUniforms.push_back(bind);
+
+        bind.variableName = "mvMatrix";
+        bind.dataType = FG_GFX_FLOAT_MAT4;
+        bind.type = shaders::UNIFORM_MODEL_VIEW_MATRIX;
+        newUniforms.push_back(bind);
+
+        bind.variableName = "mvpMatrix";
+        bind.dataType = FG_GFX_FLOAT_MAT4;
+        bind.type = shaders::UNIFORM_MVP_MATRIX;
+        newUniforms.push_back(bind);
+
+        //bind.variableName = "scale";
+        //bind.type = shaders::UNIFORM_SCALE;
+        //newUniforms.append(bind);
+
+        //bind.variableName = "mvpDQuat";
+        //bind.type = shaders::UNIFORM_MVP_DQUAT
+        //bind.size = 2;
+        //bind.dataType = FG_GFX_FLOAT_VEC4;
+    } else if(blockType == shaders::UNIFORM_BLOCK_LIGHTING_INFO) {
+        bind.variableName = FG_GFX_DIRECTIONAL_LIGHT_DIRECTION_TEXT;
+        //bind.size = 8; // maximum number of directional lights per scene
+        //bind.dataType = ?;
+        bind.dataType = FG_GFX_FLOAT_VEC3;
+        bind.type = shaders::UNIFORM_DIRECTIONAL_LIGHT_DIRECTION;
+        bind.size = 1;
+        bind.stride = 0;
+        //? better to define uniform block the same way the structure (one uniform)
+        // need additional shader types
+        newUniforms.push_back(bind);
+
+        bind.variableName = FG_GFX_DIRECTIONAL_LIGHT_AMBIENT_TEXT;
+        bind.dataType = FG_GFX_FLOAT_VEC4;
+        bind.type = shaders::UNIFORM_DIRECTIONAL_LIGHT_AMBIENT;
+        newUniforms.push_back(bind);
+
+        bind.variableName = FG_GFX_DIRECTIONAL_LIGHT_DIFFUSE_TEXT;
+        bind.dataType = FG_GFX_FLOAT_VEC4;
+        bind.type = shaders::UNIFORM_DIRECTIONAL_LIGHT_DIFFUSE;
+        newUniforms.push_back(bind);
+
+        bind.variableName = FG_GFX_DIRECTIONAL_LIGHT_SPECULAR_TEXT;
+        bind.dataType = FG_GFX_FLOAT_VEC4;
+        bind.type = shaders::UNIFORM_DIRECTIONAL_LIGHT_SPECULAR;
+        newUniforms.push_back(bind);
+    } else if(blockType == shaders::UNIFORM_BLOCK_MATERIAL_INFO) {
+        bind.variableName = FG_GFX_MATERIAL_AMBIENT_TEXT;
+        bind.dataType = FG_GFX_FLOAT_VEC4;
+        bind.type = shaders::UNIFORM_MATERIAL_AMBIENT;
+        bind.size = 1;
+        bind.stride = 0;
+        newUniforms.push_back(bind);
+
+        bind.variableName = FG_GFX_MATERIAL_DIFFUSE_TEXT;
+        bind.dataType = FG_GFX_FLOAT_VEC4;
+        bind.type = shaders::UNIFORM_MATERIAL_DIFFUSE;
+        newUniforms.push_back(bind);
+
+        bind.variableName = FG_GFX_MATERIAL_SPECULAR_TEXT;
+        bind.dataType = FG_GFX_FLOAT_VEC4;
+        bind.type = shaders::UNIFORM_MATERIAL_SPECULAR;
+        newUniforms.push_back(bind);
+
+        bind.variableName = FG_GFX_MATERIAL_SHININESS_TEXT;
+        bind.dataType = FG_GFX_FLOAT;
+        bind.type = shaders::UNIFORM_MATERIAL_SHININESS;
+        newUniforms.push_back(bind);
+    }
+
+    uniforms.append(newUniforms);
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------

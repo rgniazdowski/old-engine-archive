@@ -154,8 +154,27 @@ namespace fg {
                 UNIFORM_CUBE_TEXTURE,
                 /// Directional light (need probably a little more of those)
                 UNIFORM_DIRECTIONAL_LIGHT,
+                /// Direction of the directional light; This uniform sub-type
+                /// is intended mainly for usage in Uniform blocks;
+                /// Uniform blocks are not available in OGLES2.0, they are
+                /// available in OGLES3.0;
+                UNIFORM_DIRECTIONAL_LIGHT_DIRECTION,
+                /// Ambient light component of directional light
+                UNIFORM_DIRECTIONAL_LIGHT_AMBIENT,
+                /// Diffuse light component
+                UNIFORM_DIRECTIONAL_LIGHT_DIFFUSE,
+                /// Specular light component
+                UNIFORM_DIRECTIONAL_LIGHT_SPECULAR,
                 /// Material to be used
                 UNIFORM_MATERIAL,
+                /// Ambient color component of material
+                UNIFORM_MATERIAL_AMBIENT,
+                /// Diffuse color component
+                UNIFORM_MATERIAL_DIFFUSE,
+                /// Specular color component
+                UNIFORM_MATERIAL_SPECULAR,
+                /// Shininess level of the material
+                UNIFORM_MATERIAL_SHININESS,
                 /// Phase shift (custom parameter)
                 UNIFORM_PHASE,
                 /// Delta time (in milliseconds)
@@ -174,12 +193,10 @@ namespace fg {
                 UNIFORM_BONE_MATRICES,
                 /// Special array with bone rigid transformations (less space, it's like mat2x4)
                 UNIFORM_BONE_DUAL_QUATERNIONS,
-                /// Shorter name for UNIFORM_BONE_DUAL_QUATERNIONS
-                UNIFORM_BONE_DQUATS = UNIFORM_BONE_DUAL_QUATERNIONS,
                 /// Custom uniform - can be any type (only one per shader program)
                 UNIFORM_CUSTOM,
 
-                NUM_UNIFORM_TYPES = 22
+                NUM_UNIFORM_TYPES = UNIFORM_CUSTOM // 30, last id
             }; // enum UniformType
 
             //------------------------------------------------------------------
@@ -200,6 +217,36 @@ namespace fg {
             }; // enum UniformBlockType
 
             //------------------------------------------------------------------
+
+            /**
+             * 
+             * @param input
+             * @param outVariable
+             * @param outMember
+             * @param subIndex
+             */
+            void splitVariableName(const char *input,
+                                   char* outVariable,
+                                   char* outMember,
+                                   fgGFXint* subIndex);
+
+            /**
+             * 
+             * @param input
+             * @param outVariable
+             * @param outMember
+             * @param subIndex
+             */
+            void splitVariableName(const std::string& input,
+                                   std::string& outVariable,
+                                   std::string& outMember,
+                                   fgGFXint& subIndex);
+
+
+            /**
+             * 
+             * @return
+             */
             const char* getShaderProgramConfigSuffix(void);
 
             //------------------------------------------------------------------
@@ -343,6 +390,24 @@ namespace fg {
              */
             UniformType getUniformTypeFromText(const std::string& text);
             /**
+             * 
+             * @param text
+             * @return 
+             */
+            fgGFXenum getUniformDataTypeFromText(const char* text);
+            /**
+             * 
+             * @param text
+             * @return
+             */
+            fgGFXenum getUniformDataTypeFromText(const std::string& text);
+            /**
+             * 
+             * @param uniformType
+             * @return 
+             */
+            fgGFXenum getUniformDataTypeFromUniformType(UniformType uniformType);
+            /**
              *
              * @param value
              * @return
@@ -371,6 +436,7 @@ namespace fg {
             const char* getTextFromUniformBlockType(UniformBlockType value);
 
             //------------------------------------------------------------------
+
     #if defined(FG_USING_OPENGL)
             const unsigned int NUM_SHADER_TYPES = 6;
     #elif defined(FG_USING_OPENGL_ES)
@@ -422,6 +488,9 @@ namespace fg {
          *
          */
         struct SUniformBind {
+            typedef SUniformBind self_type;
+            typedef CVector<fgGFXint> LocationVec;
+
             /// Name of the variable to bind
             std::string variableName;
             /// Location of the variable
@@ -430,12 +499,26 @@ namespace fg {
             shaders::UniformType type;
             /// Data type of the uniform variable
             fgGFXenum dataType;
+            /// Size of the uniform if declared as an array
+            fgGFXint size;
+            /// Stride between the elements of the selected uniform
+            fgGFXint stride;
             /// Precision of the uniform
             shaders::Precision precision;
+            /// Locations of member variables if uniform is a structure.
+            /// This wont hold any additional information (like names).
+            /// ShaderProgram class specific code needs to care about
+            /// reading and writing with proper order.
+            LocationVec nestedLocations;
             /**
              * 
              */
             SUniformBind();
+            /**
+             * 
+             * @param orig
+             */
+            SUniformBind(const self_type& orig);
             /**
              * 
              * @param _variableName
@@ -447,7 +530,6 @@ namespace fg {
              * 
              */
             virtual ~SUniformBind();
-
             /**
              *
              * @param b
@@ -607,8 +689,6 @@ namespace fg {
              * @param _type
              */
             void setType(AttributeType _type);
-
-
             inline int operator ==(const SAttributeBind &b) const {
                 return (b.variableName.compare(this->variableName) == 0 && b.type == this->type);
             }
@@ -666,6 +746,26 @@ namespace fg {
              */
             std::string& toString(std::string & buf);
         }; // struct SShaderConstantDef
+
+    } // namespace gfx
+} // namespace fg
+
+//------------------------------------------------------------------------------
+
+namespace fg {
+    namespace gfx {
+        namespace shaders {
+            typedef CVector<SUniformBind> UniformBindVec;
+
+            /**
+             * 
+             * @param blockType
+             * @param uniforms
+             * @return
+             */
+            fgBool appendStandardUniformsToUniformBlock(UniformBlockType blockType,
+                                                        UniformBindVec& uniforms);
+        } // namespace shaders
     } // namespace gfx
 } // namespace fg
 

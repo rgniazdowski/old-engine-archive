@@ -443,6 +443,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
                 _bind.precision = shaders::getPrecisionFromText(_uprecision->string);
             }
             _bind.variableName = _uname->string;
+            _bind.dataType = shaders::getUniformDataTypeFromUniformType(_bind.type);
             //_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_uDataType->string);
             m_uniformBinds.push_back(_bind);
         }

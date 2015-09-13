@@ -476,13 +476,13 @@ namespace fg {
              * @param type
              * @return 
              */
-            fgGFXint getUniformLocation(shaders::UniformType type);
+            fgGFXint getUniformLocation(shaders::UniformType uniformType);
             /**
              * 
              * @param variableName
              * @return 
              */
-            fgGFXint getUniformLocation(std::string variableName);
+            fgGFXint getUniformLocation(const std::string& variableName);
 
             //------------------------------------------------------------------
 
@@ -491,13 +491,25 @@ namespace fg {
              * @param type
              * @return 
              */
-            fgGFXint getUniformBindIndex(shaders::UniformType type);
+            fgGFXint getUniformBindIndex(shaders::UniformType uniformType) const;
             /**
              * 
              * @param type
              * @return 
              */
             SUniformBind* getUniformBind(shaders::UniformType type);
+            /**
+             *
+             * @param variableName
+             * @return
+             */
+            SUniformBind* getUniformBind(const std::string& variableName);
+            /**
+             *
+             * @param variableName
+             * @return
+             */
+            SUniformBind* getUniformBind(const char* variableName);
 
             //------------------------------------------------------------------
 

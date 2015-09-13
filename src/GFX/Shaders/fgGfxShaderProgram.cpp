@@ -17,6 +17,7 @@
 #ifndef FG_INC_GFX_SHADER_MANAGER
 #include "fgGfxShaderManager.h"
 #include "GFX/Textures/fgTextureTypes.h"
+#include "Util/fgMemory.h"
 #endif
 
 using namespace fg;
@@ -590,72 +591,137 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
     if(FG_GFX_FALSE == glIsProgram(m_gfxID)) {
         return FG_FALSE;
     }
-    UniformBindVecItor begin, end, itor;
-    begin = m_uniformBinds.begin();
-    end = m_uniformBinds.end();
-    itor = begin;
-    for(; itor != end; itor++) {
-        SUniformBind & bind = *itor;
-        if(bind.type == shaders::UNIFORM_INVALID || bind.variableName.empty())
+    std::string memberName, variableName;
+
+    fgGFXint subIndex = 0;
+    fgGFXint uMaxLength = 0;
+    fgGFXint nActiveUniforms = 0;
+    glGetProgramiv(m_gfxID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &uMaxLength);
+    glGetProgramiv(m_gfxID, GL_ACTIVE_UNIFORMS, &nActiveUniforms);
+    fgGFXchar* name = fgMalloc<char>(uMaxLength, FG_TRUE);
+    for(int uniformIdx = 0; uniformIdx < nActiveUniforms; uniformIdx++) {
+        fgGFXint size;
+        fgGFXenum dataType;
+        fgGFXsizei length;
+        fgGFXint boundLocation;
+        memset(name, 0, uMaxLength);
+        glGetActiveUniform(m_gfxID, uniformIdx, uMaxLength,
+                           &length, &size, &dataType, name);
+        GLCheckError("glGetActiveUniform");
+        shaders::splitVariableName(std::string(name), variableName, memberName, subIndex);
+        //printf("active uniform: %s -> '%s' idx[%d].'%s'\n", name, variableName.c_str(),
+        //       subIndex, memberName.c_str());
+        SUniformBind* pBind = getUniformBind(name);
+        if(!pBind)
             continue;
-        std::string variableName;
-        variableName.append(bind.variableName);
-        if(bind.type == shaders::UNIFORM_DIRECTIONAL_LIGHT) {
-            // cant bind to just a variable name
-            // need to find... first item in struct;
-            //variableName.append(".direction");
-            variableName.append(".ambient");
-            // #FIXME - if this is an array (need to have info on that
-            // need also to add [N], array access)
-            //printf("SDirLight.direction: %d\n", getUniformLocation(std::string("u_directionalLight.direction")));
-            //printf("SDirLight.ambient: %d\n", getUniformLocation(std::string("u_directionalLight.ambient")));
-            //printf("SDirLight.diffuse: %d\n", getUniformLocation(std::string("u_directionalLight.diffuse")));
-            //printf("SDirLight.specular: %d\n", getUniformLocation(std::string("u_directionalLight.specular")));
-        } else if(bind.type == shaders::UNIFORM_MATERIAL) {
-            variableName.append(".ambient"); // 4f
-            //printf("SMaterial.ambient: %d\n", getUniformLocation(std::string("u_material.ambient")));
-            //printf("SMaterial.diffuse: %d\n", getUniformLocation(std::string("u_material.diffuse")));
-            //printf("SMaterial.specular: %d\n", getUniformLocation(std::string("u_material.specular")));
-            //printf("SMaterial.shininess: %d\n", getUniformLocation(std::string("u_material.shininess")));
+        if(pBind->type == shaders::UNIFORM_DIRECTIONAL_LIGHT) {
+            const char * const nestedNames[] = {".direction", ".ambient", ".diffuse", ".specular"};
+            // found that bind belongs to directional light
+            // however with using glGetActiveUniform
+            // this binding will be found at least 4 times (for every structure member)
+            // need to detect that properly and bind locations accordingly.
+            // subIndex value will be very helpful;
+            // For structures and array of structures of special type
+            // dataType is set to 0
+            pBind->nestedLocations.resize(4 * (subIndex + 1));
+            for(unsigned int i = 0; i < 4; i++) {
+                if(strings::endsWith(name, nestedNames[i], FG_FALSE)) {
+                    // found member variable
+                    boundLocation = getUniformLocation(name);
+                    pBind->nestedLocations[subIndex * 4 + i] = boundLocation;
+                }
+            }
+            pBind->dataType = 0;
+        } else if(pBind->type == shaders::UNIFORM_MATERIAL) {
+            const char * const nestedNames[] = {".ambient", ".diffuse", ".specular", ".shininess"};
+            pBind->nestedLocations.resize(4 * (subIndex + 1));
+            for(unsigned int i = 0; i < 4; i++) {
+                if(strings::endsWith(name, nestedNames[i], FG_FALSE)) {
+                    // found member variable
+                    boundLocation = getUniformLocation(name);
+                    pBind->nestedLocations[subIndex * 4 + i] = boundLocation;
+                }
+            }
+            pBind->dataType = 0;
+        } else {
+            pBind->dataType = dataType;
+            pBind->location = getUniformLocation(name);
+            boundLocation = pBind->location;
         }
-        bind.location = getUniformLocation(variableName);
+        pBind->size = size; // > 1 if array
         FG_LOG_DEBUG("GFX: Bound uniform '%s' of type: '%s'(%d) to location: %d",
-                     bind.variableName.c_str(),
-                     getTextFromUniformType(bind.type),
-                     (int)bind.type,
-                     bind.location);
-        GLCheckError("glGetUniformLocation");
+                     name,
+                     getTextFromUniformType(pBind->type),
+                     (int)pBind->type,
+                     boundLocation);
     }
+    fgFree(name);
+
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-fgGFXint gfx::CShaderProgram::getUniformBindIndex(shaders::UniformType type) {
+fgGFXint gfx::CShaderProgram::getUniformBindIndex(shaders::UniformType uniformType) const {
     int n = (int)m_uniformBinds.size();
-    if(n <= (int)type)
+    if(n <= (int)uniformType)
         return 0;
-    if(m_uniformBinds[(int)type].type == type)
-        return (int)type;
+    if(m_uniformBinds[(int)uniformType].type == uniformType)
+        return (int)uniformType;
     return 0;
 }
 //------------------------------------------------------------------------------
 
-gfx::SUniformBind *gfx::CShaderProgram::getUniformBind(shaders::UniformType type) {
+gfx::SUniformBind* gfx::CShaderProgram::getUniformBind(shaders::UniformType type) {
     int index = getUniformBindIndex(type);
     return &m_uniformBinds[index];
 }
 //------------------------------------------------------------------------------
 
-fgGFXint gfx::CShaderProgram::getUniformLocation(shaders::UniformType type) {
-    SUniformBind* bind = getUniformBind(type);
+gfx::SUniformBind* gfx::CShaderProgram::getUniformBind(const std::string& variableName) {
+    if(variableName.empty())
+        return NULL;
+    SUniformBind* pBind = NULL;
+    const unsigned int n = m_uniformBinds.size();
+    // This function will also work for nested variables (meaning structure members)
+    // UniformBind works as binding to single variables or arrays
+    // even if binding is to structure or array of structures.
+    // There is special vector of locations for this member variables.
+    // Need to split properly the name which can be of form: 'name'[0].[member]    
+    std::string realVariableName;
+    std::string memberName;
+    int subIndex = 0;
+    shaders::splitVariableName(variableName, realVariableName, memberName, subIndex);
+    for(unsigned int idx = 0; idx < n; idx++) {
+        if(m_uniformBinds[idx].variableName.compare(realVariableName) == 0) {
+            pBind = &m_uniformBinds[idx];
+            break;
+        }
+    }
+    return pBind;
+}
+//------------------------------------------------------------------------------
+
+gfx::SUniformBind* gfx::CShaderProgram::getUniformBind(const char* variableName) {
+    if(!variableName)
+        return NULL;
+    if(!variableName[0])
+        return NULL;
+    return getUniformBind(std::string(variableName));
+}
+//------------------------------------------------------------------------------
+
+fgGFXint gfx::CShaderProgram::getUniformLocation(shaders::UniformType uniformType) {
+    SUniformBind* bind = getUniformBind(uniformType); // no need to check for NULL
     return bind->location;
 }
 //------------------------------------------------------------------------------
 
-fgGFXint gfx::CShaderProgram::getUniformLocation(std::string variableName) {
+fgGFXint gfx::CShaderProgram::getUniformLocation(const std::string& variableName) {
     if(!m_gfxID || variableName.empty())
         return -1;
-    return glGetUniformLocation(m_gfxID, variableName.c_str());
+    fgGFXint result = glGetUniformLocation(m_gfxID, variableName.c_str());
+    GLCheckError("glGetUniformLocation");
+    return result;
 }
 //------------------------------------------------------------------------------
 
@@ -691,39 +757,35 @@ fgBool gfx::CShaderProgram::setUniform(CMVMatrix* matrix) {
 
 fgBool gfx::CShaderProgram::setUniform(const SDirectionalLight& light) {
     SUniformBind* bind = &m_uniformBinds[shaders::UNIFORM_DIRECTIONAL_LIGHT];
-    if(bind->location == -1)
+    if(bind->nestedLocations.empty())
         return FG_FALSE;
-
-    //glUniform3fv(bind->location + 1, 1, math::value_ptr(light.halfPlane));
-    glUniform4fv(bind->location + 0, 1, math::value_ptr(light.ambient));
-    glUniform4fv(bind->location + 1, 1, math::value_ptr(light.diffuse));
-    glUniform3fv(bind->location + 2, 1, math::value_ptr(light.direction));
-    glUniform4fv(bind->location + 3, 1, math::value_ptr(light.specular));
-
-    //SDirLight.ambient: 1 | 0
-    //SDirLight.diffuse: 2 | 1
-    //SDirLight.direction: 3 | 2
-    //SDirLight.specular: 4 | 3
-
+    if(bind->nestedLocations[0] < 0)
+        return FG_FALSE;
+    //".direction", ".ambient", ".diffuse", ".specular"
+    glUniform3fv(bind->nestedLocations[0], 1, math::value_ptr(light.direction));
+    glUniform4fv(bind->nestedLocations[1], 1, math::value_ptr(light.ambient));
+    glUniform4fv(bind->nestedLocations[2], 1, math::value_ptr(light.diffuse));
+    glUniform4fv(bind->nestedLocations[3], 1, math::value_ptr(light.specular));
+#if defined(FG_DEBUG)
     GLCheckError("glUniform4fv");
+#endif    
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CShaderProgram::setUniform(const SMaterial& material) {
     SUniformBind* bind = &m_uniformBinds[shaders::UNIFORM_MATERIAL];
-    if(bind->location == -1)
+    if(bind->nestedLocations.empty())
         return FG_FALSE;
+    if(bind->nestedLocations[0] < 0)
+        return FG_FALSE;
+    // if not present, can always check for uniform block?
+    //".ambient", ".diffuse", ".specular", ".shininess"
 
-    //SMaterial.ambient : 5 | 0
-    //SMaterial.diffuse : 6 | 1
-    //SMaterial.shininess : 7 | 2
-    //SMaterial.specular : 8 | 3
-
-    glUniform4fv(bind->location + 0, 1, math::value_ptr(material.ambient));
-    glUniform4fv(bind->location + 1, 1, math::value_ptr(material.diffuse));
-    glUniform1f(bind->location + 2, material.shininess);
-    glUniform4fv(bind->location + 3, 1, math::value_ptr(material.specular));
+    glUniform4fv(bind->nestedLocations[0], 1, math::value_ptr(material.ambient));
+    glUniform4fv(bind->nestedLocations[1], 1, math::value_ptr(material.diffuse));
+    glUniform4fv(bind->nestedLocations[2], 1, math::value_ptr(material.specular));
+    glUniform1f(bind->nestedLocations[3], material.shininess);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
