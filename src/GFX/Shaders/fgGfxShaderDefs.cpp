@@ -82,6 +82,11 @@
 #define FG_GFX_BONE_DUAL_QUATS_TEXT     "BoneDualQuats"
 #define FG_GFX_CUSTOM_TEXT              "Custom"
 
+#define FG_GFX_BLOCK_INVALID_TEXT       "Invalid"
+#define FG_GFX_BLOCK_TRANSFORM_TEXT     "Transform"
+#define FG_GFX_BLOCK_LIGHTING_INFO_TEXT "LightingInfo"
+#define FG_GFX_BLOCK_MATERIAL_INFO_TEXT "MaterialInfo"
+
 namespace fg {
     namespace gfx {
         namespace shaders {
@@ -204,6 +209,18 @@ namespace fg {
                                                        FG_GFX_CUSTOM_TEXT
             };
 
+            const UniformBlockType g_UniformBlockTypes[] = {
+                                                            UNIFORM_BLOCK_TRANSFORM,
+                                                            UNIFORM_BLOCK_LIGHTING_INFO,
+                                                            UNIFORM_BLOCK_MATERIAL_INFO
+            };
+
+            const char * const g_UniformBlockTypesText[] = {
+                                                            FG_GFX_BLOCK_TRANSFORM_TEXT,
+                                                            FG_GFX_BLOCK_LIGHTING_INFO_TEXT,
+                                                            FG_GFX_BLOCK_MATERIAL_INFO_TEXT
+            };
+
             const UsageMask g_UsageMaskTypes[] = {
                                                   USAGE_EMPTY_BIT,
                                                   USAGE_FALLBACK_BIT,
@@ -299,7 +316,7 @@ gfx::shaders::UsageMask gfx::shaders::getUsageMaskFromText(const std::string& te
     if(parts.size() == 1) {
         parts.clear();
         strings::split(text, ' ', parts);
-    }    
+    }
     const unsigned int n = parts.size();
     const unsigned int nUsages = sizeof (g_UsageMaskTypes) / sizeof (UsageMask);
     for(unsigned int i = 0; i < n; i++) {
@@ -339,7 +356,7 @@ void gfx::shaders::getTextFromUsageMask(UsageMask mask, std::string& text) {
         }
     }
     if(text.length()) {
-        text.erase(text.length()-1); // remove the last separator
+        text.erase(text.length() - 1); // remove the last separator
     }
 }
 //------------------------------------------------------------------------------
@@ -529,6 +546,8 @@ gfx::shaders::UniformType gfx::shaders::getUniformTypeFromText(const char* text)
 //------------------------------------------------------------------------------
 
 gfx::shaders::UniformType gfx::shaders::getUniformTypeFromText(const std::string& text) {
+    if(text.empty())
+        return UniformType::UNIFORM_INVALID;
     return getUniformTypeFromText(text.c_str());
 }
 //------------------------------------------------------------------------------
@@ -541,6 +560,45 @@ const char* gfx::shaders::getTextFromUniformType(UniformType value) {
     for(unsigned int i = 0; i < n; i++) {
         if(g_UniformTypes[i] == value) {
             result = g_UniformTypesText[i];
+            break;
+        }
+    }
+    return result;
+}
+//------------------------------------------------------------------------------
+
+gfx::shaders::UniformBlockType gfx::shaders::getUniformBlockTypeFromText(const char* text) {
+    UniformBlockType result = shaders::UNIFORM_BLOCK_INVALID;
+    if(!text)
+        return result;
+    if(!text[0])
+        return result;
+    const unsigned int n = sizeof (g_UniformBlockTypes) / sizeof (UniformBlockType);
+    for(unsigned int i = 0; i < n; i++) {
+        if(strings::isEqual(g_UniformBlockTypesText[i], text, FG_FALSE)) {
+            result = g_UniformBlockTypes[i];
+            break;
+        }
+    }
+    return result;
+}
+//------------------------------------------------------------------------------
+
+gfx::shaders::UniformBlockType gfx::shaders::getUniformBlockTypeFromText(const std::string& text) {
+    if(text.empty())
+        return UniformBlockType::UNIFORM_BLOCK_INVALID;
+    return getUniformBlockTypeFromText(text.c_str());
+}
+//------------------------------------------------------------------------------
+
+const char* gfx::shaders::getTextFromUniformBlockType(UniformBlockType value) {
+    const char* result = NULL;
+    if(value == shaders::UNIFORM_BLOCK_INVALID)
+        return result;
+    const unsigned int n = sizeof (g_UniformBlockTypes) / sizeof (UniformBlockType);
+    for(unsigned int i = 0; i < n; i++) {
+        if(g_UniformBlockTypes[i] == value) {
+            result = g_UniformBlockTypesText[i];
             break;
         }
     }
@@ -570,6 +628,96 @@ precision(shaders::PRECISION_DEFAULT) {
 
 gfx::SUniformBind::~SUniformBind() {
     variableName.clear();
+}
+//------------------------------------------------------------------------------
+
+gfx::SUniformBlockBind::SUniformBlockBind() :
+blockName(),
+index(-1),
+bindingIndex(-1),
+type(shaders::UNIFORM_BLOCK_INVALID),
+uniforms() { }
+//------------------------------------------------------------------------------
+
+gfx::SUniformBlockBind::SUniformBlockBind(const self_type& orig) {
+    this->blockName.append(orig.blockName);
+    this->index = orig.index;
+    this->bindingIndex = orig.bindingIndex;
+    this->type = orig.type;
+    this->uniforms.append(orig.uniforms);
+}
+//------------------------------------------------------------------------------
+
+gfx::SUniformBlockBind::SUniformBlockBind(const char *_blockName,
+                                          shaders::UniformBlockType _type) :
+blockName(_blockName),
+index(-1),
+bindingIndex(-1),
+type(_type),
+uniforms() {
+    // should this type of constructor append standard uniforms based on
+    // uniform block type? Is this is a place for this kind of stuff?
+    // shaders::appendStandardUniformsToUniformBlock(this->type, this->uniforms);
+}
+//------------------------------------------------------------------------------
+
+gfx::SUniformBlockBind::~SUniformBlockBind() {
+    blockName.clear();
+}
+//------------------------------------------------------------------------------
+
+int gfx::SUniformBlockBind::addUniformBind(const SUniformBind& uniformBind) {
+    // this method will overwrite data
+    int index = uniforms.find(uniformBind);
+    if(index >= 0) {
+        // found
+        uniforms[index] = uniformBind;
+    } else {
+        // new
+        uniforms.push_back(uniformBind);
+        index = uniforms.size() - 1;
+    }
+    return index;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SUniformBlockBind::hasUniform(const char* name) const {
+    if(!name)
+        return FG_FALSE;
+    if(!name[0])
+        return FG_FALSE;
+    fgBool found = FG_FALSE;
+    const unsigned int n = this->count();
+    for(unsigned int i = 0; i < n; i++) {
+        const SUniformBind& bind = uniforms[i];
+        if(bind.variableName.compare(name) == 0) {
+            found = FG_TRUE;
+            break;
+        }
+    }
+    return found;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SUniformBlockBind::hasUniform(const std::string& name) const {
+    if(name.empty())
+        return FG_FALSE;
+    return hasUniform(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SUniformBlockBind::hasUniform(const SUniformBind& uniformBind) const {
+    return (fgBool)uniforms.contains(uniformBind);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::SUniformBlockBind::isEmpty(void) const {
+    return (fgBool)uniforms.empty();
+}
+//------------------------------------------------------------------------------
+
+unsigned int gfx::SUniformBlockBind::count(void) const {
+    return (unsigned int)uniforms.size();
 }
 //------------------------------------------------------------------------------
 

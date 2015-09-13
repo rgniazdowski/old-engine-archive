@@ -184,6 +184,22 @@ namespace fg {
 
             //------------------------------------------------------------------
 
+            enum UniformBlockType {
+                /// Invalid uniform block
+                UNIFORM_BLOCK_INVALID,
+                /// Block containing various transformation matrices
+                /// like MVP, MV, M; plus scale, FOV, dual quaternions
+                UNIFORM_BLOCK_TRANSFORM,
+                /// Block containing information about current scene lighting
+                /// including model of lighting, number of directional lights,
+                /// spot lights etc.
+                UNIFORM_BLOCK_LIGHTING_INFO,
+                /// Block containing information about currently used material
+                UNIFORM_BLOCK_MATERIAL_INFO
+
+            }; // enum UniformBlockType
+
+            //------------------------------------------------------------------
             const char* getShaderProgramConfigSuffix(void);
 
             //------------------------------------------------------------------
@@ -335,6 +351,26 @@ namespace fg {
 
             //------------------------------------------------------------------
 
+            /**
+             *
+             * @param text
+             * @return
+             */
+            UniformBlockType getUniformBlockTypeFromText(const char* text);
+            /**
+             *
+             * @param text
+             * @return
+             */
+            UniformBlockType getUniformBlockTypeFromText(const std::string& text);
+            /**
+             * 
+             * @param value
+             * @return
+             */
+            const char* getTextFromUniformBlockType(UniformBlockType value);
+
+            //------------------------------------------------------------------
     #if defined(FG_USING_OPENGL)
             const unsigned int NUM_SHADER_TYPES = 6;
     #elif defined(FG_USING_OPENGL_ES)
@@ -429,6 +465,106 @@ namespace fg {
                 return !(b.variableName.compare(this->variableName) == 0 && b.type == this->type);
             }
         }; // struct SUniformBind
+
+        /**
+         * This is special purpose structure for storing information about
+         * uniform block. Basic information is retrieved from shader config files.
+         * More information is taken from runtime (like offsets, validity).
+         *
+         */
+        struct SUniformBlockBind {
+            typedef SUniformBlockBind self_type;
+            typedef CVector<SUniformBind> UniformBindVec;
+
+            /// Name of the block
+            std::string blockName;
+            /// Index of the uniform block (it's like location for normal uniform)
+            fgGFXint index;
+            /// Index of the uniform block binding
+            fgGFXint bindingIndex;
+            /// Type of the uniform block
+            shaders::UniformBlockType type;
+            /// List of uniforms in this uniform block
+            /// Member 'location' of SUniformBind structure contains now offset
+            /// that tells position of given uniform in the buffer.
+            UniformBindVec uniforms;
+
+            /**
+             *
+             */
+            SUniformBlockBind();
+            /**
+             * 
+             * @param orig
+             */
+            SUniformBlockBind(const self_type& orig);
+            /**
+             *
+             * @param _variableName
+             * @param _type
+             */
+            SUniformBlockBind(const char *_blockName,
+                              shaders::UniformBlockType _type);
+            /**
+             *
+             */
+            virtual ~SUniformBlockBind();
+
+            //------------------------------------------------------------------
+
+            /**
+             *
+             * @param uniformBind
+             * @return
+             */
+            int addUniformBind(const SUniformBind& uniformBind);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool hasUniform(const char* name) const;
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool hasUniform(const std::string& name) const;
+            /**
+             *
+             * @param uniformBind
+             * @return
+             */
+            fgBool hasUniform(const SUniformBind& uniformBind) const;
+            /**
+             *
+             * @return
+             */
+            fgBool isEmpty(void) const;
+            /**
+             *
+             * @return
+             */
+            unsigned int count(void) const;
+
+            //------------------------------------------------------------------
+            /**
+             *
+             * @param b
+             * @return
+             */
+            inline int operator ==(const SUniformBlockBind &b) const {
+                return (b.blockName.compare(this->blockName) == 0 && b.type == this->type);
+            }
+            /**
+             *
+             * @param b
+             * @return
+             */
+            inline int operator !=(const SUniformBlockBind &b) const {
+                return !(b.blockName.compare(this->blockName) == 0 && b.type == this->type);
+            }
+        }; // struct SUniformBlock;
 
         // The attribute qualifier can be used only with the data types:
         // float, vec2, vec3, vec4, mat2, mat3, and mat4.
