@@ -24,7 +24,9 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-gfx::CUniformUpdater::CUniformUpdater() {
+gfx::CUniformUpdater::CUniformUpdater() :
+m_uniformValues(),
+m_uniformUpdateList() {
     m_uniformValues.resize(shaders::NUM_UNIFORM_TYPES + 1);
     const unsigned int n = m_uniformValues.size();
     for(unsigned int i = 0; i < n; i++) {
@@ -332,7 +334,7 @@ void gfx::CUniformUpdater::SUniformValue::copy(const SMaterial& material,
 //------------------------------------------------------------------------------
 
 void gfx::CUniformUpdater::updateUniforms(CShaderProgram* pProgram) {
-    if(pProgram)
+    if(!pProgram)
         return;
     const unsigned int n = m_uniformUpdateList.size();
     for(unsigned int i = 0; i < n; i++) {

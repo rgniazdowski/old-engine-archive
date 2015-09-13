@@ -274,7 +274,7 @@ namespace fg {
                         const Vector2f& vector,
                         unsigned int index = 0);
             //------------------------------------------------------------------
-
+        private:
             /**
              *
              */

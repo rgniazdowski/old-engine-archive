@@ -171,11 +171,6 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         // Now this object is made of some shapes/meshes
         // they have separate drawcalls so this one (NodeObject) does not
         // need any separate drawcall - just one for every mesh/shape
-        if(m_drawCall) {
-            //delete m_drawCall; // ?? ?? ?
-            m_drawCall = NULL;
-            // this is not needed
-        }
         // Now setup draw call and children from every shape/mesh from given model
         // -- need some method for quick children removal - all of them
         ChildrenVecItor it = getChildren().begin(), end = getChildren().end();
@@ -224,10 +219,6 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             //}
             // No need to check if it's inserted successfully
             getChildren().push_back(pChildNode);
-
-        }
-        if(shapes.size()) {
-            m_drawCall = getChildren()[0]->getDrawCall(); // ?
         }
         /// Maybe some children should not be accessible globally?
         /// Need to think about it - there can be many objects containing the 
