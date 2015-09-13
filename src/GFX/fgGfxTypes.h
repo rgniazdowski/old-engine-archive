@@ -36,37 +36,14 @@ namespace fg {
 };
     #endif // 0 // nope...
 
-    #ifndef FG_INC_GFX_GL
-        #include "fgGfxGL.h"
-    #endif
-
-    #ifndef FG_INC_GFX_COLOR
-        #include "fgGfxColor.h"
-    #endif
-
-    #ifndef FG_INC_GFX_ATTRIB_BITS
-        #include "fgGfxAttribBits.h"
-    #endif
-
-    #ifndef FG_INC_GFX_ATTRIBUTE_DATA
-        #include "fgGfxAttributeData.h"
-    #endif
-
-    #ifndef FG_INC_GFX_BUFFERID
-        #include "fgGfxBufferID.h"
-    #endif
-
-    #ifndef FG_INC_GFX_TEXTUREID
-        #include "fgGfxTextureID.h"
-    #endif
-
-    #ifndef FG_INC_GFX_VERTEX
-        #include "fgGfxVertex.h"
-    #endif
-
-    #ifndef FG_INC_GFX_VERTEX_DATA
-        #include "fgGfxVertexData.h"
-    #endif    
+    #include "fgGfxGL.h"
+    #include "fgGfxColor.h"
+    #include "fgGfxAttribBits.h"
+    #include "fgGfxAttributeData.h"
+    #include "fgGfxBufferID.h"
+    #include "fgGfxTextureID.h"
+    #include "fgGfxVertex.h"
+    #include "fgGfxVertexData.h"
 
     #if !defined(FG_RAND)
         #define FG_RAND(_A, _B) (_A + (int)(((float)(_B - _A + 1)) * rand() / (((float)RAND_MAX) + 1.0f)))
@@ -189,11 +166,13 @@ namespace fg {
         };
 
     #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
+
         enum FrontFace {
             FACE_CCW = (unsigned int)GL_CCW,
             FACE_CW = (unsigned int)GL_CW
         };
     #else 
+
         enum FrontFace {
             FACE_CCW,
             FACE_CW

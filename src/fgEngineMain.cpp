@@ -758,6 +758,9 @@ fgBool CEngineMain::loadResources(void) {
     m_gfxMain->generateBuiltInData();
     m_gfxMain->getShaderManager()->setLinkOnUse(FG_TRUE);
     m_gfxMain->getShaderManager()->setLinkOnRequest(FG_TRUE);
+//#if defined(FG_USING_OPENGL_ES)
+    m_gfxMain->getShaderManager()->setUniformAutoUpdate(FG_TRUE);
+//#endif
 
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();

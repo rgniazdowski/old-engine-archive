@@ -294,3 +294,4 @@ fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) 
     }
     return status;
 }
+//------------------------------------------------------------------------------

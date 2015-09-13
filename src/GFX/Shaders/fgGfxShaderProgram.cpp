@@ -351,17 +351,16 @@ fgBool gfx::CShaderProgram::use(void) {
     // call to glIsProgram may be a slowdown, this shouldn't be necessary at some point
     if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !isPreloaded())
         return FG_FALSE;
+    fgBool status = FG_TRUE;
     if(m_pManager) {
-        CShaderManager *shaderMgr = static_cast<CShaderManager *>(m_pManager);
-        if(shaderMgr->isProgramUsed(this))
-            return FG_FALSE;
-        shaderMgr->setInternalCurrentProgram(this);
+        CShaderManager *pShaderMgr = static_cast<CShaderManager *>(m_pManager);
+        status = pShaderMgr->useProgram(this);
+    } else {
+        context::useProgram(m_gfxID);
+        this->setRecentlyUsed(FG_TRUE);
+        GLCheckError("glUseProgram");
     }
-    //fgGFXuint last = context::activeProgram();
-    context::useProgram(m_gfxID);
-    this->setRecentlyUsed(FG_TRUE);
-    GLCheckError("glUseProgram");
-    return FG_TRUE;
+    return status;
 }
 //------------------------------------------------------------------------------
 
@@ -1008,7 +1007,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXsizei count,
                                        const fgGFXfloat *value) {
     SUniformBind* bind = &m_uniformBinds[type];
-    if(bind->location == -1)
+    if(bind->location == -1 || !value || !count)
         return FG_FALSE;
     if(bind->dataType == FG_GFX_FLOAT_VEC4) {
         glUniform4fv(bind->location, count / 4, value);
@@ -1022,6 +1021,12 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
     } else if(bind->dataType == FG_GFX_FLOAT) {
         glUniform1fv(bind->location, count, value);
         GLCheckError("glUniform1fv");
+    } else if(bind->dataType == FG_GFX_FLOAT_MAT4) {
+        glUniformMatrix4fv(bind->location, count / 16, GL_FALSE, value);
+    } else if(bind->dataType == FG_GFX_FLOAT_MAT3) {
+        glUniformMatrix3fv(bind->location, count / 9, GL_FALSE, value);
+    } else if(bind->dataType == FG_GFX_FLOAT_MAT2) {
+        glUniformMatrix2fv(bind->location, count / 4, GL_FALSE, value);
     }
     return FG_TRUE;
 }
@@ -1031,7 +1036,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
                                        fgGFXsizei count,
                                        const fgGFXint *value) {
     SUniformBind* bind = &m_uniformBinds[type];
-    if(bind->location == -1)
+    if(bind->location == -1 || !value || !count)
         return FG_FALSE;
     if(bind->dataType == FG_GFX_INT_VEC4) {
         glUniform4iv(bind->location, count / 4, value);

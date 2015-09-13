@@ -1027,7 +1027,7 @@ void gfx::CSceneManager::render(void) {
                 continue;
             pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
             pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
-            
+
 #if defined(FG_DEBUG)
             CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
             SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;

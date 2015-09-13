@@ -291,6 +291,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
         m_3DScene->initialize();
         m_2DScene->initialize();
         registerSceneCallbacks();
+        m_shaderMgr->getUniformUpdater()->enable(shaders::UNIFORM_DIRECTIONAL_LIGHT);
     }
     float t2 = timesys::ms();
     FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
@@ -686,6 +687,16 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
     context::frontFace(FrontFace::FACE_CCW);
     context::setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
 
+    SDirectionalLight mainLight;
+    mainLight.direction = Vec3f(1.0f, 1.0, 1.0f);
+    mainLight.ambient = Color4f(0.25f, 0.25f, 0.25f, 1.0f);
+    mainLight.diffuse = Color4f(1.0f, 1.0f, 0.9f, 1.0f);
+    mainLight.specular = Color4f(0.9f, 0.7f, 0.5f, 1.0f);
+    Vec4f lightDir = m_3DScene->getMVP()->getViewMatrix() * Vec4f(mainLight.direction, 0.0f);
+    mainLight.direction = Vec3f(lightDir);
+
+    m_shaderMgr->getUniformUpdater()->update(shaders::UNIFORM_DIRECTIONAL_LIGHT, mainLight);
+
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -834,7 +845,8 @@ fgBool gfx::CGfxMain::preLoadShaders(void) {
     }
     if(!m_shaderMgr->isInit())
         m_shaderMgr->initialize();
-    return m_shaderMgr->preLoadShaders();
+    fgBool status = m_shaderMgr->preLoadShaders();
+    return status;
 }
 //------------------------------------------------------------------------------
 
@@ -1000,7 +1012,7 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
     if(!pEventStruct->node.pNodeA) {
         return FG_FALSE;
     }
-    
+
     if(pEventStruct->node.pNodeA->getNodeType() != gfx::SCENE_NODE_OBJECT) {
         pEventStruct->node.pNodeA->refreshGfxInternals();
         return FG_TRUE; // event handled

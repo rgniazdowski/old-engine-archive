@@ -81,7 +81,6 @@ namespace fg {
              */
             virtual fgBool setAnimation(const char* name, unsigned int slot);
 
-
             /**
              * 
              */

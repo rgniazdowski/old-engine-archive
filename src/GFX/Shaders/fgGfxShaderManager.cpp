@@ -21,6 +21,7 @@ using namespace fg;
 gfx::CShaderManager::CShaderManager() :
 base_type(),
 m_shaderObjectsHolder(this),
+m_uniformUpdater(),
 m_currentProgram(NULL),
 m_shadersDir(NULL),
 m_shadersPath(),
@@ -607,7 +608,7 @@ gfx::CShaderProgram* gfx::CShaderManager::request(const std::string& info) {
         }
         if(!isFound)
             return NULL;
-    }    
+    }
     if(!pRequestedShader) {
         if(isConfig) {
             pRequestedShader = new CShaderProgram();
@@ -850,17 +851,21 @@ fgBool gfx::CShaderManager::useProgram(CShaderProgram* pProgram) {
     if(!pProgram) {
         return FG_FALSE;
     }
+    if(m_currentProgram == pProgram) {
+        return FG_FALSE;
+    }
     if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
         pProgram->link();
     }
-    if(pProgram->use()) {
-        m_currentProgram = pProgram;
-        return FG_TRUE;
-    }
-    return FG_FALSE;
+    context::useProgram(pProgram->getGfxID());
+    pProgram->setRecentlyUsed(FG_TRUE);
+    m_currentProgram = pProgram;
+    if(isUniformAutoUpdate())
+        m_uniformUpdater.updateUniforms(m_currentProgram);
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
@@ -869,16 +874,21 @@ fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
     if(!pProgram) {
         return FG_FALSE;
     }
+    if(m_currentProgram == pProgram) {
+        return FG_FALSE;
+    }
     if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
         pProgram->link();
     }
-    if(pProgram == m_currentProgram) {
-        return FG_FALSE;
-    }
-    return pProgram->use();
+    context::useProgram(pProgram->getGfxID());
+    pProgram->setRecentlyUsed(FG_TRUE);
+    m_currentProgram = pProgram;
+    if(isUniformAutoUpdate())
+        m_uniformUpdater.updateUniforms(m_currentProgram);
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
@@ -887,16 +897,21 @@ fgBool gfx::CShaderManager::useProgram(const std::string &nameTag) {
     if(!pProgram) {
         return FG_FALSE;
     }
+    if(m_currentProgram == pProgram) {
+        return FG_FALSE;
+    }
     if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
         pProgram->link();
     }
-    if(pProgram == m_currentProgram) {
-        return FG_FALSE;
-    }
-    return pProgram->use();
+    context::useProgram(pProgram->getGfxID());
+    pProgram->setRecentlyUsed(FG_TRUE);
+    m_currentProgram = pProgram;
+    if(isUniformAutoUpdate())
+        m_uniformUpdater.updateUniforms(m_currentProgram);
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
@@ -905,16 +920,21 @@ fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
     if(!pProgram) {
         return FG_FALSE;
     }
+    if(m_currentProgram == pProgram) {
+        return FG_FALSE;
+    }
     if(isLinkOnUse() && !pProgram->isLinked()) {
         if(!pProgram->compile()) {
             return FG_FALSE;
         }
         pProgram->link();
     }
-    if(pProgram == m_currentProgram) {
-        return FG_FALSE;
-    }
-    return pProgram->use();
+    context::useProgram(pProgram->getGfxID());
+    pProgram->setRecentlyUsed(FG_TRUE);
+    m_currentProgram = pProgram;
+    if(isUniformAutoUpdate())
+        m_uniformUpdater.updateUniforms(m_currentProgram);
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 

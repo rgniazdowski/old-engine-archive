@@ -152,6 +152,8 @@
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderManager.h</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderProgram.cpp</itemPath>
           <itemPath>../../../src/GFX/Shaders/fgGfxShaderProgram.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxUniformUpdater.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Textures" displayName="Textures" projectFiles="true">
           <itemPath>../../../src/GFX/Textures/fgTextureErrorCodes.h</itemPath>
@@ -1248,6 +1250,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3049,6 +3061,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Textures/fgTextureErrorCodes.h"
             ex="false"
             tool="3"
@@ -4812,6 +4834,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Textures/fgTextureErrorCodes.h"
             ex="false"
             tool="3"
@@ -6557,6 +6589,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -8329,6 +8371,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Textures/fgTextureErrorCodes.h"
             ex="false"
             tool="3"
@@ -10085,6 +10137,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxUniformUpdater.h"
             ex="false"
             tool="3"
             flavor2="0">

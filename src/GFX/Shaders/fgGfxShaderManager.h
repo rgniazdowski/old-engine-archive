@@ -24,12 +24,13 @@
     #include "Util/fgTag.h"
     #include "Util/fgDirent.h"
     #include "fgGfxShaderProgram.h"
+    #include "fgGfxUniformUpdater.h"
 
 namespace fg {
     namespace gfx {
         class CShaderManager;
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #define FG_TAG_SHADER_MANAGER_NAME  "GfxShaderManager"
 //#define FG_TAG_MANAGER_BASE_ID        20 //#FIXME - something automatic maybe?
@@ -192,6 +193,7 @@ namespace fg {
             typedef DataVecItor ProgramVecItor;
 
         public:
+
             /**
              *
              */
@@ -205,7 +207,10 @@ namespace fg {
                 /// Should shaders be linked when requesting?
                 LINK_ON_REQUEST = 0x0004,
                 /// Should shader be set to current after request?
-                USE_ON_REQUEST = 0x0008
+                USE_ON_REQUEST = 0x0008,
+                /// Whether or not to automatically set data for specific uniforms
+                /// when switching shader programs
+                UNIFORM_AUTO_UPDATE = 0x0010,
             }; // enum StateFlags
 
         public:
@@ -475,8 +480,17 @@ namespace fg {
              */
             CShaderProgram* getCurrentProgram(void) const;
 
+            /**
+             * 
+             * @return
+             */
+            CUniformUpdater* getUniformUpdater(void) {
+                return &m_uniformUpdater;
+            }
+
             //------------------------------------------------------------------
-        protected:
+
+        protected:            
             /**
              * 
              * @param flags
@@ -514,6 +528,13 @@ namespace fg {
             }
             /**
              * 
+             * @return 
+             */
+            fgBool isUniformAutoUpdate(void) const {
+                return (fgBool)!!(m_stateFlags & UNIFORM_AUTO_UPDATE);
+            }
+            /**
+             * 
              * @param toggle
              */
             void setLinkOnRequest(fgBool toggle = FG_TRUE) {
@@ -533,12 +554,20 @@ namespace fg {
             void setUseOnRequest(fgBool toggle = FG_TRUE) {
                 setFlag(USE_ON_REQUEST, toggle);
             }
-
+            /**
+             * 
+             * @param toggle
+             */
+            void setUniformAutoUpdate(fgBool toggle = FG_TRUE) {
+                setFlag(UNIFORM_AUTO_UPDATE, toggle);
+            }
             //------------------------------------------------------------------
 
         private:
             /// Current shader object manager instance
             CShaderObjectManager m_shaderObjectsHolder;
+            /// Internal uniform automatic updater
+            CUniformUpdater m_uniformUpdater;
             /// Pointer to shader program object which is being currently used
             /// For double checking - after GFX suspend/resume program ID
             /// will become invalid, need to set this pointer to NULL on suspend
@@ -546,7 +575,7 @@ namespace fg {
             /// Dirent instance for searching shaders
             util::CDirent* m_shadersDir;
             /// Current shader search path
-            std::string m_shadersPath;            
+            std::string m_shadersPath;
             /// Current flags of the shader manager
             StateFlags m_stateFlags;
         }; // class CShaderManager

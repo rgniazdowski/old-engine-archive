@@ -12,6 +12,7 @@
 #include "Util/fgTime.h"
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 gfx::CCameraAnimation::CCameraAnimation(const Type cameraType) : base_type(),
 m_type(cameraType),

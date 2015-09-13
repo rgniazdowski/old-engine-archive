@@ -16,21 +16,10 @@
         #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxStdInc inside of GfxTypes header."
     #endif
 
-    #ifndef FG_INC_GFX_GL
-        #include "fgGfxGL.h"
-    #endif
-
-    #ifndef FG_INC_GFX_PLATFORM
-        #include "fgGfxPlatform.h"
-    #endif
-
-    #ifndef FG_INC_TYPES
-        #include "fgTypes.h"
-    #endif
-
-    #ifndef FG_INC_GFX_TYPES
-        #include "fgGfxTypes.h"
-    #endif
+    #include "fgGfxGL.h"
+    #include "fgGfxPlatform.h"
+    #include "fgTypes.h"
+    #include "fgGfxTypes.h"
 
     #undef FG_INC_GFX_STD_INC_BLOCK
 #endif /* FG_INC_GFX_STD_INC */

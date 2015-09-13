@@ -18,9 +18,7 @@
     #define FG_INC_GFX_ATTRIB_BITS
     #define FG_INC_GFX_ATTRIB_BITS_BLOCK
 
-    #ifndef FG_INC_TYPES
-        #include "fgTypes.h"
-    #endif
+    #include "fgTypes.h"
 
 namespace fg {
     namespace gfx {
