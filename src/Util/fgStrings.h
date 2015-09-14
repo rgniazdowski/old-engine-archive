@@ -12,12 +12,7 @@
     #define FG_INC_STRINGS
     #define FG_INC_STRINGS_BLOCK
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
-
-    #include "fgVector.h"
-    #include "fgBool.h"
+    #include "fgTypes.h"
 
     #if defined(FG_USING_GLM)
         #include "glm/vec3.hpp"
@@ -44,6 +39,43 @@ namespace fg {
 namespace fg {
 
     namespace strings {
+
+        enum MatchMode {
+            MATCH_DEFAULT = 0x0000,
+            /// This will match name only when it is equal (exactly the same)
+            MATCH_EXACT = 0x0001,
+            /// Matching animation name without checking character case
+            MATCH_CASE_INSENSITIVE = 0x0002,
+            /// Match substring of the name (first occurrence)
+            MATCH_SUBSTR = 0x0004,
+            /// Match all occurrences of the substring
+            MATCH_ALL = 0x0008,
+            /// Match with regular expression
+            MATCH_REGEX = 0x0010
+        };
+
+        FG_ENUM_FLAGS(MatchMode);
+
+        //----------------------------------------------------------------------
+
+        fgBool doesMatch(const char* name, const char* query,
+                         MatchMode mode = MATCH_EXACT);
+
+        fgBool doesMatch(const std::string& name,
+                         const std::string& query,
+                         MatchMode mode = MATCH_EXACT);
+
+        fgBool doesMatch(const char* name, const char* query,
+                         const char* mode);
+
+        fgBool doesMatch(const std::string& name,
+                         const std::string& query,
+                         const std::string& mode);
+
+        MatchMode getMatchModeFromText(const char* text);
+        MatchMode getMatchModeFromText(const std::string& text);
+
+        //----------------------------------------------------------------------
         /**
          *
          * @param output
@@ -68,6 +100,7 @@ namespace fg {
          * @return
          */
         char* toLower(const char* input);
+        //----------------------------------------------------------------------
 
         /**
          *
@@ -92,6 +125,8 @@ namespace fg {
          * @return
          */
         char* toUpper(const char* input);
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param str
@@ -126,6 +161,8 @@ namespace fg {
         std::string reduce(const std::string& str,
                            const std::string& fill = " ",
                            const std::string& whitespace = " \t\r");
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param s
@@ -144,6 +181,9 @@ namespace fg {
          */
         CVector<std::string> split(const std::string& s,
                                    char delim);
+
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param string
@@ -156,6 +196,8 @@ namespace fg {
          * @return 
          */
         fgBool isNumber(const std::string& string);
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param input
@@ -176,6 +218,9 @@ namespace fg {
         fgBool isEqual(const char* input,
                        const char* pattern,
                        const fgBool caseSensitive = FG_TRUE);
+
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param input
@@ -196,6 +241,9 @@ namespace fg {
         fgBool startsWith(const char* input,
                           const char* pattern,
                           fgBool caseSensitive = FG_TRUE);
+
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param input
@@ -216,6 +264,9 @@ namespace fg {
         fgBool endsWith(const char* input,
                         const char* pattern,
                         fgBool caseSensitive = FG_TRUE);
+
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param input
@@ -233,6 +284,9 @@ namespace fg {
         fgBool containsChars(const char* input,
                              const char* chars,
                              const fgBool caseSensitive = FG_TRUE);
+
+        //----------------------------------------------------------------------
+
         /**
          * 
          * @param str
@@ -261,6 +315,9 @@ namespace fg {
          * @return 
          */
         const char* stristr(const std::string& str, const std::string& needle);
+
+        //----------------------------------------------------------------------
+
         /**
          *
          * @param value
