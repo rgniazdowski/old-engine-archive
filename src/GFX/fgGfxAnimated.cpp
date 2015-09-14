@@ -79,14 +79,16 @@ int gfx::traits::CAnimated::pushAnimation(anim::SAnimationInfo* pAnimationInfo) 
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::CAnimation* gfx::traits::CAnimated::getAnimation(const std::string& name) {
+gfx::anim::CAnimation* gfx::traits::CAnimated::getAnimation(const std::string& name,
+                                                            strings::MatchMode mode) {
     if(name.empty())
         return NULL;
-    return getAnimation(name.c_str());
+    return getAnimation(name.c_str(), mode);
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::CAnimation* gfx::traits::CAnimated::getAnimation(const char* name) {
+gfx::anim::CAnimation* gfx::traits::CAnimated::getAnimation(const char* name,
+                                                            strings::MatchMode mode) {
     if(!name)
         return NULL;
     if(!name[0])
@@ -94,7 +96,7 @@ gfx::anim::CAnimation* gfx::traits::CAnimated::getAnimation(const char* name) {
     anim::CAnimation* pAnimation = NULL;
     const unsigned int n = m_animations.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(m_animations[i].pAnimation->getName().compare(name) == 0) {
+        if(strings::doesMatch(m_animations[i].pAnimation->getNameStr(), name, mode)) {
             pAnimation = m_animations[i].pAnimation;
             break;
         }
@@ -123,14 +125,16 @@ gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(anim::CAnima
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const std::string& name) {
+gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const std::string& name,
+                                                                    strings::MatchMode mode) {
     if(name.empty())
         return NULL;
-    return getAnimationInfo(name.c_str());
+    return getAnimationInfo(name.c_str(), mode);
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const char* name) {
+gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const char* name,
+                                                                    strings::MatchMode mode) {
     if(!name)
         return NULL;
     if(!name[0])
@@ -138,7 +142,7 @@ gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const char* 
     anim::SAnimationInfo* pAnimationInfo = NULL;
     const unsigned int n = m_animations.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(m_animations[i].pAnimation->getName().compare(name) == 0) {
+        if(strings::doesMatch(m_animations[i].pAnimation->getNameStr(), name, mode)) {
             pAnimationInfo = &m_animations[i];
             break;
         }
@@ -147,7 +151,25 @@ gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const char* 
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(unsigned int slot) {
+gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const std::string& name,
+                                                                    const std::string& mode) {
+    if(name.empty())
+        return NULL;
+    const strings::MatchMode modeEnum = strings::getMatchModeFromText(mode);
+    return getAnimationInfo(name.c_str(), modeEnum);
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(const char* name,
+                                                                    const char* mode) {
+    if(!name)
+        return NULL;
+    const strings::MatchMode modeEnum = strings::getMatchModeFromText(mode);
+    return getAnimationInfo(name, modeEnum);
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfoBySlot(unsigned int slot) {
     if(slot >= m_animations.size())
         return NULL;
     return &m_animations[slot];
@@ -157,18 +179,28 @@ gfx::anim::SAnimationInfo* gfx::traits::CAnimated::getAnimationInfo(unsigned int
 int gfx::traits::CAnimated::getAnimationSlot(anim::CAnimation* pAnimation) {
     if(!pAnimation)
         return -1;
-    return getAnimationSlot(pAnimation->getNameStr());
+    int slot = -1;
+    const unsigned int n = m_animations.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_animations[i].pAnimation == pAnimation) {
+            slot = (int)i;
+            break;
+        }
+    }
+    return slot;
 }
 //------------------------------------------------------------------------------
 
-int gfx::traits::CAnimated::getAnimationSlot(const std::string& name) {
+int gfx::traits::CAnimated::getAnimationSlot(const std::string& name,
+                                             strings::MatchMode mode) {
     if(name.empty())
         return -1;
-    return getAnimationSlot(name.c_str());
+    return getAnimationSlot(name.c_str(), mode);
 }
 //------------------------------------------------------------------------------
 
-int gfx::traits::CAnimated::getAnimationSlot(const char* name) {
+int gfx::traits::CAnimated::getAnimationSlot(const char* name,
+                                             strings::MatchMode mode) {
     if(!name)
         return -1;
     if(!name[0])
@@ -176,7 +208,7 @@ int gfx::traits::CAnimated::getAnimationSlot(const char* name) {
     int slot = -1;
     const unsigned int n = m_animations.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(m_animations[i].pAnimation->getName().compare(name) == 0) {
+        if(strings::doesMatch(m_animations[i].pAnimation->getNameStr(), name, mode)) {
             slot = (int)i;
             break;
         }
@@ -200,15 +232,17 @@ fgBool gfx::traits::CAnimated::hasAnimation(anim::CAnimation* pAnimation) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::traits::CAnimated::hasAnimation(const std::string& name) {
+fgBool gfx::traits::CAnimated::hasAnimation(const std::string& name,
+                                            strings::MatchMode mode) {
     if(name.empty())
         return FG_FALSE;
 
-    return hasAnimation(name.c_str());
+    return hasAnimation(name.c_str(), mode);
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::traits::CAnimated::hasAnimation(const char* name) {
+fgBool gfx::traits::CAnimated::hasAnimation(const char* name,
+                                            strings::MatchMode mode) {
     if(!name)
         return FG_FALSE;
     if(!name[0])
@@ -216,7 +250,7 @@ fgBool gfx::traits::CAnimated::hasAnimation(const char* name) {
     fgBool found = FG_FALSE;
     const unsigned int n = m_animations.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(m_animations[i].pAnimation->getName().compare(name) == 0) {
+        if(strings::doesMatch(m_animations[i].pAnimation->getNameStr(), name, mode)) {
             found = FG_TRUE;
             break;
         }
@@ -228,121 +262,109 @@ fgBool gfx::traits::CAnimated::hasAnimation(const char* name) {
 void gfx::traits::CAnimated::removeAnimation(anim::CAnimation* pAnimation) {
     if(!pAnimation)
         return;
-    int index = getAnimationSlot(pAnimation->getNameStr());
+    int index = getAnimationSlot(pAnimation);
     if(index >= 0) {
+        m_animations[index].stop();
         m_animations.remove(index);
     }
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::removeAnimation(const std::string& name) {
+void gfx::traits::CAnimated::removeAnimation(const std::string& name,
+                                             strings::MatchMode mode) {
     if(name.empty())
         return;
-    removeAnimation(name.c_str());
+    removeAnimation(name.c_str(), mode);
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::removeAnimation(const char* name) {
+void gfx::traits::CAnimated::removeAnimation(const char* name,
+                                             strings::MatchMode mode) {
     if(!name)
         return;
     if(!name[0])
         return;
-    int index = getAnimationSlot(name);
+    int index = getAnimationSlot(name, mode);
     if(index >= 0) {
+        m_animations[index].stop();
         m_animations.remove(index);
     }
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::pauseAnimation(anim::CAnimation* pAnimation) {
-    if(!pAnimation)
-        return;
-    anim::SAnimationInfo* pInfo = getAnimationInfo(pAnimation);
-    if(!pInfo)
-        return;
-    // TODO
-    // pInfo->pause();
-}
-//------------------------------------------------------------------------------
-
-void gfx::traits::CAnimated::pauseAnimation(const std::string& name) {
+void gfx::traits::CAnimated::removeAnimation(const std::string& name,
+                                             const std::string& mode) {
     if(name.empty())
         return;
-    pauseAnimation(name.c_str());
+    const strings::MatchMode modeEnum = strings::getMatchModeFromText(mode);
+    removeAnimation(name.c_str(), modeEnum);
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::pauseAnimation(const char* name) {
+void gfx::traits::CAnimated::removeAnimation(const char* name, const char* mode) {
     if(!name)
         return;
-    if(!name[0])
-        return;
-    anim::SAnimationInfo* pInfo = getAnimationInfo(name);
-    if(!pInfo)
-        return;
-    // TODO
-    // pInfo->pause();
+    const strings::MatchMode modeEnum = strings::getMatchModeFromText(mode);
+    removeAnimation(name, modeEnum);
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::resumeAnimation(anim::CAnimation* pAnimation) {
-    if(!pAnimation)
-        return;
-    anim::SAnimationInfo* pInfo = getAnimationInfo(pAnimation);
-    if(!pInfo)
-        return;
-    // TODO
-    // pInfo->resume();
+void gfx::traits::CAnimated::removeAnimations(void) {
+    stopAnimations();
+    m_animations.clear();
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::resumeAnimation(const std::string& name) {
-    if(name.empty())
-        return;
-    resumeAnimation(name.c_str());
+void gfx::traits::CAnimated::playAnimations(void) {
+    const unsigned int n = getAnimationsCount();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::SAnimationInfo* pInfo = getAnimationInfoBySlot(i);
+        if(pInfo)
+            pInfo->play();
+    }
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::resumeAnimation(const char* name) {
-    if(!name)
-        return;
-    if(!name[0])
-        return;
-    anim::SAnimationInfo* pInfo = getAnimationInfo(name);
-    if(!pInfo)
-        return;
-    // TODO
-    // pInfo->resume();
+void gfx::traits::CAnimated::stopAnimations(void) {
+    const unsigned int n = getAnimationsCount();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::SAnimationInfo* pInfo = getAnimationInfoBySlot(i);
+        if(pInfo)
+            pInfo->stop();
+    }
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::restartAnimation(anim::CAnimation* pAnimation) {
-    if(!pAnimation)
-        return;
-    anim::SAnimationInfo* pInfo = getAnimationInfo(pAnimation);
-    if(!pInfo)
-        return;
-    // TODO
-    // pInfo->restart();
+void gfx::traits::CAnimated::pauseAnimations(fgBool toggle) {
+    const unsigned int n = getAnimationsCount();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::SAnimationInfo* pInfo = getAnimationInfoBySlot(i);
+        if(pInfo) {
+            if(toggle)
+                pInfo->togglePause();
+            else
+                pInfo->pause();
+        }
+    }
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::restartAnimation(const std::string& name) {
-    if(name.empty())
-        return;
-    restartAnimation(name.c_str());
+void gfx::traits::CAnimated::resumeAnimations(void) {
+    const unsigned int n = getAnimationsCount();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::SAnimationInfo* pInfo = getAnimationInfoBySlot(i);
+        if(pInfo)
+            pInfo->resume();
+    }
 }
 //------------------------------------------------------------------------------
 
-void gfx::traits::CAnimated::restartAnimation(const char* name) {
-    if(!name)
-        return;
-    if(!name[0])
-        return;
-    anim::SAnimationInfo* pInfo = getAnimationInfo(name);
-    if(!pInfo)
-        return;
-    // TODO
-    // pInfo->restart();
+void gfx::traits::CAnimated::rewindAnimations(void) {
+    const unsigned int n = getAnimationsCount();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::SAnimationInfo* pInfo = getAnimationInfoBySlot(i);
+        if(pInfo)
+            pInfo->rewind();
+    }
 }
 //------------------------------------------------------------------------------

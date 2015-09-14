@@ -26,7 +26,6 @@
 #endif
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CSceneManager::CSceneManager() :

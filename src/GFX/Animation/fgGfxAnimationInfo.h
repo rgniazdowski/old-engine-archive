@@ -197,7 +197,7 @@ namespace fg {
                 /**
                  *
                  */
-                void stop(void);
+                void stop(fgBool shouldRewind = FG_TRUE);
                 /**
                  *
                  */
@@ -245,6 +245,14 @@ namespace fg {
                 }
                 inline fgBool isPlayingReversed(void) const {
                     return (fgBool)!!(m_stateFlags & PLAYING_REVERSED);
+                }
+
+                //--------------------------------------------------------------
+                inline int operator ==(const SAnimationInfo &b) const {
+                    return (b.pAnimation == this->pAnimation);
+                }
+                inline int operator !=(const SAnimationInfo &b) const {
+                    return !(b.pAnimation == this->pAnimation);
                 }
 
             }; // struct SAnimationInfo

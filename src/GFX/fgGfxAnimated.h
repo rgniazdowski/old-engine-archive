@@ -19,6 +19,7 @@
     #define FG_INC_GFX_ANIMATED_BLOCK
 
     #include "GFX/Animation/fgGfxAnimationInfo.h"
+    #include "Util/fgStrings.h"
 
 namespace fg {
     namespace gfx {
@@ -55,7 +56,6 @@ namespace fg {
                 virtual ~CAnimated() { }
 
                 //--------------------------------------------------------------
-
                 /**
                  * This function is intentionally left empty. It should be overloaded if needed.
                  * Mainly such function will be used from scripts on scene node object
@@ -100,13 +100,15 @@ namespace fg {
                  * @param name
                  * @return
                  */
-                anim::CAnimation* getAnimation(const std::string& name);
+                anim::CAnimation* getAnimation(const std::string& name,
+                                               strings::MatchMode mode = strings::MATCH_EXACT);
                 /**
                  *
                  * @param name
                  * @return
                  */
-                anim::CAnimation* getAnimation(const char* name);
+                anim::CAnimation* getAnimation(const char* name,
+                                               strings::MatchMode mode = strings::MATCH_EXACT);
                 /**
                  *
                  * @param slot
@@ -125,20 +127,40 @@ namespace fg {
                  * @param name
                  * @return
                  */
-                anim::SAnimationInfo* getAnimationInfo(const std::string& name);
+                anim::SAnimationInfo* getAnimationInfo(const std::string& name,
+                                                       strings::MatchMode mode = strings::MATCH_EXACT);
                 /**
                  *
                  * @param name
                  * @return
                  */
-                anim::SAnimationInfo* getAnimationInfo(const char* name);
+                anim::SAnimationInfo* getAnimationInfo(const char* name,
+                                                       strings::MatchMode mode = strings::MATCH_EXACT);
+                /**
+                 *
+                 * @param name
+                 * @param mode
+                 * @return
+                 */
+                anim::SAnimationInfo* getAnimationInfo(const std::string& name,
+                                                       const std::string& mode);
+
+                /**
+                 * 
+                 * @param name
+                 * @param mode
+                 * @return 
+                 */
+                anim::SAnimationInfo* getAnimationInfo(const char* name,
+                                                       const char* mode);
                 /**
                  *
                  * @param slot
                  * @return
                  */
-                anim::SAnimationInfo* getAnimationInfo(unsigned int slot);
+                anim::SAnimationInfo* getAnimationInfoBySlot(unsigned int slot);
 
+                //--------------------------------------------------------------
                 /**
                  *
                  * @param pAnimation
@@ -150,13 +172,15 @@ namespace fg {
                  * @param name
                  * @return
                  */
-                int getAnimationSlot(const std::string& name);
+                int getAnimationSlot(const std::string& name,
+                                     strings::MatchMode mode = strings::MATCH_EXACT);
                 /**
                  *
                  * @param name
                  * @return
                  */
-                int getAnimationSlot(const char* name);
+                int getAnimationSlot(const char* name,
+                                     strings::MatchMode mode = strings::MATCH_EXACT);
 
                 //--------------------------------------------------------------
 
@@ -171,13 +195,15 @@ namespace fg {
                  * @param name
                  * @return
                  */
-                fgBool hasAnimation(const std::string& name);
+                fgBool hasAnimation(const std::string& name,
+                                    strings::MatchMode mode = strings::MATCH_EXACT);
                 /**
                  *
                  * @param name
                  * @return
                  */
-                fgBool hasAnimation(const char* name);
+                fgBool hasAnimation(const char* name,
+                                    strings::MatchMode mode = strings::MATCH_EXACT);
 
                 //--------------------------------------------------------------
 
@@ -190,66 +216,51 @@ namespace fg {
                  *
                  * @param name
                  */
-                void removeAnimation(const std::string& name);
+                void removeAnimation(const std::string& name,
+                                     strings::MatchMode mode = strings::MATCH_EXACT);
                 /**
                  *
                  * @param name
                  */
-                void removeAnimation(const char* name);
-
+                void removeAnimation(const char* name,
+                                     strings::MatchMode mode = strings::MATCH_EXACT);
+                /**
+                 *
+                 * @param name
+                 * @param mode
+                 */
+                void removeAnimation(const std::string& name, const std::string& mode);
+                /**
+                 * 
+                 * @param name
+                 * @param mode
+                 */
+                void removeAnimation(const char* name, const char* mode);
                 //--------------------------------------------------------------
-
+                /**
+                 * 
+                 */
+                virtual void removeAnimations(void);
                 /**
                  *
-                 * @param pAnimation
                  */
-                void pauseAnimation(anim::CAnimation* pAnimation);
+                virtual void playAnimations(void);
                 /**
                  *
-                 * @param name
                  */
-                void pauseAnimation(const std::string& name);
+                virtual void stopAnimations(void);
                 /**
                  *
-                 * @param name
                  */
-                void pauseAnimation(const char* name);
-
-                //--------------------------------------------------------------
-
+                virtual void pauseAnimations(fgBool toggle = FG_TRUE);
                 /**
                  *
-                 * @param pAnimation
                  */
-                void resumeAnimation(anim::CAnimation* pAnimation);
+                virtual void resumeAnimations(void);
                 /**
                  *
-                 * @param name
                  */
-                void resumeAnimation(const std::string& name);
-                /**
-                 *
-                 * @param name
-                 */
-                void resumeAnimation(const char* name);
-
-                //--------------------------------------------------------------
-
-                /**
-                 *
-                 * @param pAnimation
-                 */
-                void restartAnimation(anim::CAnimation* pAnimation);
-                /**
-                 *
-                 * @param name
-                 */
-                void restartAnimation(const std::string& name);
-                /**
-                 *
-                 * @param name
-                 */
-                void restartAnimation(const char* name);
+                virtual void rewindAnimations(void);
 
                 //--------------------------------------------------------------
             protected:
@@ -276,6 +287,7 @@ namespace fg {
                 AnimationsVec const& getAnimations(void) const {
                     return m_animations;
                 }
+            public:
                 /**
                  * 
                  * @return 

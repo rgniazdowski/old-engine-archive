@@ -72,6 +72,8 @@ namespace fg {
         const SceneNodeType SCENE_NODE_TRIGGER = 5;
 
         ///
+        class CGfxMain;
+        ///
         class CSceneManager;
         ///
         class CScene3D;
@@ -103,6 +105,7 @@ namespace fg {
         public traits::CDrawable,
         public traits::CAnimated,
         public CTreeNodeObject {
+            friend class CGfxMain;
             friend class CSceneManager;
             //friend class CScene3D;
             //friend class CScene2D;
@@ -197,11 +200,6 @@ namespace fg {
              */
             virtual ~CSceneNode();
 
-            /**
-             * 
-             */
-            virtual void refreshGfxInternals(void);
-
         public:
             using drawable_type::draw;
             /**
@@ -210,15 +208,6 @@ namespace fg {
              */
             virtual void draw(const Matrix4f& modelMat);
 
-        protected:
-            /**
-             *
-             * @param delta
-             * @return
-             */
-            virtual void animate(float delta = 0.0f);
-
-        public:
             /**
              * 
              * @param delta
@@ -782,13 +771,6 @@ namespace fg {
                 return m_aabb;
             }
 
-            ////////////////////////////////////////////////////////////////////
-
-            /**
-             * 
-             */
-            virtual void updateAABB(void);
-
             //------------------------------------------------------------------
             /**
              * 
@@ -931,6 +913,20 @@ namespace fg {
             }
 
         protected:
+            /**
+             *
+             * @param delta
+             * @return
+             */
+            virtual void animate(float delta = 0.0f);
+            /**
+             *
+             */
+            virtual void updateAABB(void);
+            /**
+             *
+             */
+            virtual void refreshGfxInternals(void);
             /**
              * 
              * @param objectType

@@ -287,3 +287,206 @@ fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) 
     return status;
 }
 //------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::removeAnimations(void) {
+    animated_type::removeAnimations();
+    // SceneNodeObject is a special node type
+    // when added to the scene, children are added automatically
+    // based on the shapes of the model.
+    if(!m_pModel)
+        return;
+    if(!m_pModel->isAnimated())
+        return;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode) {
+            continue;
+        }
+        if(pNode->getNodeType() != SCENE_NODE_MESH) {
+            continue;
+        }
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
+            continue;
+        }
+        // now it is know that this mesh node is based on this objects' model;
+        // need to remove animations that are also based on this model
+        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
+        unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo* pInfo = &animations[animId];
+            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
+                pNodeMesh->removeAnimation(pInfo->pAnimation);
+                animId--;
+                nAnimations--;
+                continue;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::playAnimations(void) {
+    animated_type::playAnimations();
+    if(!m_pModel)
+        return;
+    if(!m_pModel->isAnimated())
+        return;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode) {
+            continue;
+        }
+        if(pNode->getNodeType() != SCENE_NODE_MESH) {
+            continue;
+        }
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
+            continue;
+        }
+        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
+        const unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo* pInfo = &animations[animId];
+            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
+                pInfo->play();
+                break;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::stopAnimations(void) {
+    animated_type::stopAnimations();
+    if(!m_pModel)
+        return;
+    if(!m_pModel->isAnimated())
+        return;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode) {
+            continue;
+        }
+        if(pNode->getNodeType() != SCENE_NODE_MESH) {
+            continue;
+        }
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
+            continue;
+        }
+        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
+        const unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo* pInfo = &animations[animId];
+            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
+                pInfo->stop();
+                break;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::pauseAnimations(fgBool toggle) {
+    animated_type::pauseAnimations();
+    if(!m_pModel)
+        return;
+    if(!m_pModel->isAnimated())
+        return;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode) {
+            continue;
+        }
+        if(pNode->getNodeType() != SCENE_NODE_MESH) {
+            continue;
+        }
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
+            continue;
+        }
+        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
+        const unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo* pInfo = &animations[animId];
+            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
+                if(toggle) {
+                    pInfo->togglePause();
+                } else {
+                    pInfo->pause();
+                }
+                continue;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::resumeAnimations(void) {
+    animated_type::resumeAnimations();
+    if(!m_pModel)
+        return;
+    if(!m_pModel->isAnimated())
+        return;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode) {
+            continue;
+        }
+        if(pNode->getNodeType() != SCENE_NODE_MESH) {
+            continue;
+        }
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
+            continue;
+        }
+        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
+        const unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo* pInfo = &animations[animId];
+            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
+                pInfo->resume();
+                continue;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::rewindAnimations(void) {
+    animated_type::rewindAnimations();
+    if(!m_pModel)
+        return;
+    if(!m_pModel->isAnimated())
+        return;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode) {
+            continue;
+        }
+        if(pNode->getNodeType() != SCENE_NODE_MESH) {
+            continue;
+        }
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
+            continue;
+        }
+        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
+        const unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo* pInfo = &animations[animId];
+            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
+                pInfo->rewind();
+                continue;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------

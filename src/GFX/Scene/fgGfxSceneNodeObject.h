@@ -27,6 +27,7 @@ namespace fg {
         struct SMeshBase;
         struct SShape;
         struct SSkinnedMesh;
+
         /**
          * 
          */
@@ -77,6 +78,7 @@ namespace fg {
              */
             virtual fgBool setAnimation(const char* name, unsigned int slot);
 
+        protected:
             /**
              * 
              */
@@ -86,6 +88,32 @@ namespace fg {
              * 
              */
             virtual void refreshGfxInternals(void);
+
+        public:
+            /**
+             *
+             */
+            virtual void removeAnimations(void);
+            /**
+             *
+             */
+            virtual void playAnimations(void);
+            /**
+             *
+             */
+            virtual void stopAnimations(void);
+            /**
+             *
+             */
+            virtual void pauseAnimations(fgBool toggle = FG_TRUE);
+            /**
+             *
+             */
+            virtual void resumeAnimations(void);
+            /**
+             *
+             */
+            virtual void rewindAnimations(void);
 
         private:
             /// Pointer to the external model on which this object is based

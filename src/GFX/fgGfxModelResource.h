@@ -374,8 +374,24 @@ namespace fg {
             }
             /**
              * 
+             * @param pShape
              * @return 
              */
+            fgBool hasShape(SShape* pShape) const {
+                return m_shapes.contains(pShape);
+            }
+            /**
+             *
+             * @param pMesh
+             * @return
+             */
+            fgBool hasMesh(const SMeshBase* pMesh) const {
+                for(unsigned int i=0;i<m_shapes.size();i++) {
+                    if(m_shapes[i]->mesh == pMesh)
+                        return FG_TRUE;
+                }
+                return FG_FALSE;
+            }
             /**
              * 
              * @return 

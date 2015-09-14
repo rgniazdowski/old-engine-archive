@@ -29,10 +29,14 @@ namespace fg {
         class CSceneManager;
         class CScene3D;
         class CSceneNodeObject;
+        //class CSceneNodeTrigger;
+
         /**
          * 
          */
         class CSceneNodeMesh : public CSceneNode {
+            friend class CSceneManager;
+            friend class CSceneNodeObject;
         public:
             ///
             typedef CSceneNode base_type;
@@ -40,8 +44,8 @@ namespace fg {
             typedef CSceneNodeMesh self_type;
             ///
             typedef CSceneNodeMesh type;
-            
-        public:
+
+        protected:
             /**
              * 
              */
@@ -95,12 +99,7 @@ namespace fg {
              * @param pMaterial
              */
             void setMaterial(SMaterial *pMaterial);
-            
-            /**
-             * 
-             */
-            virtual void refreshGfxInternals(void);
-            
+
         public:
             using drawable_type::draw;
             /**
@@ -108,12 +107,16 @@ namespace fg {
              * @param modelMat
              */
             virtual void draw(const Matrix4f& modelMat);
+
+        protected:
             /**
              * 
              */
             virtual void updateAABB(void);
-
-        protected:
+            /**
+             *
+             */
+            virtual void refreshGfxInternals(void);
             /**
              *
              * @param delta
