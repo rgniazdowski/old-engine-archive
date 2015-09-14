@@ -11,7 +11,6 @@
 #include "fgGfx2DScene.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CScene2D::CScene2D() {

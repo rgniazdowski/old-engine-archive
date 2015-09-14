@@ -498,15 +498,15 @@ void event::CInputHandler::addKeyPressed(KeyVirtualCode keyCode) {
     if(keyCode == FG_KEY_NULL)
         return;
     if((unsigned int)keyCode > (unsigned int)FG_NUM_VIRTUAL_KEYS)
-        return;    
+        return;
     if(m_keysPressedPool.find(keyCode) < 0 && !m_keyRepeats[(unsigned int)keyCode]) {
         // key is down for the first time (0 -> 1)
         m_keysPressedPool.push_back(keyCode);
     } else {
         // key is still being down (1 -> 1)
         m_keysDownPool.push_back(keyCode);
-    }
-    m_keyRepeats[(unsigned int)keyCode]++;
+    }    
+    //m_keyRepeats[(unsigned int)keyCode]++;
     toggleKeyboardMod(keyCode, FG_TRUE);
 }
 //------------------------------------------------------------------------------
@@ -654,7 +654,7 @@ void event::CInputHandler::processData(void) {
     // this is called once
     for(unsigned int i = 0; i < (unsigned int)m_keysPressedPool.size(); i++) {
         KeyVirtualCode keyCode = m_keysPressedPool[i];
-        {
+        if(m_keyRepeats[(unsigned int)keyCode] == 0) {
             SKey* keyEvent = (SKey*)m_eventMgr->requestEventStruct(event::KEY_PRESSED);
             CArgumentList* argList = m_eventMgr->requestArgumentList();
             keyEvent->pressed = FG_TRUE;
@@ -664,8 +664,9 @@ void event::CInputHandler::processData(void) {
             argList->push(SArgument::Type::ARG_TMP_POINTER, (void*)keyEvent);
             m_eventMgr->throwEvent(event::KEY_PRESSED, argList);
         }
+        m_keyRepeats[(unsigned int)keyCode]++;
     }
-    m_keysPressedPool.clear();
+    //m_keysPressedPool.clear();
 
     // Keys being still down - continuous callbacks
     for(unsigned int i = 0; i < (unsigned int)m_keysDownPool.size(); i++) {
@@ -824,7 +825,7 @@ void event::CInputHandler::processData(void) {
                             &touchPtr.m_swipeUp, &touchPtr.m_swipeDown, &touchPtr.m_swipeYSize); // OUT
 
             touchPtr.m_xSwipeSteps = touchPtr.m_swipeXSize / PIXELS_PER_STEP_X;
-            touchPtr.m_ySwipeSteps = touchPtr.m_swipeYSize / PIXELS_PER_STEP_Y;            
+            touchPtr.m_ySwipeSteps = touchPtr.m_swipeYSize / PIXELS_PER_STEP_Y;
             touchPtr.m_swipeXSize %= PIXELS_PER_STEP_X;
             touchPtr.m_swipeYSize %= PIXELS_PER_STEP_Y;
 

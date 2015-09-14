@@ -11,7 +11,6 @@
 #include "fgGfxQuadtree.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CQuadtree::CQuadtree() :
