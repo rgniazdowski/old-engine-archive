@@ -18,9 +18,7 @@
     #define FG_INC_MATH_DUAL_QUATERNION
     #define FG_INC_MATH_DUAL_QUATERNION_BLOCK
 
-    #ifndef FG_INC_MATHLIB
-        #include "fgMathLib.h"
-    #endif
+    #include "fgMathLib.h"
 
 namespace fg {
 
@@ -101,7 +99,7 @@ namespace fg {
             this->qe.w = -0.5f * (t.x * q.x + t.y * q.y + t.z * q.z);
             this->qe.x = 0.5f * (t.x * q.w + t.y * q.z - t.z * q.y);
             this->qe.y = 0.5f * (-t.x * q.z + t.y * q.w + t.z * q.x);
-            this->qe.z = 0.5f * (t.x * q.y - t.y * q.x + t.z * q.w);            
+            this->qe.z = 0.5f * (t.x * q.y - t.y * q.x + t.z * q.w);
             this->q0 = math::normalize(q);
             //this->q0 = q;
             this->qe = (quat_type(0, t) * this->q0) * 0.5f;
@@ -433,85 +431,84 @@ namespace fg {
     //--------------------------------------------------------------------------
 } // namespace fg
 
-    namespace glm {
+namespace glm {
+    /**
+     *
+     * @param dq
+     * @return
+     */
+    template<typename T, precision P>
+    inline detail::tmat3x3<T, P> toMat3(fg::DualQuaternionT<T, P> const& dq) {
+        return dq.toMat3();
+    }
+    /**
+     *
+     * @param dq
+     * @return
+     */
+    template<typename T, precision P>
+    inline detail::tmat4x4<T, P> toMat4(fg::DualQuaternionT<T, P> const& dq) {
+        return dq.toMat4();
 
-        /**
-         * 
-         * @param dq
-         * @return 
-         */
-        template<typename T, precision P>
-        inline detail::tmat3x3<T, P> toMat3(fg::DualQuaternionT<T, P> const& dq) {
-            return dq.toMat3();
-        }
-        /**
-         * 
-         * @param dq
-         * @return 
-         */
-        template<typename T, precision P>
-        inline detail::tmat4x4<T, P> toMat4(fg::DualQuaternionT<T, P> const& dq) {
-            return dq.toMat4();
+    }
+    /**
+     *
+     * @param dq
+     * @param v
+     * @return
+     */
+    template<typename T, precision P>
+    inline detail::tvec3<T, P> rotate(fg::DualQuaternionT<T, P> const& dq,
+                                      detail::tvec3<T, P> const& v) {
+        return dq.rotate(v);
+    }
+    /**
+     *
+     * @param dq
+     * @param v
+     * @return
+     */
+    template<typename T, precision P>
+    inline detail::tvec4<T, P> rotate(fg::DualQuaternionT<T, P> const& dq,
+                                      detail::tvec4<T, P> const& v) {
+        return dq.rotate(v);
+    }
+    /**
+     *
+     * @param dq
+     * @param angle
+     * @param axis
+     * @return
+     */
+    template<typename T, precision P>
+    inline fg::DualQuaternionT<T, P> rotate(fg::DualQuaternionT<T, P> const& dq,
+                                            T const& angle,
+                                            detail::tvec3<T, P> const& axis) {
+        fg::DualQuaternionT<T, P> result = dq;
+        result.q0 = glm::rotate(result.q0, angle, axis);
+        return result;
+    }
+    /**
+     *
+     * @param dq
+     * @return
+     */
+    template<typename T, precision P>
+    inline T const * value_ptr(fg::DualQuaternionT<T, P> const& dq) {
+        return &(dq[0]);
+    }
+    /**
+     *
+     * @param dq
+     * @return
+     */
+    template<typename T, precision P>
+    inline T * value_ptr(fg::DualQuaternionT<T, P>& dq) {
+        return &(dq[0]);
+    }
 
-        }
-        /**
-         * 
-         * @param dq
-         * @param v
-         * @return 
-         */
-        template<typename T, precision P>
-        inline detail::tvec3<T, P> rotate(fg::DualQuaternionT<T, P> const& dq,
-                                          detail::tvec3<T, P> const& v) {
-            return dq.rotate(v);
-        }
-        /**
-         * 
-         * @param dq
-         * @param v
-         * @return 
-         */
-        template<typename T, precision P>
-        inline detail::tvec4<T, P> rotate(fg::DualQuaternionT<T, P> const& dq,
-                                          detail::tvec4<T, P> const& v) {
-            return dq.rotate(v);
-        }
-        /**
-         * 
-         * @param dq
-         * @param angle
-         * @param axis
-         * @return 
-         */
-        template<typename T, precision P>
-        inline fg::DualQuaternionT<T, P> rotate(fg::DualQuaternionT<T, P> const& dq,
-                                         T const& angle,
-                                         detail::tvec3<T, P> const& axis) {
-            fg::DualQuaternionT<T, P> result = dq;
-            result.q0 = glm::rotate(result.q0, angle, axis);
-            return result;
-        }
-        /**
-         *
-         * @param dq
-         * @return
-         */
-        template<typename T, precision P>
-        inline T const * value_ptr(fg::DualQuaternionT<T, P> const& dq) {
-            return &(dq[0]);
-        }
-        /**
-         * 
-         * @param dq
-         * @return
-         */
-        template<typename T, precision P>
-        inline T * value_ptr(fg::DualQuaternionT<T, P>& dq) {
-            return &(dq[0]);
-        }
-
-    } // namespace math
-    namespace fg{
+} // namespace math
+namespace fg {
     typedef DualQuaternionT<float, math::precision::defaultp> DualQuaternionf;
     typedef DualQuaternionT<double, math::precision::defaultp> DualQuaterniond;
 

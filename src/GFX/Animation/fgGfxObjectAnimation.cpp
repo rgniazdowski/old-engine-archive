@@ -29,8 +29,8 @@ base_type(orig) { }
 gfx::anim::CObjectAnimation::~CObjectAnimation() { }
 //------------------------------------------------------------------------------
 
-void gfx::anim::CObjectAnimation::calculate(SAnimationFrameInfo& frameInfo,
-                                            float elapsed) {
+void gfx::anim::CObjectAnimation::calculate(SAnimationInfo& animationInfo,
+                                            float delta) {
  }
 //------------------------------------------------------------------------------
 

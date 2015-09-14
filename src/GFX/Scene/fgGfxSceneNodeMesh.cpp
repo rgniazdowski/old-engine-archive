@@ -103,8 +103,7 @@ void gfx::CSceneNodeMesh::setMaterial(SMaterial *pMaterial) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNodeMesh::animate(float delta) {
-    base_type::animate(delta);
+void gfx::CSceneNodeMesh::animate(float delta) {    
     SSkinnedMesh *pSkinnedMesh = getSkinnedMesh();
     if(!pSkinnedMesh)
         return;
@@ -113,11 +112,17 @@ void gfx::CSceneNodeMesh::animate(float delta) {
         return;
     const unsigned int nAnimations = animations.size();
     for(unsigned int animId = 0; animId < nAnimations; animId++) {
-        anim::SAnimationInfo &info = animations[animId];
-        // #FIXME - timesys
+        anim::SAnimationInfo &animationInfo = animations[animId];
         // calculate will check if animation is compatible
-        pSkinnedMesh->calculate(info.pAnimation, info.currentFrame, timesys::exact()/1.0f);
+        pSkinnedMesh->calculate(animationInfo, delta);
     }
+    // Base function version will merge all compatible animations into one.
+    // Merged animations can be retrieved by their type.
+    // Bone animations can be applied only to skinned mesh.
+    // Node animations contain only one transformation which is the final model
+    // matrix used to transform the node. This matrix is simply copied into
+    // m_modelMatrix. NOTE: Node transformation matrix is relative to the parent.
+    base_type::animate(delta);
 }
 //------------------------------------------------------------------------------
 
@@ -133,7 +138,7 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
             pProgram->use();
             // the index of animation should not be zero...
             pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
-                                 animations[0].currentFrame.dualQuaternions);
+                                 animations[0].curFrame.dualQuaternions);
         }
     }
     base_type::draw(modelMat);
@@ -183,7 +188,7 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
                 for(unsigned int boneId = 0; boneId < nBones; boneId++) {
                     Vec3f min, max;
                     pSkinnedMesh->boneEdges[boneId].transform(pSkinnedMesh,
-                                                              info.currentFrame.dualQuaternions,
+                                                              info.curFrame.dualQuaternions,
                                                               min, max);
                     m_aabb.merge(min);
                     m_aabb.merge(max);

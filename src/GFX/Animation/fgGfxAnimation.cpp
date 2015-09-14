@@ -66,7 +66,7 @@ gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const std::strin
         return NULL;
     SAnimationChannel* pChannel = NULL;
     const unsigned int n = count();
-    for(unsigned int i =0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         if(m_channels[i].targetName.compare(name) == 0) {
             pChannel = &m_channels[i];
             break;
@@ -81,7 +81,7 @@ gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const char* name
         return NULL;
     SAnimationChannel* pChannel = NULL;
     const unsigned int n = count();
-    for(unsigned int i=0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         if(m_channels[i].targetName.compare(name) == 0) {
             pChannel = &m_channels[i];
             break;
@@ -96,7 +96,7 @@ const gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const std:
         return NULL;
     const SAnimationChannel* pChannel = NULL;
     const unsigned int n = count();
-    for(unsigned int i =0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         if(m_channels[i].targetName.compare(name) == 0) {
             pChannel = &m_channels[i];
             break;
@@ -111,7 +111,7 @@ const gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const char
         return NULL;
     const SAnimationChannel* pChannel = NULL;
     const unsigned int n = count();
-    for(unsigned int i=0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         if(m_channels[i].targetName.compare(name) == 0) {
             pChannel = &m_channels[i];
             break;
@@ -154,7 +154,7 @@ fgBool gfx::anim::CAnimation::removeChannel(const std::string& name) {
         return FG_FALSE;
     unsigned int n = count();
     fgBool status = FG_FALSE;
-    for(unsigned int i =0;i<n;i++) {
+    for(unsigned int i = 0; i < n; i++) {
         if(m_channels[i].targetName.compare(name) == 0) {
             m_channels.remove(i, n);
             status = FG_TRUE;

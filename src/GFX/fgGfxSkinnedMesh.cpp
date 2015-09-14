@@ -17,6 +17,7 @@
 #include "fgGfxSkinnedMesh.h"
 #include "Animation/fgGfxAnimation.h"
 #include "Animation/fgGfxBoneAnimation.h"
+#include "Animation/fgGfxAnimationInfo.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -442,14 +443,18 @@ fgGFXboolean gfx::SSkinnedMesh::genBuffers(SMeshBase* pMeshSuper) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::SSkinnedMesh::calculate(anim::CAnimation* pAnimation,
-                                  anim::SAnimationFrameInfo& frameInfo,
-                                  float elapsed) {
-    if(!isAnimationCompatible(pAnimation))
+void gfx::SSkinnedMesh::calculate(anim::SAnimationInfo& animationInfo,
+                                  float delta) {
+    anim::CAnimation* pAnimation = animationInfo.pAnimation;
+    if(!pAnimation)
         return;
+    if(pAnimation->getType() != anim::Type::BONE)
+        return;
+    //if(!isAnimationCompatible(pAnimation))
+    //    return;
     anim::CBoneAnimation* pBoneAnimation = NULL;
     pBoneAnimation = static_cast<anim::CBoneAnimation*>(pAnimation);
-    pBoneAnimation->calculate(frameInfo, this->bones, elapsed);
+    pBoneAnimation->calculate(animationInfo, this->bones, delta);
 }
 //------------------------------------------------------------------------------
 

@@ -19,7 +19,7 @@
     #define FG_INC_GFX_OBJECT_ANIMATION_BLOCK
 
     #include "fgGfxAnimation.h"
-    
+
 namespace fg {
     namespace gfx {
         namespace anim {
@@ -53,8 +53,8 @@ namespace fg {
                  * @param frameInfo
                  * @param elapsed
                  */
-                virtual void calculate(SAnimationFrameInfo& frameInfo,
-                                       float elapsed = 0.0f);
+                virtual void calculate(SAnimationInfo& animationInfo,
+                                       float delta = 0.0f);
 
             private:
 

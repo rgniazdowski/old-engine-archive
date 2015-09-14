@@ -58,16 +58,16 @@ namespace fg {
                  * 
                  * @param pArmature
                  */
-                virtual void calculate(SAnimationFrameInfo& frameInfo,
-                                       float elapsed = 0.0f);
+                virtual void calculate(SAnimationInfo& animationInfo,
+                                       float delta = 0.0f);
                 /**
                  * 
                  * @param frameInfo
                  * @param elapsed
                  */
-                virtual void calculate(SAnimationFrameInfo& frameInfo,
+                virtual void calculate(SAnimationInfo& animationInfo,
                                        const BonesVec& bones,
-                                       float elapsed = 0.0f);
+                                       float delta = 0.0f);
 
             public:
                 /**

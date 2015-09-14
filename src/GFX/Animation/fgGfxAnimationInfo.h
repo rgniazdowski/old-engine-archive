@@ -18,8 +18,7 @@
     #define FG_INC_GFX_ANIMATION_INFO
     #define FG_INC_GFX_ANIMATION_INFO_BLOCK
 
-    #include "fgVector.h"
-    #include "Math/fgMathLib.h"
+    #include "fgTypes.h"
     #include "Math/fgDualQuaternion.h"
 
 namespace fg {
@@ -130,10 +129,34 @@ namespace fg {
                 typedef SAnimationInfo type;
 
             public:
+
+                /**
+                 *
+                 */
+                enum StateFlags {
+                    NO_FLAGS = 0x0000,
+                    PLAYING = 0x0001,
+                    PAUSED = 0x0002,
+                    STOPPED = 0x0004,
+                    LOOPED = 0x0008,
+                    REVERSE_LOOPED = 0x0010,
+                    PLAYING_REVERSED = 0x0020
+                }; // enum StateFlags
+
+            public:
                 /// External pointer to the currently used animation
                 CAnimation* pAnimation;
                 /// Information on currently calculated frame
-                SAnimationFrameInfo currentFrame;
+                SAnimationFrameInfo curFrame;
+                ///
+                float tempo;
+                ///
+
+            private:
+                StateFlags m_stateFlags;
+                int m_loopCount;
+
+                void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
 
             public:
                 /**
@@ -156,11 +179,87 @@ namespace fg {
                 void clear(void);
                 /**
                  *
-                 * @param elapsed
+                 * @param delta
                  */
-                void calculate(float elapsed = 0.0f);
+                void calculate(float delta = 0.0f);
+                /**
+                 *
+                 * @param delta
+                 */
+                void advanceTime(float delta = 0.0f);
+
+                //--------------------------------------------------------------
+
+                /**
+                 *
+                 */
+                void play(void);
+                /**
+                 *
+                 */
+                void stop(void);
+                /**
+                 *
+                 */
+                void pause(void);
+                /**
+                 *
+                 */
+                void togglePause(void);
+                /**
+                 *
+                 */
+                void resume(void);
+                /**
+                 *
+                 */
+                void rewind(void);
+                /**
+                 *
+                 * @param counter
+                 * @param shouldPlay
+                 */
+                void loop(int counter = -1, fgBool shouldPlay = FG_FALSE);
+                /**
+                 *
+                 * @param counter
+                 * @param shouldPlay
+                 */
+                void reloop(int counter = -1, fgBool shouldPlay = FG_FALSE);
+
+                //--------------------------------------------------------------
+                inline fgBool isPlaying(void) const {
+                    return (fgBool)!!(m_stateFlags & PLAYING);
+                }
+                inline fgBool isPaused(void) const {
+                    return (fgBool)!!(m_stateFlags & PAUSED);
+                }
+                inline fgBool isStopped(void) const {
+                    return (fgBool)!!((m_stateFlags & STOPPED) || (m_stateFlags == NO_FLAGS));
+                }
+                inline fgBool isLooped(void) const {
+                    return (fgBool)!!(m_stateFlags & LOOPED);
+                }
+                inline fgBool isReverseLooped(void) const {
+                    return (fgBool)!!(m_stateFlags & REVERSE_LOOPED);
+                }
+                inline fgBool isPlayingReversed(void) const {
+                    return (fgBool)!!(m_stateFlags & PLAYING_REVERSED);
+                }
 
             }; // struct SAnimationInfo
+
+            // FG_ENUM_FLAGS(SAnimationInfo::StateFlags);
+            FG_ENUM_FLAGS(SAnimationInfo::StateFlags);
+            //------------------------------------------------------------------
+            inline void SAnimationInfo::setFlag(const StateFlags flags, const fgBool toggle) {
+                if(toggle) {
+                    m_stateFlags |= flags;
+                } else {
+                    m_stateFlags |= flags;
+                    m_stateFlags ^= flags;
+                }
+            }
 
         } // namespace anim
     } // namespace gfx

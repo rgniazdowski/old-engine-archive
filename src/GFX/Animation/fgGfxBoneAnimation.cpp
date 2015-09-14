@@ -44,36 +44,38 @@ gfx::anim::CBoneAnimation::~CBoneAnimation() {
 }
 //------------------------------------------------------------------------------
 
-void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
-                                          float elapsed) {
+void gfx::anim::CBoneAnimation::calculate(SAnimationInfo& animationInfo,
+                                          float delta) {
     if(!m_pArmature)
         return;
     // this is mostly undesired
-    // this will calculate all the bones, when only leaf nodes are needed
-    calculate(frameInfo, m_pArmature->getBones(), elapsed);
+    // this will calculate all the bones
+    // calculate(frameInfo, m_pArmature->getBones(), elapsed);
 
+    // For bone animation one should not call base version of calculate()
+    // Need to use it with only subset of all bones
 }
 //------------------------------------------------------------------------------
 
-void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
+void gfx::anim::CBoneAnimation::calculate(SAnimationInfo& animInfo,
                                           const BonesVec& bones,
-                                          float elapsed) {
+                                          float delta) {
     if(!m_pArmature) {
         // nothing to do!
         return;
     }
-
+    animInfo.advanceTime(delta);
     // time scale? elapsed is in seconds...
-    const float currentTime = math::mod(elapsed * 1000.0f, getDurationInMs());
-    frameInfo.elapsed = (currentTime / getDurationInMs()) * getDurationInTicks();
+    const float currentTime = math::mod(animInfo.curFrame.elapsed * 1000.0f, getDurationInMs());
+    animInfo.curFrame.index = (currentTime / getDurationInMs()) * getDurationInTicks();
 
     //CArmature::BonesVec const& bones = m_pArmature->getBones();
     const unsigned int nBones = bones.size();
     if(!nBones) {
-        frameInfo.clear();
+        animInfo.curFrame.clear();
         return;
     }
-    frameInfo.resize(nBones);
+    animInfo.curFrame.resize(nBones);
     // frameInfo.transformations contains final bone matrices;
     // this vector will hold node transformation matrices #LOCK
     if(m_intermediate.capacity() < nBones)
@@ -91,28 +93,30 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationFrameInfo& frameInfo,
             continue;
         if(shouldInterpolate()) {
             channel.getMatrixInterpolated(m_intermediate[pBone->index],
-                                          frameInfo.elapsed);
+                                          animInfo.curFrame.index);
         } else {
             channel.getMatrix(m_intermediate[pBone->index],
-                              frameInfo.elapsed);
+                              animInfo.curFrame.index);
         }
     }
     for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
         SBone* pBone = bones[boneIdx];
         // start with the mesh-to-bone matrix
-        frameInfo.transformations[boneIdx] = pBone->offset;
+        animInfo.curFrame.transformations[boneIdx] = pBone->offset;
         const SBone* pTmp = pBone;
         // append all node transformations down the parent chain
         // until we're back at mesh coordinates again
         while(pTmp) {
-            frameInfo.transformations[boneIdx] = m_intermediate[pTmp->index] * frameInfo.transformations[boneIdx];
+            animInfo.curFrame.transformations[boneIdx] =
+                    m_intermediate[pTmp->index] *
+                    animInfo.curFrame.transformations[boneIdx];
             pTmp = pTmp->pParent;
         }
         //frameInfo.transformations[i] = Matrix4f();
         // now frameInfo contains proper matrix transformations
         // these matrices are not optimal (4x4 is too big)
         // convert mat4 to dual quaternion
-        frameInfo.dualQuaternions[boneIdx].initializeFrom(frameInfo.transformations[boneIdx]);
+        animInfo.curFrame.dualQuaternions[boneIdx].initializeFrom(animInfo.curFrame.transformations[boneIdx]);
     }
 }
 //------------------------------------------------------------------------------

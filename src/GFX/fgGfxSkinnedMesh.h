@@ -27,7 +27,7 @@ namespace fg {
         namespace anim {
             class CAnimation;
             struct SAnimationFrameInfo;
-            struct SAnimationFrame;
+            struct SAnimationInfo;
         } // namespace anim
 
         struct SSkinnedMesh {
@@ -171,14 +171,12 @@ namespace fg {
             virtual void refreshSkinningInfo() = 0;
 
             /**
-             * Helper function for calculating current animation frame
-             * @param pAnimation    Animation object to use (must be bone subtype)
-             * @param frameInfo     Reference to special frame info structure
+             * Helper function for calculating current animation frame             
+             * @param frameInfo     Reference to special animation info structure
              * @param elapsed       Elapsed time (since app init) - not animation time
              */
-            void calculate(anim::CAnimation* pAnimation,
-                           anim::SAnimationFrameInfo& frameInfo,
-                           float elapsed = 0.0f);
+            void calculate(anim::SAnimationInfo& animationInfo,
+                           float delta = 0.0f);
 
             fgBool isAnimationCompatible(const anim::CAnimation* pAnimation) const;
 
@@ -281,13 +279,12 @@ namespace fg {
              * 
              */
             virtual void refreshSkinningInfo(void);
-
             /**
              * 
              * @return
              */
             virtual AttributeMask attribMask(void) const {
-                return base_type::attribMask() | ATTRIBUTE_BLEND_WEIGHTS_BIT| ATTRIBUTE_BLEND_INDICES_BIT;
+                return base_type::attribMask() | ATTRIBUTE_BLEND_WEIGHTS_BIT | ATTRIBUTE_BLEND_INDICES_BIT;
             }
 
         protected:
@@ -384,13 +381,12 @@ namespace fg {
              *
              */
             virtual void refreshSkinningInfo(void);
-
             /**
              *
              * @return
              */
             virtual AttributeMask attribMask(void) const {
-                return base_type::attribMask() | ATTRIBUTE_BLEND_WEIGHTS_BIT| ATTRIBUTE_BLEND_INDICES_BIT;
+                return base_type::attribMask() | ATTRIBUTE_BLEND_WEIGHTS_BIT | ATTRIBUTE_BLEND_INDICES_BIT;
             }
 
         protected:

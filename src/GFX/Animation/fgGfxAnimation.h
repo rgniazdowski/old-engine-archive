@@ -23,14 +23,15 @@
     #endif
 
     #include "fgGfxAnimationChannel.h"    
-    #include "fgVector.h"
+    #include "fgVector.h"    
 
 namespace fg {
     namespace gfx {
         namespace anim {
 
             struct SAnimationFrameInfo;
-
+            struct SAnimationInfo;
+            
             enum class Type {
                 INVALID = 0,
                 NODE = 1,
@@ -75,7 +76,7 @@ namespace fg {
                  * @param frameInfo
                  * @param elapsed
                  */
-                virtual void calculate(SAnimationFrameInfo& frameInfo,
+                virtual void calculate(SAnimationInfo& animationInfo,
                                        float elapsed = 0.0f) = 0;
 
                 /**

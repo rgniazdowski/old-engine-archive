@@ -237,6 +237,7 @@
             <word>rasterized</word>
             <word>readdir</word>
             <word>realloc</word>
+            <word>reloop</word>
             <word>renderbuffer</word>
             <word>renderbuffers</word>
             <word>rfactor</word>
