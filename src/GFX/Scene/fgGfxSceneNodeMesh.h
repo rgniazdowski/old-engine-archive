@@ -18,18 +18,17 @@
     #define FG_INC_GFX_SCENE_NODE_MESH
     #define FG_INC_GFX_SCENE_NODE_MESH_BLOCK
 
-    #ifndef FG_INC_GFX_SCENE_NODE
-        #include "fgGfxSceneNode.h"
-    #endif
+    #include "fgGfxSceneNode.h"
+    #include "GFX/fgGfxMesh.h"
 
-    #ifndef FG_INC_GFX_MESH
-        #include "fgGfxMesh.h"
-    #endif
 namespace fg {
     namespace gfx {
 
         struct SSkinnedMesh;
 
+        class CSceneManager;
+        class CScene3D;
+        class CSceneNodeObject;
         /**
          * 
          */

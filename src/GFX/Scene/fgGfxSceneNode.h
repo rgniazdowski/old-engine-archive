@@ -17,18 +17,10 @@
     #include "GFX/fgGfxAABoundingBox.h"
     #include "GFX/fgGfxBoundingVolume.h"
 
-    #ifndef FG_INC_GFX_DRAWABLE
-        #include "GFX/fgGfxDrawable.h"
-    #endif
-    #ifndef FG_INC_GFX_ANIMATED
-        #include "GFX/fgGfxAnimated.h"
-    #endif
-    #ifndef FG_INC_GFX_DRAW_CALL
-        #include "GFX/fgGfxDrawCall.h"
-    #endif
-    #ifndef FG_INC_GFX_TREE_NODE_OBJECT
-        #include "fgGfxTreeNodeObject.h"
-    #endif
+    #include "GFX/fgGfxDrawable.h"
+    #include "GFX/fgGfxAnimated.h"
+    #include "GFX/fgGfxDrawCall.h"
+    #include "fgGfxTreeNodeObject.h"
 
     #include "Physics/fgCollisionBody.h"
 
@@ -640,7 +632,7 @@ namespace fg {
              * @param index
              * @return
              */
-            self_type* getChild(const unsigned int index = 0);
+            self_type* getChildByIndex(const unsigned int index = 0);
 
             /**
              * 
@@ -667,7 +659,7 @@ namespace fg {
              */
             fgBool hasChild(const char* childName);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -683,7 +675,7 @@ namespace fg {
                 return !isEmpty();
             }
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -706,7 +698,7 @@ namespace fg {
                 return m_children.size();
             }
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @param pParent
@@ -722,7 +714,7 @@ namespace fg {
                 return m_pParent;
             }
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -738,7 +730,7 @@ namespace fg {
                 return m_nodeType;
             }
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -860,7 +852,7 @@ namespace fg {
                 setFlag(SELECTED, FG_FALSE);
             }
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             /**
              * 
              * @param b

@@ -210,7 +210,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline unsigned int numCallbacks(void) const {
+            inline unsigned int getCallbacksCount(void) const {
                 return m_callbacks.size();
             }
             /**
@@ -218,7 +218,7 @@ namespace fg {
              * @return 
              */
             inline fgBool hasCallbacks(void) const {
-                return (fgBool)!!numCallbacks();
+                return (fgBool)!!getCallbacksCount();
             }
 
         protected:

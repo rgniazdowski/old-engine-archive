@@ -15,6 +15,7 @@
 #include "GFX/Textures/fgTextureResource.h"
 #include "GFX/fgGfxFrustum.h"
 #include "GFX/fgGfxPrimitives.h"
+#include "GFX/fgGfxModelResource.h"
 
 #include "Resource/fgResourceManager.h"
 #include "Util/fgStrings.h"
@@ -1030,14 +1031,14 @@ void gfx::CSceneManager::render(void) {
 
 #if defined(FG_DEBUG)
             CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
-            SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;
+            SMeshBase* sphereMesh = sphereModel->getShapes()[0]->mesh;
             if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
                 CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
                 if(pSceneObj->getModel()) {
                     m_MVP.calculate(pSceneObj->getModelMatrix());
                     pProgram->setUniform(&m_MVP);
                     // Current aabb - it's in model space (local)
-                    AABB3Df& modelBox = pSceneObj->getModel()->getRefAABB();
+                    AABB3Df& modelBox = pSceneObj->getModel()->getAABB();
                     // Initial Bounding box
                     primitives::drawAABBLines(modelBox, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
                     // Draw transformed bounding box #FIXME - colors FUBAR

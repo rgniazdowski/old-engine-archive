@@ -19,6 +19,7 @@
 #include "fgGfxSceneManager.h"
 #include "GFX/Shaders/fgGfxShaderManager.h"
 #include "GFX/Animation/fgGfxAnimation.h"
+#include "GFX/fgGfxModelResource.h"
 #include "GFX/fgGfxSkinnedMesh.h"
 #include "Util/fgStrings.h"
 #include "fgLog.h"
@@ -26,7 +27,7 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-gfx::CSceneNodeObject::CSceneNodeObject(gfx::CModel *pModel, gfx::CSceneNode *pParent) :
+gfx::CSceneNodeObject::CSceneNodeObject(CModelResource* pModel, gfx::CSceneNode* pParent) :
 CSceneNode(SCENE_NODE_OBJECT, pParent),
 m_pModel(NULL) {
     CSceneNode::setNodeType(SCENE_NODE_OBJECT);
@@ -73,8 +74,8 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
     }
     m_pModel->genBuffers();
     SMaterial* pMainMaterial = m_pModel->getMainMaterial();
-    CModel::ShapesVecItor sit = m_pModel->getRefShapes().begin(),
-            send = m_pModel->getRefShapes().end();
+    CModel::ShapesVecItor sit = m_pModel->getShapes().begin(),
+            send = m_pModel->getShapes().end();
 
     for(; sit != send; sit++) {
         if(!(*sit))
@@ -117,9 +118,9 @@ void gfx::CSceneNodeObject::updateAABB(void) {
     if(body) {
         if(m_pModel && !isAutoScale()) {
             if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
-                body->setRadius(math::length(m_scale * m_pModel->getRefAABB().getExtent()));
+                body->setRadius(math::length(m_scale * m_pModel->getAABB().getExtent()));
             } else {
-                body->setHalfSize(m_scale * (m_pModel->getRefAABB().getExtent()));
+                body->setHalfSize(m_scale * (m_pModel->getAABB().getExtent()));
             }
             body->setInertiaTensor();
             body->calculateDerivedData();
@@ -130,8 +131,8 @@ void gfx::CSceneNodeObject::updateAABB(void) {
     }
     if(m_pModel) {
         if(!m_pModel->isAnimated()) {
-            m_aabb.min = m_pModel->getRefAABB().min;
-            m_aabb.max = m_pModel->getRefAABB().max;
+            m_aabb.min = m_pModel->getAABB().min;
+            m_aabb.max = m_pModel->getAABB().max;
             m_aabb.transform(m_modelMat);
         } else {
             m_aabb.invalidate();
@@ -139,7 +140,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
             // this begins to suck beyond comprehension.
             const unsigned int nChildren = getChildrenCount();
             for(unsigned int childId = 0; childId < nChildren; childId++) {
-                CSceneNode* pNode = getChild(childId);
+                CSceneNode* pNode = getChildByIndex(childId);
                 if(!pNode)
                     continue;
                 if(pNode->getNodeType() != gfx::SCENE_NODE_MESH) {
@@ -153,7 +154,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
         if(body && !isAutoScale()) {
             m_aabb.radius = body->getRadius();
         } else {
-            m_aabb.radius = math::length(m_scale * m_pModel->getRefAABB().getExtent());
+            m_aabb.radius = math::length(m_scale * m_pModel->getAABB().getExtent());
         }
     }
 }
@@ -180,8 +181,8 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             // Would need to clear the children list?
         } // SRSLY? #FIXME
 
-        gfx::CModel::ShapesVec &shapes = pModel->getRefShapes();
-        setBoundingVolume(pModel->getRefAABB());
+        gfx::CModel::ShapesVec &shapes = pModel->getShapes();
+        setBoundingVolume(pModel->getAABB());
         gfx::CModel::ShapesVecItor sit = shapes.begin(), send = shapes.end();
         unsigned int sIdx = 0;
         for(; sit != send; sit++) {
@@ -266,7 +267,7 @@ fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) 
         // now need to set this for all skinned meshes        
         const unsigned int nChildren = getChildrenCount();
         for(unsigned int childId = 0; childId < nChildren; childId++) {
-            CSceneNode* pNode = getChild(childId);
+            CSceneNode* pNode = getChildByIndex(childId);
             if(!pNode)
                 continue;
             if(pNode->getNodeType() != gfx::SCENE_NODE_MESH) {

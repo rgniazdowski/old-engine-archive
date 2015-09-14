@@ -536,7 +536,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 break;
             case SDL_SYSWMEVENT: /**< System specific event */
                 break;
-
+                
                 /* Keyboard events */
             case SDL_KEYDOWN: /**< Key pressed */
                 if(this->m_engineMain) {

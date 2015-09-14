@@ -669,7 +669,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const char *childName) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode* gfx::CSceneNode::getChild(const unsigned int index) {
+gfx::CSceneNode* gfx::CSceneNode::getChildByIndex(const unsigned int index) {
     if(!getChildrenCount())
         return NULL;
     if(index >= getChildrenCount())

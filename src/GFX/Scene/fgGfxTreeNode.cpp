@@ -18,7 +18,6 @@
 #include "fgGfxSceneNode.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::STreeNodeBase::~STreeNodeBase() {

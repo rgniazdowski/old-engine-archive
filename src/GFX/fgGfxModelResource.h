@@ -343,49 +343,51 @@ namespace fg {
              *
              * @param shape
              */
-            void addShape(SShape *shape);
+            void addShape(SShape* pShape);
             /**
              * 
              * @param mesh
              * @param name
              */
-            SShape* addShape(SMeshBase *pMesh, const char *name);
+            SShape* addShape(SMeshBase* pMesh, const char *name);
             /**
              *
              * @param mesh
              * @param name
              */
-            SShape* addShape(SMeshBase *pMesh, const std::string& name);
+            SShape* addShape(SMeshBase* pMesh, const std::string& name);
 
         public:
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
              */
-            ShapesVec& getRefShapes(void) {
+            ShapesVec& getShapes(void) {
                 return m_shapes;
             }
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
              */
-            ShapesVec const& getRefShapes(void) const {
-                //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
-                //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
+            ShapesVec const& getShapes(void) const {
                 return m_shapes;
             }
             /**
              * 
              * @return 
              */
-            AABoundingBox3Df& getRefAABB(void) {
+            /**
+             * 
+             * @return 
+             */
+            AABoundingBox3Df& getAABB(void) {
                 return m_aabb;
             }
             /**
              * 
              * @return 
              */
-            AABoundingBox3Df const& getRefAABB(void) const {
+            AABoundingBox3Df const& getAABB(void) const {
                 return m_aabb;
             }
 
@@ -765,7 +767,7 @@ namespace fg {
             /// Model animation information (armature & animations)
             SModelSkinning m_skinning;
             /// Global material override definition
-            SMaterial *m_materialOverride;
+            SMaterial* m_materialOverride;
             /// Array holding all basic shapes of the model
             ShapesVec m_shapes;
             /// Main bounding box - it's for whole model (all shapes)

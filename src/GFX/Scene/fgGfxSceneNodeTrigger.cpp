@@ -17,7 +17,6 @@
 #include "fgGfxSceneNodeTrigger.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CSceneNodeTrigger::CSceneNodeTrigger() : CSceneNode(SCENE_NODE_TRIGGER), m_callbacks() {

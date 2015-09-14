@@ -2130,7 +2130,7 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
 
     // Register GfxSceneNodeTrigger metatable (TRIGGER OBJECT)
     LPCD::Class(m_luaState->GetCState(), metatableSceneNodeTriggerName, metatableSceneNodeName)
-            .ObjectDirect("numCallbacks", (gfx::CSceneNodeTrigger*)0, &gfx::CSceneNodeTrigger::numCallbacks)
+            .ObjectDirect("numCallbacks", (gfx::CSceneNodeTrigger*)0, &gfx::CSceneNodeTrigger::getCallbacksCount)
             .ObjectDirect("hasCallbacks", (gfx::CSceneNodeTrigger*)0, &gfx::CSceneNodeTrigger::hasCallbacks)
             ;
 

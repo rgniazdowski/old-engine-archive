@@ -744,7 +744,6 @@ void gfx::CGfxMain::render(void) {
     m_shaderMgr->useProgram(sPlainEasyProgram);
     sPlainEasyProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
     sPlainEasyProgram->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, (fgGFXint)0);
-
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::render");
@@ -882,7 +881,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(event::CArgumentList* argv) {
     if(pResource->getResourceType() == resource::MODEL3D) {
 
         CModelResource* pModel = static_cast<CModelResource*>(pResource);
-        CModelResource::ShapesVec& shapes = pModel->getRefShapes();
+        CModelResource::ShapesVec& shapes = pModel->getShapes();
         resource::CResourceManager* pResourceMgr = static_cast<resource::CResourceManager*>(m_pResourceMgr);
 
         if(pModel) {

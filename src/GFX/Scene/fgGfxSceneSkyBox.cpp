@@ -20,7 +20,6 @@
 #include "fgGfxSceneSkyBox.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CSceneSkyBox::CSceneSkyBox() :

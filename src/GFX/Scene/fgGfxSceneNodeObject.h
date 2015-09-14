@@ -18,19 +18,15 @@
     #define FG_INC_GFX_SCENE_NODE_OBJECT
     #define FG_INC_GFX_SCENE_NODE_OBJECT_BLOCK
 
-    #ifndef FG_INC_GFX_SCENE_NODE
-        #include "fgGfxSceneNode.h"
-    #endif
-    #ifndef FG_INC_GFX_DRAW_CALL
-        #include "GFX/fgGfxDrawCall.h"
-    #endif
-    #ifndef FG_INC_GFX_MODEL_RESOURCE
-        #include "GFX/fgGfxModelResource.h"
-    #endif
+    #include "fgGfxSceneNode.h"    
 
 namespace fg {
     namespace gfx {
 
+        class CModelResource;
+        struct SMeshBase;
+        struct SShape;
+        struct SSkinnedMesh;
         /**
          * 
          */
@@ -47,7 +43,7 @@ namespace fg {
             /**
              * 
              */
-            CSceneNodeObject(gfx::CModel *pModel = NULL, CSceneNode *pParent = NULL);
+            CSceneNodeObject(CModelResource *pModel = NULL, CSceneNode *pParent = NULL);
             /**
              * 
              * @param orig
@@ -63,12 +59,12 @@ namespace fg {
              * 
              * @param pModel
              */
-            virtual void setModel(gfx::CModel *pModel);
+            virtual void setModel(CModelResource *pModel);
             /**
              * 
              * @return 
              */
-            gfx::CModel *getModel(void) const {
+            CModelResource *getModel(void) const {
                 return m_pModel;
             }
 
@@ -93,7 +89,7 @@ namespace fg {
 
         private:
             /// Pointer to the external model on which this object is based
-            CModel *m_pModel;
+            CModelResource *m_pModel;
         }; // class CSceneNodeObject
 
     } // namespace gfx
