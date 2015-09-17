@@ -52,6 +52,7 @@
             <word>aabb</word>
             <word>Accel</word>
             <word>Accessor</word>
+            <word>alloccurrences</word>
             <word>anim</word>
             <word>antialiased</word>
             <word>antialiasing</word>
@@ -78,6 +79,7 @@
             <word>bvec</word>
             <word>bvh</word>
             <word>callbacks</word>
+            <word>caseinsensitive</word>
             <word>centre</word>
             <word>Chincisan</word>
             <word>codec</word>
@@ -172,6 +174,7 @@
             <word>mainmenu</word>
             <word>malloc</word>
             <word>masse</word>
+            <word>matchpart</word>
             <word>mediump</word>
             <word>mergemeshes</word>
             <word>meshaos</word>
@@ -188,6 +191,7 @@
             <word>multitexturing</word>
             <word>mutex</word>
             <word>namespace</word>
+            <word>nocase</word>
             <word>noclip</word>
             <word>nofixcenter</word>
             <word>nohighquality</word>
@@ -202,6 +206,7 @@
             <word>ny</word>
             <word>nz</word>
             <word>obj</word>
+            <word>objects'</word>
             <word>octree</word>
             <word>ommit</word>
             <word>overallocation</word>
@@ -237,6 +242,7 @@
             <word>rasterized</word>
             <word>readdir</word>
             <word>realloc</word>
+            <word>regex</word>
             <word>reloop</word>
             <word>renderbuffer</word>
             <word>renderbuffers</word>
@@ -269,6 +275,7 @@
             <word>subchunks</word>
             <word>subpath</word>
             <word>subpixel</word>
+            <word>substr</word>
             <word>texcoords</word>
             <word>texel</word>
             <word>texels</word>

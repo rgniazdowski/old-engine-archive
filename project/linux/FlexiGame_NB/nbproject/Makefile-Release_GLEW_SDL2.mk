@@ -52,9 +52,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1082467756/fgGfxAnimationChannel.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxAnimationInfo.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxArmature.o \
+	${OBJECTDIR}/_ext/1082467756/fgGfxBlending.o \
+	${OBJECTDIR}/_ext/1082467756/fgGfxBlendingInfo.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxBone.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxBoneAnimation.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o \
+	${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o \
 	${OBJECTDIR}/_ext/293675389/fgParticleSystem.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o \
@@ -335,6 +338,16 @@ ${OBJECTDIR}/_ext/1082467756/fgGfxArmature.o: ../../../src/GFX/Animation/fgGfxAr
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxArmature.o ../../../src/GFX/Animation/fgGfxArmature.cpp
 
+${OBJECTDIR}/_ext/1082467756/fgGfxBlending.o: ../../../src/GFX/Animation/fgGfxBlending.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxBlending.o ../../../src/GFX/Animation/fgGfxBlending.cpp
+
+${OBJECTDIR}/_ext/1082467756/fgGfxBlendingInfo.o: ../../../src/GFX/Animation/fgGfxBlendingInfo.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxBlendingInfo.o ../../../src/GFX/Animation/fgGfxBlendingInfo.cpp
+
 ${OBJECTDIR}/_ext/1082467756/fgGfxBone.o: ../../../src/GFX/Animation/fgGfxBone.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
 	${RM} "$@.d"
@@ -349,6 +362,11 @@ ${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o: ../../../src/GFX/Animation/
 	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o ../../../src/GFX/Animation/fgGfxObjectAnimation.cpp
+
+${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o: ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp
 
 ${OBJECTDIR}/_ext/293675389/fgParticleSystem.o: ../../../src/GFX/Particles/fgParticleSystem.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/293675389

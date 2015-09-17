@@ -66,12 +66,18 @@
           <itemPath>../../../src/GFX/Animation/fgGfxAnimationInfo.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxArmature.cpp</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxArmature.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBlending.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBlending.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBlendingInfo.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxBlendingInfo.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxBone.cpp</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxBone.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxBoneAnimation.cpp</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxBoneAnimation.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxObjectAnimation.cpp</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxObjectAnimation.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxSkinningInfo.cpp</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxSkinningInfo.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Particles" displayName="Particles" projectFiles="true">
           <itemPath>../../../src/GFX/Particles/fgParticle.h</itemPath>
@@ -854,6 +860,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
             ex="false"
             tool="1"
@@ -880,6 +906,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2661,6 +2697,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
             ex="false"
             tool="1"
@@ -2687,6 +2743,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4434,6 +4500,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
             ex="false"
             tool="1"
@@ -4460,6 +4546,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6193,6 +6289,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
             ex="false"
             tool="1"
@@ -6219,6 +6335,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7971,6 +8097,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
             ex="false"
             tool="1"
@@ -7997,6 +8143,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9741,6 +9897,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlending.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxBlendingInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxBone.cpp"
             ex="false"
             tool="1"
@@ -9767,6 +9943,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxObjectAnimation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxSkinningInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
