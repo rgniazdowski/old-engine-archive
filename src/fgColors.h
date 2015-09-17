@@ -18,10 +18,7 @@
     #define FG_INC_COLORS
     #define FG_INC_COLORS_BLOCK
 
-    #ifndef FG_INC_GFX_COLOR
-        #include "GFX/fgGfxColor.h"
-    #endif
-
+    #include "GFX/fgGfxColor.h"
     #include "fgBool.h"
     #include <string>
 
@@ -44,7 +41,7 @@ namespace fg {
          * @return 
          */
         fgBool isInit(void);
-        
+
         /**
          * 
          * @param name

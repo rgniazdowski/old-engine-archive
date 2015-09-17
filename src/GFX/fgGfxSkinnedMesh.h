@@ -180,6 +180,31 @@ namespace fg {
 
             fgBool isAnimationCompatible(const anim::CAnimation* pAnimation) const;
 
+            /**
+             * This function matches bones to given axis-aligned bounding box.
+             * Returns only the bones that are fully inside.
+             * Matching is based on the mesh (and bones) in bind-pose.
+             * @param aabb          AABB to which match the bones.
+             * @param matchedBones  Vector with pointers to matched bones. It will
+             *                      be cleared before first insertion.
+             * @param fuzzyEdge     Fraction from 0.0 to 1.0 telling how much
+             *                      error is allowed (where 1.0 is 100%)
+             * @return              Number of found bones.
+             */
+            unsigned int matchBones(const AABoundingBox3Df& aabb,
+                                    BonesVec& matchedBones,
+                                    float fuzzyEdge = 0.0f) const;
+            /**
+             *
+             * @param aabb
+             * @param matchedBones
+             * @param fuzzyEdge
+             * @return
+             */
+            unsigned int matchBones(const AABoundingBox3Df& aabb,
+                                    CVector<unsigned int>& matchedBones,
+                                    float fuzzyEdge = 0.0f) const;
+
         protected:
             /**
              *

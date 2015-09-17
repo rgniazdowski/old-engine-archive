@@ -476,6 +476,97 @@ fgBool gfx::SSkinnedMesh::isAnimationCompatible(const anim::CAnimation* pAnimati
 }
 //------------------------------------------------------------------------------
 
+unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
+                                           BonesVec& matchedBones,
+                                           float fuzzyEdge) const {
+    unsigned int nFound = 0;
+    CVector<unsigned int> matchedIdxs;
+    nFound = matchBones(aabb, matchedIdxs, fuzzyEdge);
+    if(nFound) {
+        matchedBones.clear();
+        matchedBones.reserve(nFound);
+        matchedBones.resize(nFound);
+    }
+    for(unsigned int i = 0; i < nFound; i++) {
+        matchedBones[i] = bones[matchedIdxs[i]];
+    }
+    return nFound;
+}
+//------------------------------------------------------------------------------
+
+unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
+                                           CVector<unsigned int>& matchedBones,
+                                           float fuzzyEdge) const {
+    const unsigned int nBones = boneBoxes.size();
+    if(!nBones)
+        return 0;
+    //--------------------------------
+    // Mode I:
+    // ratio = boneBox / aabbBox;
+    // ratio <= limit;
+    //--------------------------------
+    // Mode II:
+    // ratio = boneBox / aabbBox;
+    // ratio >= limit;
+    //--------------------------------
+    // Mode III:
+    // ratio = fuzzBox / aabbBox;
+    // ratio <= limit;
+    //--------------------------------
+    // Mode IV:
+    // ratio = fuzzBox / aabbBox;
+    // ratio >= limit;
+    //--------------------------------
+    // Mode V:
+    // ratio = fuzzBox / boneBox;
+    // ratio <= limit;
+    //--------------------------------
+    // Mode VI:
+    // ratio = fuzzBox / boneBox;
+    // ratio >= limit;
+    //--------------------------------
+    fgBool shouldFuzzy = (fgBool)!!(fuzzyEdge > FG_EPSILON && fuzzyEdge <= 1.0f);
+    matchedBones.clear();
+    for(unsigned int i = 0; i < nBones; i++) {
+        const AABoundingBox3Df& boneBox = boneBoxes[i];
+        //printf("Testing bone[%d][%s]: min:(%.2f;%.2f;%.2f) max:(%.2f;%.2f;%.2f)\n",
+        //       i, bones[i]->name.c_str(),
+        //       box.min.x, box.min.y, box.min.z,
+        //       box.max.x, box.max.y, box.max.z);
+        if(aabb.test(boneBox)) {
+            matchedBones.push_back(i);
+        } else if(shouldFuzzy) {
+            AABoundingBox3Df fuzz;
+            fuzz.intersect(aabb, boneBox);
+            if(!fuzz.isValid())
+                continue;
+            const float ratio[3] = {fuzz.width() / boneBox.width(),
+                                    fuzz.height() / boneBox.height(),
+                                    fuzz.depth() / boneBox.depth()};
+            fgBool passed = FG_FALSE;
+            for(unsigned int r = 0; r < 3; r++) {
+                if(ratio[r] <= fuzzyEdge && ratio[r] <= 1.0f) {
+                    passed = FG_TRUE;
+                    break;
+                }
+            }
+            if(passed) {
+                /*
+                printf("FUZZBOX: min:(%.2f;%.2f;%.2f) max:(%.2f;%.2f;%.2f) w:%.2f|h:%.2f|d:%.2f\n",
+                       fuzz.min.x, fuzz.min.y, fuzz.min.z,
+                       fuzz.max.x, fuzz.max.y, fuzz.max.z,
+                       fuzz.width(), fuzz.height(), fuzz.depth());
+                printf("Matched[%s] -> volume fuzz: %.2f | volume aabbquery: %.2f | ratio: %.2f|%.2f|%.2f\n",
+                       bones[i]->name.c_str(), fuzz.getVolume(), aabb.getVolume(), ratio[0], ratio[1], ratio[2]);
+                 */
+                matchedBones.push_back(i);
+            }
+        }
+    }
+    return matchedBones.size();
+}
+//------------------------------------------------------------------------------
+
 /******************************************************************************
  * SKINNED MESH SOA FUNCTIONS - STRUCTURE OF ARRAYS
  ******************************************************************************/

@@ -623,15 +623,13 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
             resExtType = resource::SOUND;
         } else if(strings::endsWith(fext, "particle.ini", FG_TRUE)) {
             resExtType = resource::PARTICLE_EFFECT;
-        } else {
         }
 
-        if(resExtType != resource::INVALID || isConfig) {
+        if(isConfig || resExtType != resource::INVALID) {
             isFound = FG_TRUE;
             break;
         }
     };
-
     if(!isFound)
         return NULL;
     if(isConfig) {
