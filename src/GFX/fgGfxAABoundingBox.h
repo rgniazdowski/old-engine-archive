@@ -37,18 +37,7 @@ namespace fg {
         /**
          * 
          */
-        class AABBHelper {
-        private:
-            /**
-             * 
-             */
-            AABBHelper() { }
-            /**
-             * 
-             */
-            ~AABBHelper() { }
-
-        public:
+        namespace aabb_helper {
             /**
              * 
              * @param bbox
@@ -58,9 +47,9 @@ namespace fg {
              * @return 
              */
             template <class TBoxType>
-            static TBoxType &setBoundsFromData(TBoxType& bbox, const void *data,
-                                               const typename TBoxType::size_type stride,
-                                               const typename TBoxType::size_type count = 1) {
+            TBoxType &setBoundsFromData(TBoxType& bbox, const void *data,
+                                        const typename TBoxType::size_type stride,
+                                        const typename TBoxType::size_type count = 1) {
                 if(!data || !count || !stride)
                     return bbox;
                 // need to reset
@@ -83,7 +72,7 @@ namespace fg {
                 }
                 return bbox;
             }
-        };
+        } // namespace aabb_helper
 
         /**
          *
@@ -145,6 +134,7 @@ namespace fg {
              *
              */
             virtual ~SAABoundingBoxT() { }
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -184,6 +174,7 @@ namespace fg {
                     return this->min[i];
                 }
             }
+            //------------------------------------------------------------------
             /**
              * 
              */
@@ -282,6 +273,11 @@ namespace fg {
                 this->max.y = this->min.y + height;
                 return (*this);
             }
+            //------------------------------------------------------------------
+            virtual value_type getVolume(void) const {
+                return this->width() * this->height();
+            }
+            //------------------------------------------------------------------
             /**
              * 
              * @param vec
@@ -346,6 +342,7 @@ namespace fg {
                 }
                 return FG_TRUE;
             }
+            //------------------------------------------------------------------
             /**
              * 
              * @param a
@@ -367,7 +364,22 @@ namespace fg {
              * @return
              */
             virtual box_type& merge(const vector_type& v) = 0;
-
+            //------------------------------------------------------------------
+            /**
+             * 
+             * @param a
+             * @param b
+             * @return
+             */
+            virtual box_type& intersect(const box_type& a,
+                                        const box_type& b) = 0;
+            /**
+             * 
+             * @param a
+             * @return 
+             */
+            virtual box_type& intersect(const box_type& a) = 0;
+            //------------------------------------------------------------------
             /**
              * 
              * @param data
@@ -376,6 +388,7 @@ namespace fg {
              */
             virtual box_type& setBoundsFromData(vector_type *data,
                                                 const size_type count = 1) = 0;
+            //------------------------------------------------------------------
             /**
              * 
              */
@@ -401,7 +414,8 @@ namespace fg {
                 }
                 return FG_TRUE;
             }
-        };
+            //------------------------------------------------------------------
+        }; // struct SAABoundingBoxT<BOX>
 
         /**
          *
@@ -458,6 +472,7 @@ namespace fg {
                 }
                 return (*this);
             }
+            //------------------------------------------------------------------
             /**
              * 
              * @param a
@@ -554,6 +569,40 @@ namespace fg {
                 }
                 return (*this);
             }
+            //------------------------------------------------------------------
+            /**
+             *
+             * @param a
+             * @param b
+             * @return
+             */
+            virtual self_type& intersect(const self_type& a,
+                                         const self_type& b) {
+                this->min = a.min;
+                this->max = a.max;
+                return this->intersect(b);
+            }
+            /**
+             *
+             * @param a
+             * @return
+             */
+            virtual self_type& intersect(const self_type& a) {
+                // if this->max < a.min -> invalidate
+                if(this->max.x < a.min.x ||
+                        this->max.y < a.min.y ||
+                        a.max.x < this->min.x ||
+                        a.max.y < this->min.y) {
+                    this->invalidate();
+                    return (*this);
+                }
+                this->min.x = math::max(a.min.x, this->min.x);
+                this->min.y = math::max(a.min.y, this->min.y);
+                this->max.x = math::min(a.max.x, this->max.x);
+                this->max.y = math::min(a.max.y, this->max.y);
+                return (*this);
+            }
+            //------------------------------------------------------------------
             /**
              * 
              * @param data
@@ -583,8 +632,9 @@ namespace fg {
             virtual inline self_type& setBoundsFromData(const void *data,
                                                         const size_type stride,
                                                         const size_type count = 1) {
-                return AABBHelper::setBoundsFromData((*this), data, stride, count);
+                return aabb_helper::setBoundsFromData((*this), data, stride, count);
             }
+            //------------------------------------------------------------------
             /**
              * 
              */
@@ -642,6 +692,7 @@ namespace fg {
 
                 return result;
             }
+            //------------------------------------------------------------------
             /**
              * 
              * @param m
@@ -673,7 +724,7 @@ namespace fg {
                     }
                 }
             }
-        };
+        }; // struct SAABoundingBox2DT<T>
 
         /// Basic axis-aligned bounding box 2D with float data type
         typedef SAABoundingBox2DT<float> AABoundingBox2Df;
@@ -753,6 +804,7 @@ namespace fg {
                 }
                 return (*this);
             }
+            //------------------------------------------------------------------
             /**
              * 
              * @param a
@@ -852,6 +904,38 @@ namespace fg {
                 }
                 return (*this);
             }
+            //------------------------------------------------------------------
+            virtual self_type& intersect(const self_type& a,
+                                         const self_type& b) {
+                this->min = a.min;
+                this->max = a.max;
+                return this->intersect(b);
+            }
+            /**
+             *
+             * @param a
+             * @return
+             */
+            virtual self_type& intersect(const self_type& a) {
+                // if this->max < a.min -> invalidate
+                if(this->max.x < a.min.x ||
+                        this->max.y < a.min.y ||
+                        this->max.z < a.min.z ||
+                        a.max.x < this->min.x ||
+                        a.max.y < this->min.y ||
+                        a.max.z < this->min.z) {
+                    this->invalidate();
+                    return (*this);
+                }
+                this->min.x = math::max(a.min.x, this->min.x);
+                this->min.y = math::max(a.min.y, this->min.y);
+                this->min.z = math::max(a.min.z, this->min.z);
+                this->max.x = math::min(a.max.x, this->max.x);
+                this->max.y = math::min(a.max.y, this->max.y);
+                this->max.z = math::min(a.max.z, this->max.z);
+                return (*this);
+            }
+            //------------------------------------------------------------------
             /**
              * 
              * @param data
@@ -883,8 +967,9 @@ namespace fg {
             virtual inline self_type& setBoundsFromData(const void *data,
                                                         const size_type stride,
                                                         const size_type count = 1) {
-                return AABBHelper::setBoundsFromData((*this), data, stride, count);
+                return aabb_helper::setBoundsFromData((*this), data, stride, count);
             }
+            //------------------------------------------------------------------
             /**
              *  
              */
@@ -907,7 +992,7 @@ namespace fg {
                 this->min.x = fmax;
                 this->min.y = fmax;
                 this->min.z = fmax;
-            }            
+            }
             /**
              * 
              * @return 
@@ -959,6 +1044,7 @@ namespace fg {
 
                 return result;
             }
+            //------------------------------------------------------------------
             /**
              * 
              * @param m
@@ -990,7 +1076,23 @@ namespace fg {
                     }
                 }
             }
-
+            //------------------------------------------------------------------
+            /**
+             * 
+             * @return
+             */
+            value_type depth(void) const {
+                return this->max.z - this->min.z;
+            }
+            //------------------------------------------------------------------
+            /**
+             * 
+             * @return
+             */
+            virtual value_type getVolume(void) const {
+                return this->height() * this->width() * this->depth();
+            }
+            //------------------------------------------------------------------
             using base_type::test;
             /**
              * 
@@ -1071,7 +1173,7 @@ namespace fg {
                 }
                 return FG_TRUE;
             }
-        };
+        }; // struct SAABoundingBox3DT<T>
 
         /// Basic axis-aligned bounding box 3D with float data type
         typedef SAABoundingBox3DT<float> AABoundingBox3Df;
@@ -1090,8 +1192,8 @@ namespace fg {
         typedef AABoundingBox3Du AABB3Du;
         ///
         typedef AABoundingBox3Dd AABB3Dd;
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_AA_BOUNDING_BOX_BLOCK
 #endif	/* FG_INC_GFX_AA_BOUNDING_BOX */

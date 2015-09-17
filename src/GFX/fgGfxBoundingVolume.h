@@ -228,7 +228,7 @@ namespace fg {
             virtual inline self_type& setBoundsFromData(const void *data,
                                                         const size_type stride,
                                                         const size_type count = 1) {
-                AABBHelper::setBoundsFromData((*this), data, stride, count);
+                aabb_helper::setBoundsFromData((*this), data, stride, count);
                 this->refresh();
                 return (*this);
             }
@@ -527,7 +527,7 @@ namespace fg {
             virtual inline self_type& setBoundsFromData(const void* data,
                                                         const size_type stride,
                                                         const size_type count = 1) {
-                AABBHelper::setBoundsFromData((*this), data, stride, count);
+                aabb_helper::setBoundsFromData((*this), data, stride, count);
                 this->refresh();
                 return (*this);
             }
