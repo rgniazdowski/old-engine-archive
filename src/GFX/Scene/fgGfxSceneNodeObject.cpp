@@ -352,7 +352,6 @@ void gfx::CSceneNodeObject::playAnimations(void) {
             anim::SAnimationInfo* pInfo = &animations[animId];
             if(m_pModel->hasAnimation(pInfo->pAnimation)) {
                 pInfo->play();
-                break;
             }
         }
     }
@@ -384,7 +383,6 @@ void gfx::CSceneNodeObject::stopAnimations(void) {
             anim::SAnimationInfo* pInfo = &animations[animId];
             if(m_pModel->hasAnimation(pInfo->pAnimation)) {
                 pInfo->stop();
-                break;
             }
         }
     }
@@ -420,7 +418,6 @@ void gfx::CSceneNodeObject::pauseAnimations(fgBool toggle) {
                 } else {
                     pInfo->pause();
                 }
-                continue;
             }
         }
     }
@@ -452,7 +449,6 @@ void gfx::CSceneNodeObject::resumeAnimations(void) {
             anim::SAnimationInfo* pInfo = &animations[animId];
             if(m_pModel->hasAnimation(pInfo->pAnimation)) {
                 pInfo->resume();
-                continue;
             }
         }
     }
@@ -484,7 +480,6 @@ void gfx::CSceneNodeObject::rewindAnimations(void) {
             anim::SAnimationInfo* pInfo = &animations[animId];
             if(m_pModel->hasAnimation(pInfo->pAnimation)) {
                 pInfo->rewind();
-                continue;
             }
         }
     }
