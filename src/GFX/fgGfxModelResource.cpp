@@ -107,6 +107,206 @@ gfx::anim::CAnimation* gfx::CModelResource::SModelSkinning::getAnimation(const c
     return pResult;
 }
 //------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
+    if(!path)
+        return FG_FALSE;
+    fgBool status = FG_TRUE;
+
+    enum ReadingState
+    {
+        NONE,
+        READ_ANIMATION_MAPPING,
+        READ_BONE_MAPPING,
+        READ_ANIMATION_BLENDING,
+        READ_BLEND_PAIR
+    } state;
+    state = NONE;
+    util::CFile file;
+    status = file.open(path, util::CFile::Mode::READ);
+    char lineBuf[512];
+    CStringVector splits1, splits2;
+    std::string line;
+    if(status) {
+        memset(lineBuf, 0, 512);
+        splits1.reserve(4);
+        splits2.reserve(8);
+        line.reserve(513);
+
+        this->skinningInfo.actionsMap.clear();
+    }
+    anim::SBlendingInfo::AnimationPair currentPair;
+    anim::StandardActionType action[2] = {anim::ACTION_NONE, anim::ACTION_NONE};
+    currentPair.first = NULL;
+    currentPair.second = NULL;
+    int currentIndex = -1;
+    while(status && file.readString(lineBuf, 512)) {
+        line.clear();
+        splits1.clear();
+        splits2.clear();
+        line.append(strings::trim(lineBuf, " \n\r\t"));
+        if(line.empty() || strings::startsWith(lineBuf, ";") || strings::startsWith(lineBuf, "//") ||
+           strings::startsWith(lineBuf, "#")) {
+            memset(lineBuf, 0, 512);
+            continue;
+        }
+
+        if(state == NONE) {
+            if(strings::startsWith(line, "begin ", FG_FALSE)) {
+                std::string catName = line.substr(6);
+                if(strings::startsWith(catName.c_str(), "AnimationMapping", FG_FALSE)) {
+                    state = READ_ANIMATION_MAPPING;
+                } else if(strings::startsWith(catName.c_str(), "BoneMapping", FG_FALSE)) {
+                    state = READ_BONE_MAPPING;
+                } else if(strings::startsWith(catName.c_str(), "AnimationBlending", FG_FALSE)) {
+                    state = READ_ANIMATION_BLENDING;
+                }
+            }
+        } else if(state == READ_ANIMATION_MAPPING && strings::startsWith(line, "map ", FG_FALSE)) {
+            strings::split(line, '{', splits1);
+            if(splits1.empty())
+                continue;
+            std::string animationName = strings::trim(splits1[0], " \t\"\'\\").substr(4);
+            anim::StandardActionType actionType = anim::getActionTypeFromText(animationName.c_str());
+            strings::split(splits1[1], ',', splits2);
+            unsigned int _n = splits2.size();
+            if(!_n)
+                continue;
+            for(unsigned int _i = 0; _i < _n; _i++) {
+                std::string realAnimName = strings::trim(splits2[_i], " \t\"\'\\{}[]");
+                this->skinningInfo.actionsMap[actionType] = realAnimName;
+            }
+        } else if(state == READ_BONE_MAPPING && strings::startsWith(line, "map ", FG_FALSE) && pArmature) {
+            strings::split(line, '{', splits1);
+            if(splits1.empty())
+                continue;
+            std::string boneName = strings::trim(splits1[0], " \t\"\'\\").substr(4);
+            anim::BoneType boneType = anim::getBoneTypeFromText(boneName.c_str());
+            strings::split(splits1[1], ',', splits2);
+            unsigned int _n = splits2.size();
+            if(!_n)
+                continue;
+            for(unsigned int _i = 0; _i < _n; _i++) {
+                std::string realBoneName = strings::trim(splits2[_i], " \t\"\'\\{}[]");
+                anim::SBone* pBone = this->pArmature->get(realBoneName);
+                if(pBone) {
+                    if(!this->skinningInfo.boneTypesMap[boneType].contains(pBone))
+                        this->skinningInfo.boneTypesMap[boneType].push_back(pBone);
+                }
+            }
+        } else if(state == READ_ANIMATION_BLENDING) {
+            if(strings::startsWith(line, "begin_blend", FG_FALSE)) {
+                strings::split(line, ' ', splits1);
+                if(splits1.size() < 2) {
+                    currentIndex = -1;
+                    continue;
+                }
+                strings::split(splits1[1], '+', splits2);
+                if(splits2.size() < 2) {
+                    currentIndex = -1;
+                    continue;
+                }
+                action[0] = anim::getActionTypeFromText(splits2[0]);
+                action[1] = anim::getActionTypeFromText(splits2[1]);
+
+                anim::CAnimation * animation[2];
+                animation[0] = this->getAnimation(this->skinningInfo.actionsMap[action[0]].c_str(),
+                                                  strings::MATCH_SUBSTR);
+                animation[1] = this->getAnimation(this->skinningInfo.actionsMap[action[1]].c_str(),
+                                                  strings::MATCH_SUBSTR);
+                if(animation[0] && animation[1]) {
+                    currentPair.first = animation[0];
+                    currentPair.second = animation[1];
+                } else {
+                    action[0] = anim::ACTION_NONE;
+                    action[1] = anim::ACTION_NONE;
+                    currentIndex = -1;
+                    continue;
+                }
+                state = READ_BLEND_PAIR; // next stage
+                this->skinningInfo.armatureInfo.push_back(anim::SBlendingPair());
+                currentIndex = this->skinningInfo.armatureInfo.size() - 1;
+                this->skinningInfo.armatureInfo[currentIndex].animation = currentPair;
+                this->skinningInfo.armatureInfo[currentIndex].weights.resize(this->pArmature->count());
+            }
+        } else if(state == READ_BLEND_PAIR) {
+            if(currentIndex < 0) {
+                state = READ_ANIMATION_BLENDING;
+                action[0] = anim::ACTION_NONE;
+                action[1] = anim::ACTION_NONE;
+                continue;
+            }
+            if(strings::startsWith(line, "end_blend", FG_FALSE)) {
+                state = READ_ANIMATION_BLENDING;
+                action[0] = anim::ACTION_NONE;
+                action[1] = anim::ACTION_NONE;
+                continue;
+            }
+            // run+attack
+            // HEAD,NECK,ARM_LEFT,ARM_RIGHT={0.0,1.0}
+            strings::split(line, '=', splits1);
+            anim::SSkinningInfo::BoneTypesMap& boneTypesMap = this->skinningInfo.boneTypesMap;
+            CVector<anim::BoneType> boneTypes;
+            // get list of bone categories
+            strings::split(splits1[0], ',', splits2);
+            boneTypes.reserve(splits2.size());
+            for(unsigned int i = 0; i < splits2.size(); i++) {
+                std::string stdBoneName = strings::trim(splits2[i], " \t\n\r[]{}();,.");
+                anim::BoneType boneType = anim::getBoneTypeFromText(stdBoneName.c_str());
+                if(boneType != anim::BONE_INVALID) {
+                    boneTypes.push_back(boneType);
+                } else if(strings::isEqual(stdBoneName, "ALL", FG_FALSE)) {
+                    boneTypes.clear();
+                    anim::SSkinningInfo::BoneTypesMapItor itor = boneTypesMap.begin(),
+                            end = boneTypesMap.end();
+                    for(; itor != end; itor++)
+                        boneTypes.push_back(itor->first);
+                }
+            }
+            splits2.clear();
+            // get list of weights / should be 2
+            strings::split(splits1[1], ',', splits2);
+            if(splits2.size() < 2) {
+
+            }
+            float weights[2] = {0.0f, 0.0f};
+            for(unsigned int i = 0; i < 2; i++) {
+                std::string weightStr = strings::trim(splits2[i], " \t\n\r[]{}();,");
+                weights[i] = (float)std::atof(weightStr.c_str());
+            }
+            anim::SBlendingInfo& pairsInfoVec = this->skinningInfo.armatureInfo;
+            // process all bones for every type
+            for(unsigned int typeIdx = 0; typeIdx < boneTypes.size(); typeIdx++) {
+                anim::BoneType boneType = boneTypes[typeIdx];
+                unsigned int nSubBones = boneTypesMap[boneType].size();
+                if(nSubBones == 0) {
+                    // ?
+                    continue;
+                }
+
+                for(unsigned int i = 0; i < nSubBones; i++) {
+                    anim::SBone* pBone = boneTypesMap[boneType][i];
+                    if(!pBone)
+                        continue;
+                    int boneIndex = pBone->index;
+                    pairsInfoVec[currentIndex].weights[boneIndex].first = weights[0];
+                    pairsInfoVec[currentIndex].weights[boneIndex].second = weights[1];
+                }
+            }
+        }
+
+        if(strings::isEqual("end", line)) {
+            state = NONE;
+        }
+
+        memset(lineBuf, 0, 512);
+    }
+    if(status)
+        file.close();
+    return status;
+}
+//------------------------------------------------------------------------------
+
 gfx::CModelResource::CModelResource() :
 base_type(),
 m_skinning(),
@@ -268,6 +468,13 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
             m_numIndices += shape->mesh->getNumIndices();
             // #FIXME
             m_numTriangles += shape->mesh->getNumIndices() / 3;
+
+            if(shape->mesh->isSkinnedMesh()) {
+                SSkinnedMesh* pSkinned = shape->getSkinnedMesh();
+                pSkinned->skinningInfo.boneTypesMap = m_skinning.skinningInfo.boneTypesMap;
+                pSkinned->skinningInfo.armatureInfo = m_skinning.skinningInfo.armatureInfo;
+                pSkinned->skinningInfo.actionsMap = m_skinning.skinningInfo.actionsMap;
+            }
         }
         this->m_size += shape->getDataSize();
     }
@@ -862,6 +1069,15 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     } // while (stack not empty)
     //m_skinning.pArmature = pArmature;
     s_objImporter->FreeScene();
+    // load additional skinning info file
+    std::string& currentPath = this->getCurrentFilePath();
+    std::string skinning_file;
+    skinning_file = currentPath.substr(0, currentPath.size() - strlen(ext) - 1);
+    skinning_file.append(".skin");
+    if(!this->m_skinning.loadFromFile(skinning_file)) {
+        FG_LOG_ERROR("GFX: Model: Failed to load additional skinning info file '%s' for model '%s'.",
+                     skinning_file.c_str(), getNameStr());
+    }
     // reset the ready flag
     this->m_isReady = FG_FALSE;
     refreshInternalData(); // recalculate internals

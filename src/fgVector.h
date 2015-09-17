@@ -12,9 +12,7 @@
     #define FG_INC_VECTOR
     #define FG_INC_VECTOR_BLOCK
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
+    #include "fgBuildConfig.h"
 
     #if defined(FG_USING_MARMALADE)
         #include "IwArray.h"
@@ -84,6 +82,7 @@ namespace fg {
         typedef CVector<T, Alloc> self_type;
         typedef std::vector<T, Alloc> base_type;
         typedef typename base_type::size_type size_type;
+
     public:
         /**
          * 
@@ -112,7 +111,7 @@ namespace fg {
          */
         self_type intersection(const base_type& other) {
             self_type result;
-            size_type n = other.size();
+            typename base_type::size_type n = other.size();
             for(unsigned int si = 0; si < n; si++) {
                 if(this->contains(other[si]))
                     result.push_back(other[si]);
@@ -125,7 +124,7 @@ namespace fg {
          * @return
          */
         bool remove(typename base_type::size_type index) {
-            size_type n = this->size();
+            typename base_type::size_type n = this->size();
             if(index >= n)
                 return false;
             this->operator [](index) = this->operator [](n - 1);

@@ -20,6 +20,7 @@
 
     #include "fgGfxMesh.h"
     #include "Animation/fgGfxBone.h"
+    #include "Animation/fgGfxSkinningInfo.h"
 
 namespace fg {
     namespace gfx {
@@ -133,6 +134,8 @@ namespace fg {
             BoneBoxesVec boneBoxes;
             ///
             BoneEdgesVec boneEdges;
+            ///
+            anim::SSkinningInfo skinningInfo;
 
             /**
              *

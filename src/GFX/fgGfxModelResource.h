@@ -148,6 +148,8 @@ namespace fg {
                 AnimationsVec animations;
                 /// Original Armature instance
                 anim::CArmature* pArmature;
+                ///
+                anim::SSkinningInfo skinningInfo;
 
                 /**
                  *
@@ -184,6 +186,22 @@ namespace fg {
                  *
                  */
                 void destroy(void);
+                /**
+                 *
+                 * @param path
+                 * @return
+                 */
+                fgBool loadFromFile(const std::string& path) {
+                    if(path.empty())
+                        return FG_FALSE;
+                    return loadFromFile(path.c_str());
+                }
+                /**
+                 * 
+                 * @param path
+                 * @return
+                 */
+                fgBool loadFromFile(const char* path);
             }; // protected struct SModelSkinning
 
         public:

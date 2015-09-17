@@ -29,7 +29,10 @@ using namespace fg;
 gfx::SSkinnedMesh::SSkinnedMesh() :
 bones(),
 blendWeights(),
-blendIndices() {
+blendIndices(),
+boneBoxes(),
+boneEdges(),
+skinningInfo() {
     bones.reserve(4);
     blendWeights.reserve(8);
     blendIndices.reserve(8);
@@ -44,6 +47,9 @@ gfx::SSkinnedMesh::~SSkinnedMesh() {
     blendIndices.clear();
     boneBoxes.clear();
     boneEdges.clear();
+    skinningInfo.armatureInfo.clear();
+    skinningInfo.blendingInfo.clear();
+    skinningInfo.boneTypesMap.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -53,6 +59,9 @@ void gfx::SSkinnedMesh::clearSkinningInfo(void) {
     blendIndices.clear();
     boneBoxes.clear();
     boneEdges.clear();
+    // clear blending info | leave armatureInfo - it will be needed
+    skinningInfo.blendingInfo.clear();
+    skinningInfo.boneTypesMap.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -290,6 +299,41 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
         }
     }
     countVec.clear();
+
+    // now update blending info
+    if(skinningInfo.armatureInfo.empty())
+        return;
+    anim::SBlendingInfo& absPairsInfo = skinningInfo.armatureInfo;
+    anim::SBlendingInfo& blendPairsInfo = skinningInfo.blendingInfo;
+    const unsigned int nPairs = absPairsInfo.size();
+    blendPairsInfo.resize(nPairs);
+
+    // this will copy just required data
+    // now indexes in channelWeighs match bone indexes in this mesh
+    for(unsigned int pairIdx = 0; pairIdx < nPairs; pairIdx++) {
+        blendPairsInfo[pairIdx].weights.resize(nBones);
+        blendPairsInfo[pairIdx].animation = absPairsInfo[pairIdx].animation;
+        // need also to match properly animations, attack should use upper bones
+        // where for example run should use lower bones
+        // need automatic bones groups
+        if(0) {
+            anim::CAnimation* pFirst = blendPairsInfo[pairIdx].animation.first;
+            anim::CAnimation* pSecond = blendPairsInfo[pairIdx].animation.second;
+            anim::StandardActionType firstAction = skinningInfo.getActionType(pFirst->getNameStr());
+            anim::StandardActionType secondAction = skinningInfo.getActionType(pSecond->getNameStr());
+            CVector<anim::BoneType> firstBones, secondBones;
+            anim::getBonesForStandardAction(firstAction, firstBones);
+            anim::getBonesForStandardAction(secondAction, secondBones);
+        }
+        // copy proper info
+        for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
+            anim::SBone* pBone = bones[boneIdx];
+            int armatureBoneIdx = pBone->index;
+            blendPairsInfo[pairIdx].weights[boneIdx] =
+                    absPairsInfo[pairIdx].weights[armatureBoneIdx];
+        }
+    }
+
 }
 //------------------------------------------------------------------------------
 

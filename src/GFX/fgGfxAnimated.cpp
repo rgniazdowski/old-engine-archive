@@ -28,7 +28,8 @@ fgBool gfx::traits::CAnimated::setAnimation(anim::CAnimation* pAnimation, unsign
         return FG_FALSE;
     if(m_animations.capacity() <= slot)
         m_animations.reserve(slot + 1);
-    m_animations.resize(slot + 1);
+    if(m_animations.size() <= slot)
+        m_animations.resize(slot + 1);
 
     if(m_animations[slot].pAnimation == pAnimation) {
         return FG_TRUE;
