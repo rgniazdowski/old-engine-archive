@@ -1,0 +1,50 @@
+begin AnimationMapping
+    map attack { "crooked_attackre" }
+    map death { "dead_by_headshotF" }
+    map run { "crooked_runF" }
+end
+
+begin BoneMapping
+    map HEAD { "Bone.005" }
+    map NECK { "Bone.004" }
+    map SPINE { "Bone.002", "Bone.003" }
+    map PELVIS { "Bone.001" }
+    map THIGH_LEFT { "Bone.008" }
+    map THIGH_RIGHT { "Bone" }
+    map LEG_LEFT { "Bone.009" }
+    map LEG_RIGHT { "Bone.006" }
+    map FOOT_LEFT { "Bone.010" }
+    map FOOT_RIGHT { "Bone.007" }
+
+    map ARM_LEFT { "Bone.014" }
+    map ARM_RIGHT { "Bone.011" }
+
+    map FOREARM_LEFT { "Bone.015" }
+    map FOREARM_RIGHT { "Bone.012" }
+
+    map HAND_LEFT { "Bone.016" }
+    map HAND_RIGHT { "Bone.013" }
+end
+
+begin AnimationBlending
+    begin_blend run+attack
+        PELVIS={0.75,0.25}
+        SPINE={0.4,0.6}
+        HEAD={0.2,0.8}
+        NECK={0.35,0.65}
+        ARM_LEFT,ARM_RIGHT,FOREARM_LEFT,FOREARM_RIGHT={0.15,0.85}
+        HAND_LEFT,HAND_RIGHT={0.1,0.9}
+        THIGH_LEFT,THIGH_RIGHT={0.95,0.05}
+        LEG_LEFT,LEG_RIGHT={0.9,0.1}
+        FOOT_LEFT,FOOT_RIGHT={1.0,0.0}
+    end_blend
+
+    begin_blend run+death
+        ALL={0.0,1.0}
+    end_blend
+
+    begin_blend attack+death
+        ALL={0.0,1.0}
+    end_blend
+end
+
