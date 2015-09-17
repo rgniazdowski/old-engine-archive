@@ -364,6 +364,37 @@ namespace fg {
              */
             SShape* addShape(SMeshBase* pMesh, const std::string& name);
 
+            /**
+             * 
+             * @param name
+             * @return
+             */
+            SShape* getShape(const std::string& name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            SShape* getShape(const char* name);
+            /**
+             *
+             * @param pMesh
+             * @return
+             */
+            SShape* getShape(SMeshBase* pMesh);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            SMeshBase* getMesh(const std::string& name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            SMeshBase* getMesh(const char* name);
+
         public:
             /**
              * Returns the reference to the shapes array

@@ -327,6 +327,65 @@ gfx::SShape* gfx::CModelResource::addShape(SMeshBase *pMesh, const std::string& 
 }
 //------------------------------------------------------------------------------
 
+gfx::SShape* gfx::CModelResource::getShape(const std::string& name) {
+    if(name.empty())
+        return NULL;
+    return getShape(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::SShape* gfx::CModelResource::getShape(const char* name) {
+    if(!name)
+        return NULL;
+    SShape* pShape = NULL;
+    const unsigned int n = m_shapes.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_shapes[i]->name.compare(name) == 0) {
+            pShape = m_shapes[i];
+            break;
+        }
+    }
+    return pShape;
+}
+//------------------------------------------------------------------------------
+
+gfx::SShape* gfx::CModelResource::getShape(SMeshBase* pMesh) {
+    if(!pMesh)
+        return NULL;
+    SShape* pShape = NULL;
+    const unsigned int n = m_shapes.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_shapes[i]->mesh == pMesh) {
+            pShape = m_shapes[i];
+            break;
+        }
+    }
+    return pShape;
+}
+//------------------------------------------------------------------------------
+
+gfx::SMeshBase* gfx::CModelResource::getMesh(const std::string& name) {
+    if(name.empty())
+        return NULL;
+    return getMesh(name.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::SMeshBase* gfx::CModelResource::getMesh(const char* name) {
+    if(!name)
+        return NULL;
+    SMeshBase* pMesh = NULL;
+    const unsigned int n = m_shapes.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_shapes[i]->name.compare(name) == 0) {
+            pMesh = m_shapes[i]->mesh;
+            break;
+        }
+    }
+    return pMesh;
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::CModelResource::internal_loadWavefrontObj(void) {
     if(getFilePath(this->m_quality).empty()) {
         return FG_FALSE;
