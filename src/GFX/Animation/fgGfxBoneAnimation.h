@@ -28,6 +28,39 @@ namespace fg {
             class CArmature;
 
             /**
+             *
+             */
+            enum StandardActionType {
+                ACTION_NONE = 0,
+                ACTION_IDLE,
+                ACTION_ATTACK,
+                ACTION_MELEE,
+                ACTION_FIRE,
+                ACTION_RELOAD,
+                ACTION_RUN,
+                ACTION_WALK,
+                ACTION_CROUCH,
+
+                ACTION_STRAFE_LEFT,
+                ACTION_STRAFE_RIGHT,
+
+                ACTION_LEAN_LEFT,
+                ACTION_LEAN_RIGHT,
+
+                ACTION_GRAB,
+                ACTION_JUMP,
+                ACTION_KICK,
+                ACTION_USE,
+
+                ACTION_DEATH,
+
+                ACTION_OTHER,
+
+                NUM_STANDARD_ACTIONS
+            };
+
+            StandardActionType getActionTypeFromText(const std::string& text);
+            StandardActionType getActionTypeFromText(const char* name);
              * 
              */
             class CBoneAnimation : public CAnimation {

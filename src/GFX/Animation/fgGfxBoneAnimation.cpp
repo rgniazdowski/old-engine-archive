@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
- *******************************************************/
+ ******************************************************************************/
 /* 
  * File:   fgGfxBoneAnimation.cpp
  * Author: vigilant
@@ -17,11 +17,93 @@
 #include "fgGfxBoneAnimation.h"
 #include "fgGfxAnimationInfo.h"
 #include "fgGfxArmature.h"
+#include "Util/fgStrings.h"
 #include "Util/fgTime.h"
+
+namespace fg {
+    namespace gfx {
+        namespace anim {
+            const StandardActionType g_StandardActionTypes[] = {
+                                                                ACTION_NONE,
+                                                                ACTION_IDLE,
+                                                                ACTION_ATTACK,
+                                                                ACTION_MELEE,
+                                                                ACTION_FIRE,
+                                                                ACTION_RELOAD,
+                                                                ACTION_RUN,
+                                                                ACTION_WALK,
+                                                                ACTION_CROUCH,
+
+                                                                ACTION_STRAFE_LEFT,
+                                                                ACTION_STRAFE_RIGHT,
+
+                                                                ACTION_LEAN_LEFT,
+                                                                ACTION_LEAN_RIGHT,
+
+                                                                ACTION_GRAB,
+                                                                ACTION_JUMP,
+                                                                ACTION_KICK,
+                                                                ACTION_USE,
+
+                                                                ACTION_DEATH,
+
+                                                                ACTION_OTHER
+            };
+
+            const char * const g_StandardActionTypesText[] = {
+                                                              "none",
+                                                              "idle",
+                                                              "attack",
+                                                              "melee",
+                                                              "fire",
+                                                              "reload",
+                                                              "run",
+                                                              "walk",
+                                                              "crouch",
+
+                                                              "strafe_left",
+                                                              "strafe_right",
+
+                                                              "lean_left",
+                                                              "lean_right",
+
+                                                              "grab",
+                                                              "jump",
+                                                              "kick",
+                                                              "use",
+
+                                                              "death",
+                                                              "other"
+            };
+        }
+    }
+}
 
 using namespace fg;
 //------------------------------------------------------------------------------
 
+gfx::anim::StandardActionType gfx::anim::getActionTypeFromText(const std::string& text) {
+    if(text.empty())
+        return ACTION_NONE;
+    return getActionTypeFromText(text.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::StandardActionType gfx::anim::getActionTypeFromText(const char* text) {
+    if(!text)
+        return ACTION_NONE;
+    StandardActionType result = ACTION_NONE;
+    const unsigned int n = sizeof (g_StandardActionTypes) / sizeof (StandardActionType);
+    for(unsigned int i = 0; i < n; i++) {
+        if(strings::isEqual(text, g_StandardActionTypesText[i], FG_FALSE)) {
+            result = g_StandardActionTypes[i];
+            break;
+        }
+    }
+    return result;
+
+}
+//------------------------------------------------------------------------------
 gfx::anim::CBoneAnimation::CBoneAnimation(CArmature* pArmature) :
 base_type(),
 m_pArmature(pArmature) {
