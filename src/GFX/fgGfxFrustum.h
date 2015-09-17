@@ -19,10 +19,7 @@
     #define FG_INC_GFX_FRUSTUM_BLOCK
 
     #include "fgGfxPlane.h"
-
-    #ifndef FG_INC_GFX_BOUNDING_VOLUME
-        #include "fgGfxBoundingVolume.h"
-    #endif
+    #include "fgGfxBoundingVolume.h"
 
 namespace fg {
 

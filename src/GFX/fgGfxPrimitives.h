@@ -14,10 +14,7 @@
 
     #include "fgGfxStdInc.h"
     #include "Math/fgMathLib.h"
-    #ifndef FG_INC_GFX_SHADER_PROGRAM
-        #include "GFX/Shaders/fgGfxShaderProgram.h"
-    #endif
-
+    #include "GFX/Shaders/fgGfxShaderProgram.h"
     #include "fgGfxAABoundingBox.h"
 
 namespace fg {
@@ -44,7 +41,6 @@ namespace fg {
                                     SDrawingInfo& drawingInfo,
                                     const AttributeMask attribMask,
                                     unsigned int count = 0);
-
             /**
              * 
              * @param attrData

@@ -12,21 +12,10 @@
     #define FG_INC_GFX_SCENE_MANAGER
     #define FG_INC_GFX_SCENE_MANAGER_BLOCK
 
-    #ifndef FG_INC_HANDLE_MANAGER
-        #include "Util/fgHandleManager.h"
-    #endif
-
-    #ifndef FG_INC_EVENT_MANAGER
-        #include "Event/fgEventManager.h"
-    #endif
-
-    #ifndef FG_INC_GFX_DRAWING_BATCH
-        #include "GFX/fgGfxDrawingBatch.h"
-    #endif 
-
-    #ifndef FG_INC_GFX_CAMERA_ANIMATION
-        #include "GFX/fgGfxCameraAnimation.h"
-    #endif
+    #include "Util/fgHandleManager.h"
+    #include "Event/fgEventManager.h"
+    #include "GFX/fgGfxDrawingBatch.h"
+    #include "GFX/fgGfxCameraAnimation.h"
 
     #include "Util/fgBTreeMap.h"
 
@@ -1715,7 +1704,7 @@ namespace fg {
             ///
             SPlaneGridf m_groundGrid;
             ///
-            Vector3f m_worldSize;            
+            Vector3f m_worldSize;
             /// Internal camera
             CCameraAnimation m_camera;
             /// Internal skybox

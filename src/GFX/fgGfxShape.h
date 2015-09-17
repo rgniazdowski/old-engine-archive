@@ -20,10 +20,7 @@
 
     #include "fgGfxMesh.h"
     #include "fgGfxSkinnedMesh.h"
-
-    #ifndef FG_INC_GFX_MATERIAL
-        #include "fgGfxMaterial.h"
-    #endif
+    #include "fgGfxMaterial.h"
 
 namespace fg {
     namespace gfx {

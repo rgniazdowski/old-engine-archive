@@ -12,19 +12,10 @@
     #define FG_INC_GFX_MODEL_RESOURCE
     #define FG_INC_GFX_MODEL_RESOURCE_BLOCK
 
-    #ifndef FG_INC_TYPES
-        #include "fgTypes.h"
-    #endif
-    #ifndef FG_INC_GFX_MESH
-        #include "fgGfxMesh.h"
-    #endif
-    #ifndef FG_INC_GFX_SHAPE
-        #include "fgGfxShape.h"
-    #endif
-    #ifndef FG_INC_RESOURCE
-        #include "Resource/fgResource.h"
-    #endif
-
+    #include "fgTypes.h"
+    #include "fgGfxMesh.h"
+    #include "fgGfxShape.h"
+    #include "Resource/fgResource.h"
     #if defined(FG_USING_ASSIMP)
 namespace Assimp {
     class Importer;

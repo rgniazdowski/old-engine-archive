@@ -12,17 +12,9 @@
     #define FG_INC_GFX_MESH
     #define FG_INC_GFX_MESH_BLOCK
 
-    #ifndef FG_INC_GFX_TYPES
-        #include "fgGfxTypes.h"
-    #endif
-    
-    #ifndef FG_INC_GFX_AA_BOUNDING_BOX
-        #include "fgGfxAABoundingBox.h"
-    #endif
-
-    #ifndef FG_INC_GFX_PRIMITIVES
-        #include "fgGfxPrimitives.h"
-    #endif
+    #include "fgGfxTypes.h"
+    #include "fgGfxAABoundingBox.h"
+    #include "fgGfxPrimitives.h"
 
 /*
 Assuming the container has at least one element in it, you 
@@ -83,7 +75,6 @@ namespace fg {
              * 
              */
             virtual void fixCenter(fgBool saveDisplacement = FG_TRUE) = 0;
-
             /**
              *
              * @return
@@ -91,6 +82,8 @@ namespace fg {
             virtual fgBool isSkinnedMesh(void) const {
                 return FG_FALSE;
             }
+
+
         }; // struct SMeshBase
 
         /**
@@ -117,7 +110,6 @@ namespace fg {
             static const unsigned short UVS_VBO_ARRAY_IDX;
             static const unsigned short INDICES_VBO_ARRAY_IDX;
             static const unsigned short VBO_ARRAY_SIZE;
-
             /**
              * 
              */
@@ -451,7 +443,6 @@ namespace fg {
             virtual fgGFXuint components(void) const {
                 return 3;
             }
-
             /**
              * Returns whether the data is empty (positions)
              * @return 
@@ -474,7 +465,7 @@ namespace fg {
             CVertexData* vertices;
             /// Special indices array
             /// #FIXME Need to check for OGL version, ushort is mandatory on ES2
-            CVector<fgGFXushort> indices;            
+            CVector<fgGFXushort> indices;
 
             static const unsigned short POSITIONS_VBO_ARRAY_IDX;
             static const unsigned short VERTICES_VBO_ARRAY_IDX;
@@ -857,7 +848,6 @@ namespace fg {
             virtual fgGFXuint components(void) const {
                 return this->vertices->components();
             }
-
             /**
              * 
              * @return 
