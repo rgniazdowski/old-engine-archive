@@ -78,6 +78,35 @@ void gfx::CModelResource::SModelSkinning::destroy(void) {
 }
 //------------------------------------------------------------------------------
 
+gfx::anim::CAnimation* gfx::CModelResource::SModelSkinning::getAnimation(const std::string& name,
+                                                                         strings::MatchMode mode) {
+    if(name.empty())
+        return NULL;
+    return getAnimation(name.c_str(), mode);
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::CAnimation* gfx::CModelResource::SModelSkinning::getAnimation(const char* name,
+                                                                         strings::MatchMode mode) {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
+    anim::CAnimation* pResult = NULL;
+    const unsigned int n = this->animations.size();
+    for(unsigned int i = 0; i < n; i++) {
+        anim::CAnimation* pAnimation = this->animations[i];
+        if(!pAnimation)
+            continue;
+        if(strings::doesMatch(pAnimation->getNameStr(), name, mode)) {
+            //if(pAnimation->getName().compare(name) == 0) {
+            pResult = pAnimation;
+            break;
+        }
+    }
+    return pResult;
+}
+//------------------------------------------------------------------------------
 gfx::CModelResource::CModelResource() :
 base_type(),
 m_skinning(),
@@ -498,6 +527,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     if(pNodeArmature) {
         stack.push(pNodeArmature);
         pArmature = new anim::CArmature();
+        m_skinning.pArmature = pArmature;
         // first child here
         anim::SBone* pBone = new anim::SBone();
         pBone->name.append("ArmatureRoot");
@@ -771,7 +801,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             }
         }
     } // while (stack not empty)
-    m_skinning.pArmature = pArmature;
+    //m_skinning.pArmature = pArmature;
     s_objImporter->FreeScene();
     // reset the ready flag
     this->m_isReady = FG_FALSE;
@@ -1136,27 +1166,12 @@ fgBool gfx::CModelResource::hasAnimation(const char* name) const {
 gfx::anim::CAnimation* gfx::CModelResource::getAnimation(const std::string& name) {
     if(name.empty())
         return NULL;
-    return getAnimation(name.c_str());
+    return m_skinning.getAnimation(name.c_str());
 }
 //------------------------------------------------------------------------------
 
 gfx::anim::CAnimation* gfx::CModelResource::getAnimation(const char* name) {
-    if(!name)
-        return NULL;
-    if(!name[0])
-        return NULL;
-    anim::CAnimation* pResult = NULL;
-    const unsigned int n = m_skinning.animations.size();
-    for(unsigned int i = 0; i < n; i++) {
-        anim::CAnimation* pAnimation = m_skinning.animations[i];
-        if(!pAnimation)
-            continue;
-        if(pAnimation->getName().compare(name) == 0) {
-            pResult = pAnimation;
-            break;
-        }
-    }
-    return pResult;
+    return m_skinning.getAnimation(name);
 }
 //------------------------------------------------------------------------------
 

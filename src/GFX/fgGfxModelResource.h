@@ -16,6 +16,8 @@
     #include "fgGfxMesh.h"
     #include "fgGfxShape.h"
     #include "Resource/fgResource.h"
+    #include "Util/fgStrings.h"
+    
     #if defined(FG_USING_ASSIMP)
 namespace Assimp {
     class Importer;
@@ -160,6 +162,20 @@ namespace fg {
                  *
                  */
                 virtual ~SModelSkinning();
+                //--------------------------------------------------------------
+
+                /**
+                 * 
+                 */
+                anim::CAnimation* getAnimation(const std::string& name,
+                                               strings::MatchMode mode = strings::MATCH_EXACT);
+                /**
+                 *
+                 */
+                anim::CAnimation* getAnimation(const char* name,
+                                               strings::MatchMode mode = strings::MATCH_EXACT);
+
+                //--------------------------------------------------------------
                 /**
                  *
                  */
@@ -377,7 +393,7 @@ namespace fg {
              * @return
              */
             fgBool hasMesh(const SMeshBase* pMesh) const {
-                for(unsigned int i=0;i<m_shapes.size();i++) {
+                for(unsigned int i = 0; i < m_shapes.size(); i++) {
                     if(m_shapes[i]->mesh == pMesh)
                         return FG_TRUE;
                 }
