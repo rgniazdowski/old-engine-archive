@@ -45,8 +45,7 @@ pAnimation(_pAnimation),
 curFrame(),
 tempo(1.0f),
 m_stateFlags(NO_FLAGS),
-m_loopCount(0) {
-}
+m_loopCount(0) { }
 //------------------------------------------------------------------------------
 
 gfx::anim::SAnimationInfo::SAnimationInfo(const SAnimationInfo& orig) {
@@ -119,22 +118,25 @@ void gfx::anim::SAnimationInfo::advanceTime(float delta) {
         } else if(curFrame.elapsed >= durationS) {
             curFrame.elapsed = durationS - 0.0025f;
             stop(FG_FALSE);
-
         }
     }
 }
 //------------------------------------------------------------------------------
 
 void gfx::anim::SAnimationInfo::play(void) {
+    float durationS = 0.0f;
+    if(pAnimation)
+        durationS = pAnimation->getDurationInSeconds();
     if(isReverseLooped()) {
         setFlag(PLAYING_REVERSED, FG_TRUE);
         setFlag(PLAYING, FG_FALSE);
-        if(pAnimation)
-            curFrame.elapsed = pAnimation->getDurationInSeconds() - 0.0025f;
+        if(curFrame.elapsed <= 0.0025f)
+            curFrame.elapsed = durationS - 0.0025f;
     } else {
         setFlag(PLAYING, FG_TRUE);
         setFlag(PLAYING_REVERSED, FG_FALSE);
-        curFrame.elapsed = 0.0f;
+        if(curFrame.elapsed >= durationS - 0.003f)
+            curFrame.elapsed = 0.0f;
     }
     setFlag(PAUSED, FG_FALSE);
     setFlag(STOPPED, FG_FALSE);
