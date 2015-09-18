@@ -661,32 +661,38 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
                         Vec3f(center.x + extent.x, center.y - extent.y, center.z - extent.z), // 7 +x, -y, -z
                         Vec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z) // 8 -x, -y, -z
     };
-#define _id_vec(_X) v[(_X-1)]
-    const Vector3f aabbLineStripBuf[] = {
-                                         // 1st face
-                                         _id_vec(4), // 0
-                                         _id_vec(1), // 1
-                                         _id_vec(2), // 2
-                                         _id_vec(4), // 3
-                                         _id_vec(3), // 4
-                                         _id_vec(2), // 5
+    //#define _id_vec(_X) v[(_X-1)]
+#define _id_vec(_X) (_X-1)
+    const unsigned short aabbLineStripBuf[] = {
+                                               // 1st face
+                                               _id_vec(1), // 0
+                                               _id_vec(2), // 1
+                                               _id_vec(2), // 2
+                                               _id_vec(3), // 3
+                                               _id_vec(3), // 4
+                                               _id_vec(4), // 5
+                                               _id_vec(4), // 6
+                                               _id_vec(1), // 7
 
-                                         // 2nd face
-                                         _id_vec(7), // 6
-                                         _id_vec(3), // 7
-                                         _id_vec(6), // 8
-                                         _id_vec(7), // 9
+                                               // 2nd face
+                                               _id_vec(8), // 8
+                                               _id_vec(7), // 9
+                                               _id_vec(7), // 10
+                                               _id_vec(6), // 11
+                                               _id_vec(6), // 12
+                                               _id_vec(5), // 13
+                                               _id_vec(5), // 14
+                                               _id_vec(8), // 15
 
-                                         // 3rd face
-                                         _id_vec(8), // 10
-                                         _id_vec(6), // 11
-                                         _id_vec(5), // 12
-                                         _id_vec(8), // 13
-
-                                         // 4th face
-                                         _id_vec(1), // 14
-                                         _id_vec(5), // 15
-                                         _id_vec(4), // 16
+                                               // side lines
+                                               _id_vec(1), // 16
+                                               _id_vec(8), // 17
+                                               _id_vec(4), // 18
+                                               _id_vec(5), // 19
+                                               _id_vec(3), // 20
+                                               _id_vec(6), // 21
+                                               _id_vec(2), // 22
+                                               _id_vec(7) // 23
     };
     const Color4f aabbColor[] = {
                                  color,
@@ -697,23 +703,10 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
                                  color,
                                  color,
                                  color,
-                                 color,
-
-                                 color,
-                                 color,
-                                 color,
-                                 color,
-
-                                 color,
-                                 color,
-                                 color,
-                                 color,
-
                                  color
-
     };
 #undef _id_vec
-    uintptr_t offset = (uintptr_t)((unsigned int*)&aabbLineStripBuf[0]);
+    uintptr_t offset = (uintptr_t)((unsigned int*)&v[0]);
     context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
@@ -728,8 +721,40 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
                                  FG_GFX_FALSE,
                                  sizeof (Vector4f),
                                  reinterpret_cast<fgGFXvoid*>(offset));
-    context::drawArrays(PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
+    //context::drawArrays(PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
+    context::drawElements(PrimitiveMode::LINES,
+                          sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]),
+                          &aabbLineStripBuf[0]);
 
+}
+//------------------------------------------------------------------------------
+
+void gfx::primitives::drawLine(const Vec3f& start, const Vec3f& end, const Color4f& color) {
+    context::diffVertexAttribArrayMask(ATTRIBUTE_POSITION_BIT | ATTRIBUTE_COLOR_BIT);
+
+    const Vec3f v[2] = {start, end};
+
+    const Color4f aabbColor[] = {
+                                 color,
+                                 color
+    };
+#undef _id_vec
+    uintptr_t offset = (uintptr_t)((unsigned int*)&v[0]);
+    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector3f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
+
+    offset = (uintptr_t)((unsigned int*)&aabbColor[0]);
+    context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                 4,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector4f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
+    context::drawArrays(PrimitiveMode::LINE_STRIP, 0, sizeof (v) / sizeof (v[0]));
 }
 //------------------------------------------------------------------------------
 

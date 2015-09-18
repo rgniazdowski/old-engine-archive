@@ -1027,11 +1027,11 @@ void gfx::CSceneManager::render(void) {
                 continue;
             pProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 0.0f);
             pProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
-
 #if defined(FG_DEBUG)
             CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
             SMeshBase* sphereMesh = sphereModel->getShapes()[0]->mesh;
-            if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
+            if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) &&
+               pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
                 CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
                 if(pSceneObj->getModel()) {
                     m_MVP.calculate(pSceneObj->getModelMatrix());
@@ -1047,8 +1047,12 @@ void gfx::CSceneManager::render(void) {
                 m_MVP.resetModelMatrix();
                 pProgram->setUniform(&m_MVP);
                 primitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
+                if(pSceneNode->getParent()) {
+                    primitives::drawLine(pSceneNode->getBoundingVolume().center,
+                                         pSceneNode->getParent()->getBoundingVolume().center,
+                                         Color4f(1.0f, 1.0f, 0.0f, 1.0f));
+                }
             }
-
             if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
                 Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getBoundingVolume().center);
                 const float radius = pSceneNode->getBoundingVolume().radius;
@@ -1617,7 +1621,7 @@ gfx::CSceneNode *gfx::CSceneManager::addFromModel(const std::string& modelNameTa
     if(!pResourceManager) {
         return NULL;
     }
-    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
+    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->request(modelNameTag));
     if(!pModelRes) {
         return NULL;
     }
@@ -1634,7 +1638,7 @@ gfx::CSceneNode *gfx::CSceneManager::addFromModel(const char *modelNameTag,
     if(!pResourceManager) {
         return NULL;
     }
-    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
+    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->request(modelNameTag));
     if(!pModelRes) {
         return NULL;
     }

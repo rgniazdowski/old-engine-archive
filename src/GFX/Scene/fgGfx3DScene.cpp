@@ -227,6 +227,11 @@ void gfx::CScene3D::render(void) {
             aabb.min = pTreeNode->center - extent;
             aabb.max = pTreeNode->center + extent;
             primitives::drawAABBLines(aabb, Color4f(0.2f, d, 1.0f - d, 1.0f));
+            if(pTreeNode->parent) {
+                primitives::drawLine(pTreeNode->center,
+                                     pTreeNode->parent->center,
+                                     Color4f(1.0f, 0.2f, 1.0f, 1.0f));
+            }
         }
 #endif        
     }

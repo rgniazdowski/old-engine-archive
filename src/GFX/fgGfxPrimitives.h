@@ -119,7 +119,12 @@ namespace fg {
              * @param aabb
              * @param color
              */
-            void drawAABBLines(const AABoundingBox3Df& aabb, const Color4f& color = Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+            void drawAABBLines(const AABoundingBox3Df& aabb,
+                               const Color4f& color = Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+
+            void drawLine(const Vec3f& start,
+                          const Vec3f& end,
+                          const Color4f& color = Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 
             void drawSquare2D(void);
 
