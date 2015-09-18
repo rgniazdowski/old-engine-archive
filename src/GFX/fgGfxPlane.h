@@ -214,7 +214,7 @@ namespace fg {
              * @param point
              * @return 
              */
-            value_type distance(const vector_type& point) {
+            value_type distance(const vector_type& point) const {
                 return (value_type)(this->d + math::dot(this->n, point));
                 //return (value_type)(math::dot(point, this->n) - this->d);
                 //return (d + normal.innerProduct(p));
@@ -226,7 +226,7 @@ namespace fg {
              * @param c
              * @return
              */
-            value_type distance(value_type a, value_type b, value_type c) {
+            value_type distance(value_type a, value_type b, value_type c) const {
                 return (value_type)(this->d + math::dot(this->n, vector_type(a, b, c)));
                 //return (value_type)(math::dot(vector_type(a, b, c), this->n) - this->d);
 
@@ -237,7 +237,7 @@ namespace fg {
              * @param point
              * @return 
              */
-            Halfspace classify(const vector_type& point) {
+            Halfspace classify(const vector_type& point) const {
                 value_type _d = distance(point);
                 if(_d < (value_type)0) return NEGATIVE;
                 if(_d > (value_type)0) return POSITIVE;
@@ -262,7 +262,7 @@ namespace fg {
              * 
              * @return
              */
-            inline char getApproxAlignment(void) {
+            inline char getApproxAlignment(void) const {
                 if(math::abs(n.x) > math::abs(n.y) && math::abs(n.x) > math::abs(n.z)) {
                     return 'x';
                 } else if(math::abs(n.y) > math::abs(n.x) && math::abs(n.y) > math::abs(n.z)) {
@@ -275,7 +275,7 @@ namespace fg {
              * @param point
              * @return
              */
-            inline value_type fastDistance(const vector_type& point) {
+            inline value_type fastDistance(const vector_type& point) const {
                 switch(this->axis) {
                     case Axis::X:
                         if(n.x < 0) {

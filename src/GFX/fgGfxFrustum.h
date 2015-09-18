@@ -109,46 +109,46 @@ namespace fg {
              * @param point
              * @return 
              */
-            int testPoint(const Vector3f &point);
+            int testPoint(const Vector3f &point) const;
             /**
              * 
              * @param point
              * @param radius
              * @return 
              */
-            int testSphere(const Vector3f &point, const float radius);
+            int testSphere(const Vector3f &point, const float radius) const;
             /**
              * 
              * @param box
              * @return 
              */
-            int testSphere(const BoundingVolume3Df& box);
+            int testSphere(const BoundingVolume3Df& box) const;
             /**
              * 
              * @param box
              * @return 
              */
-            int testVolume(const AABoundingBox3Df& box);
+            int testVolume(const AABoundingBox3Df& box) const;
             /**
              * 
              * @param box
              * @return 
              */
-            int testVolume(const BoundingVolume3Df& box);
+            int testVolume(const BoundingVolume3Df& box) const;
             /**
              * 
              * @param center
              * @param extent
              * @return 
              */
-            int testVolume(const Vector3f& center, const float extent);
+            int testVolume(const Vector3f& center, const float extent) const;
             /**
              * 
              * @param center
              * @param extent
              * @return 
              */
-            int testVolume(const Vector3f& center, const Vector3f& extent);
+            int testVolume(const Vector3f& center, const Vector3f& extent) const;
 
         public:
             /**

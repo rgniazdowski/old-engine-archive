@@ -233,7 +233,7 @@ void gfx::CFrustum::set(const Matrix4f &matrix) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testPoint(const Vector3f &point) {
+int gfx::CFrustum::testPoint(const Vector3f &point) const {
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
     for(int i = 0; i < 6; i++) {
@@ -245,7 +245,7 @@ int gfx::CFrustum::testPoint(const Vector3f &point) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
+int gfx::CFrustum::testSphere(const Vector3f &point, const float radius) const {
     // #FIXME - OPTIMIZE!
     // #FIXME - remember that for now this all works with world-space (MVP transform)
     int result = INSIDE;
@@ -262,7 +262,7 @@ int gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) {
+int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) const {
     // #FIXME - remember that for now this all works with world-space (MVP transform)
     int result = INSIDE;
     float distance = 0.0f;
@@ -278,7 +278,7 @@ int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testVolume(const AABoundingBox3Df& box) {
+int gfx::CFrustum::testVolume(const AABoundingBox3Df& box) const {
     if(!box.isValid())
         return OUTSIDE;
     // #FIXME - OPTIMIZE!
@@ -314,7 +314,7 @@ int gfx::CFrustum::testVolume(const AABoundingBox3Df& box) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testVolume(const BoundingVolume3Df& box) {
+int gfx::CFrustum::testVolume(const BoundingVolume3Df& box) const {
     if(!box.isValid())
         return OUTSIDE;
     int result = INSIDE;
@@ -330,7 +330,7 @@ int gfx::CFrustum::testVolume(const BoundingVolume3Df& box) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testVolume(const Vector3f& center, const float extent) {
+int gfx::CFrustum::testVolume(const Vector3f& center, const float extent) const {
     int result = INSIDE;
     for(int i = 0; i < NUM_PLANES; i++) {
         Vec3f absPlane = math::abs(m_planes[i].n);
@@ -344,7 +344,7 @@ int gfx::CFrustum::testVolume(const Vector3f& center, const float extent) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CFrustum::testVolume(const Vector3f& center, const Vector3f& extent) {
+int gfx::CFrustum::testVolume(const Vector3f& center, const Vector3f& extent) const {
     int result = INSIDE;
     for(int i = 0; i < NUM_PLANES; i++) {
         Vec3f absPlane = math::abs(m_planes[i].n);

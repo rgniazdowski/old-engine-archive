@@ -252,17 +252,13 @@ namespace fg {
             virtual inline void refresh(void) {
                 center = 0.5f * (this->min + this->max);
                 extent = 0.5f * (this->max - this->min);
-                //radius = 0.0f;
-                //radius = math::max(radius, extent.x);
-                //radius = math::max(radius, extent.y);
             }
             /**
              * 
              */
             virtual inline void invalidate(void) {
                 this->zero();
-                this->min.x = FLT_MAX;
-                this->min.y = FLT_MAX;
+                base_type::invalidate();
             }
             /**
              * 
@@ -555,20 +551,13 @@ namespace fg {
             virtual inline void refresh(void) {
                 center = 0.5f * (this->min + this->max);
                 extent = 0.5f * (this->max - this->min);
-                //radius = 0.0f;
-                //radius = math::max(radius, math::pow(extent.z * extent.z + extent.x * extent.x + extent.y * extent.y, 1.0f/2.0f));
-                //radius = math::max(radius, math::sqrt(extent.z * extent.z + extent.x * extent.x));
-                //radius = math::max(radius, math::sqrt(extent.z * extent.z + extent.y * extent.y));
-                //radius = math::max(radius, math::sqrt(extent.y * extent.y + extent.x * extent.x));
             }
             /**
              * 
              */
             virtual inline void invalidate(void) {
                 this->zero();
-                this->min.x = FLT_MAX;
-                this->min.y = FLT_MAX;
-                this->min.z = FLT_MAX;
+                base_type::invalidate();
             }
             /**
              *
@@ -604,7 +593,6 @@ namespace fg {
              */
             virtual void transform(typename Matrix4T<TValueType>::type const& m) {
                 Vector3f ext = 0.5f * (this->max - this->min);
-                //radius = math::max(radius, math::sqrt(ext.z * ext.z + ext.x * ext.x + ext.y * ext.y));
                 radius = math::length(ext);
                 base_type::transform(m);
                 this->refresh();
