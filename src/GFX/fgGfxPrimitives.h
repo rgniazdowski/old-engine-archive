@@ -133,7 +133,7 @@ namespace fg {
             //------------------------------------------------------------------
 
             /**
-             * 
+             *
              * @param inputData
              * @param attribMask
              * @param mode
@@ -143,7 +143,7 @@ namespace fg {
                                 const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
-             * 
+             *
              * @param inputData
              * @param mode
              */
@@ -151,7 +151,7 @@ namespace fg {
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
-             * 
+             *
              * @param inputData
              * @param attribMask
              * @param mode
@@ -161,7 +161,7 @@ namespace fg {
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
-             * 
+             *
              * @param inputData
              * @param attribMask
              * @param mode
@@ -171,7 +171,7 @@ namespace fg {
                            const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
-             * 
+             *
              * @param inputData
              * @param attribMask
              * @param mode
@@ -183,7 +183,7 @@ namespace fg {
             //------------------------------------------------------------------
 
             /**
-             * 
+             *
              * @param inputData
              * @param indices
              * @param attribMask
@@ -195,7 +195,7 @@ namespace fg {
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
-             * 
+             *
              * @param inputData
              * @param indices
              * @param attribMask
@@ -207,7 +207,7 @@ namespace fg {
                                   const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
-             * 
+             *
              * @param inputData
              * @param indices
              * @param attribMask

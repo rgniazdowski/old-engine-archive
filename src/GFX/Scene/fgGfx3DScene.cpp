@@ -69,7 +69,7 @@ void gfx::CScene3D::sortCalls(void) {
     }
     // Update the MVP based on the main camera properties
     getMVP()->setCamera((CCamera *)(getCamera()));
-    CFrustum &frustum = getMVP()->getFrustum();
+    CFrustum const& frustum = getMVP()->getFrustum();
     // Remove from the queue any remaining nodes (CSceneNode)
     getNodeQueue().clear();
     //
@@ -146,23 +146,22 @@ void gfx::CScene3D::sortCalls(void) {
             if(pSceneNode->isVisible()) {
                 continue;
             }
-
-            CDrawCall *pDrawCall = pSceneNode->getDrawCall();
+            //CDrawCall *pDrawCall = pSceneNode->getDrawCall();
 #if defined(FG_DEBUG)
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
             }
 #endif
+            BoundingVolume3Df const& boundingVolume = pSceneNode->getBoundingVolume();
             int visibilityResult = 1;
-            if(isFrustumCheck()) {
-                visibilityResult = frustum.testVolume(pSceneNode->getBoundingVolume());
-            } else if(isFrustumCheckSphere()) {
-                visibilityResult = frustum.testSphere(pSceneNode->getBoundingVolume());
+            if(isFrustumCheckSphere()) {
+                visibilityResult = frustum.testSphere(boundingVolume);
+            } else if(isFrustumCheck()) {
+                visibilityResult = frustum.testVolume(boundingVolume);
             }
-            // Set visibility recursively (for all children also)
+            // Set visibility (non-recursive)
             // The second flag is true by default.
-            pSceneNode->setVisible(!!visibilityResult, FG_TRUE);
-
+            pSceneNode->setVisible(!!visibilityResult, FG_FALSE);
 #if defined(FG_DEBUG)
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
@@ -182,14 +181,7 @@ void gfx::CScene3D::sortCalls(void) {
                 }
                 getNodeQueue().push(pSceneNode);
             }
-            // this checking should not be here,  nodes have refreshGfxInternals()
-            // function and scene manager initializeNode()
-            if(pDrawCall) {
-                if(!pDrawCall->getShaderProgram())
-                    pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
-                // getRefPriorityQueue().push(pDrawCall);
-            }
-        }
+        } // for every object in tree node
     }
     if(m_physicsWorld) {
         m_physicsWorld->finishFrame();

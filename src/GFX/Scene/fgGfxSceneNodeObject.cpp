@@ -133,7 +133,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
         if(!m_pModel->isAnimated()) {
             m_aabb.min = m_pModel->getAABB().min;
             m_aabb.max = m_pModel->getAABB().max;
-            m_aabb.transform(m_modelMat);
+            m_aabb.transform(m_finalModelMat);
         } else {
             m_aabb.invalidate();
             // should now just merge with aabb's of the meshes? lol
@@ -149,12 +149,11 @@ void gfx::CSceneNodeObject::updateAABB(void) {
                 CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
                 m_aabb.merge(pNodeMesh->getBoundingVolume());
             }
-            m_aabb.transform(m_modelMat);
         }
         if(body && !isAutoScale()) {
             m_aabb.radius = body->getRadius();
         } else {
-            m_aabb.radius = math::length(m_scale * m_pModel->getAABB().getExtent());
+            m_aabb.radius = math::length(m_aabb.getExtent());
         }
     }
 }
@@ -174,29 +173,43 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         // need any separate drawcall - just one for every mesh/shape
         // Now setup draw call and children from every shape/mesh from given model
         // -- need some method for quick children removal - all of them
+        gfx::CModel::ShapesVec oldShapes;
+        oldShapes.reserve(getChildrenCount());
         ChildrenVecItor it = getChildren().begin(), end = getChildren().end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;
-            // Would need to clear the children list?
-        } // SRSLY? #FIXME
+            CSceneNode* pNode = (*it);
+            if(pNode->getNodeType() == SCENE_NODE_MESH) {
+                CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+                if(pModel->hasMesh(pNodeMesh->getMesh())) {
+                    oldShapes.push_back(pModel->getShape(pNodeMesh->getMesh()));
+                    if(!pNodeMesh->isManaged() && isManaged()) {
+                        // if child node is not managed, can add it
+                        // .. .. 
+                    }
+                }
+            }
+        } // for every child in this node
 
         gfx::CModel::ShapesVec &shapes = pModel->getShapes();
         setBoundingVolume(pModel->getAABB());
         gfx::CModel::ShapesVecItor sit = shapes.begin(), send = shapes.end();
         unsigned int sIdx = 0;
         for(; sit != send; sit++) {
-
+            sIdx = getChildrenCount() + 1;
             if(!(*sit))
                 continue;
-            SShape *pShape = (*sit);
-            SMeshBase *pMesh = (*sit)->mesh;
+            SShape* pShape = (*sit);
+            SMeshBase* pMesh = (*sit)->mesh;
             if(!pMesh)
                 continue;
+            if(oldShapes.contains(pShape)) {
+                continue; // there is already a child with this idx
+            }
             CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
             static_cast<CSceneNodeMesh *>(pChildNode)->setMaterial(pShape->material);
             std::string childName = this->getName();
-            sIdx = getChildrenCount() + 1;
             childName.append("_");
             childName.append(pShape->name);
             childName.append("_");
@@ -204,7 +217,6 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             childName.append(1, (char)('0' + (sIdx % 10)));
             pChildNode->setName(childName);
 
-            //pChildNode->getDrawCall()->setupMaterial(pShape->material);
             // Should register it in a manager? #NOPE
             // There is no need to register this NodeMesh - it's immediate child
             // required to do the drawing - however this is about to change
@@ -213,19 +225,18 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             // If so the drawing procedures for object should be empty - not include
             // the children. The children would be drawn via the scene manager/octree
             // #FIXME #P2 #IMPORTANT
-            //if(m_pManager) {
-            //if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-            //static_cast<fgGfxSceneManager *>(m_pManager)->addNode(pChildNode->getRefHandle(), pChildNode, this);
-            //}
-            //}
-            // No need to check if it's inserted successfully
-            getChildren().push_back(pChildNode);
+            if(m_pManager && isManaged()) {
+                if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
+                    static_cast<CSceneManager *>(m_pManager)->addNode(pChildNode->getRefHandle(),
+                                                                      pChildNode,
+                                                                      this);
+                }
+            } else {
+                // FALLBACK
+                // No need to check if it's inserted successfully
+                getChildren().push_back(pChildNode);
+            }
         }
-        /// Maybe some children should not be accessible globally?
-        /// Need to think about it - there can be many objects containing the 
-        /// same meshes. And they will have the same name ? NOPE
-        /// Randomize name tag? oh my... you could work at the coal mine you know?
-        /// It would be ... easier?
     }
 }
 //------------------------------------------------------------------------------

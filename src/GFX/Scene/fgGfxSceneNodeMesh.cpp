@@ -166,7 +166,7 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
         if(!m_pMesh->isSkinnedMesh()) {
             m_aabb.min = m_pMesh->aabb.min;
             m_aabb.max = m_pMesh->aabb.max;
-            m_aabb.transform(m_modelMat);
+            m_aabb.transform(m_finalModelMat);
         } else {
             m_aabb.invalidate();
             animated_type::AnimationsVec& animations = getAnimations();
@@ -175,7 +175,6 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
             // This still need fixing, need to interpolate animations
             // automatically, and use result here
             // (without traversing animations ...)
-
             SSkinnedMesh *pSkinnedMesh = this->getSkinnedMesh();
             const unsigned int nAnimations = animations.size();
             for(unsigned int animId = 0; animId < nAnimations; animId++) {
@@ -185,6 +184,7 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
                 if(info.pAnimation->getType() != anim::Type::BONE)
                     continue;
                 unsigned int nBones = pSkinnedMesh->boneEdges.size();
+
                 for(unsigned int boneId = 0; boneId < nBones; boneId++) {
                     Vec3f min, max;
                     pSkinnedMesh->boneEdges[boneId].transform(pSkinnedMesh,
@@ -193,18 +193,18 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
                     m_aabb.merge(min);
                     m_aabb.merge(max);
                 }
-                if(info.pAnimation->getType() == anim::Type::BONE)
-                    break; // #FIXME - this seriously need to be better
+                if(info.pAnimation->getType() == anim::Type::BONE);
+                //break; // #FIXME - this seriously need to be better
                 // also would really need some method in base class
                 // that updates the aabb based on the children size
                 // but too soon for that !TODO
             }
-            m_aabb.transform(m_modelMat);
+            m_aabb.transform(m_finalModelMat);
         }
         if(body && !isAutoScale()) {
             m_aabb.radius = body->getRadius();
         } else {
-            m_aabb.radius = math::length(m_scale * m_pMesh->aabb.getExtent());
+            m_aabb.radius = math::length(m_aabb.getExtent());
         }
     }
 }

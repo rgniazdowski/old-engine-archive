@@ -175,8 +175,10 @@ namespace fg {
             /// Current scale of the scene node - scale is automatically
             /// applied to the displayed data (mesh/shape/model/...)
             Vector3f m_scale;
-            /// Internal object specific model matrix
+            /// Internal object specific model matrix (local)
             Matrix4f m_modelMat;
+            /// Final model matrix (chain transformation, world, based on parent)
+            Matrix4f m_finalModelMat;
             /// This is updated bounding box - it's transformed by the model matrix
             BoundingVolume3Df m_aabb;
             /// Because the Scene Node is drawable it will contain inside required
@@ -733,6 +735,20 @@ namespace fg {
              */
             inline Matrix4f const& getModelMatrix(void) const {
                 return m_modelMat;
+            }
+            /**
+             *
+             * @return
+             */
+            inline Matrix4f& getFinalModelMatrix(void) {
+                return m_finalModelMat;
+            }
+            /**
+             *
+             * @return
+             */
+            inline Matrix4f const& getFinalModelMatrix(void) const {
+                return m_finalModelMat;
             }
             /**
              * 

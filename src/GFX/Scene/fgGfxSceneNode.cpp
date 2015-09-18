@@ -28,6 +28,7 @@ m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
+m_finalModelMat(),
 m_aabb(), // axis-aligned bounding box - this one will be transformed
 m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
@@ -254,18 +255,8 @@ fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
-    if(!isVisible())
-        return;
-    if(m_drawCall) {
-        m_drawCall->draw(m_modelMat * modelMat);
-    }
-    ChildrenVecItor it = m_children.begin(), end = m_children.end();
-    for(; it != end; it++) {
-        if(!(*it))
-            continue;
-        if(m_drawCall != (*it)->getDrawCall()) {
-            (*it)->draw(m_modelMat * modelMat);
-        }
+    if(m_drawCall && isVisible()) {
+        m_drawCall->draw(m_finalModelMat * modelMat);
     }
 }
 //------------------------------------------------------------------------------
@@ -322,13 +313,18 @@ void gfx::CSceneNode::update(float delta) {
         m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
 
     }
+    if(getParent()) {
+        m_finalModelMat = m_modelMat * getParent()->getFinalModelMatrix();
+    } else {
+        m_finalModelMat = m_modelMat;
+    }
     animate(delta);
     // The base version of the updateAABB will update it depending on the collision body
     // if no collision body is present - the transformation wont be valid,
     // so it does nothing... - this way this function can be called at the end of 
     // any derived version (extend)
     updateAABB();
-    
+
 }
 //------------------------------------------------------------------------------
 

@@ -913,7 +913,7 @@ void gfx::CSceneManager::sortCalls(void) {
             m_pickSelection.groundIntersectionPoint[1] = Vector3f();
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
-
+    CFrustum const& frustum = m_MVP.getFrustum();
     m_traverse.rewind();
     while(m_traverse.next(getActiveRootNode())) {
         CSceneNode *pSceneNode = m_traverse.current;
@@ -922,7 +922,7 @@ void gfx::CSceneManager::sortCalls(void) {
         if(pSceneNode->getNodeType() == SCENE_NODE_ROOT) {
             continue; // for now skip the root nodes in linear traversal
         }
-        CDrawCall* pDrawCall = pSceneNode->getDrawCall();
+        //CDrawCall* pDrawCall = pSceneNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
@@ -933,13 +933,16 @@ void gfx::CSceneManager::sortCalls(void) {
             // the model matrix; maybe some operator ?
             pSceneNode->update(timesys::elapsed()); // update nodes internals when active
         }
+        BoundingVolume3Df const& boundingVolume = pSceneNode->getBoundingVolume();
         int visibilityResult = 1;
-        if(isFrustumCheck()) {
-            visibilityResult = m_MVP.getFrustum().testVolume(pSceneNode->getBoundingVolume());
-        } else if(isFrustumCheckSphere()) {
-            visibilityResult = m_MVP.getFrustum().testSphere(pSceneNode->getBoundingVolume());
+        if(isFrustumCheckSphere()) {
+            visibilityResult = frustum.testSphere(boundingVolume);
+        } else if(isFrustumCheck()) {
+            visibilityResult = frustum.testVolume(boundingVolume);
         }
-        pSceneNode->setVisible(!!visibilityResult);
+        // Set visibility (non-recursive)
+        // The second flag is true by default.
+        pSceneNode->setVisible(!!visibilityResult, FG_FALSE);
 #if defined(FG_DEBUG)
         if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
@@ -953,20 +956,15 @@ void gfx::CSceneManager::sortCalls(void) {
                 m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
             }
         }
-        // #FIXME #LINEAR_TRAVERSE - linear traverse should push to queue
-        // only the deepest child nodes - the same goes with octree
-        // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes
-        // ? also need to push to queue more than one draw call        
-        // The aabb for each object is updated based on the children        
+        // Each object is pushed to queue individually
+        // Even if it contains children, single draw function should not draw
+        // everyone - need specialized function for that
+        // This is due to the fact that node queue sorts objects based on sorting
+        // index (which is determined based on the data in the given draw call)
+        // The aabb for each object is updated based on the children.
         if(pSceneNode->isVisible() && !pSceneNode->getRefHandle().isNull()) {
             // push to queue only nodes that have valid handle
             m_nodeQueue.push(pSceneNode);
-        }
-        // #FIXME - srsly?
-        if(pDrawCall) {
-            if(!pDrawCall->getShaderProgram())
-                pDrawCall->setShaderProgram(((gfx::CShaderManager*)getShaderManager())->getCurrentProgram());
-            // getRefPriorityQueue().push(pDrawCall);
         }
     }
     m_pickSelection.end(getStateFlags());
@@ -1034,7 +1032,7 @@ void gfx::CSceneManager::render(void) {
                pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
                 CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
                 if(pSceneObj->getModel()) {
-                    m_MVP.calculate(pSceneObj->getModelMatrix());
+                    m_MVP.calculate(pSceneObj->getFinalModelMatrix());
                     pProgram->setUniform(&m_MVP);
                     // Current aabb - it's in model space (local)
                     AABB3Df& modelBox = pSceneObj->getModel()->getAABB();
@@ -1046,7 +1044,8 @@ void gfx::CSceneManager::render(void) {
             if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
                 m_MVP.resetModelMatrix();
                 pProgram->setUniform(&m_MVP);
-                primitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
+                primitives::drawAABBLines(pSceneNode->getBoundingVolume(),
+                                          Color4f(0.5f, 0.5f, 1.0f, 1.0f));
                 if(pSceneNode->getParent()) {
                     primitives::drawLine(pSceneNode->getBoundingVolume().center,
                                          pSceneNode->getParent()->getBoundingVolume().center,
