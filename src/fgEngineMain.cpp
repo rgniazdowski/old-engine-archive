@@ -767,6 +767,7 @@ fgBool CEngineMain::loadResources(void) {
     m_gfxMain->getShaderManager()->setUniformAutoUpdate(FG_TRUE);
     //#endif
 
+
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     std::string mainScriptPath, modScriptPath;
@@ -911,7 +912,7 @@ fgBool CEngineMain::render(void) {
 #endif
     gfx::CShaderProgram* pGuiProgram = m_gfxMain->getShaderManager()->request(gfx::shaders::USAGE_GUI_RENDER_BIT);
     m_gfxMain->getShaderManager()->useProgram(pGuiProgram);
-    Matrix4f modelMat = math::translate(modelMat, Vec3f(0.0f, 0.0f, 0.0f));
+    Matrix4f modelMat = math::translate(Matrix4f(), Vec3f(0.0f, 0.0f, 0.0f));
     gfx::CMVPMatrix mvp;
     mvp.identity();
     mvp.setOrtho(0.0f,
