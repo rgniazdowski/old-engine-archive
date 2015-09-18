@@ -37,6 +37,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CGfxMain::CGfxMain() :
+m_loader(NULL),
 m_textureMgr(NULL),
 m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
@@ -151,9 +152,9 @@ void gfx::CGfxMain::registerResourceCallbacks(void) {
         return;
 
     if(!m_resourceCreatedCallback)
-        m_resourceCreatedCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::resourceCreatedHandler);
+        m_resourceCreatedCallback = new event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::resourceCreatedHandler);
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->addCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -161,7 +162,7 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->removeCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -170,7 +171,7 @@ void gfx::CGfxMain::registerSceneCallbacks(void) {
         return;
 
     if(!m_sceneNodeInsertedCallback)
-        m_sceneNodeInsertedCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::sceneNodeInsertedHandler);
+        m_sceneNodeInsertedCallback = new event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::sceneNodeInsertedHandler);
 
     m_3DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
     m_2DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
@@ -191,11 +192,11 @@ void gfx::CGfxMain::registerProgramCallbacks(void) {
         return;
 
     if(!m_programEventCallback)
-        m_programEventCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::programEventHandler);
+        m_programEventCallback = new event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::programEventHandler);
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_QUIT, m_programEventCallback);
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_SUSPEND, m_programEventCallback);
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_RESUME, m_programEventCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_QUIT, m_programEventCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_SUSPEND, m_programEventCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->addCallback(event::PROGRAM_RESUME, m_programEventCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -203,9 +204,9 @@ void gfx::CGfxMain::unregisterProgramCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_QUIT, m_programEventCallback);
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_SUSPEND, m_programEventCallback);
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_RESUME, m_programEventCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_QUIT, m_programEventCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_SUSPEND, m_programEventCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->removeCallback(event::PROGRAM_RESUME, m_programEventCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -221,7 +222,8 @@ fgBool gfx::CGfxMain::initGFX(void) {
         m_mainWindow = new gfx::CWindow();
     }
     m_mainWindow->registerOnSwap(&gfx::CGfxMain::handleMainWindowBufferSwap, (void*)this);
-    m_loader = new CLoader(this);
+    if(!m_loader)
+        m_loader = new CLoader(this);
     int sw = (int)context::getScreenSize().x;
     int sh = (int)context::getScreenSize().y;
 #if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
@@ -702,26 +704,13 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CGfxMain::render(void) {
-    glm::mat4 Model;
-    resource::CResourceManager *rm = NULL;
-    ::std::string sPlainEasyShaderName("sPlainEasy");
-    ::std::string sOrthoEasyShaderName("sOrthoEasy");
-    ::std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
-
-    rm = (resource::CResourceManager *)m_textureMgr->getResourceManager();
-    if(!rm) {
-        FG_LOG_ERROR("Cant access resource manager.");
-        return;
-    }
-
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
-    m_3DScene->setSkyBoxShader(sSkyBoxEasyShaderName); // #FIXME #FUBAR
-
     //
     // OH MY GOD HOW THIS SUX #FIXME
     //
+
     if(true) {
         // Load proper texture
         static resource::CResource *pResourceX = NULL;
@@ -736,14 +725,17 @@ void gfx::CGfxMain::render(void) {
         }
     }
 
-    CShaderProgram *sPlainEasyProgram = m_shaderMgr->get(sPlainEasyShaderName);
-    if(!sPlainEasyProgram) {
-        FG_LOG_ERROR("Cant access sPlainEasy shader program.");
-        return;
+    CShaderProgram *pDefaultProgram = m_shaderMgr->request(shaders::USAGE_DEFAULT_BIT | shaders::USAGE_LOW_QUALITY_BIT);
+    if(!pDefaultProgram) {
+        pDefaultProgram = m_shaderMgr->request(shaders::USAGE_FALLBACK_BIT);
+        if(!pDefaultProgram) {
+            FG_LOG_ERROR("Cant access default/fallback shader program.");
+            return;
+        }
     }
-    m_shaderMgr->useProgram(sPlainEasyProgram);
-    sPlainEasyProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
-    sPlainEasyProgram->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, (fgGFXint)0);
+    m_shaderMgr->useProgram(pDefaultProgram);
+    pDefaultProgram->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
+    pDefaultProgram->setUniform(shaders::UNIFORM_PLAIN_TEXTURE, (fgGFXint)0);
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::render");
@@ -764,38 +756,20 @@ void gfx::CGfxMain::render(void) {
     // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
     ////////////////////////////////////////////////////////////////////////////
     context::frontFace(FrontFace::FACE_CCW);
-    gfx::CShaderProgram *sOrthoEasyProgram = m_shaderMgr->get(sOrthoEasyShaderName);
-    if(!sOrthoEasyProgram) {
-        FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
+    gfx::CShaderProgram *p2DProgram = m_shaderMgr->request(shaders::USAGE_2D_RENDER_BIT);
+    if(!p2DProgram) {
+        FG_LOG_ERROR("Cant access shader program for 2D rendering.");
         return;
     }
-    m_shaderMgr->useProgram(sOrthoEasyProgram);
-    sOrthoEasyProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
-    context::setBlend(FG_TRUE);
+    m_shaderMgr->useProgram(p2DProgram);
+    p2DProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+    //context::setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0.0f,
                                   (float)m_mainWindow->getWidth(),
                                   (float)m_mainWindow->getHeight(),
                                   0.0f);
     m_2DScene->render();
-    context::blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    context::setBlend(FG_FALSE);
 
-    // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
-    m_shaderMgr->useProgram(sOrthoEasyProgram);
-    Model = math::translate(Model, Vec3f(0.0f, 0.0f, 0.0f));
-    CMVPMatrix mvp_lol;
-    CMVPMatrix *MVP = &mvp_lol;
-    MVP->identity();
-    MVP->setOrtho(0.0f,
-                  (float)m_mainWindow->getWidth(),
-                  (float)m_mainWindow->getHeight(),
-                  0.0f);
-    MVP->calculate(Model);
-    sOrthoEasyProgram->setUniform(MVP);
-    context::setBlend(FG_TRUE);
-    context::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
-    context::frontFace(FrontFace::FACE_CCW);
 }
 //------------------------------------------------------------------------------
 

@@ -756,6 +756,11 @@ fgBool CEngineMain::loadResources(void) {
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
     m_gfxMain->preLoadShaders();
     m_gfxMain->generateBuiltInData();
+    {
+        gfx::CShaderProgram* pSkyBoxProgram = m_gfxMain->getShaderManager()->request(gfx::shaders::USAGE_SKYBOX_RENDER_BIT);
+        m_gfxMain->get3DScene()->setSkyBoxShader(pSkyBoxProgram);
+        m_gfxMain->get2DScene()->setSkyBoxShader(pSkyBoxProgram);
+    }
     m_gfxMain->getShaderManager()->setLinkOnUse(FG_TRUE);
     m_gfxMain->getShaderManager()->setLinkOnRequest(FG_TRUE);
     //#if defined(FG_USING_OPENGL_ES)
@@ -897,11 +902,24 @@ fgBool CEngineMain::render(void) {
         return FG_FALSE;
     }
     gfx::context::setBlend(FG_TRUE); // #FIXME
+    gfx::context::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    gfx::context::scissor();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GUI::render");
     }
 #endif
+    gfx::CShaderProgram* pGuiProgram = m_gfxMain->getShaderManager()->request(gfx::shaders::USAGE_GUI_RENDER_BIT);
+    m_gfxMain->getShaderManager()->useProgram(pGuiProgram);
+    Matrix4f modelMat = math::translate(modelMat, Vec3f(0.0f, 0.0f, 0.0f));
+    gfx::CMVPMatrix mvp;
+    mvp.identity();
+    mvp.setOrtho(0.0f,
+                 (float)m_gfxMain->getMainWindow()->getWidth(),
+                 (float)m_gfxMain->getMainWindow()->getHeight(),
+                 0.0f);
+    mvp.calculate(modelMat);
+    pGuiProgram->setUniform(&mvp);
     m_guiMain->render();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {

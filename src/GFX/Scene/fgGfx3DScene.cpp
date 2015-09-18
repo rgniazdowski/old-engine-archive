@@ -16,9 +16,9 @@
 #include "GFX/Shaders/fgGfxShaderManager.h"
 #include "GFX/Textures/fgTextureResource.h"
 
-#include "Util/fgMemory.h"
 #include "Resource/fgResourceManager.h"
 #include "Physics/fgWorld.h"
+#include "Util/fgMemory.h"
 
 #include "fgDebugConfig.h"
 #if defined(FG_DEBUG)
@@ -26,7 +26,6 @@
 #endif
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CScene3D::CScene3D() :
@@ -79,9 +78,9 @@ void gfx::CScene3D::sortCalls(void) {
     m_pickSelection.init(*getMVP(), *getCamera(), getStateFlags());
     if(m_pickSelection.shouldCheck) {
         fgBool groundStatus = getGroundGrid().rayIntersect(m_pickSelection.rayEye,
-                                                            m_pickSelection.rayDir,
-                                                            m_pickSelection.groundIntersectionPoint[1],
-                                                            FG_TRUE);
+                                                           m_pickSelection.rayDir,
+                                                           m_pickSelection.groundIntersectionPoint[1],
+                                                           FG_TRUE);
         if(!groundStatus) {
             m_pickSelection.groundIntersectionPoint[1] = Vector3f();
         }

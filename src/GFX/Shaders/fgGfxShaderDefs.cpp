@@ -29,6 +29,9 @@
 #define FG_GFX_USAGE_CARTOON_EFFECT_TEXT               "CartoonEffect"
 #define FG_GFX_USAGE_PARTICLE_RENDER_TEXT              "ParticleRender"
 #define FG_GFX_USAGE_SKYBOX_RENDER_TEXT                "SkyboxRender"
+#define FG_GFX_USAGE_GUI_RENDER_TEXT                   "GuiRender"
+#define FG_GFX_USAGE_2D_RENDER_TEXT                    "2DRender"
+#define FG_GFX_USAGE_FLAT_RENDER_TEXT                  "FlatRender"
 
 #define FG_GFX_SHADER_FRAGMENT_TEXT         "FragmentShader"
 #define FG_GFX_SHADER_VERTEX_TEXT           "VertexShader"
@@ -263,7 +266,10 @@ namespace fg {
                                                   USAGE_GAUSSIAN_BLUR_BIT,
                                                   USAGE_CARTOON_EFFECT_BIT,
                                                   USAGE_PARTICLE_RENDER_BIT,
-                                                  USAGE_SKYBOX_RENDER_BIT
+                                                  USAGE_SKYBOX_RENDER_BIT,
+                                                  USAGE_GUI_RENDER_BIT,
+                                                  USAGE_2D_RENDER_BIT,
+                                                  USAGE_FLAT_RENDER_BIT
             };
 
             const char * const g_UsageMaskTypesText[] = {
@@ -284,7 +290,10 @@ namespace fg {
                                                          FG_GFX_USAGE_GAUSSIAN_BLUR_TEXT,
                                                          FG_GFX_USAGE_CARTOON_EFFECT_TEXT,
                                                          FG_GFX_USAGE_PARTICLE_RENDER_TEXT,
-                                                         FG_GFX_USAGE_SKYBOX_RENDER_TEXT
+                                                         FG_GFX_USAGE_SKYBOX_RENDER_TEXT,
+                                                         FG_GFX_USAGE_GUI_RENDER_TEXT,
+                                                         FG_GFX_USAGE_2D_RENDER_TEXT,
+                                                         FG_GFX_USAGE_FLAT_RENDER_TEXT
             };
 
         } // namespace shaders

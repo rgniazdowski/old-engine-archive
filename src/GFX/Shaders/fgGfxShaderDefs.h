@@ -45,8 +45,11 @@ namespace fg {
                 USAGE_GAUSSIAN_BLUR_BIT = (1 << 13),
                 USAGE_CARTOON_EFFECT_BIT = (1 << 14),
                 USAGE_PARTICLE_RENDER_BIT = (1 << 15),
-                USAGE_SKYBOX_RENDER_BIT = (1 << 16)
-            }; // enum CategoryMask
+                USAGE_SKYBOX_RENDER_BIT = (1 << 16),
+                USAGE_GUI_RENDER_BIT = (1 << 17),
+                USAGE_2D_RENDER_BIT = (1 << 18),
+                USAGE_FLAT_RENDER_BIT = (1 << 19)
+            }; // enum UsageMask
             FG_ENUM_FLAGS(UsageMask);
 
             /**

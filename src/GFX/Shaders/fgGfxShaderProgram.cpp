@@ -257,7 +257,7 @@ fgBool gfx::CShaderProgram::compile(void) {
 
 fgBool gfx::CShaderProgram::link(void) {
     if(isLinked() || !isPreloaded()) {
-        FG_LOG_ERROR("GFX: Shader is already linked / is not pre-loaded on link() for program '%s'", getNameStr());
+        //FG_LOG_ERROR("GFX: Shader is already linked / is not pre-loaded on link() for program '%s'", getNameStr());
         return FG_FALSE;
     }
     if(!isCompiled()) {
