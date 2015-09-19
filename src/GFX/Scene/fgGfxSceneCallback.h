@@ -19,24 +19,30 @@
     #define FG_INC_GFX_SCENE_CALLBACK_BLOCK
 
     #include "Event/fgCallback.h"
-    #include "fgGfxSceneEvent.h"
+    #include "fgGfxSceneEvent.h"    
 
 namespace fg {
     namespace event {
         const CallbackType SCENE_CALLBACK = 1000;
         const CallbackType SCENE_FUNCTION_CALLBACK = 1001;
         const CallbackType SCENE_METHOD_CALLBACK = 1002;
-    }
+    } // namespace event
+    
     namespace gfx {
 
         class CSceneNode;
         class CSceneNodeTrigger;
         class CSceneManager;
+        
+        namespace traits {
+            class CTriggerable;
+        } // namespace traits
 
         /**
          *
          */
         class CSceneCallback : public virtual fg::event::CFunctionCallback {
+            friend class traits::CTriggerable;
             friend class CSceneNode;
             friend class CSceneNodeTrigger;
             friend class CSceneManager;
@@ -93,7 +99,7 @@ namespace fg {
         private:
             ///
             unsigned int m_ref;
-        };
+        }; // class CSceneCallback
 
         /**
          *
@@ -261,7 +267,7 @@ namespace fg {
             TClass* m_pClassInstance;
             ///
             fgSceneMethod m_sceneMethod;
-        };
+        }; // class CSceneMethodCallback
 
         /**
          * 
@@ -400,9 +406,10 @@ namespace fg {
         private:
             ///
             fgSceneFunction m_sceneFunction;
-        };
-    }
-}
+        }; // class CSceneFunctionCallback
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_SCENE_CALLBACK_BLOCK
 #endif	/* FG_INC_GFX_SCENE_CALLBACK */

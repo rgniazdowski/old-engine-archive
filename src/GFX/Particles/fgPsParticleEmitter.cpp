@@ -29,6 +29,10 @@ m_particles(),
 m_numParticles(0),
 m_maxCount(0),
 m_pCamera(NULL) {
+    if(!m_drawCall) {
+        m_drawCall = new CDrawCall();
+    }
+    
     setCollidable(FG_FALSE);
     setupFromParticleEffect(pEffect);
 }

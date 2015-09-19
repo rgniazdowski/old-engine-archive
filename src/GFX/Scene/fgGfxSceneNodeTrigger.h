@@ -18,11 +18,9 @@
     #define FG_INC_GFX_SCENE_NODE_TRIGGER
     #define FG_INC_GFX_SCENE_NODE_TRIGGER_BLOCK
 
-    #ifndef FG_INC_GFX_SCENE_NODE
-        #include "fgGfxSceneNode.h"
-    #endif
-
+    #include "fgGfxSceneNode.h"
     #include "fgGfxSceneCallback.h"
+    #include "fgGfxTriggerable.h"
 
 namespace fg {
     namespace gfx {
@@ -33,7 +31,8 @@ namespace fg {
         /**
          *
          */
-        class CSceneNodeTrigger : public CSceneNode {
+        class CSceneNodeTrigger : public CSceneNode,
+        public traits::CTriggerable {
             friend CSceneManager;
         public:
             ///
@@ -42,86 +41,8 @@ namespace fg {
             typedef CSceneNodeTrigger self_type;
             ///
             typedef CSceneNodeTrigger type;
-
-        public:
-
-            enum TriggerActivation {
-                ON_COLLISION_BEGIN = 0,
-                ON_COLLISION_END = 1
-            };
-
-            enum TriggerShape {
-                BOX,
-                SPHERE,
-                PLANE
-            };
-
-        protected:
-
-            /**
-             *
-             */
-            struct TriggerInfo {
-                /**
-                 *
-                 */
-                CSceneCallback* pCallback;
-                /**
-                 * 
-                 */
-                TriggerActivation activation;
-                /**
-                 * 
-                 */
-                TriggerInfo() : pCallback(NULL), activation(ON_COLLISION_BEGIN) { }
-                /**
-                 * 
-                 * @param callback
-                 * @param onActivate
-                 */
-                TriggerInfo(CSceneCallback *callback, TriggerActivation activationType = ON_COLLISION_BEGIN) :
-                pCallback(callback), activation(activationType) { }
-                /**
-                 * 
-                 */
-                inline void Call(void) {
-                    if(pCallback) pCallback->Call();
-                }
-                /**
-                 * 
-                 * @param argv
-                 */
-                inline void Call(event::CArgumentList* argv) {
-                    if(pCallback) pCallback->Call(argv);
-                }
-                /**
-                 * 
-                 * @param pSystemData
-                 */
-                inline void Call(void* pSystemData) {
-                    if(pCallback) pCallback->Call(pSystemData);
-                }
-                /**
-                 * 
-                 * @param pNodeA
-                 */
-                inline void Call(CSceneNode* pNodeA) {
-                    if(pCallback) pCallback->Call(pNodeA);
-                }
-                /**
-                 * 
-                 * @param pNodeA
-                 * @param pNodeB
-                 */
-                inline void Call(CSceneNode* pNodeA, CSceneNode* pNodeB) {
-                    if(pCallback) pCallback->Call(pNodeA, pNodeB);
-                }
-            };
-
             ///
-            typedef CVector<TriggerInfo> CallbacksVec;
-            ///
-            typedef CallbacksVec::iterator CallbacksVecItor;
+            typedef traits::CTriggerable triggerable_type;
 
         public:
             /**
@@ -138,15 +59,15 @@ namespace fg {
              */
             virtual ~CSceneNodeTrigger();
 
-            ////////////////////////////////////////////////////////////////////
-
             /**
              * 
-             * @param bodyType
+             * @param trait
+             * @param pObj
+             * @return
              */
-            virtual void setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType);
+            virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -183,63 +104,6 @@ namespace fg {
             virtual void setScale(const Vector3f& scale);
 
             //------------------------------------------------------------------
-        public:
-
-            /**
-             * 
-             * @param pCallback
-             * @param activationType
-             */
-            void addCallback(CSceneCallback *pCallback, TriggerActivation activationType);
-            /**
-             * 
-             * @param pCallback
-             */
-            void removeCallback(CSceneCallback *pCallback);
-            /**
-             * 
-             * @param pCallback
-             */
-            fgBool checkCallback(CSceneCallback *pCallback);
-            /**
-             * 
-             * @param activationType
-             */
-            void trigger(TriggerActivation activationType, CSceneNode* pNodeB = NULL);
-            /**
-             * 
-             * @return 
-             */
-            inline unsigned int getCallbacksCount(void) const {
-                return m_callbacks.size();
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline fgBool hasCallbacks(void) const {
-                return (fgBool)!!getCallbacksCount();
-            }
-
-        protected:
-            /**
-             * 
-             * @return 
-             */
-            CallbacksVec& getCallbacks(void) {
-                return m_callbacks;
-            }
-            /**
-             * 
-             * @return 
-             */
-            CallbacksVec const& getCallbacks(void) const {
-                return m_callbacks;
-            }
-
-        private:
-            ///
-            CallbacksVec m_callbacks;
         }; // class CSceneNodeTrigger
 
     } // namespace gfx

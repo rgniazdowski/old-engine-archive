@@ -17,13 +17,14 @@
     #include "GFX/fgGfxAABoundingBox.h"
     #include "GFX/fgGfxBoundingVolume.h"
 
-    
+
     #include "fgGfxAnimated.h"
     #include "fgGfxDrawable.h"
     #include "GFX/fgGfxDrawCall.h"
     #include "fgGfxSpatialObject.h"
 
     #include "Physics/fgCollisionBody.h"
+    #include "fgGfxTraits.h"
 
     #include <set>
 
@@ -177,10 +178,7 @@ namespace fg {
             /// Internal object specific model matrix (local)
             Matrix4f m_modelMat;
             /// Final model matrix (chain transformation, world, based on parent)
-            Matrix4f m_finalModelMat;            
-            /// Because the Scene Node is drawable it will contain inside required
-            /// draw call - pre-configured properly will draw what is needed
-            CDrawCall *m_drawCall;
+            Matrix4f m_finalModelMat;
 
         public:
             /**
@@ -707,13 +705,6 @@ namespace fg {
              * 
              * @return 
              */
-            inline CDrawCall* getDrawCall(void) const {
-                return m_drawCall;
-            }
-            /**
-             * 
-             * @return 
-             */
             inline SceneNodeType getNodeType(void) const {
                 return m_nodeType;
             }
@@ -834,66 +825,6 @@ namespace fg {
              */
             inline int operator !=(const CSceneNode& b) const {
                 return (this->getHandle() != b.getHandle());
-            }
-            /**
-             * 
-             * @param a
-             * @return 
-             */
-            inline bool operator <(const CSceneNode& a) const {
-                if(!this->m_drawCall)
-                    return true;
-                else if(!a.getDrawCall())
-                    return false;
-                else {
-                    return (*this->m_drawCall < *a.getDrawCall());
-                }
-                return false;
-            }
-            /**
-             * 
-             * @param a
-             * @return 
-             */
-            inline bool operator >(const CSceneNode& a) const {
-                if(!this->m_drawCall)
-                    return false;
-                else if(!a.getDrawCall())
-                    return true;
-                else {
-                    return (*this->m_drawCall > *a.getDrawCall());
-                }
-                return false;
-            }
-            /**
-             * 
-             * @param a
-             * @return 
-             */
-            inline bool operator <=(const CSceneNode& a) const {
-                if(!this->m_drawCall)
-                    return true;
-                else if(!a.getDrawCall())
-                    return false;
-                else {
-                    return (*this->m_drawCall <= *a.getDrawCall());
-                }
-                return true;
-            }
-            /**
-             * 
-             * @param a
-             * @return 
-             */
-            inline bool operator >=(const CSceneNode& a) const {
-                if(!this->m_drawCall)
-                    return true;
-                else if(!a.getDrawCall())
-                    return false;
-                else {
-                    return (*this->m_drawCall >= *a.getDrawCall());
-                }
-                return true;
             }
 
         protected:

@@ -870,7 +870,7 @@ void gfx::CSceneManager::update(void) {
         else
             activation = CSceneNodeTrigger::ON_COLLISION_END;
         if(info.pTrigger) {
-            info.pTrigger->trigger(activation, info.pNodeB);
+            info.pTrigger->trigger(activation, info.pTrigger, info.pNodeB);
         }
 
         if(info.isBegin && m_sceneEventMgr) {

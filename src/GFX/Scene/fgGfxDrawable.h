@@ -21,9 +21,14 @@
     #ifndef FG_INC_MATHLIB
         #include "Math/fgMathLib.h"
     #endif
+    #include "fgBool.h"
+    #include "fgGfxTraits.h"
 
 namespace fg {
     namespace gfx {
+        class CDrawCall;
+        class CDrawingBatch;
+
         namespace traits {
 
             /**
@@ -31,14 +36,20 @@ namespace fg {
              */
             class CDrawable {
             public:
+                typedef CDrawable self_type;
+                typedef CDrawable type;
+            public:
+                static const SceneNode SELF_TRAIT = SceneNode::DRAWABLE;
+                
+            public:
                 /**
                  *
                  */
-                CDrawable() { }
+                CDrawable();
                 /**
                  *
                  */
-                virtual ~CDrawable() { }
+                virtual ~CDrawable();
 
             public:
                 /**
@@ -53,6 +64,61 @@ namespace fg {
                  * @param modelMat
                  */
                 virtual void draw(const Matrix4f& modelMat) = 0;
+                /**
+                 *
+                 * @return
+                 */
+                fgBool hasDrawCall(void) const {
+                    return (fgBool)(m_drawCall != NULL);
+                }
+                /**
+                 * 
+                 * @return
+                 */
+                CDrawCall* getDrawCall(void) const {
+                    return m_drawCall;
+                }
+
+            public:
+                /**
+                 * 
+                 * @param a
+                 * @return 
+                 */
+                bool operator ==(const self_type& a) const;
+                /**
+                 *
+                 * @param a
+                 * @return
+                 */
+                bool operator !=(const self_type& a) const;
+                /**
+                 *
+                 * @param a
+                 * @return
+                 */
+                bool operator <(const self_type& a) const;
+                /**
+                 *
+                 * @param a
+                 * @return
+                 */
+                bool operator >(const self_type& a) const;
+                /**
+                 *
+                 * @param a
+                 * @return
+                 */
+                bool operator <=(const self_type& a) const;
+                /**
+                 *
+                 * @param a
+                 * @return
+                 */
+                bool operator >=(const self_type& a) const;
+
+            protected:
+                CDrawCall* m_drawCall;
 
             }; // class CDrawable
 

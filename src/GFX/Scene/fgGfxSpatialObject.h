@@ -19,6 +19,7 @@
     #define FG_INC_GFX_SPATIAL_OBJECT_BLOCK
 
     #include "GFX/fgGfxBoundingVolume.h"
+    #include "fgGfxTraits.h"
 
 namespace fg {
     namespace gfx {
@@ -33,9 +34,13 @@ namespace fg {
             class CSpatialObject {
             public:
                 ///
-                typedef CSpatialObject type;
-                ///
                 typedef CSpatialObject self_type;
+                ///
+                typedef CSpatialObject type;
+                /// Bounding box type - axis-aligned
+                typedef AABoundingBox3Df box_type;
+            public:
+                static const SceneNode SELF_TRAIT = SceneNode::SPATIAL;
 
             public:
                 /**

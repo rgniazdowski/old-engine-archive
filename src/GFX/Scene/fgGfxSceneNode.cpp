@@ -28,18 +28,12 @@ m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
-m_finalModelMat(),
-m_drawCall(NULL) // DrawCall for this node - it cannot be managed
+m_finalModelMat()
 {
     setActive(FG_TRUE);
     setCollidable(FG_TRUE);
     setAutoScale(FG_FALSE);
-    // Draw call is only initialized when Node Custom type is specialized
-    if(m_nodeType == SCENE_NODE_CUSTOM) {
-        m_drawCall = new CDrawCall();
-    } else {
-        m_drawCall = NULL;
-    }
+
     if(pParent) {
         if(!m_pManager) {
             m_pManager = pParent->getManager();
@@ -61,20 +55,12 @@ gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
         this->m_scale = orig.m_scale;
         this->m_modelMat = orig.m_modelMat;
         this->m_aabb = orig.m_aabb;
-        //this->m_pManager
-        if(this->m_nodeType == SCENE_NODE_CUSTOM) {
-            m_drawCall = new CDrawCall();
-        } else {
-            m_drawCall = NULL;
-        }
+
     }
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode::~CSceneNode() {
-    if(m_drawCall)
-        delete m_drawCall;
-    m_drawCall = NULL;
+gfx::CSceneNode::~CSceneNode() {    
     m_pParent = NULL;
     m_pTreeNode = NULL;
     // Need to signal the managing object that this node is going to be removed

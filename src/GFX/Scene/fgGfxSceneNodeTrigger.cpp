@@ -19,38 +19,34 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-gfx::CSceneNodeTrigger::CSceneNodeTrigger() : CSceneNode(SCENE_NODE_TRIGGER), m_callbacks() {
-    m_callbacks.reserve(2);
+gfx::CSceneNodeTrigger::CSceneNodeTrigger() :
+base_type(SCENE_NODE_TRIGGER),
+triggerable_type() {
+    this->setNodeTrait(triggerable_type::SELF_TRAIT);
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) : base_type(orig) {
-    if(this != &orig) {
-        unsigned int n = orig.m_callbacks.size();
-        for(unsigned int i = 0; i < n; i++) {
-            this->m_callbacks.push_back(orig.m_callbacks[i]);
-            if(this->m_callbacks.back().pCallback) {
-                this->m_callbacks.back().pCallback->upRef();
-            }
-        }
-    }
+gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) :
+base_type(orig),
+triggerable_type(orig) {
+    this->setNodeTrait(triggerable_type::SELF_TRAIT);
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNodeTrigger::~CSceneNodeTrigger() {
-    unsigned int n = m_callbacks.size();
-    for(unsigned int i = 0; i < n; i++) {
-        TriggerInfo &info = m_callbacks[i];
-        if(info.pCallback) {
-            if(!info.pCallback->downRef()) {
-                delete info.pCallback;
-            }
-            info.pCallback = NULL;
+gfx::CSceneNodeTrigger::~CSceneNodeTrigger() { }
+//------------------------------------------------------------------------------
+
+fgBool gfx::CSceneNodeTrigger::queryTrait(const traits::SceneNode trait, void **pObj) {
+    fgBool status = hasTraits(trait);
+    status = (fgBool)(status && (pObj != NULL));
+    if(status) {
+        if(trait & traits::TRIGGERABLE) {
+            *pObj = static_cast<traits::CTriggerable*>(this);
         }
+    } else {
+        status = base_type::queryTrait(trait, pObj);
     }
-    m_callbacks.clear_optimised();
-    CallbacksVec swapvec;
-    m_callbacks.swap(swapvec);
+    return status;
 }
 //------------------------------------------------------------------------------
 
@@ -112,74 +108,5 @@ void gfx::CSceneNodeTrigger::setScale(const Vector3f& scale) {
     m_modelMat[3].y = translation.y;
     m_modelMat[3].z = translation.z;
 
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeTrigger::setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType) {
-    // Scene Node Trigger does not need a collision body
-    // At least not the base version of node trigger
-    if(getCollisionBody()) {
-        removeCollisionBody();
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeTrigger::addCallback(CSceneCallback *pCallback,
-                                         TriggerActivation activationType) {
-    if(!pCallback)
-        return;
-    fgBool status = checkCallback(pCallback);
-    if(!status) {
-        pCallback->upRef();
-        m_callbacks.push_back(TriggerInfo(pCallback, activationType));
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeTrigger::removeCallback(CSceneCallback *pCallback) {
-    fgBool status = FG_FALSE;
-    if(!pCallback) {
-        return;
-    }
-    unsigned int n = m_callbacks.size();
-    for(unsigned int i = 0; i < n && !status; i++) {
-        TriggerInfo &info = m_callbacks[i];
-        if(info.pCallback == pCallback) {
-            pCallback->downRef();
-            m_callbacks[i] = m_callbacks[n - 1];
-            m_callbacks[n - 1].pCallback = NULL;
-            m_callbacks.resize(n - 1);
-            status = FG_TRUE;
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-fgBool gfx::CSceneNodeTrigger::checkCallback(CSceneCallback *pCallback) {
-    fgBool status = FG_FALSE;
-    if(!pCallback) {
-        return status;
-    }
-    unsigned int n = m_callbacks.size();
-    for(unsigned int i = 0; i < n && !status; i++) {
-        TriggerInfo &info = m_callbacks[i];
-        if(info.pCallback == pCallback) {
-            status = FG_TRUE;
-        }
-    }
-    return status;
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeTrigger::trigger(TriggerActivation activationType,
-                                     CSceneNode* pNodeB) {
-
-    unsigned int n = m_callbacks.size();
-    for(unsigned int i = 0; i < n; i++) {
-        TriggerInfo &info = m_callbacks[i];
-        if(info.activation == activationType) {
-            info.Call(this, pNodeB);
-        }
-    }
 }
 //------------------------------------------------------------------------------

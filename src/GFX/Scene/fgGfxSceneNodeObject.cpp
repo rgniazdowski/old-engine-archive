@@ -30,7 +30,6 @@ using namespace fg;
 gfx::CSceneNodeObject::CSceneNodeObject(CModelResource* pModel, gfx::CSceneNode* pParent) :
 CSceneNode(SCENE_NODE_OBJECT, pParent),
 m_pModel(NULL) {
-    CSceneNode::setNodeType(SCENE_NODE_OBJECT);
     // Now need to reset the draw call - this is object based on model
     // it has multiple children - they have their own draw calls
     // One drawcall for model/object is not needed - remove it just in case
@@ -38,16 +37,12 @@ m_pModel(NULL) {
     // GfxSceneNode is a base class however it is not abstract - so special
     // purpose SceneNode can be set externally - no within some kind of constructor
     // Scene node has special type id for that - scene node custom *
-    if(m_drawCall)
-        delete m_drawCall;
-    m_drawCall = NULL;
     setModel(pModel);
 }
 //------------------------------------------------------------------------------
 
 gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_type(orig) {
     if(this != &orig) {
-        this->m_drawCall = NULL;
         this->setModel(orig.getModel());
         this->setNodeType(SCENE_NODE_OBJECT);
     }
@@ -55,10 +50,8 @@ gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_typ
 //------------------------------------------------------------------------------
 
 gfx::CSceneNodeObject::~CSceneNodeObject() {
-    //FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
     // The base class destructor (SceneNode) will take care of that
-    m_drawCall = NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -105,7 +98,6 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
                     if(!pDrawCall->getShaderProgram())
                         pDrawCall->setShaderProgram(pMainMaterial->shaderProgram);
                 }
-                //pDrawCall->setTexture()
             }
         }
     }
