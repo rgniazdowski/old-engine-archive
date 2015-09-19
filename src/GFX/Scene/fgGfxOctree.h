@@ -36,9 +36,9 @@ namespace fg {
             typedef STreeNode base_type;
 
             ///
-            self_type *parent;
+            self_type* parent;
             ///
-            self_type *child[2][2][2];
+            self_type* child[2][2][2];
             /**
              * 
              * @param _parent
@@ -79,7 +79,7 @@ namespace fg {
             virtual ~SOctreeNode() {
                 depth = 0;
                 parent = NULL;
-                nodeType = 0;
+                nodeType = TREE_NODE_INVALID;
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         for(int k = 0; k < 2; k++) {
@@ -92,7 +92,7 @@ namespace fg {
                 } // for(i)
             }
 
-        };
+        }; // struct SOctreeNode
 
         /**
          *
@@ -127,7 +127,7 @@ namespace fg {
                  * @return 
                  */
                 SOctreeNode *next(SOctreeNode *pRoot);
-            };
+            }; // struct STraverse
 
         public:
             /**
@@ -152,7 +152,7 @@ namespace fg {
             SOctreeNode *getRoot(void) const {
                 return m_root;
             }
-            
+
             /**
              * 
              */
@@ -165,7 +165,7 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL);
+            virtual int insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode = NULL);
 
         public:
             /**
@@ -183,7 +183,7 @@ namespace fg {
              * 
              */
             void rewind(void);
-            
+
             /**
              * 
              */

@@ -72,14 +72,15 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL);
+            virtual int insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode = NULL);
             
         private:
             ///
             float m_looseK;
-        };
-    };
-};
+        }; // class CLooseOctree
+        
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_LOOSE_QUADTREE_BLOCK
 #endif	/* FG_INC_GFX_LOOSE_QUADTREE */

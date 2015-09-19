@@ -37,7 +37,7 @@ void gfx::CQuadtree::deleteRoot(void) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
+int gfx::CQuadtree::insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
         return -1;
     }
@@ -65,7 +65,7 @@ int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
 
                 SQuadtreeNode *quadNode = static_cast<SQuadtreeNode *>(pTreeNode);
 
-                if(fitsInBox((CSceneNode *)pObject, c, quarterSize)) {
+                if(fitsInBox(pObject, c, quarterSize)) {
                     // Recurse into this node.
                     if(quadNode->child[j][i] == NULL) {
                         quadNode->child[j][i] = new SQuadtreeNode(quadNode, c, pTreeNode->depth + 1);

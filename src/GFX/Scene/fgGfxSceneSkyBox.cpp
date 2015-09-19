@@ -23,7 +23,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CSceneSkyBox::CSceneSkyBox() :
-base_type(traits::DRAWABLE_SKYBOX),
+base_type(),
 m_skyBoxScale(1.0f),
 m_pos(),
 m_textureID(),
@@ -37,8 +37,7 @@ gfx::CSceneSkyBox::CSceneSkyBox(const CSceneSkyBox& orig) {
         this->m_skyBoxScale = orig.m_skyBoxScale;
         this->m_textureID = orig.m_textureID;
         this->m_program = orig.m_program;
-        this->m_MVP = orig.m_MVP;
-        this->setDrawableType(traits::DRAWABLE_SKYBOX);
+        this->m_MVP = orig.m_MVP;        
     }
 }
 //------------------------------------------------------------------------------

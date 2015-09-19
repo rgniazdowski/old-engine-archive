@@ -73,7 +73,7 @@ namespace fg {
             virtual ~SQuadtreeNode() {
                 depth = 0;
                 parent = NULL;
-                nodeType = 0;
+                nodeType = TREE_NODE_INVALID;
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         if(child[i][j]) {
@@ -83,7 +83,7 @@ namespace fg {
                     } // for(j)
                 } // for(i)
             }
-        };
+        }; // struct SQuadtreeNode
 
         /**
          * 
@@ -157,7 +157,7 @@ namespace fg {
                     }
                     return next(root);
                 }
-            };
+            }; // struct STraverse
 
         public:
             /**
@@ -178,7 +178,7 @@ namespace fg {
              * 
              * @return 
              */
-            SQuadtreeNode *getRoot(void) const {
+            SQuadtreeNode* getRoot(void) const {
                 return m_root;
             }
 
@@ -189,13 +189,13 @@ namespace fg {
 
         public:
             /**
-             * Insert the given object (sceneNode - logical) into the tree given by treeNode
+             * Insert the given spatial object into the tree given by pTreeNode
              * Returns the depth of the node the object was placed in.
              * @param pObject
              * @param pTreeNode
              * @return
              */
-            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL);
+            virtual int insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode = NULL);
 
         public:
             /**
@@ -223,9 +223,10 @@ namespace fg {
             SQuadtreeNode *m_root;
             ///
             STraverse m_traverse;
-        };
-    };
-};
+        }; // class CQuadtree
+        
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_QUADTREE_BLOCK
 #endif /* FG_INC_GFX_QUADTREE */

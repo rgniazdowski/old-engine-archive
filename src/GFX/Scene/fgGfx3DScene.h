@@ -97,9 +97,10 @@ namespace fg {
             COctree *m_octree;
             ///
             CVector<SOctreeNode *> m_octNodes;
-        };
-    };
-};
+        }; // class CScene3D
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_3D_SCENE_BLOCK
 #endif /* FG_INC_GFX_3D_SCENE */

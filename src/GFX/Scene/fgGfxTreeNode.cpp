@@ -25,7 +25,7 @@ gfx::STreeNodeBase::~STreeNodeBase() {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::STreeNodeBase::removeObject(CTreeNodeObject* pObject) {
+fgBool gfx::STreeNodeBase::removeObject(traits::CSpatialObject* pObject) {
     if(!pObject || objects.empty())
         return FG_FALSE;
     const int index = objects.find(pObject);
@@ -42,14 +42,11 @@ fgBool gfx::STreeNodeBase::removeObject(CTreeNodeObject* pObject) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::STreeNodeBase::removeAllObjects(void) {
-    fgBool status = FG_TRUE;
+void gfx::STreeNodeBase::removeAllObjects(void) {
     while(!objects.empty()) {
-        CTreeNodeObject* pObject = objects.front();
-        if(!removeObject(pObject))
-            status = FG_FALSE;
+        traits::CSpatialObject* pObject = objects.front();
+        removeObject(pObject);
     }
-    objects.clear_optimised();    
-    return status;
+    objects.clear_optimised();
 }
 //------------------------------------------------------------------------------

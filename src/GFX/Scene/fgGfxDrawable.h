@@ -23,20 +23,8 @@
     #endif
 
 namespace fg {
-
     namespace gfx {
         namespace traits {
-            ///
-            typedef unsigned int DrawableType;
-
-            /// Invalid drawable
-            const DrawableType DRAWABLE_INVALID = 0x000;
-            /// Drawable draw call
-            const DrawableType DRAWABLE_DRAWCALL = 0x0A0;
-            /// Drawable scene node
-            const DrawableType DRAWABLE_SCENENODE = 0x0A1;
-            /// Drawable scene box
-            const DrawableType DRAWABLE_SKYBOX = 0x0A2;
 
             /**
              *
@@ -46,8 +34,7 @@ namespace fg {
                 /**
                  *
                  */
-                CDrawable(const DrawableType drawableType = DRAWABLE_INVALID) :
-                m_drawableType(drawableType) { }
+                CDrawable() { }
                 /**
                  *
                  */
@@ -60,34 +47,13 @@ namespace fg {
                 void draw(void) {
                     this->draw(Matrix4f());
                 }
-                
+
                 /**
                  * Draw with given model matrix
                  * @param modelMat
                  */
                 virtual void draw(const Matrix4f& modelMat) = 0;
 
-            public:
-                /**
-                 *
-                 * @return
-                 */
-                DrawableType getDrawableType(void) const {
-                    return m_drawableType;
-                }
-
-            protected:
-                /**
-                 *
-                 * @param drawableType
-                 */
-                void setDrawableType(const DrawableType drawableType) {
-                    m_drawableType = drawableType;
-                }
-
-            private:
-                ///
-                DrawableType m_drawableType;
             }; // class CDrawable
 
         } // namespace traits

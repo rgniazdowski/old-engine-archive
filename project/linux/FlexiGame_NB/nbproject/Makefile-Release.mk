@@ -65,6 +65,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfx2DScene.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o \
+	${OBJECTDIR}/_ext/1008910172/fgGfxAnimated.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBasetree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspFile.o \
@@ -97,7 +98,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/34731496/fgTextureLoader.o \
 	${OBJECTDIR}/_ext/34731496/fgTextureManager.o \
 	${OBJECTDIR}/_ext/34731496/fgTextureResource.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxAnimated.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxAssimpHelper.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxAttributeData.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxCamera.o \
@@ -397,6 +397,11 @@ ${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o: ../../../src/GFX/Scene/fgGfx3DScene
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o ../../../src/GFX/Scene/fgGfx3DScene.cpp
 
+${OBJECTDIR}/_ext/1008910172/fgGfxAnimated.o: ../../../src/GFX/Scene/fgGfxAnimated.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxAnimated.o ../../../src/GFX/Scene/fgGfxAnimated.cpp
+
 ${OBJECTDIR}/_ext/1008910172/fgGfxBasetree.o: ../../../src/GFX/Scene/fgGfxBasetree.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
@@ -556,11 +561,6 @@ ${OBJECTDIR}/_ext/34731496/fgTextureResource.o: ../../../src/GFX/Textures/fgText
 	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureResource.o ../../../src/GFX/Textures/fgTextureResource.cpp
-
-${OBJECTDIR}/_ext/534590209/fgGfxAnimated.o: ../../../src/GFX/fgGfxAnimated.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxAnimated.o ../../../src/GFX/fgGfxAnimated.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGfxAssimpHelper.o: ../../../src/GFX/fgGfxAssimpHelper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

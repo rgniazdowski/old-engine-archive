@@ -38,7 +38,7 @@ void gfx::COctree::deleteRoot(void) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::COctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
+int gfx::COctree::insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode) {
     return -1;
 }
 //------------------------------------------------------------------------------

@@ -19,7 +19,7 @@ using namespace fg;
 gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
                             self_type *pParent) :
 base_type(), // fgManagedObjectBase init
-drawable_type(traits::DRAWABLE_SCENENODE), // fgGfxDrawable init
+drawable_type(), // fgGfxDrawable init
 animated_type(),
 m_nodeType(nodeType), // Current node type
 m_pParent(pParent), // Pointer to the parent node
@@ -29,7 +29,6 @@ m_stateFlags(StateFlags::NO_FLAGS),
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
 m_finalModelMat(),
-m_aabb(), // axis-aligned bounding box - this one will be transformed
 m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
     setActive(FG_TRUE);
@@ -51,7 +50,6 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 
 gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
     if(this != &orig) {
-        this->setDrawableType(orig.getDrawableType());
         this->m_nodeType = orig.m_nodeType;
         this->m_pTreeNode = NULL;
         this->m_pParent = NULL;

@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>../../../src/fgEnumFlags.h</itemPath>
       <itemPath>../../../src/fgNamespaceInfo.h</itemPath>
       <itemPath>../../../src/fgPluginResource.h</itemPath>
       <itemPath>../../../src/fgQueue.h</itemPath>
@@ -98,6 +99,8 @@
           <itemPath>../../../src/GFX/Scene/fgGfx2DScene.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfx3DScene.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfx3DScene.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxAnimated.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxAnimated.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBasetree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBasetree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspCompiler.cpp</itemPath>
@@ -112,6 +115,7 @@
           <itemPath>../../../src/GFX/Scene/fgGfxBspTree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxDrawable.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp</itemPath>
@@ -141,6 +145,7 @@
           <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxTraits.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNodeObject.h</itemPath>
@@ -172,8 +177,6 @@
           <itemPath>../../../src/GFX/Textures/fgTextureTypes.h</itemPath>
         </logicalFolder>
         <itemPath>../../../src/GFX/fgGfxAABoundingBox.h</itemPath>
-        <itemPath>../../../src/GFX/fgGfxAnimated.cpp</itemPath>
-        <itemPath>../../../src/GFX/fgGfxAnimated.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAssimpHelper.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxAssimpHelper.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxAttribBits.h</itemPath>
@@ -191,7 +194,6 @@
         <itemPath>../../../src/GFX/fgGfxContext.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxDrawCall.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxDrawCall.h</itemPath>
-        <itemPath>../../../src/GFX/fgGfxDrawable.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxDrawingBatch.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxDrawingBatch.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxErrorCodes.h</itemPath>
@@ -1000,6 +1002,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
@@ -1066,6 +1078,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1215,6 +1232,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
@@ -1345,10 +1367,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -1406,8 +1424,6 @@
       <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
@@ -2327,6 +2343,8 @@
       <item path="../../../src/fgEngineMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/fgEngineMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgEnumFlags.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgErrno.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -2837,6 +2855,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
@@ -2903,6 +2931,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3052,6 +3085,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
@@ -3182,10 +3220,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -3243,8 +3277,6 @@
       <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
@@ -4164,6 +4196,8 @@
       <item path="../../../src/fgEngineMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgEngineMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgEnumFlags.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgErrno.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -4640,6 +4674,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
@@ -4706,6 +4750,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4855,6 +4904,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
@@ -4985,10 +5039,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -5046,8 +5096,6 @@
       <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
@@ -5967,6 +6015,8 @@
       <item path="../../../src/fgEngineMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgEngineMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgEnumFlags.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgErrno.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -6429,6 +6479,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
@@ -6495,6 +6555,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6644,6 +6709,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
@@ -6774,10 +6844,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -6835,8 +6901,6 @@
       <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
@@ -7756,6 +7820,8 @@
       <item path="../../../src/fgEngineMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgEngineMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgEnumFlags.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgErrno.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -8237,6 +8303,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
@@ -8303,6 +8379,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -8452,6 +8533,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
@@ -8582,10 +8668,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -8643,8 +8725,6 @@
       <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
@@ -9564,6 +9644,8 @@
       <item path="../../../src/fgEngineMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/fgEngineMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgEnumFlags.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgErrno.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -10037,6 +10119,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxAnimated.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
@@ -10103,6 +10195,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -10252,6 +10349,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
@@ -10382,10 +10484,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxAnimated.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxAnimated.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxAssimpHelper.cpp"
             ex="false"
             tool="1"
@@ -10443,8 +10541,6 @@
       <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
@@ -11364,6 +11460,8 @@
       <item path="../../../src/fgEngineMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/fgEngineMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgEnumFlags.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgErrno.cpp" ex="false" tool="1" flavor2="8">
       </item>

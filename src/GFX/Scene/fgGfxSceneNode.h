@@ -17,10 +17,11 @@
     #include "GFX/fgGfxAABoundingBox.h"
     #include "GFX/fgGfxBoundingVolume.h"
 
-    #include "GFX/fgGfxDrawable.h"
-    #include "GFX/fgGfxAnimated.h"
+    
+    #include "fgGfxAnimated.h"
+    #include "fgGfxDrawable.h"
     #include "GFX/fgGfxDrawCall.h"
-    #include "fgGfxTreeNodeObject.h"
+    #include "fgGfxSpatialObject.h"
 
     #include "Physics/fgCollisionBody.h"
 
@@ -85,8 +86,6 @@ namespace fg {
         class CSceneNodeObject;
         ///
         struct STreeNode;
-        ///
-        class CTreeNodeObject;
 
         /**
          * Scene object/node can be anything, it requires model matrix for any kind of 
@@ -104,7 +103,7 @@ namespace fg {
         public resource::CManagedObject<SceneNodeHandle>,
         public traits::CDrawable,
         public traits::CAnimated,
-        public CTreeNodeObject {
+        public traits::CSpatialObject {
             friend class CGfxMain;
             friend class CSceneManager;
             //friend class CScene3D;
@@ -178,9 +177,7 @@ namespace fg {
             /// Internal object specific model matrix (local)
             Matrix4f m_modelMat;
             /// Final model matrix (chain transformation, world, based on parent)
-            Matrix4f m_finalModelMat;
-            /// This is updated bounding box - it's transformed by the model matrix
-            BoundingVolume3Df m_aabb;
+            Matrix4f m_finalModelMat;            
             /// Because the Scene Node is drawable it will contain inside required
             /// draw call - pre-configured properly will draw what is needed
             CDrawCall *m_drawCall;
@@ -757,36 +754,7 @@ namespace fg {
             inline void setModelMatrix(const Matrix4f& modelMat) {
                 m_modelMat = modelMat;
             }
-            /**
-             * 
-             * @param aabb
-             */
-            inline void setBoundingVolume(const AABoundingBox3Df& aabb) {
-                m_aabb.invalidate();
-                m_aabb.merge(aabb);
-            }
-            /**
-             * 
-             * @param aabb
-             */
-            inline void setBoundingVolume(const BoundingVolume3Df& aabb) {
-                m_aabb = aabb;
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline BoundingVolume3Df& getBoundingVolume(void) {
-                return m_aabb;
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline BoundingVolume3Df const& getBoundingVolume(void) const {
-                return m_aabb;
-            }
-
+            
             //------------------------------------------------------------------
             /**
              * 

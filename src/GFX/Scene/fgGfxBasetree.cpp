@@ -28,28 +28,28 @@ m_maxDepth(DEFAULT_DEPTH) { }
 gfx::CBasetree::~CBasetree() { }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
-                                 STreeNode* treeNode,
+fgBool gfx::CBasetree::fitsInBox(const traits::CSpatialObject* pObject,
+                                 STreeNode* pTreeNode,
                                  const float halfExtent) {
-    if(!sceneNode || !treeNode)
+    if(!pObject || !pTreeNode)
         return FG_FALSE;
 
     // nope, it needs to check if the bounding volume of scene node can fit inside
     // the Quad-tree Node (center+halfExtents)
     //sceneNode->getRefBoundingVolume().test(treeNode->center, halfExtent);
-    return fitsInBox(sceneNode, treeNode->center, halfExtent);
+    return fitsInBox(pObject, pTreeNode->center, halfExtent);
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
+fgBool gfx::CBasetree::fitsInBox(const traits::CSpatialObject* pObject,
                                  const Vector3f& center,
                                  const float halfExtent) {
-    if(!sceneNode)
+    if(!pObject)
         return FG_FALSE;
 
-    const Vector3f& objpos = sceneNode->getBoundingVolume().center;
-    const Vector3f& objext = sceneNode->getBoundingVolume().extent;
-    //float r = sceneNode->getRefBoundingVolume().radius;
+    const Vector3f& objpos = pObject->getBoundingVolume().center;
+    const Vector3f& objext = pObject->getBoundingVolume().extent;
+    //float r = pObject->getRefBoundingVolume().radius;
 
     if(objpos.x - objext.x < center.x - halfExtent ||
        objpos.x + objext.x > center.x + halfExtent ||
@@ -64,15 +64,15 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
+fgBool gfx::CBasetree::fitsInBox(const traits::CSpatialObject* pObject,
                                  const Vector2f& center,
                                  const float halfExtent) {
-    if(!sceneNode)
+    if(!pObject)
         return FG_FALSE;
 
-    const Vector3f& objpos = sceneNode->getBoundingVolume().center;
-    const Vector3f& objext = sceneNode->getBoundingVolume().extent;
-    //float r = sceneNode->getRefBoundingVolume().radius;
+    const Vector3f& objpos = pObject->getBoundingVolume().center;
+    const Vector3f& objext = pObject->getBoundingVolume().extent;
+    //float r = pObject->getRefBoundingVolume().radius;
 
     if(objpos.x - objext.x < center.x - halfExtent ||
        objpos.x + objext.x > center.x + halfExtent ||

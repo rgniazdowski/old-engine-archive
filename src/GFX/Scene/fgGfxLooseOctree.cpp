@@ -18,7 +18,6 @@
 #include "fgGfxSceneNode.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 const float gfx::CLooseOctree::DEFAULT_LOOSE_K = 2.0f;
@@ -34,7 +33,7 @@ gfx::CLooseOctree::CLooseOctree(const CLooseOctree& orig) { }
 gfx::CLooseOctree::~CLooseOctree() { }
 //------------------------------------------------------------------------------
 
-int gfx::CLooseOctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
+int gfx::CLooseOctree::insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
         return -1;
     }

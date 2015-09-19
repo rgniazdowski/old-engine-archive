@@ -33,7 +33,7 @@ gfx::CLooseQuadtree::CLooseQuadtree(const CLooseQuadtree& orig) { }
 gfx::CLooseQuadtree::~CLooseQuadtree() { }
 //------------------------------------------------------------------------------
 
-int gfx::CLooseQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
+int gfx::CLooseQuadtree::insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
         return -1;
     }
@@ -47,15 +47,14 @@ int gfx::CLooseQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) 
     } else if(pTreeNode->getType() != TREE_NODE_QUADTREE) {
         return -1;
     }
-    Vector2f c;
-    CSceneNode *sceneNode = static_cast<CSceneNode *>(pObject);
+    Vector2f c;    
     // Check child nodes to see if object fits in one of them.
     //	if (o->radius < WORLD_SIZE / (4 << q->depth)) {
     if(pTreeNode->depth + 1 < (int)getMaxDepth()) {
         float halfSize = m_looseK * getWorldSize().x / (2 << pTreeNode->depth);
         float quarterSize = halfSize / 2;
         float offset = (getWorldSize().x / (2 << pTreeNode->depth)) / 2;
-        const Vector3f& objpos = sceneNode->getBoundingVolume().center;
+        const Vector3f& objpos = pObject->getBoundingVolume().center;
 
         // Pick child based on classification of object's center point.
         int i = (objpos.x <= pTreeNode->center.x) ? 0 : 1;
@@ -66,19 +65,19 @@ int gfx::CLooseQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) 
 
         SQuadtreeNode *quadNode = static_cast<SQuadtreeNode *>(pTreeNode);
 
-        if(fitsInBox(sceneNode, c, quarterSize)) {
+        if(fitsInBox(pObject, c, quarterSize)) {
             // Recurse into this node.
             if(quadNode->child[j][i] == 0) {
                 quadNode->child[j][i] = new SQuadtreeNode(quadNode, c, pTreeNode->depth + 1);
             }
-            return insert(sceneNode, quadNode->child[j][i]);
+            return insert(pObject, quadNode->child[j][i]);
         }
     }
 
     // Keep object in this node.
-    if(!pTreeNode->objects.contains(sceneNode)) {
+    if(!pTreeNode->objects.contains(pObject)) {
         pObject->setTreeNode(pTreeNode);
-        pTreeNode->objects.push_back(sceneNode);
+        pTreeNode->objects.push_back(pObject);
     }
     return pTreeNode->depth;
 }

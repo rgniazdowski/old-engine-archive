@@ -21,22 +21,25 @@
     #include "fgBool.h"
     #include "fgVector.h"
     #include "Math/fgMathLib.h"
-    #include "fgGfxTreeNodeObject.h"
+    #include "fgGfxSpatialObject.h"
 
 namespace fg {
     namespace gfx {
 
-        ///
-        typedef unsigned char TreeNodeType;
+        enum TreeNodeType {
+            TREE_NODE_INVALID = 0,
+            TREE_NODE_QUADTREE = 1,
+            TREE_NODE_OCTREE = 2,
+            TREE_NODE_BSP = 3,
+            TREE_NODE_ABT = 4,
+            TREE_NODE_DYNAMIC_AABB = 5,
 
-        const TreeNodeType TREE_NODE_INVALID = 0;
-        const TreeNodeType TREE_NODE_QUADTREE = 1;
-        const TreeNodeType TREE_NODE_OCTREE = 2;
-        const TreeNodeType TREE_NODE_BSP = 3;
-        const TreeNodeType TREE_NODE_ABT = 4;
-        const TreeNodeType TREE_NODE_DYNAMIC_AABB = 5;
-        //const TreeNodeType TREE_NODE_BVH = 6;
+            NUM_TREE_NODE_TYPES
+        }; // enum TreeNodeType
 
+        /**
+         *
+         */
         struct STreeNodeBase {
         public:
             ///
@@ -44,20 +47,25 @@ namespace fg {
             ///
             typedef STreeNodeBase self_type;
             ///
-            typedef CVector<CTreeNodeObject *> ObjectsVec;
+            typedef CVector<traits::CSpatialObject *> ObjectsVec;
             ///
             typedef ObjectsVec::iterator ObjectsVecItor;
+            ///
+            typedef ObjectsVec::const_iterator ObjectsVecConstItor;
 
         protected:
             ///
             TreeNodeType nodeType;
+
         public:
             ///
             ObjectsVec objects;
             /**
              *
              */
-            STreeNodeBase(TreeNodeType _nodeType = TREE_NODE_INVALID) : nodeType(_nodeType), objects() { }
+            STreeNodeBase(TreeNodeType _nodeType = TREE_NODE_INVALID) :
+            nodeType(_nodeType),
+            objects() { }
             /**
              *
              */
@@ -68,12 +76,12 @@ namespace fg {
              * @param pNode
              * @return
              */
-            virtual fgBool removeObject(CTreeNodeObject *pObject);
+            virtual fgBool removeObject(traits::CSpatialObject* pObject);
             /**
              *
              * @return
              */
-            virtual fgBool removeAllObjects(void);
+            virtual void removeAllObjects(void);
             /**
              * 
              * @return
@@ -90,7 +98,7 @@ namespace fg {
             inline void setType(TreeNodeType _nodeType) {
                 nodeType = _nodeType;
             }
-        };
+        }; // struct STreeNodeBase
 
         /**
          * Standard Node for any kind of 3D/2D spatial tree - GFX subsystem
@@ -137,9 +145,10 @@ namespace fg {
              * 
              */
             virtual ~STreeNode() { }
-        };
-    };
-};
+        }; // struct STreeNode
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_TREE_NODE_BLOCK
 #endif	/* FG_INC_GFX_TREE_NODE */

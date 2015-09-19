@@ -27,17 +27,7 @@
         #include "fgGfxMVPMatrix.h"
     #endif
 
-    #ifndef FG_INC_GFX_MESH
-        #include "fgGfxMesh.h"
-    #endif
-
-    #ifndef FG_INC_GFX_SHAPE
-        #include "fgGfxShape.h"
-    #endif
-
-    #ifndef FG_INC_GFX_DRAWABLE
-        #include "fgGfxDrawable.h"
-    #endif
+    #include "fgGfxShape.h"
 
     #include "Util/fgFastCmp.h"
     #include "Textures/fgTextureTypes.h"
@@ -65,7 +55,6 @@ namespace fg {
             DRAW_APPEND_RELATIVE
         }; // enum DrawAppendMode
 
-
         enum DrawCallType {
             DRAW_CALL_INVALID = 0,
             DRAW_CALL_VERTEX_BUFFER = 1,
@@ -82,15 +71,14 @@ namespace fg {
         /**
          * Special class representing a single draw call
          */
-        class CDrawCall : public traits::CDrawable {
+        class CDrawCall {
             friend class ::fg::gfx::CDrawingBatch;
 
-        public:            
-            typedef traits::CDrawable base_type;
-            typedef CDrawCall self_type;            
+        public:
+            typedef CDrawCall self_type;
             typedef CDrawCall type;
 
-        public:            
+        public:
             static const unsigned char CMP_SLOT_ATTRIB_MASK = 0;
             static const unsigned char CMP_SLOT_TEXTURE = 1;
             static const unsigned char CMP_SLOT_SHADER_PROGRAM = 2;
@@ -370,7 +358,9 @@ namespace fg {
                               const fgBool rewind = FG_FALSE);
 
             //------------------------------------------------------------------
-            using base_type::draw;
+            void draw(void) {
+                this->draw(Matrix4f());
+            }
             /**
              * Draw with given model matrix
              * @param modelMat

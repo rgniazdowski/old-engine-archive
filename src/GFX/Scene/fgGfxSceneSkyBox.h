@@ -18,7 +18,7 @@
     #define FG_INC_GFX_SKYBOX
     #define FG_INC_GFX_SKYBOX_BLOCK
 
-    #include "GFX/fgGfxDrawable.h"
+    #include "fgGfxDrawable.h"
     #include "GFX/fgGfxTextureID.h"
 
 namespace fg {
@@ -38,8 +38,9 @@ namespace fg {
             typedef CSceneSkyBox type;
             ///
             typedef CSceneSkyBox self_type;
-            
+
         public:
+
             /**
              *
              */
@@ -48,7 +49,7 @@ namespace fg {
                 SKYBOX_DOME,
                 SKYBOX_FLAT
             };
-            
+
         public:
             /**
              * 

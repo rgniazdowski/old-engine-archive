@@ -102,19 +102,7 @@ inline const char * _FG_BOOL_TO_TEXT(fgBool value) {
     #define FG_BOOL_TO_TEXT(value) _FG_BOOL_TO_TEXT(value)
 //inline bool operator ==(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) == static_cast<int>(y)); } 
 //inline bool operator !=(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) != static_cast<int>(y)); }
-    #define FG_ENUM_FLAGS(Type) \
-inline bool operator !(Type x) { return static_cast<int>(x) == 0; } \
-inline bool operator &&(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) && static_cast<int>(y)); } \
-inline bool operator ||(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) || static_cast<int>(y)); } \
-inline bool operator ||(bool x, Type y) { return static_cast<bool>(static_cast<int>(x) || static_cast<int>(y)); } \
-inline bool operator ||(Type x, bool y) { return static_cast<bool>(static_cast<int>(x) || static_cast<int>(y)); } \
-inline Type	operator	& (Type x, Type y) { return static_cast<Type>(static_cast<int>(x) & static_cast<int>(y));	} \
-inline Type	operator	| (Type x, Type y) { return static_cast<Type>(static_cast<int>(x) | static_cast<int>(y));	} \
-inline Type	operator	^ (Type x, Type y) { return static_cast<Type>(static_cast<int>(x) ^ static_cast<int>(y));	} \
-inline Type	operator	~ (Type x)	{ return static_cast<Type>(~static_cast<int>(x));	} \
-inline Type& operator	&= (Type& x, Type y)	{ x = x & y; return x; } \
-inline Type& operator	|= (Type& x, Type y)	{ x = x | y; return x; } \
-inline Type& operator	^= (Type& x, Type y)	{ x = x ^ y; return x; }
+    #include "fgEnumFlags.h"
 
     #include "fgVector.h"
 

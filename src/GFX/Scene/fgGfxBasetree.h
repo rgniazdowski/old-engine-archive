@@ -26,8 +26,6 @@
 namespace fg {
     namespace gfx {
 
-        class CSceneNode;
-
         ///
         typedef unsigned int SpatialTreeType;
 
@@ -139,7 +137,7 @@ namespace fg {
                  * @return 
                  */
                 virtual TNodeType *next(TNodeType *root) = 0;
-            };
+            }; // struct STraverseBase
 
         public:
             /**
@@ -214,32 +212,32 @@ namespace fg {
         public:
             /**
              * 
-             * @param sceneNode
-             * @param treeNode
+             * @param pObject
+             * @param pTreeNode
              * @param halfExtent
              * @return 
              */
-            static fgBool fitsInBox(const CSceneNode* sceneNode,
-                                    STreeNode* treeNode,
+            static fgBool fitsInBox(const traits::CSpatialObject* pObject,
+                                    STreeNode* pTreeNode,
                                     const float halfExtent);
             /**
              * 
-             * @param sceneNode
+             * @param pObject
              * @param center
              * @param halfExtent
              * @return 
              */
-            static fgBool fitsInBox(const CSceneNode* sceneNode,
+            static fgBool fitsInBox(const traits::CSpatialObject* pObject,
                                     const Vector3f& center,
                                     const float halfExtent);
             /**
              * 
-             * @param sceneNode
+             * @param pObject
              * @param center
              * @param halfExtent
              * @return 
              */
-            static fgBool fitsInBox(const CSceneNode* sceneNode,
+            static fgBool fitsInBox(const traits::CSpatialObject* pObject,
                                     const Vector2f& center,
                                     const float halfExtent);
 
@@ -247,11 +245,11 @@ namespace fg {
         public:
             /**
              * 
-             * @param sceneNode
-             * @param treeNode
+             * @param pObject
+             * @param pTreeNode
              * @return 
              */
-            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL) = 0;
+            virtual int insert(traits::CSpatialObject* pObject, STreeNode* pTreeNode = NULL) = 0;
 
         public:
             /**
@@ -277,10 +275,10 @@ namespace fg {
             Vector3f m_worldSize;
             ///
             unsigned int m_maxDepth;
-        };
+        }; // class CBasetree
 
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_BASE_TREE_BLOCK
 #endif	/* FG_INC_GFX_BASE_TREE */
