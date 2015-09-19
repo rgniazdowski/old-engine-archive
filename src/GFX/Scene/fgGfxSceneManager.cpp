@@ -1052,7 +1052,7 @@ void gfx::CSceneManager::render(void) {
                                          Color4f(1.0f, 1.0f, 0.0f, 1.0f));
                 }
             }
-            if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
+            if(FG_DEBUG_CFG_OPTION(gfxSphereShow)) {
                 Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getBoundingVolume().center);
                 const float radius = pSceneNode->getBoundingVolume().radius;
                 mat = math::scale(mat, Vec3f(radius, radius, radius));

@@ -503,6 +503,7 @@ fgBool CEngineMain::initialize(void) {
 
 fgBool CEngineMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Loading configuration...");
+    fgBool status = FG_TRUE;
     if(!m_settings)
         m_settings = new CSettings();
     if(!m_settings->load("settings.xml")) { // #FIXME - universal, cross solution - path management
@@ -531,6 +532,7 @@ fgBool CEngineMain::loadConfiguration(void) {
         OPT_PHYSICS_BBOX,
         OPT_GUI_BBOX,
         OPT_GFX_BBOX,
+        OPT_GFX_SPHERE,
         OPT_GFX_TREE_BBOX,
         OPT_GFX_FRUSTUM,
         OPT_GFX_LIGHT,
@@ -567,6 +569,8 @@ fgBool CEngineMain::loadConfiguration(void) {
         {OPT_GUI_BBOX, "--gui-bbox-show", SO_NONE},
         {OPT_GFX_BBOX, "--gfx-bbox", SO_OPT},
         {OPT_GFX_BBOX, "--gfx-bbox-show", SO_NONE},
+        {OPT_GFX_SPHERE, "--gfx-sphere", SO_OPT},
+        {OPT_GFX_SPHERE, "--gfx-sphere-show", SO_NONE},
         {OPT_GFX_TREE_BBOX, "--gfx-tree-bbox", SO_OPT},
         {OPT_GFX_TREE_BBOX, "--gfx-tree-bbox-show", SO_NONE},
         {OPT_GFX_FRUSTUM, "--gfx-frustum-show", SO_OPT},
@@ -598,6 +602,27 @@ fgBool CEngineMain::loadConfiguration(void) {
                 }
                 break;
 #if defined(FG_DEBUG)
+            case OPT_HELP:
+                printf("Available options (only in DEBUG build):\n");
+                printf("--verbose                 Select verbosity level for all messages\n"
+                       "--physics-bbox-show       Display physical bounding boxes\n"
+                       "--gui-bbox-show           Display bounding boxes for GUI elements\n"
+                       "--gfx-bbox-show           Display bounding boxes for 3D scene objects\n"
+                       "--gfx-sphere-show         Display bounding spheres for 3D scene objects\n"
+                       "--gfx-tree-bbox-show      Display bounding boxes for spatial tree nodes\n"
+                       "--gfx-frustum-show        Display frustum box\n"
+                       "--gfx-light-show          Show light sources\n"
+                       "--gfx-dump-config         Whether or not to dump graphics configuration\n"
+                       "--gfx-dump-display        Whether or not to dump all available screen resolutions\n"
+                       "--game-free-look          Whether or not to activate free look camera (no-clip like)\n"
+                       "--show-labels             Whether or not to show labels for 3D scene objects\n"
+                       "--dump-config             Dump .ini configuration files\n"
+                       "--fullscreen, --fs        Force fullscreen mode\n"
+                       "--profiling-debug         Activate profiling in DEBUG mode\n"
+                       "--console, --show-console Show built-in console after startup\n"
+                       "\n");
+                status = FG_FALSE; // FIXME - this is bad
+                break;
             case OPT_VERBOSE_LEVEL:
                 if(hasArgument) {
                     // #FIXME - need to check for more than just numbers
@@ -639,6 +664,15 @@ fgBool CEngineMain::loadConfiguration(void) {
                     g_DebugConfig.gfxBBoxShow = (bool)boolValue;
                 } else {
                     g_DebugConfig.gfxBBoxShow = true;
+                }
+                break;
+
+            case OPT_GFX_SPHERE:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxSphereShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxSphereShow = true;
                 }
                 break;
 
@@ -737,6 +771,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                     fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
                     g_DebugConfig.consoleShow = (bool)boolValue;
                 } else {
+
                     g_DebugConfig.consoleShow = true;
                 }
                 break;
@@ -746,7 +781,7 @@ fgBool CEngineMain::loadConfiguration(void) {
         };
     }
     FG_LOG_DEBUG("Main: Selected current mod: '%s'", m_settings->getCurrentModPathStr());
-    return FG_TRUE;
+    return status;
 }
 //------------------------------------------------------------------------------
 
@@ -785,7 +820,7 @@ fgBool CEngineMain::loadResources(void) {
     // DEVICE YIELD
     ////////////////////////////////////////////////////////////////////////////
     // Can also create special event for GFX - upload static vertex data
-    // Create vertex buffers on event - not explicitly 
+    // Create vertex buffers on event - not explicitly
     // DEVICE YIELD
     m_gfxMain->getLoader()->update(15.0f); // 90
     ////////////////////////////////////////////////////////////////////////////
@@ -799,6 +834,7 @@ fgBool CEngineMain::loadResources(void) {
     // Name of the plugin resource should have the same name as mod
     resource::CResource *pPluginRes = m_resourceMgr->request(m_settings->getCurrentModPathStr());
     if(pPluginRes && pPluginRes->getResourceType() == resource::PLUGIN) {
+
         CPluginResource *plugin = (CPluginResource *)pPluginRes;
         plugin->setInternalInfo(this); // setting pointer to the CGameMain
         plugin->create(); // Loading the shared object | should initialize the plugin
@@ -810,6 +846,8 @@ fgBool CEngineMain::loadResources(void) {
 //------------------------------------------------------------------------------
 
 fgBool CEngineMain::preRender(void) {
+    if(!m_init)
+        return FG_FALSE;
     static float t1 = -1.0f;
     float t2 = fg::timesys::ms();
     float dt = 0.0f;
@@ -841,6 +879,7 @@ fgBool CEngineMain::preRender(void) {
     m_guiMain->preRender();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
+
         profile::g_debugProfiling->end("GUI::preRender");
     }
 #endif    
@@ -849,6 +888,9 @@ fgBool CEngineMain::preRender(void) {
 //------------------------------------------------------------------------------
 
 fgBool CEngineMain::render(void) {
+    if(!m_init) {
+        return FG_FALSE;
+    }
     if(!m_gfxMain->isInit()) {
         return FG_FALSE;
     }
@@ -913,17 +955,23 @@ fgBool CEngineMain::render(void) {
     gfx::CShaderProgram* pGuiProgram = m_gfxMain->getShaderManager()->request(gfx::shaders::USAGE_GUI_RENDER_BIT);
     m_gfxMain->getShaderManager()->useProgram(pGuiProgram);
     Matrix4f modelMat = math::translate(Matrix4f(), Vec3f(0.0f, 0.0f, 0.0f));
+    float screenW = 1024.0f, screenH = 600.0f;
+    if(m_gfxMain->getMainWindow()) {
+        screenW = (float)m_gfxMain->getMainWindow()->getWidth();
+        screenH = (float)m_gfxMain->getMainWindow()->getHeight();
+    }
     gfx::CMVPMatrix mvp;
     mvp.identity();
     mvp.setOrtho(0.0f,
-                 (float)m_gfxMain->getMainWindow()->getWidth(),
-                 (float)m_gfxMain->getMainWindow()->getHeight(),
+                 screenW,
+                 screenH,
                  0.0f);
     mvp.calculate(modelMat);
     pGuiProgram->setUniform(&mvp);
     m_guiMain->render();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
+
         profile::g_debugProfiling->end("GUI::render");
     }
 #endif
@@ -935,6 +983,9 @@ fgBool CEngineMain::render(void) {
 //------------------------------------------------------------------------------
 
 fgBool CEngineMain::update(fgBool force) {
+    if(!m_init) {
+        return FG_FALSE;
+    }
     static float t1 = -1.0f;
     float t2 = fg::timesys::ms();
     float dt = 0.0f;
@@ -949,8 +1000,14 @@ fgBool CEngineMain::update(fgBool force) {
         return FG_FALSE;
     }
     timesys::markTick(timesys::TICK_UPDATE);
-    m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
-                             m_gfxMain->getMainWindow()->getHeight());
+    int screenW = 1024, screenH = 600;
+    if(m_gfxMain && m_gfxMain->getMainWindow()) {
+        screenW = m_gfxMain->getMainWindow()->getWidth();
+        screenH = m_gfxMain->getMainWindow()->getHeight();
+    }
+    if(m_guiMain)
+        m_guiMain->setScreenSize(screenW,
+                                 screenH);
 
     // Update logic manager
     if(m_gameMain)
@@ -1006,10 +1063,10 @@ fgBool CEngineMain::update(fgBool force) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
+fgBool CEngineMain::gameTouchHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
+    event::SEvent* pEvent = (event::SEvent *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     event::EventType type = pEvent->code;
@@ -1022,6 +1079,7 @@ fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
             this->m_gfxMain->get3DScene()->reportSelectionClick(FG_TRUE);
             this->m_gfxMain->get2DScene()->reportSelectionClick(FG_TRUE);
         } else if(type == event::TOUCH_RELEASED) {
+
             this->m_gfxMain->get3DScene()->reportSelectionClick(FG_FALSE);
             this->m_gfxMain->get2DScene()->reportSelectionClick(FG_FALSE);
         }
@@ -1030,10 +1088,10 @@ fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CEngineMain::gameMouseHandler(event::CArgumentList *argv) {
+fgBool CEngineMain::gameMouseHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
+    event::SEvent* pEvent = (event::SEvent *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     event::EventType type = pEvent->code;
@@ -1046,6 +1104,7 @@ fgBool CEngineMain::gameMouseHandler(event::CArgumentList *argv) {
             this->m_gfxMain->get3DScene()->reportSelectionClick(FG_TRUE);
             this->m_gfxMain->get2DScene()->reportSelectionClick(FG_TRUE);
         } else if(type == event::MOUSE_RELEASED) {
+
             this->m_gfxMain->get3DScene()->reportSelectionClick(FG_FALSE);
             this->m_gfxMain->get2DScene()->reportSelectionClick(FG_FALSE);
         }
@@ -1094,6 +1153,7 @@ fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
     } else {
         return FG_FALSE;
     }
+
     if(pressed)
         this->m_gfxMain->get3DSceneCamera()->update((float)xRel, (float)yRel);
     return FG_TRUE;

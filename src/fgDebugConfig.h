@@ -31,6 +31,7 @@ namespace fg {
         bool physicsBBoxShow; // Whether to show bounding boxes debug info for physics simulation
         bool guiBBoxShow; // Whether to show bounding boxes debug info (GUI)
         bool gfxBBoxShow; // Whether to show bounding boxes in GFX?
+        bool gfxSphereShow; // Whether to show bounding spheres in GFX?
         bool gfxTreeBBoxShow; // Whether to show bounding boxes of spatial trees in GFX?
         bool gfxFrustumShow; // Whether to show frustum boxes?
         bool gfxLightShow; // Whether to show light sources?
