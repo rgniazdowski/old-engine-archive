@@ -138,14 +138,17 @@ int gfx::CSceneNode::queryChildrenTraits(const traits::SceneNode trait,
         return 0;
     if(shouldClear)
         output.clear();
+    int found = 0;
     const unsigned int nChildren = getChildrenCount();
     for(unsigned int i = 0; i < nChildren; i++) {
         CSceneNode* pChild = getChildByIndex(i);
         if(pChild->hasTraits(trait)) {
             output.push_back(pChild);
-            pChild->queryChildrenTraits(trait, output, FG_FALSE);
+            found++;
+            found += pChild->queryChildrenTraits(trait, output, FG_FALSE);
         }
     }
+    return found;
 }
 //------------------------------------------------------------------------------
 

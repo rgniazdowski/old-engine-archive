@@ -969,6 +969,8 @@ void gfx::CSceneManager::sortCalls(void) {
             // push to queue only nodes that have valid handle and are drawable
             m_drawableQueue.push(pDrawable);
             m_visibleNodes.push_back(pSceneNode);
+        } else if(pSceneNode->getNodeType() == SCENE_NODE_OBJECT && visibilityResult > 0) {
+            m_visibleNodes.push_back(pSceneNode);
         }
     }
     m_pickSelection.end(getStateFlags());

@@ -187,9 +187,11 @@ void gfx::CScene3D::sortCalls(void) {
                 }
                 getDrawableQueue().push(pDrawable);
                 getVisibleNodes().push_back(pSceneNode);
+            } else if(pSceneNode->getNodeType() == SCENE_NODE_OBJECT && visibilityResult > 0) {
+                getVisibleNodes().push_back(pSceneNode);
             }
         } // for every object in tree node
-    }
+    } // traverse octree
     if(m_physicsWorld) {
         m_physicsWorld->finishFrame();
     }
