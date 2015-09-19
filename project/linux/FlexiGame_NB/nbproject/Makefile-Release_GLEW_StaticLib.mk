@@ -73,6 +73,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspResource.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspTree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o \
+	${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxOctree.o \
@@ -88,6 +89,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeTrigger.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxSceneSkyBox.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxTreeNode.o \
+	${OBJECTDIR}/_ext/1008910172/fgGfxTriggerable.o \
 	${OBJECTDIR}/_ext/960776194/fgGfxShader.o \
 	${OBJECTDIR}/_ext/960776194/fgGfxShaderBase.o \
 	${OBJECTDIR}/_ext/960776194/fgGfxShaderConfig.o \
@@ -439,6 +441,11 @@ ${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o: ../../../src/GFX/Scene/fgGfxBspTyp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o ../../../src/GFX/Scene/fgGfxBspTypes.cpp
 
+${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o: ../../../src/GFX/Scene/fgGfxDrawable.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o ../../../src/GFX/Scene/fgGfxDrawable.cpp
+
 ${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o: ../../../src/GFX/Scene/fgGfxLooseOctree.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
@@ -513,6 +520,11 @@ ${OBJECTDIR}/_ext/1008910172/fgGfxTreeNode.o: ../../../src/GFX/Scene/fgGfxTreeNo
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxTreeNode.o ../../../src/GFX/Scene/fgGfxTreeNode.cpp
+
+${OBJECTDIR}/_ext/1008910172/fgGfxTriggerable.o: ../../../src/GFX/Scene/fgGfxTriggerable.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxTriggerable.o ../../../src/GFX/Scene/fgGfxTriggerable.cpp
 
 ${OBJECTDIR}/_ext/960776194/fgGfxShader.o: ../../../src/GFX/Shaders/fgGfxShader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/960776194

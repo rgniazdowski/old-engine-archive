@@ -115,6 +115,7 @@
           <itemPath>../../../src/GFX/Scene/fgGfxBspTree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxDrawable.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxDrawable.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.h</itemPath>
@@ -145,10 +146,12 @@
           <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSpatialObject.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTraits.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.h</itemPath>
-          <itemPath>../../../src/GFX/Scene/fgGfxTreeNodeObject.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxTriggerable.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxTriggerable.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Shaders" displayName="Shaders" projectFiles="true">
           <itemPath>../../../src/GFX/Shaders/fgGfxShader.cpp</itemPath>
@@ -1082,6 +1085,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
@@ -1232,6 +1240,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
@@ -1247,7 +1260,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2935,6 +2953,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
@@ -3085,6 +3108,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
@@ -3100,7 +3128,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4754,6 +4787,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
@@ -4904,6 +4942,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
@@ -4919,7 +4962,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6559,6 +6607,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
@@ -6709,6 +6762,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
@@ -6724,7 +6782,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -8383,6 +8446,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
@@ -8533,6 +8601,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
@@ -8548,7 +8621,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -10199,6 +10277,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxDrawable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxDrawable.h"
             ex="false"
             tool="3"
@@ -10349,6 +10432,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
@@ -10364,7 +10452,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxTriggerable.h"
             ex="false"
             tool="3"
             flavor2="0">
