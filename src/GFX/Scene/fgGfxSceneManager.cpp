@@ -1514,9 +1514,6 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
     }
     SceneNodeType nodeType = pSourceNode->getNodeType();
     switch(nodeType) {
-        case SCENE_NODE_CUSTOM:
-            pNewNode = new CSceneNode(*pSourceNode);
-            break;
         case SCENE_NODE_MESH:
             pNewNode = new CSceneNodeMesh(*(static_cast<CSceneNodeMesh*>(pSourceNode)));
             break;

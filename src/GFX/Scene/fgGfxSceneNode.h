@@ -58,20 +58,18 @@ namespace fg {
         const SceneNodeType SCENE_NODE_INVALID = 0;
         /// This is a special SceneNode type - it's for specifying root nodes
         const SceneNodeType SCENE_NODE_ROOT = 1;
-        /// Custom scene node - it is still drawable but relies on custom
-        /// draw call type to draw something - meaning that this utilizes
-        /// custom vertex data
-        const SceneNodeType SCENE_NODE_CUSTOM = 2;
         /// Node mesh is based on GfxMesh/Shape - Model is made of Shapes
         /// Every shape is made of one mesh. This will be mostly child node.
-        const SceneNodeType SCENE_NODE_MESH = 3;
+        const SceneNodeType SCENE_NODE_MESH = 2;
         /// This is special type of mesh node - based on GfxModel
         /// this will contain multiple children (mesh/shapes) with
         /// configured draw calls and updated bounding boxes
-        const SceneNodeType SCENE_NODE_OBJECT = 4;
+        const SceneNodeType SCENE_NODE_OBJECT = 3;
         /// Trigger is a special node type - when collision occurs with it
         /// the special event is thrown - registered callbacks will be called
-        const SceneNodeType SCENE_NODE_TRIGGER = 5;
+        const SceneNodeType SCENE_NODE_TRIGGER = 4;
+        /// Particle emitter special node
+        const SceneNodeType SCENE_NODE_PARTICLE_EMITTER = 5;
 
         ///
         class CGfxMain;
@@ -135,23 +133,28 @@ namespace fg {
                 ACTIVE = 0x0008,
                 /// Whether or not this node is selected. False by default
                 SELECTED = 0x0010
-            };
+            }; // enum StateFlags
 
         public:
             /// SceneNode type - self
             typedef CSceneNode self_type;
+            ///
+            typedef CSceneNode type;
+            /// Base type for scene node
+            typedef resource::CManagedObject<SceneNodeHandle> base_type;
+
             /// Scene node tag type
             typedef SceneNodeTag tag_type;
             /// Drawable object type
             typedef traits::CDrawable drawable_type;
             /// Animated object type
             typedef traits::CAnimated animated_type;
-            /// Base type for scene node
-            typedef fg::resource::CManagedObject<SceneNodeHandle> base_type;
+            /// Spatial object type
+            typedef traits::CSpatialObject spatial_type;
+
             /// Handle type for scene node
             typedef SceneNodeHandle handle_type;
-            /// Bounding box type - axis-aligned
-            typedef AABoundingBox3Df box_type;
+
             /// Special set containing children
             typedef CVector<self_type *> ChildrenVec;
             /// Bidirectional iterator through children set
@@ -160,16 +163,18 @@ namespace fg {
         private:
             /// Current scene node type - set in the constructors
             SceneNodeType m_nodeType;
-            /// Scene node father/parent node pointer
-            self_type* m_pParent;
-            /// Collision body used for physics, it can be BOX, SPHERE or more
-            /// complex convex volume
-            physics::CCollisionBody* m_collisionBody;
+            /// Current node traits
+            traits::SceneNode m_nodeTraits;
             /// Children of the current scene node
             /// Note that this is for more logical hierarchy (not spatial)
             ChildrenVec m_children;
-            ///
+            /// Current state flags
             StateFlags m_stateFlags;
+            /// Collision body used for physics, it can be BOX, SPHERE or more
+            /// complex convex volume
+            physics::CCollisionBody* m_collisionBody;
+            /// Scene node father/parent node pointer
+            self_type* m_pParent;
 
         protected:
             /// Current scale of the scene node - scale is automatically
@@ -196,6 +201,45 @@ namespace fg {
              * 
              */
             virtual ~CSceneNode();
+
+        protected:
+            /**
+             * 
+             * @param trait
+             */
+            void setNodeTrait(traits::SceneNode trait) {
+                m_nodeTraits |= trait;
+            }
+            /**
+             *
+             */
+            void clearNodeTraits(void) {
+                m_nodeTraits = traits::NO_NODE_TRAITS;
+            }
+
+        public:
+            /**
+             *
+             * @return
+             */
+            traits::SceneNode getTraits(void) const {
+                return m_nodeTraits;
+            }
+            /**
+             *
+             * @param traits
+             * @return
+             */
+            fgBool hasTraits(traits::SceneNode traits) const {
+                return (fgBool)!!(m_nodeTraits & traits);
+            }
+            /**
+             *
+             * @param trait
+             * @param pObj
+             * @return
+             */
+            virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
 
         public:
             using drawable_type::draw;
@@ -745,7 +789,7 @@ namespace fg {
             inline void setModelMatrix(const Matrix4f& modelMat) {
                 m_modelMat = modelMat;
             }
-            
+
             //------------------------------------------------------------------
             /**
              * 

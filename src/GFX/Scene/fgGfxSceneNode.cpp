@@ -13,7 +13,6 @@
 #include "GFX/fgGfxDrawCall.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
@@ -22,16 +21,17 @@ base_type(), // fgManagedObjectBase init
 drawable_type(), // fgGfxDrawable init
 animated_type(),
 m_nodeType(nodeType), // Current node type
-m_pParent(pParent), // Pointer to the parent node
-m_collisionBody(NULL),
+m_nodeTraits(traits::DRAWABLE | traits::ANIMATED | traits::SPATIAL),
 m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
+m_collisionBody(NULL),
+m_pParent(pParent), // Pointer to the parent node
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
 m_finalModelMat()
 {
     setActive(FG_TRUE);
-    setCollidable(FG_TRUE);
+    setCollidable(FG_FALSE);
     setAutoScale(FG_FALSE);
 
     if(pParent) {
@@ -86,6 +86,32 @@ gfx::CSceneNode::~CSceneNode() {
         delete m_collisionBody;
         m_collisionBody = NULL;
     }
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CSceneNode::queryTrait(const traits::SceneNode trait, void **pObj) {
+    fgBool status = hasTraits(trait);
+    if(!pObj)
+        status = FG_FALSE;
+    if(status) {
+        switch(trait) {
+            case traits::ANIMATED:
+                *pObj = static_cast<traits::CAnimated*>(this);
+                break;
+            case traits::DRAWABLE:
+                *pObj = static_cast<traits::CDrawable*>(this);
+                break;
+            case traits::SPATIAL:
+                *pObj = static_cast<traits::CSpatialObject*>(this);
+                break;
+            default:
+                break;
+        }
+    } else if(pObj) {
+        *pObj = NULL;
+    }
+
+    return status;
 }
 //------------------------------------------------------------------------------
 

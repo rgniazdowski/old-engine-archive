@@ -1428,7 +1428,7 @@ namespace fg {
                     pNodeB = NULL;
                     isBegin = FG_FALSE;
                 };
-            };
+            }; // struct STriggerInfo
 
             ///
             typedef CVector<STriggerInfo> TriggerInfoVec;

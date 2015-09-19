@@ -18,11 +18,10 @@
 #include "GFX/fgGfxCameraAnimation.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CParticleEmitter::CParticleEmitter(CParticleEffect *pEffect) :
-CSceneNode(SCENE_NODE_CUSTOM, NULL),
+base_type(SCENE_NODE_PARTICLE_EMITTER, NULL),
 m_effects(),
 m_origin(),
 m_particles(),
