@@ -30,10 +30,12 @@ namespace fg {
         /**
          * 
          */
-        class CParticleEmitter : public CSceneNode {
+        class CParticleEmitter : public CSceneNode, public traits::CDrawable {
         public:
             /// Base type of the ParticleEmitter
             typedef fg::gfx::CSceneNode base_type;
+            ///
+            typedef traits::CDrawable drawable_type;
             ///
             typedef CParticleEmitter self_type;
             ///
@@ -72,7 +74,13 @@ namespace fg {
              * 
              */
             virtual ~CParticleEmitter();
-            
+            /**
+             *
+             * @param trait
+             * @param pObj
+             * @return
+             */
+            virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
             /**
              * 
              * @param maxCount
@@ -157,7 +165,7 @@ namespace fg {
              */
             virtual void calculate(void);
 
-            using base_type::draw;
+            using drawable_type::draw;
             /**
              * 
              */

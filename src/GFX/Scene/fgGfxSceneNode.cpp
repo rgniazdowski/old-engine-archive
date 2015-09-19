@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
  * All rights reserved.
- * 
+ *
  * This file is part of FlexiGame: Flexible Game Engine
- * 
- * FlexiGame source code and any related files can not be copied, modified 
+ *
+ * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
@@ -16,20 +16,19 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
-                            self_type *pParent) :
+                            self_type* pParent) :
 base_type(), // fgManagedObjectBase init
-drawable_type(), // fgGfxDrawable init
 animated_type(),
+spatial_type(),
 m_nodeType(nodeType), // Current node type
-m_nodeTraits(traits::DRAWABLE | traits::ANIMATED | traits::SPATIAL),
+m_nodeTraits(traits::ANIMATED | traits::SPATIAL),
 m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
 m_collisionBody(NULL),
 m_pParent(pParent), // Pointer to the parent node
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
-m_finalModelMat()
-{
+m_finalModelMat() {
     setActive(FG_TRUE);
     setCollidable(FG_FALSE);
     setAutoScale(FG_FALSE);
@@ -60,7 +59,7 @@ gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode::~CSceneNode() {    
+gfx::CSceneNode::~CSceneNode() {
     m_pParent = NULL;
     m_pTreeNode = NULL;
     // Need to signal the managing object that this node is going to be removed
@@ -73,7 +72,7 @@ gfx::CSceneNode::~CSceneNode() {
         if(!(*it)) {
             m_children.erase(it);
         } else {
-            CSceneNode *pChild = const_cast<CSceneNode *>(*it);
+            CSceneNode* pChild = const_cast<CSceneNode *>(*it);
             destroyChild(pChild);
         }
         // can also make scene manager bind special callbacks to the managed objects...
@@ -89,6 +88,21 @@ gfx::CSceneNode::~CSceneNode() {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CSceneNode::refreshDrawableFlag(void) {
+    setFlag(DRAWABLE_CHILDREN, FG_FALSE);
+    ChildrenVecItor it = m_children.begin();
+    ChildrenVecItor end = m_children.end();
+    for(; it != end; it++) {
+        if(!(*it))
+            continue;
+        if((*it)->hasTraits(traits::DRAWABLE)) {
+            setFlag(DRAWABLE_CHILDREN, FG_TRUE);
+            break;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::CSceneNode::queryTrait(const traits::SceneNode trait, void **pObj) {
     fgBool status = hasTraits(trait);
     if(!pObj)
@@ -98,9 +112,9 @@ fgBool gfx::CSceneNode::queryTrait(const traits::SceneNode trait, void **pObj) {
             case traits::ANIMATED:
                 *pObj = static_cast<traits::CAnimated*>(this);
                 break;
-            case traits::DRAWABLE:
-                *pObj = static_cast<traits::CDrawable*>(this);
-                break;
+                //case traits::DRAWABLE:
+                //   * pObj = static_cast<traits::CDrawable*>(this);
+                //    break;
             case traits::SPATIAL:
                 *pObj = static_cast<traits::CSpatialObject*>(this);
                 break;
@@ -112,6 +126,26 @@ fgBool gfx::CSceneNode::queryTrait(const traits::SceneNode trait, void **pObj) {
     }
 
     return status;
+}
+//------------------------------------------------------------------------------
+
+int gfx::CSceneNode::queryChildrenTraits(const traits::SceneNode trait,
+                                         ChildrenVec& output,
+                                         fgBool shouldClear) {
+    if(trait == traits::NO_NODE_TRAITS)
+        return 0;
+    if(!hasChildren())
+        return 0;
+    if(shouldClear)
+        output.clear();
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int i = 0; i < nChildren; i++) {
+        CSceneNode* pChild = getChildByIndex(i);
+        if(pChild->hasTraits(trait)) {
+            output.push_back(pChild);
+            pChild->queryChildrenTraits(trait, output, FG_FALSE);
+        }
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -206,7 +240,7 @@ void gfx::CSceneNode::setRadius(float radius) {
         // This will be set where there is no collision body
         // It is not necessary with the collision body (physics)
         // because the nodes internal AABB will be updated in update(*) function
-        //float a = (2.0f * radius) / M_SQRT2;
+        //float a = (2.0f* radius) / M_SQRT2;
         float a = math::sqrt(radius * radius / 3.0f);
         m_aabb.min = -Vector3f(a, a, a);
         m_aabb.max = Vector3f(a, a, a);
@@ -247,7 +281,7 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     const Vector3f delta = obj_center - self_center;
     const float radius = m_aabb.radius + pNode->getBoundingVolume().radius;
     const float r2 = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
-    const float radius2 = radius * radius;
+    const float radius2 = radius* radius;
     if(r2 > radius2) {
         return FG_FALSE;
     }
@@ -261,13 +295,6 @@ fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
     if(!pNode->isCollidable() || !this->isCollidable())
         return FG_FALSE;
     return m_aabb.test(pNode->getBoundingVolume());
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
-    if(m_drawCall && isVisible()) {
-        m_drawCall->draw(m_finalModelMat * modelMat);
-    }
 }
 //------------------------------------------------------------------------------
 
@@ -287,7 +314,7 @@ void gfx::CSceneNode::updateAABB(void) {
             if(isAutoScale()) {
                 m_scale = extent * 2.0f;
             }
-            //m_aabb.radius = math::sqrt(extent.x * extent.x + extent.y * extent.y + extent.z * extent.z);
+            //m_aabb.radius = math::sqrt(extent.x* extent.x + extent.y* extent.y + extent.z* extent.z);
         } else if(m_collisionBody->getBodyType() == physics::CCollisionBody::SPHERE) {
             float radius = m_collisionBody->getCollisionSphere()->radius;
             float tmp = math::sqrt((radius * radius) / 3.0f);
@@ -313,7 +340,7 @@ void gfx::CSceneNode::animate(float delta) { }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::update(float delta) {
-    // The collision body is present 
+    // The collision body is present
     // Need to update the scene node model matrix based on the one
     // from the physics subsystem (CollisionBody/RigidBody)
     if(m_collisionBody) {
@@ -331,7 +358,7 @@ void gfx::CSceneNode::update(float delta) {
     animate(delta);
     // The base version of the updateAABB will update it depending on the collision body
     // if no collision body is present - the transformation wont be valid,
-    // so it does nothing... - this way this function can be called at the end of 
+    // so it does nothing... - this way this function can be called at the end of
     // any derived version (extend)
     updateAABB();
 
@@ -373,13 +400,15 @@ void gfx::CSceneNode::setCollisionBodyType(const physics::CCollisionBody::BodyTy
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
+fgBool gfx::CSceneNode::addChild(CSceneNode* pChild) {
     if(!pChild)
         return FG_FALSE;
     fgBool status = FG_TRUE;
     if(m_children.find(pChild) != -1)
         status = FG_FALSE; // duplicate, do not add...
     if(status) {
+        if(pChild->hasTraits(traits::DRAWABLE))
+            setFlag(DRAWABLE_CHILDREN, FG_TRUE);
         m_children.push_back(pChild);
         pChild->setParent(this);
     }
@@ -387,9 +416,14 @@ fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNode::removeChild(CSceneNode *pChild) {
-    if(!pChild || m_children.empty())
+fgBool gfx::CSceneNode::removeChild(CSceneNode* pChild) {
+    if(!pChild) {
         return FG_FALSE;
+    }
+    if(m_children.empty()) {
+        setFlag(DRAWABLE_CHILDREN, FG_FALSE);
+        return FG_FALSE;
+    }
     fgBool status = FG_TRUE;
     ChildrenVecItor it = m_children.findItor(pChild);
     if(it == m_children.end()) {
@@ -405,14 +439,17 @@ fgBool gfx::CSceneNode::removeChild(CSceneNode *pChild) {
             }
         }
     }
+    if(m_children.empty()) {
+        setFlag(DRAWABLE_CHILDREN, FG_FALSE);
+    }
     return status;
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
+gfx::CSceneNode* gfx::CSceneNode::removeChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return NULL;
-    CSceneNode *pChild = NULL;
+    CSceneNode* pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     ChildrenVecItor it = m_children.end();
     fgBool managerValid = FG_FALSE;
@@ -465,11 +502,16 @@ gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
             }
         }
     }
+    if(m_children.empty()) {
+        setFlag(DRAWABLE_CHILDREN, FG_FALSE);
+    } else if(pChild && pChild->hasTraits(traits::DRAWABLE)) {
+        refreshDrawableFlag();
+    }
     return pChild;
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode *gfx::CSceneNode::removeChild(const char *childName) {
+gfx::CSceneNode* gfx::CSceneNode::removeChild(const char* childName) {
     if(!childName || m_children.empty())
         return NULL;
     if(!*childName)
@@ -478,7 +520,7 @@ gfx::CSceneNode *gfx::CSceneNode::removeChild(const char *childName) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
+fgBool gfx::CSceneNode::destroyChild(CSceneNode*& pChild) {
     if(!pChild)
         return FG_FALSE;
     if(m_children.empty())
@@ -486,6 +528,7 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
     fgBool status = FG_TRUE;
     fgBool managerValid = FG_FALSE;
     ChildrenVecItor it = m_children.findItor(pChild);
+    const fgBool isDrawable = pChild->hasTraits(traits::DRAWABLE);
     if(it == m_children.end()) {
         status = FG_FALSE;
     } else {
@@ -503,6 +546,9 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
             pChild = NULL;
         }
     }
+    if(status && isDrawable) {
+        refreshDrawableFlag();
+    }
     return status;
 }
 //------------------------------------------------------------------------------
@@ -510,10 +556,10 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
 fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return FG_FALSE;
-    CSceneNode *pChild = NULL;
+    CSceneNode* pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     ChildrenVecItor it = m_children.end();
-    fgBool managerValid = FG_FALSE;
+    fgBool managerValid = FG_FALSE, isDrawable = FG_FALSE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
         if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
@@ -550,6 +596,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     }
     fgBool status = FG_FALSE;
     if(pChild) {
+        isDrawable = pChild->hasTraits(traits::DRAWABLE);
         // The child is found
         if(it != m_children.end()) {
             pChild->setParent(NULL);
@@ -571,11 +618,14 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
             status = FG_TRUE;
         }
     }
+    if(status && isDrawable) {
+        refreshDrawableFlag();
+    }
     return status;
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNode::destroyChild(const char *childName) {
+fgBool gfx::CSceneNode::destroyChild(const char* childName) {
     if(!childName)
         return FG_FALSE;
     if(!*childName)
@@ -587,7 +637,7 @@ fgBool gfx::CSceneNode::destroyChild(const char *childName) {
 gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
         return NULL;
-    CSceneNode *pChild = NULL;
+    CSceneNode* pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
@@ -629,7 +679,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& c
 gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return NULL;
-    CSceneNode *pChild = NULL;
+    CSceneNode* pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
@@ -685,7 +735,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChildByIndex(const unsigned int index) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNode::hasChild(CSceneNode *pChild) {
+fgBool gfx::CSceneNode::hasChild(CSceneNode* pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;

@@ -79,14 +79,28 @@ namespace fg {
              * 
              * @return 
              */
-            inline BatchPriorityQueue& getRefPriorityQueue(void) {
+            inline BatchPriorityQueue& getPriorityQueue(void) {
+                return m_priorityBatch;
+            }
+            /**
+             *
+             * @return
+             */
+            inline BatchPriorityQueue const& getPriorityQueue(void) const {
                 return m_priorityBatch;
             }
             /**
              * 
              * @return 
              */
-            inline DrawCallVec& getRefDrawCalls(void) {
+            inline DrawCallVec& getDrawCalls(void) {
+                return m_drawCalls;
+            }
+            /**
+             *
+             * @return
+             */
+            inline DrawCallVec const& getDrawCalls(void) const {
                 return m_drawCalls;
             }
             /**

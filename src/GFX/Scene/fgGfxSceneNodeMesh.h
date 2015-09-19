@@ -34,7 +34,7 @@ namespace fg {
         /**
          * 
          */
-        class CSceneNodeMesh : public CSceneNode {
+        class CSceneNodeMesh : public CSceneNode, public traits::CDrawable {
             friend class CSceneManager;
             friend class CSceneNodeObject;
         public:
@@ -44,6 +44,8 @@ namespace fg {
             typedef CSceneNodeMesh self_type;
             ///
             typedef CSceneNodeMesh type;
+            ///
+            typedef traits::CDrawable drawable_type;
 
         protected:
             /**
@@ -101,6 +103,14 @@ namespace fg {
             void setMaterial(SMaterial *pMaterial);
 
         public:
+            /**
+             * 
+             * @param trait
+             * @param pObj
+             * @return
+             */
+            virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
+
             using drawable_type::draw;
             /**
              * Draw with given model matrix

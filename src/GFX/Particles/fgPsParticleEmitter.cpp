@@ -22,6 +22,7 @@ using namespace fg;
 
 gfx::CParticleEmitter::CParticleEmitter(CParticleEffect *pEffect) :
 base_type(SCENE_NODE_PARTICLE_EMITTER, NULL),
+drawable_type(),
 m_effects(),
 m_origin(),
 m_particles(),
@@ -31,7 +32,7 @@ m_pCamera(NULL) {
     if(!m_drawCall) {
         m_drawCall = new CDrawCall();
     }
-    
+
     setCollidable(FG_FALSE);
     setupFromParticleEffect(pEffect);
 }
@@ -40,6 +41,20 @@ m_pCamera(NULL) {
 gfx::CParticleEmitter::~CParticleEmitter() {
     m_particles.clear_optimised();
     m_effects.clear_optimised();
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CParticleEmitter::queryTrait(const traits::SceneNode trait, void **pObj) {
+    fgBool status = hasTraits(trait);
+    status = (fgBool)(status && (pObj != NULL));
+    if(status) {
+        if(trait & traits::DRAWABLE) {
+            *pObj = static_cast<traits::CDrawable*>(this);
+        }
+    } else {
+        status = base_type::queryTrait(trait, pObj);
+    }
+    return status;
 }
 //------------------------------------------------------------------------------
 
@@ -323,14 +338,15 @@ void gfx::CParticleEmitter::calculate(void) {
 void gfx::CParticleEmitter::draw(const Matrix4f& modelMat) {
     //glEnable(GL_POLYGON_OFFSET_FILL);
     //glPolygonOffset(1.0f, 2.0f);
-
+    if(!isVisible() || !m_drawCall)
+        return;
     // #FIXME - such things should be set inside of a material
     context::blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     context::setBlend(FG_TRUE);
     context::setCullFace(FG_FALSE);
     context::disable(gfx::DEPTH_WRITEMASK);
 
-    base_type::draw(modelMat);
+    m_drawCall->draw(m_finalModelMat * modelMat);
 
     context::enable(gfx::DEPTH_WRITEMASK);
     context::setCullFace(FG_TRUE);

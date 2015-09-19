@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
  * All rights reserved.
- * 
+ *
  * This file is part of FlexiGame: Flexible Game Engine
- * 
- * FlexiGame source code and any related files can not be copied, modified 
+ *
+ * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
@@ -41,7 +41,7 @@ m_camera(CCameraAnimation::FREE),
 m_skybox(),
 m_rootNodes(),
 m_activeRootNode(NULL),
-m_nodeQueue(),
+m_visibleNodes(),
 m_pResourceMgr(NULL),
 m_sceneEventMgr(NULL),
 m_basetree(NULL) {
@@ -74,7 +74,7 @@ void gfx::CSceneManager::clear(void) {
 //------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroy(void) {
-    CDrawingBatch::flush();
+    batch_type::flush();
     if(m_basetree) {
         m_basetree->deleteRoot();
     }
@@ -98,13 +98,13 @@ fgBool gfx::CSceneManager::destroy(void) {
         (*itor).clear();
     }
     m_triggers.clear_optimised();
-    CSceneManager::clear();
+    self_type::clear();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneManager::clearScene(void) {
-    CDrawingBatch::flush();
+    batch_type::flush();
     if(m_basetree) {
         m_basetree->deleteRoot();
     }
@@ -332,7 +332,7 @@ unsigned int gfx::CSceneManager::SCollisionsInfo::capacity(void) const {
 ////////////////////////////////////////////////////////////////////////////////
 
 void gfx::CSceneManager::setShaderManager(fg::base::CManager* pShaderMgr) {
-    CDrawingBatch::setShaderManager(pShaderMgr);
+    batch_type::setShaderManager(pShaderMgr);
 }
 //------------------------------------------------------------------------------
 
@@ -373,9 +373,9 @@ void gfx::CSceneManager::refreshGfxInternals(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneManager::flush(void) {
-    CDrawingBatch::flush();
-    while(!m_nodeQueue.empty())
-        m_nodeQueue.pop();
+    batch_type::flush();
+    m_visibleNodes.clear();
+    m_drawableQueue.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -896,10 +896,7 @@ void gfx::CSceneManager::sortCalls(void) {
     if(!getShaderManager())
         return;
     m_MVP.setCamera((CCamera*)(&m_camera));
-    if(getRefPriorityQueue().empty())
-        CDrawingBatch::sortCalls(); // NOPE
-
-    m_nodeQueue.clear();
+    CDrawingBatch::sortCalls();
     //
     // Pick selection init
     //
@@ -913,6 +910,8 @@ void gfx::CSceneManager::sortCalls(void) {
             m_pickSelection.groundIntersectionPoint[1] = Vector3f();
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
+    int visibilityResult = 1;
+    traits::CDrawable* pDrawable = NULL;
     CFrustum const& frustum = m_MVP.getFrustum();
     m_traverse.rewind();
     while(m_traverse.next(getActiveRootNode())) {
@@ -922,49 +921,54 @@ void gfx::CSceneManager::sortCalls(void) {
         if(pSceneNode->getNodeType() == SCENE_NODE_ROOT) {
             continue; // for now skip the root nodes in linear traversal
         }
-        //CDrawCall* pDrawCall = pSceneNode->getDrawCall();
-#if defined(FG_DEBUG)
-        if(g_DebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
-        }
-#endif
+        visibilityResult = 0;
         if(pSceneNode->isActive()) {
             // There is a problem because the bounding box needs to be modified by
             // the model matrix; maybe some operator ?
             pSceneNode->update(timesys::elapsed()); // update nodes internals when active
         }
-        BoundingVolume3Df const& boundingVolume = pSceneNode->getBoundingVolume();
-        int visibilityResult = 1;
-        if(isFrustumCheckSphere()) {
-            visibilityResult = frustum.testSphere(boundingVolume);
-        } else if(isFrustumCheck()) {
-            visibilityResult = frustum.testVolume(boundingVolume);
+        // Ignore visibility check for node trigger
+        if(pSceneNode->getNodeType() != SCENE_NODE_TRIGGER) {
+#if defined(FG_DEBUG)
+            if(g_DebugConfig.isDebugProfiling) {
+                profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
+            }
+#endif
+            BoundingVolume3Df const& boundingVolume = pSceneNode->getBoundingVolume();
+            if(isFrustumCheckSphere()) {
+                visibilityResult = frustum.testSphere(boundingVolume);
+            } else if(isFrustumCheck()) {
+                visibilityResult = frustum.testVolume(boundingVolume);
+            }
+#if defined(FG_DEBUG)
+            if(g_DebugConfig.isDebugProfiling) {
+                profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
+            }
+#endif
         }
         // Set visibility (non-recursive)
         // The second flag is true by default.
         pSceneNode->setVisible(!!visibilityResult, FG_FALSE);
-#if defined(FG_DEBUG)
-        if(g_DebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
-        }
-#endif
-        // Pick selection // #FIXME
-        if(m_pickSelection.shouldCheck) {
-            if(visibilityResult) {
-                m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
-            } else {
-                m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
-            }
-        }
+
         // Each object is pushed to queue individually
         // Even if it contains children, single draw function should not draw
         // everyone - need specialized function for that
         // This is due to the fact that node queue sorts objects based on sorting
         // index (which is determined based on the data in the given draw call)
         // The aabb for each object is updated based on the children.
-        if(pSceneNode->isVisible() && !pSceneNode->getRefHandle().isNull()) {
-            // push to queue only nodes that have valid handle
-            m_nodeQueue.push(pSceneNode);
+        if(pSceneNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable) &&
+           visibilityResult > 0 &&
+           !pSceneNode->getRefHandle().isNull()) {
+            if(m_pickSelection.shouldCheck) {
+                if(!visibilityResult) {
+                    m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
+                } else {
+                    m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
+                }
+            }
+            // push to queue only nodes that have valid handle and are drawable
+            m_drawableQueue.push(pDrawable);
+            m_visibleNodes.push_back(pSceneNode);
         }
     }
     m_pickSelection.end(getStateFlags());
@@ -991,32 +995,32 @@ void gfx::CSceneManager::render(void) {
         // Calling underlying DrawingBatch render procedure
         // This will contain drawcalls not associated with scene/octree/quadtree structure
         CDrawingBatch::render();
-        NodePriorityQueueConstItor nodesItor, nodesEnd;
-        nodesEnd = m_nodeQueue.end();
-        nodesItor = m_nodeQueue.begin();
-        for(; nodesItor != nodesEnd; nodesItor++) {
-            if(isHideNodes()) {
-                // #FIXME
-                m_nodeQueue.clear(); //pop/clear
-                break; //continue/break
-            }
-            CSceneNode* pSceneNode = *nodesItor;
-            if(!pSceneNode)
-                continue;
+        DrawablePriorityQueueItor drawItor, drawEnd;
+        drawItor = m_drawableQueue.begin();
+        drawEnd = m_drawableQueue.end();
+        if(isHideNodes()) {
+            drawItor = drawEnd;
+        }
 #if defined(FG_DEBUG)
-            if(g_DebugConfig.isDebugProfiling) {
-                profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
-            }
+        if(g_DebugConfig.isDebugProfiling) {
+            profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
+        }
 #endif
-            pSceneNode->draw();
+        for(; drawItor != drawEnd; drawItor++) {
+            (*drawItor)->draw();
+        }
 #if defined(FG_DEBUG)
-            if(g_DebugConfig.isDebugProfiling) {
-                profile::g_debugProfiling->end("GFX::Scene::DrawNode");
-            }
+        if(g_DebugConfig.isDebugProfiling) {
+            profile::g_debugProfiling->end("GFX::Scene::DrawNode");
+        }
 #endif
-        } // for(node queue iteration)
         //----------------------------------------------------------------------
-        nodesItor = m_nodeQueue.begin();
+        VisibleNodesVecConstItor nodesItor, nodesEnd;
+        nodesEnd = m_visibleNodes.end();
+        nodesItor = m_visibleNodes.begin();
+        if(isHideNodes())
+            nodesItor = nodesEnd;
+        //----------------------------------------------------------------------
         pShaderMgr->useProgram("DefaultShader");
         pProgram = pShaderMgr->getCurrentProgram();
         for(; nodesItor != nodesEnd; nodesItor++) {
@@ -1299,9 +1303,9 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
             }
         }
     }
-
-    {
-        CDrawCall* pDrawCall = pNode->getDrawCall();
+    traits::CDrawable* pDrawable = NULL;
+    if(pNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable)) {
+        CDrawCall* pDrawCall = pDrawable->getDrawCall();
         if(pDrawCall) {
             pDrawCall->setMVP(&m_MVP);
             if(pShaderMgr && !pDrawCall->getShaderProgram()) {
@@ -1317,9 +1321,11 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
         if(!(*it))
             continue;
         CSceneNode* pChildNode = (*it);
-
-        CDrawCall* pDrawCall = pChildNode->getDrawCall();
-        if(pDrawCall) {
+        if(pChildNode->queryTrait(traits::DRAWABLE, (void **)&pDrawable)) {
+            CDrawCall* pDrawCall = pDrawable->getDrawCall();
+            if(!pDrawCall) {
+                continue;
+            }
             pDrawCall->setMVP(&m_MVP);
             if(pShaderMgr && !pDrawCall->getShaderProgram()) {
                 pDrawCall->setShaderProgram(pShaderMgr->getCurrentProgram());
@@ -1419,7 +1425,7 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
         // If this node is not root and does not have a father node
         // set as parent currently active root node
         if(!m_activeRootNode) {
-            createRootNode(NULL); // create root node with standard name            
+            createRootNode(NULL); // create root node with standard name
         } // what if creating root node failed?
         pNode->setParent(m_activeRootNode);
     }
@@ -1590,7 +1596,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const char* sourceNodeNameTag,
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode *gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
+gfx::CSceneNode* gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
                                                   const std::string& nameTag) {
     if(!pModelRes) {
         return NULL;
@@ -1608,7 +1614,7 @@ gfx::CSceneNode *gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode *gfx::CSceneManager::addFromModel(const std::string& modelNameTag,
+gfx::CSceneNode* gfx::CSceneManager::addFromModel(const std::string& modelNameTag,
                                                   const std::string& nameTag) {
     if(modelNameTag.empty() || nameTag.empty()) {
         return NULL;
@@ -1625,7 +1631,7 @@ gfx::CSceneNode *gfx::CSceneManager::addFromModel(const std::string& modelNameTa
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode *gfx::CSceneManager::addFromModel(const char *modelNameTag,
+gfx::CSceneNode* gfx::CSceneManager::addFromModel(const char *modelNameTag,
                                                   const char *nameTag) {
     if(!modelNameTag || !nameTag) {
         return NULL;
@@ -1642,55 +1648,56 @@ gfx::CSceneNode *gfx::CSceneManager::addFromModel(const char *modelNameTag,
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneManager::remove(CSceneNode* pObj) {
-    if(!pObj || !isManaged(pObj)) {
+fgBool gfx::CSceneManager::remove(CSceneNode* pNode) {
+    if(!pNode || !isManaged(pNode)) {
         return FG_FALSE;
     }
-    if(!m_nodeQueue.empty()) {
+    traits::CDrawable* pDrawable = NULL;
+    if(!m_drawableQueue.empty() && pNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable)) {
         // need to check if the scene node
         // is already in the queue - if yes - remove
-        NodePriorityQueueItor nodesItor, nodesEnd;
+        DrawablePriorityQueueItor nodesItor, nodesEnd;
         fgBool found = FG_FALSE;
-        nodesEnd = m_nodeQueue.end();
-        nodesItor = m_nodeQueue.begin();
+        nodesEnd = m_drawableQueue.end();
+        nodesItor = m_drawableQueue.begin();
         for(; nodesItor != nodesEnd; nodesItor++) {
-            CSceneNode* pSceneNodeQ = *nodesItor;
-            if(!pSceneNodeQ)
+            traits::CDrawable* pDrawableQ = *nodesItor;
+            if(!pDrawableQ)
                 continue;
-            if(pSceneNodeQ == pObj) {
+            if(pDrawableQ == pDrawable) {
                 found = FG_TRUE;
                 break;
             }
         }
         if(found) {
             // need to create new priority queue
-            NodePriorityQueue newQueue;
-            nodesItor = m_nodeQueue.begin();
+            DrawablePriorityQueue newQueue;
+            nodesItor = m_drawableQueue.begin();
             for(; nodesItor != nodesEnd; nodesItor++) {
-                CSceneNode* pSceneNodeQ = *nodesItor;
-                if(pSceneNodeQ != pObj) {
-                    newQueue.push(pSceneNodeQ);
+                traits::CDrawable* pDrawableQ = *nodesItor;
+                if(pDrawableQ != pDrawable) {
+                    newQueue.push(pDrawableQ);
                 }
             }
-            m_nodeQueue.clear();
-            m_nodeQueue.swap(newQueue);
+            m_drawableQueue.clear();
+            m_drawableQueue.swap(newQueue);
         }
     }
-    if(pObj->getTreeNode()) {
-        pObj->getTreeNode()->removeObject(pObj);
-        pObj->setTreeNode(NULL);
+    if(pNode->getTreeNode()) {
+        pNode->getTreeNode()->removeObject(pNode);
+        pNode->setTreeNode(NULL);
     }
-    // Reset the manager pointer - object is not managed - it is no longer needed    
-    pObj->setManager(NULL); // #FIXME - what about children? they also need to be removed from the manager
-    CSceneNode* parentObj = pObj->getParent();
+    // Reset the manager pointer - object is not managed - it is no longer needed
+    pNode->setManager(NULL); // #FIXME - what about children? they also need to be removed from the manager
+    CSceneNode* parentObj = pNode->getParent();
     if(parentObj) {
         // This is also so that removeChild() wont call this function again
         parentObj->setManager(NULL);
-        parentObj->removeChild(pObj);
+        parentObj->removeChild(pNode);
         parentObj->setManager(this);
     }
-    pObj->setManaged(FG_FALSE);
-    return handle_mgr_type::releaseHandle(pObj->getHandle());
+    pNode->setManaged(FG_FALSE);
+    return handle_mgr_type::releaseHandle(pNode->getHandle());
 }
 //------------------------------------------------------------------------------
 

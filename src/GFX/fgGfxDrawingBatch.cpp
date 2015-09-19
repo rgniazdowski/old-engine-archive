@@ -441,13 +441,10 @@ void gfx::CDrawingBatch::flush(void) {
 void gfx::CDrawingBatch::sortCalls(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
-    //drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
-    //for(; itor != end; itor++) {
     for(unsigned int i = 0; i < m_numDrawCalls; i++) {
-        //    if(*itor)
-        CDrawCall *drawCall = m_drawCalls[i];
-        if(drawCall)
-            m_priorityBatch.push(drawCall);
+        CDrawCall *pDrawCall = m_drawCalls[i];
+        if(pDrawCall)
+            m_priorityBatch.push(pDrawCall);
     }
 }
 //------------------------------------------------------------------------------
@@ -455,13 +452,10 @@ void gfx::CDrawingBatch::sortCalls(void) {
 void gfx::CDrawingBatch::render(void) {
     if(m_priorityBatch.empty())
         gfx::CDrawingBatch::sortCalls(); // #FIX - need to call via fgGfxDrawingBatch to avoid duplicate call (virtual)
-    int i = 0;
     while(!m_priorityBatch.empty()) {
         CDrawCall *pDrawCall = m_priorityBatch.top();
-        //static_cast<CShaderManager *>(m_pShaderMgr)->useProgram(pDrawCall->getShaderProgram());
         pDrawCall->draw();
         m_priorityBatch.pop();
-        i++;
     }
 }
 //------------------------------------------------------------------------------

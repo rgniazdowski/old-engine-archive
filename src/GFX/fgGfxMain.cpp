@@ -644,6 +644,8 @@ void gfx::CGfxMain::preRender(void) {
     if(m_particleSystem) {
         m_particleSystem->calculate();
     }
+    m_3DScene->flush();
+    m_2DScene->flush();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::sortCalls");

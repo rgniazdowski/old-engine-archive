@@ -64,14 +64,14 @@ void gfx::CScene3D::sortCalls(void) {
         CSceneManager::sortCalls();
         return;
     }
+    batch_type::sortCalls();
     if(m_physicsWorld) {
         m_physicsWorld->startFrame();
     }
     // Update the MVP based on the main camera properties
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum const& frustum = getMVP()->getFrustum();
-    // Remove from the queue any remaining nodes (CSceneNode)
-    getNodeQueue().clear();
+
     //
     // Pick selection init
     //
@@ -125,8 +125,10 @@ void gfx::CScene3D::sortCalls(void) {
     ////////////////////////////////////////////////////////////////////////////
     // PHASE II: Traverse the tree, check visibility, update nodes
     ////////////////////////////////////////////////////////////////////////////
+    int visibilityResult = 0;
     m_octree->rewind();
     m_octNodes.resize(0);
+    traits::CDrawable* pDrawable = NULL;
     while(m_octree->next()) {
         SOctreeNode *pTreeNode = static_cast<SOctreeNode *>(m_octree->current());
         unsigned int objCount = pTreeNode->objects.size();
@@ -146,31 +148,35 @@ void gfx::CScene3D::sortCalls(void) {
             if(pSceneNode->isVisible()) {
                 continue;
             }
-            //CDrawCall *pDrawCall = pSceneNode->getDrawCall();
+            visibilityResult = 0;
+            // Ignore visibility check for node trigger
+            if(pSceneNode->getNodeType() != SCENE_NODE_TRIGGER) {
 #if defined(FG_DEBUG)
-            if(g_DebugConfig.isDebugProfiling) {
-                profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
-            }
+                if(g_DebugConfig.isDebugProfiling) {
+                    profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
+                }
 #endif
-            BoundingVolume3Df const& boundingVolume = pSceneNode->getBoundingVolume();
-            int visibilityResult = 1;
-            if(isFrustumCheckSphere()) {
-                visibilityResult = frustum.testSphere(boundingVolume);
-            } else if(isFrustumCheck()) {
-                visibilityResult = frustum.testVolume(boundingVolume);
+                BoundingVolume3Df const& boundingVolume = pSceneNode->getBoundingVolume();
+                if(isFrustumCheckSphere()) {
+                    visibilityResult = frustum.testSphere(boundingVolume);
+                } else if(isFrustumCheck()) {
+                    visibilityResult = frustum.testVolume(boundingVolume);
+                }
+#if defined(FG_DEBUG)
+                if(g_DebugConfig.isDebugProfiling) {
+                    profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
+                }
+#endif
             }
             // Set visibility (non-recursive)
             // The second flag is true by default.
             pSceneNode->setVisible(!!visibilityResult, FG_FALSE);
-#if defined(FG_DEBUG)
-            if(g_DebugConfig.isDebugProfiling) {
-                profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
-            }
-#endif
+
             // #FIXME #TREE_TRAVERSE - tree needs also to contain child nodes
             // of scene nodes (like meshes of the object)
             // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes
-            if(pSceneNode->isVisible()) {
+            if(pSceneNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable) &&
+               visibilityResult > 0) {
                 // Checking for pick selection only when node is visible
                 if(m_pickSelection.shouldCheck) {
                     if(!visibilityResult) {
@@ -179,7 +185,8 @@ void gfx::CScene3D::sortCalls(void) {
                         m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
                     }
                 }
-                getNodeQueue().push(pSceneNode);
+                getDrawableQueue().push(pDrawable);
+                getVisibleNodes().push_back(pSceneNode);
             }
         } // for every object in tree node
     }

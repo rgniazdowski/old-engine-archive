@@ -17,14 +17,14 @@
 #include "fgGfxSceneNodeMesh.h"
 #include "fgGfxSceneManager.h"
 #include "GFX/Animation/fgGfxAnimation.h"
+#include "GFX/Animation/fgGfxBlending.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
-CSceneNode(SCENE_NODE_MESH, pParent) {
-    CSceneNode::setNodeType(SCENE_NODE_MESH);
+base_type(SCENE_NODE_MESH, pParent),
+drawable_type() {
     if(!m_drawCall) {
         m_drawCall = new CDrawCall(DRAW_CALL_MESH,
                                    ATTRIBUTE_POSITION_BIT |
@@ -33,6 +33,7 @@ CSceneNode(SCENE_NODE_MESH, pParent) {
     }
     m_drawCall->setZIndex(Z_INDEX_OBJECTS_3D);
     setMesh(pMesh);
+    setNodeTrait(drawable_type::SELF_TRAIT);
 }
 //------------------------------------------------------------------------------
 
@@ -106,7 +107,21 @@ void gfx::CSceneNodeMesh::setMaterial(SMaterial *pMaterial) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNodeMesh::animate(float delta) {    
+fgBool gfx::CSceneNodeMesh::queryTrait(const traits::SceneNode trait, void **pObj) {
+    fgBool status = hasTraits(trait);
+    status = (fgBool)(status && (pObj != NULL));
+    if(status) {
+        if(trait & traits::DRAWABLE) {
+            *pObj = static_cast<traits::CDrawable*>(this);
+        }
+    } else {
+        status = base_type::queryTrait(trait, pObj);
+    }
+    return status;
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeMesh::animate(float delta) {
     SSkinnedMesh *pSkinnedMesh = getSkinnedMesh();
     if(!pSkinnedMesh)
         return;
@@ -130,21 +145,20 @@ void gfx::CSceneNodeMesh::animate(float delta) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
-    if(!isVisible())
+    if(!isVisible() || !m_drawCall)
         return;
-    if(m_drawCall) {
-        animated_type::AnimationsVec& animations = getAnimations();
-        const unsigned int nAnimations = animations.size();
-        // should now use shader, check flags and push uniforms
-        CShaderProgram* pProgram = m_drawCall->getShaderProgram();
-        if(pProgram && nAnimations) {
-            pProgram->use();
+    animated_type::AnimationsVec& animations = getAnimations();
+    const unsigned int nAnimations = animations.size();
+    // should now use shader, check flags and push uniforms
+    CShaderProgram* pProgram = m_drawCall->getShaderProgram();
+    if(pProgram && nAnimations) {
+        pProgram->use();
             // the index of animation should not be zero...
             pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
                                  animations[0].curFrame.dualQuaternions);
         }
     }
-    base_type::draw(modelMat);
+    m_drawCall->draw(m_finalModelMat * modelMat);
 }
 //------------------------------------------------------------------------------
 

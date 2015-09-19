@@ -100,7 +100,6 @@ namespace fg {
          */
         class CSceneNode :
         public resource::CManagedObject<SceneNodeHandle>,
-        public traits::CDrawable,
         public traits::CAnimated,
         public traits::CSpatialObject {
             friend class CGfxMain;
@@ -132,7 +131,10 @@ namespace fg {
                 /// Whether or not this node is active. Node is active by default
                 ACTIVE = 0x0008,
                 /// Whether or not this node is selected. False by default
-                SELECTED = 0x0010
+                SELECTED = 0x0010,
+                /// Whether or not this node has drawable children.
+                /// The parent node can be not drawable.
+                DRAWABLE_CHILDREN = 00020
             }; // enum StateFlags
 
         public:
@@ -145,8 +147,6 @@ namespace fg {
 
             /// Scene node tag type
             typedef SceneNodeTag tag_type;
-            /// Drawable object type
-            typedef traits::CDrawable drawable_type;
             /// Animated object type
             typedef traits::CAnimated animated_type;
             /// Spatial object type
@@ -204,6 +204,10 @@ namespace fg {
 
         protected:
             /**
+             *
+             */
+            void refreshDrawableFlag(void);
+            /**
              * 
              * @param trait
              */
@@ -230,8 +234,8 @@ namespace fg {
              * @param traits
              * @return
              */
-            fgBool hasTraits(traits::SceneNode traits) const {
-                return (fgBool)!!(m_nodeTraits & traits);
+            fgBool hasTraits(traits::SceneNode trait) const {
+                return (fgBool)!!(m_nodeTraits & trait);
             }
             /**
              *
@@ -241,13 +245,19 @@ namespace fg {
              */
             virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
 
-        public:
-            using drawable_type::draw;
             /**
-             * 
-             * @param modelMat
+             * Recursively query all children of this node that have given traits
+             * and append them to the output vector
+             * @param traits        Trait flags to query
+             * @param output        Output vector which will be filled with child
+             *                      nodes that have required traits
+             * @param shouldClear   Whether or not the output vector should be
+             *                      cleared before first addition
+             * @return              Number of found children
              */
-            virtual void draw(const Matrix4f& modelMat);
+            int queryChildrenTraits(const traits::SceneNode trait,
+                                    ChildrenVec& output,
+                                    fgBool shouldClear = FG_FALSE);
 
             /**
              * 
@@ -851,6 +861,13 @@ namespace fg {
              */
             inline void unselect(void) {
                 setFlag(SELECTED, FG_FALSE);
+            }
+            /**
+             * 
+             * @return
+             */
+            inline fgBool hasDrawableChildren(void) const {
+                return (fgBool)!!(m_stateFlags & DRAWABLE_CHILDREN);
             }
 
             //------------------------------------------------------------------

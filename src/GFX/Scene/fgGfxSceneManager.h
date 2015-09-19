@@ -51,21 +51,26 @@ namespace fg {
             ///
             typedef fg::base::CManager base_type;
             ///
+            typedef CDrawingBatch batch_type;
+            ///
             typedef fg::util::CHandleManager<CSceneNode *, SceneNodeHandle> handle_mgr_type;
             ///
             typedef CSceneNode node_type;
             ///
             typedef SceneNodeHandle handle_type;
             ///
-            typedef CPriorityQueue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > NodePriorityQueue;
+            typedef CVector<CSceneNode*> VisibleNodesVec;
             ///
-            typedef NodePriorityQueue::const_iterator NodePriorityQueueConstItor;
+            typedef VisibleNodesVec::const_iterator VisibleNodesVecConstItor;
             ///
-            typedef NodePriorityQueue::iterator NodePriorityQueueItor;
+            typedef VisibleNodesVec::iterator VisibleNodesVecItor;
+            typedef CPriorityQueue<traits::CDrawable*, std::deque<traits::CDrawable*>, fgPtrLessEq<traits::CDrawable*> > DrawablePriorityQueue;
+            typedef DrawablePriorityQueue::const_iterator DrawablePriorityQueueConstItor;
+            typedef DrawablePriorityQueue::iterator DrawablePriorityQueueItor;
             ///
-            typedef CVector<CSceneNode *> ObjectVec;
+            typedef CVector<CSceneNode *> ObjectsVec;
             ///
-            typedef ObjectVec::iterator ObjectVecItor;
+            typedef ObjectsVec::iterator ObjectsVecItor;
 
         public:
 
@@ -1146,15 +1151,29 @@ namespace fg {
              * 
              * @return 
              */
-            inline NodePriorityQueue& getNodeQueue(void) {
-                return m_nodeQueue;
+            inline VisibleNodesVec& getVisibleNodes(void) {
+                return m_visibleNodes;
             }
             /**
              * 
              * @return 
              */
-            inline NodePriorityQueue const& getNodeQueue(void) const {
-                return m_nodeQueue;
+            inline VisibleNodesVec const& getVisibleNodes(void) const {
+                return m_visibleNodes;
+            }
+            /**
+             *
+             * @return
+             */
+            inline DrawablePriorityQueue& getDrawableQueue(void) {
+                return m_drawableQueue;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline DrawablePriorityQueue const& getDrawableQueue(void) const {
+                return m_drawableQueue;
             }
             /**
              * 
@@ -1299,7 +1318,7 @@ namespace fg {
              */
             struct SCollisionsInfo {
                 ///
-                typedef CVector<ObjectVec> ContactsVec;
+                typedef CVector<ObjectsVec> ContactsVec;
                 ///
                 typedef ContactsVec::iterator ContactsVecItor;
 
@@ -1713,11 +1732,13 @@ namespace fg {
             /// father for other nodes which are added later - root node creates
             /// separate scene, level, map, etc. Root node will be created if
             /// there isn't any
-            ObjectVec m_rootNodes;
+            ObjectsVec m_rootNodes;
             /// Currently active root node - separate scene
             CSceneNode* m_activeRootNode;
-            /// Queue containing scene node (sorted) ready to render
-            NodePriorityQueue m_nodeQueue;
+            /// Vector containing scene nodes that are visible
+            VisibleNodesVec m_visibleNodes;
+            /// Drawable priority queue - special purpose for rendering in order
+            DrawablePriorityQueue m_drawableQueue;
             /// Pointer to the external resource manager - don't know if this is necessary
             fg::base::CManager* m_pResourceMgr;
             /// This is special manager for scene based events
