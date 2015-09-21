@@ -224,8 +224,6 @@ namespace fg {
              */
             virtual ~CModelResource();
 
-            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CModelResource)
-
         protected:
             /**
              * Clears the class data, this actually does not free allocated memory,

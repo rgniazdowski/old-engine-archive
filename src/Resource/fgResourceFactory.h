@@ -13,10 +13,7 @@
     #define FG_INC_RESOURCE_FACTORY_BLOCK
 
     #include "fgResource.h"
-    #include "fgResourceFactoryTypes.h"
-
-    #include <map>
-
+    #include "Util/fgAbstractFactory.h"  
 
 namespace fg {
     namespace resource {
@@ -24,16 +21,11 @@ namespace fg {
         /**
          *
          */
-        class CResourceFactory {
+        class CResourceFactory : public util::CAbstractFactory<ResourceType, CResource> {
         public:
-            ///
-            typedef std::map<ResourceType, CreateResourceFunction> factoryMap;
-            ///
-            typedef std::pair<ResourceType, CreateResourceFunction> factoryPair;
-            ///
-            typedef factoryMap::iterator factoryMapItor;
-            ///
-            typedef factoryMap::const_iterator factoryMapConstItor;
+            typedef util::CAbstractFactory<ResourceType, CResource> base_type;
+            typedef CResourceFactory self_type;
+            typedef CResourceFactory type;
 
         public:
             /**
@@ -45,39 +37,10 @@ namespace fg {
              */
             virtual ~CResourceFactory();
 
-            /**
-             * Clear all registered resource creators
-             */
-            void clear(void);
+        }; // class CResourceFactory
 
-            /**
-             * Register resource create function based on resource type
-             * @param type
-             * @param function
-             * @return 
-             */
-            fgBool registerResource(const ResourceType type, CreateResourceFunction function);
+    } // namespace resource
+} // namespace fg
 
-            /**
-             * Call specific create function for given resource
-             * @param type
-             * @return 
-             */
-            CResource* createResource(const ResourceType type);
-
-            /**
-             * Check if given resource type constructor/create function is registered in factory
-             * @param type
-             * @return 
-             */
-            fgBool isRegistered(const ResourceType type);
-
-        private:
-            /// Map storing create functions for given resource types
-            factoryMap m_factoryMap;
-        };
-
-    };
-};
     #undef FG_INC_RESOURCE_FACTORY_BLOCK
 #endif /* FG_INC_RESOURCE_FACTORY */

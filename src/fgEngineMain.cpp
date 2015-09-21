@@ -398,26 +398,26 @@ fgBool CEngineMain::initialize(void) {
     if(!m_resourceFactory)
         m_resourceFactory = new resource::CResourceFactory();
     else
-        m_resourceFactory->clear();
-    m_resourceFactory->registerResource(resource::SOUND, &sfx::CSound::createResource);
-    m_resourceFactory->registerResource(resource::MUSIC, &sfx::CMusic::createResource);
-    m_resourceFactory->registerResource(resource::MODEL3D, &gfx::CModel::createResource);
-    m_resourceFactory->registerResource(resource::TEXTURE, &gfx::CTexture::createResource);
-    m_resourceFactory->registerResource(resource::FONT, &gui::CFont::createResource);
-    //m_resourceFactory->registerResource(resource::SAVE_FILE, &);
-    //m_resourceFactory->registerResource(resource::GUI_STRUCTURE_SHEET, &);
-    //m_resourceFactory->registerResource(resource::GUI_STYLE_SHEET, &);
-    //m_resourceFactory->registerResource(resource::SHADER, &);
-    //m_resourceFactory->registerResource(resource::SCENE, &);
-    //m_resourceFactory->registerResource(resource::SCRIPT, &);
-    m_resourceFactory->registerResource(resource::GROUP, &resource::CResourceGroup::createResource);
-    //m_resourceFactory->registerResource(resource::VARIA, &);
-    //m_resourceFactory->registerResource(resource::BINARY, &);
-    //m_resourceFactory->registerResource(resource::LIBRARY, &);
-    m_resourceFactory->registerResource(resource::PLUGIN, &CPluginResource::createResource);
-    //m_resourceFactory->registerResource(resource::CUSTOM, &);
-    //m_resourceFactory->registerResource(resource::ZIP_PACK, &);
-    m_resourceFactory->registerResource(resource::PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
+        m_resourceFactory->destroy();
+    m_resourceFactory->registerObject(resource::SOUND, new util::CFactoryObject<sfx::CSound>());
+    m_resourceFactory->registerObject(resource::MUSIC, new util::CFactoryObject<sfx::CMusic>());
+    m_resourceFactory->registerObject(resource::MODEL3D, new util::CFactoryObject<gfx::CModel>());
+    m_resourceFactory->registerObject(resource::TEXTURE, new util::CFactoryObject<gfx::CTexture>());
+    m_resourceFactory->registerObject(resource::FONT, new util::CFactoryObject<gui::CFont>());
+    //m_resourceFactory->registerObject(resource::SAVE_FILE, &);
+    //m_resourceFactory->registerObject(resource::GUI_STRUCTURE_SHEET, &);
+    //m_resourceFactory->registerObject(resource::GUI_STYLE_SHEET, &);
+    //m_resourceFactory->registerObject(resource::SHADER, &);
+    //m_resourceFactory->registerObject(resource::SCENE, &);
+    //m_resourceFactory->registerObject(resource::SCRIPT, &);
+    m_resourceFactory->registerObject(resource::GROUP, new util::CFactoryObject<resource::CResourceGroup>());
+    //m_resourceFactory->registerObject(resource::VARIA, &);
+    //m_resourceFactory->registerObject(resource::BINARY, &);
+    //m_resourceFactory->registerObject(resource::LIBRARY, &);
+    m_resourceFactory->registerObject(resource::PLUGIN, new util::CFactoryObject<CPlugin>());
+    //m_resourceFactory->registerObject(resource::CUSTOM, &);
+    //m_resourceFactory->registerObject(resource::ZIP_PACK, &);
+    m_resourceFactory->registerObject(resource::PARTICLE_EFFECT, new util::CFactoryObject<gfx::CParticleEffect>());
 
 
     // DEVICE YIELD

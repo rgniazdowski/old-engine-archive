@@ -14,7 +14,6 @@
 
     #include "fgBuildConfig.h"
     #include "Resource/fgResource.h"
-    #include "Resource/fgResourceFactoryTypes.h"
 
     #include "fgTextureTypes.h"
     #include "GFX/fgGfxStdInc.h"
@@ -59,12 +58,6 @@ namespace fg {
             virtual ~CTextureResource() {
                 CTextureResource::destroy();
             }
-
-            /**
-             * 
-             * @return 
-             */
-            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CTextureResource)
 
         protected:
             // Clears the class data, this actually does not free allocated memory,

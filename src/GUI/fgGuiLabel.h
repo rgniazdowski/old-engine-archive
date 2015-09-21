@@ -13,7 +13,6 @@
     #define FG_INC_GUI_LABEL_BLOCK
 
     #include "fgGuiWidget.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -54,16 +53,11 @@ namespace fg {
              * 
              * @return 
              */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CLabel)
-
-            /**
-             * 
-             * @return 
-             */
             virtual gfx::BoundingBox3Df updateBounds(void);
-        };
-    };
-};
+        }; // class CLabel
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_LABEL_BLOCK
 #endif /* FG_INC_GUI_LABEL */

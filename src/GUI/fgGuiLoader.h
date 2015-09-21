@@ -13,7 +13,6 @@
     #define FG_INC_GUI_LOADER_BLOCK
 
     #include "fgGuiWidget.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -54,20 +53,15 @@ namespace fg {
              * 
              * @return 
              */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CLoaderSub)
-
-            /**
-             * 
-             * @return 
-             */
             virtual gfx::BoundingBox3Df updateBounds(void);
             /**
              * 
              */
             virtual void refresh(void);
-        };
-    };
-};
+        }; // class CLoaderSub
+        
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_LOADER_BLOCK
 #endif /* FG_INC_GUI_LOADER */

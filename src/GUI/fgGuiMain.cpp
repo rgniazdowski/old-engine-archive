@@ -49,7 +49,6 @@
 #include "fgLog.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gui::CGuiMain::CGuiMain(const std::string& stylesPath,
@@ -182,23 +181,23 @@ fgBool gui::CGuiMain::initialize(void) {
         return FG_FALSE;
     }
     //m_widgetFactory->registerWidget(FG_GUI_WIDGET,		&fgGuiWidget::createWidget);
-    m_widgetFactory->registerWidget(LABEL, &CLabel::createWidget);
-    m_widgetFactory->registerWidget(BUTTON, &CButton::createWidget);
-    m_widgetFactory->registerWidget(TOGGLE_BUTTON, &CToggleButton::createWidget);
-    m_widgetFactory->registerWidget(CONTAINER, &CContainer::createWidget);
-    m_widgetFactory->registerWidget(MENU, &CMenu::createWidget);
-    m_widgetFactory->registerWidget(FRAME, &CFrame::createWidget);
-    m_widgetFactory->registerWidget(SCROLL_AREA, &CScrollArea::createWidget);
-    m_widgetFactory->registerWidget(TEXT_AREA, &CTextArea::createWidget);
-    m_widgetFactory->registerWidget(EDITABLE_TEXT, &CEditableText::createWidget);
-    m_widgetFactory->registerWidget(CONSOLE, &CConsole::createWidget);
-    m_widgetFactory->registerWidget(WINDOW, &CWindow::createWidget);
-    m_widgetFactory->registerWidget(MESSAGE_BOX, &CMessageBox::createWidget);
-    m_widgetFactory->registerWidget(POPUP, &CPopup::createWidget);
-    m_widgetFactory->registerWidget(PROGRESS_BAR, &CProgressBar::createWidget);
-    m_widgetFactory->registerWidget(TABLE, &CTable::createWidget);
-    m_widgetFactory->registerWidget(LOADER, &CLoaderSub::createWidget);
-    m_widgetFactory->registerWidget(SLIDER, &CSlider::createWidget);
+    m_widgetFactory->registerObject(LABEL, new util::CFactoryObject<CLabel>());
+    m_widgetFactory->registerObject(BUTTON, new util::CFactoryObject<CButton>());
+    m_widgetFactory->registerObject(TOGGLE_BUTTON, new util::CFactoryObject<CToggleButton>());
+    m_widgetFactory->registerObject(CONTAINER, new util::CFactoryObject<CContainer>());
+    m_widgetFactory->registerObject(MENU, new util::CFactoryObject<CMenu>());
+    m_widgetFactory->registerObject(FRAME, new util::CFactoryObject<CFrame>());
+    m_widgetFactory->registerObject(SCROLL_AREA, new util::CFactoryObject<CScrollArea>());
+    m_widgetFactory->registerObject(TEXT_AREA, new util::CFactoryObject<CTextArea>());
+    m_widgetFactory->registerObject(EDITABLE_TEXT, new util::CFactoryObject<CEditableText>());
+    m_widgetFactory->registerObject(CONSOLE, new util::CFactoryObject<CConsole>());
+    m_widgetFactory->registerObject(WINDOW, new util::CFactoryObject<CWindow>());
+    m_widgetFactory->registerObject(MESSAGE_BOX, new util::CFactoryObject<CMessageBox>());
+    m_widgetFactory->registerObject(POPUP, new util::CFactoryObject<CPopup>());
+    m_widgetFactory->registerObject(PROGRESS_BAR, new util::CFactoryObject<CProgressBar>());
+    m_widgetFactory->registerObject(TABLE, new util::CFactoryObject<CTable>());
+    m_widgetFactory->registerObject(LOADER, new util::CFactoryObject<CLoaderSub>());
+    m_widgetFactory->registerObject(SLIDER, new util::CFactoryObject<CSlider>());
 
     FG_LOG_DEBUG("GUI: Initializing builtin fonts...");
     /* List of builtin fonts:
@@ -521,7 +520,7 @@ void gui::CGuiMain::updateState(void) {
     }
     if(!m_currentMenu) {
         // #FIXME - this needs to look a little bit differently
-        gui::CWidgetManager::WidgetVec& roots = m_widgetMgr->getRefRootWidgets();
+        gui::CWidgetManager::WidgetVec& roots = m_widgetMgr->getRootWidgets();
         if(roots.empty())
             return;
         gui::CWidget *mainMenu = m_widgetMgr->get("MainMenu");

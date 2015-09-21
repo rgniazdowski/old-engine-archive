@@ -13,7 +13,6 @@
     #define FG_INC_GUI_POPUP_BLOCK
 
     #include "fgGuiWindow.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -44,12 +43,6 @@ namespace fg {
              * 
              * @return 
              */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CPopup)
-
-            /**
-             * 
-             * @return 
-             */
             virtual gfx::BoundingBox3Df updateBounds(void);
             /**
              * 
@@ -61,9 +54,10 @@ namespace fg {
              * 
              */
             virtual void setDefaults(void);
-        };
-    };
-};
+        }; // class CPopup
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_POPUP_BLOCK
 #endif /* FG_INC_GUI_POPUP */

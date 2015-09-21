@@ -201,7 +201,7 @@ void gui::CStructureSheetParser::startElement(const char *localName,
         return;
     }
 
-    CWidget *pWidget = m_widgetFactory->createWidget(widgetType);
+    CWidget *pWidget = m_widgetFactory->create(widgetType);
     if(!pWidget) {
         m_widgetStack.push(NULL);
         return;

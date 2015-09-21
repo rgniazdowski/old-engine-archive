@@ -178,12 +178,6 @@ namespace fg {
 
             /**
              * 
-             * @return 
-             */
-            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CResourceGroup)
-
-            /**
-             * 
              * @param resourceFactory
              */
             void setResourceFactory(CResourceFactory *resourceFactory);

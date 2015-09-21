@@ -13,7 +13,6 @@
     #define FG_INC_GUI_CONTAINER_BLOCK
 
     #include "fgGuiWidget.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 /* horizontal, vertical */
     #define FG_GUI_CONTAINER_PACK_METHOD
@@ -39,7 +38,7 @@ enum fgGuiContainerPackAlign {
 };
 FG_ENUM_FLAGS(fgGuiContainerPackAlign);
 
-    #include <map>
+    #include "Util/fgBTreeMap.h"
 
 namespace fg {
     namespace gui {
@@ -56,7 +55,7 @@ namespace fg {
             ///
             typedef CWidget base_type;
             ///
-            typedef std::map<std::string, CWidget*> ChildrenMap;
+            typedef util::btree_map<std::string, CWidget*> ChildrenMap;
             ///
             typedef ChildrenMap::iterator ChildrenMapItor;
             ///
@@ -93,12 +92,6 @@ namespace fg {
              * 
              */
             virtual ~CContainer();
-
-            /**
-             * 
-             * @return 
-             */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CContainer)
 
             /**
              * 
@@ -195,9 +188,10 @@ namespace fg {
             void setDrawChildren(fgBool toggle = FG_TRUE) {
                 m_drawChildren = toggle;
             }
-        };
-    };
-};
+        }; // class CContainer
+        
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_CONTAINER_BLOCK
 #endif /* FG_INC_GUI_CONTAINER */

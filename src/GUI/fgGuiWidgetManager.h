@@ -263,7 +263,7 @@ namespace fg {
              * 
              * @return 
              */
-            WidgetVec& getRefRootWidgets(void);
+            WidgetVec& getRootWidgets(void);
 
             /**
              * 

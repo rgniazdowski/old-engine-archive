@@ -18,7 +18,6 @@
 
     #include "fgGuiSlider.h"
     #include "fgGuiContainer.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -78,12 +77,6 @@ namespace fg {
              * 
              * @return 
              */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CScrollArea);
-
-            /**
-             * 
-             * @return 
-             */
             virtual void setFlags(const std::string& flags);
 
             /**
@@ -117,12 +110,10 @@ namespace fg {
              */
             virtual EventState updateState(const event::SPointerData *pointerData);
 
-        };
+        }; // class CScrollArea
         FG_ENUM_FLAGS(CScrollArea::SliderSwitch);
+        
     } // namespace gui
 } // namespace fg
-
-
-
     #undef FG_INC_GUI_SCROLL_AREA_BLOCK
 #endif /* FG_INC_GUI_SCROLL_AREA */

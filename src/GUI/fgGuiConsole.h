@@ -13,7 +13,6 @@
     #define FG_INC_GUI_CONSOLE_BLOCK
 
     #include "fgGuiTextArea.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace msg {
@@ -61,12 +60,6 @@ namespace fg {
              * @param guiLayer
              */
             virtual void preRender(CDrawer *guiLayer);
-
-            /**
-             * 
-             * @return 
-             */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CConsole)
 
             using gui::CWidget::updateBounds;
 
@@ -135,9 +128,10 @@ namespace fg {
                 base_type::clearText();
                 m_numConsoleRecords = m_textData.size();
             }
-        };
-    };
-};
+        }; // class CConsole
+        
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_CONSOLE_BLOCK
 #endif /* FG_INC_GUI_CONSOLE */

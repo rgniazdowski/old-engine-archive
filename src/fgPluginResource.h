@@ -19,7 +19,6 @@
     #define FG_INC_PLUGIN_RESOURCE_BLOCK
 
     #include "Resource/fgResource.h"
-    #include "Resource/fgResourceFactoryTypes.h"    
 
 namespace fg {
 
@@ -77,12 +76,6 @@ namespace fg {
          * @param path
          */
         CPluginResource(const std::string& path);
-
-        /**
-         * 
-         * @return
-         */
-        FG_RESOURCE_FACTORY_CREATE_FUNCTION(CPluginResource);
 
         /**
          *
@@ -155,23 +148,25 @@ namespace fg {
         }
 
     private:
-        ///
+        /// Internal plugin info structure
         SInternalInfo m_internalInfo;
-        ///
+        /// Initialization status
         fgBool m_pluginInitStatus;
-        ///
+        /// Name of the function for plugin initialization
         std::string m_initFuncName;
-        ///
+        /// Name of the function for plugin exit procedures
         std::string m_exitFuncName;
-        ///
+        /// The library handle
         void *m_libHandle;
-        ///
+        /// Pointer to the initialization function
         InitPluginFunction m_initFuncHandle;
-        ///
+        /// Pointer to the exit function
         ExitPluginFunction m_exitFuncHandle;
+    }; // class CPluginResource
 
-    };
+    typedef CPluginResource CPlugin;
 
-}
+} // namespace fg
+
     #undef FG_INC_PLUGIN_RESOURCE_BLOCK
 #endif	/* FG_INC_PLUGIN_RESOURCE */

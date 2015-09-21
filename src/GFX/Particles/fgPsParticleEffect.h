@@ -46,8 +46,6 @@ FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CParticleEffect, FG_TAG_PARTICLE_EFFECT_NAME);
     #define FG_PARTICLE_INT_UNIT_TEST_VALUE     (INT_MAX/5)
     #define FG_PARTICLE_CHECK_INT(value)        (value < FG_PARTICLE_INT_UNIT_TEST_VALUE)
 
-    #include "Resource/fgResourceFactoryTypes.h"
-
 /**
  * Below is the list of the parameters that make changes (affect the particle) 
  * only when paramsActive flag is set:
@@ -208,8 +206,6 @@ namespace fg {
             virtual ~CParticleEffect();
 
             //------------------------------------------------------------------
-
-            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CParticleEffect);
 
             /**
              * Create function loads/interprets data from file in ROM and place it in RAM memory.

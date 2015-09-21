@@ -19,7 +19,6 @@
     #define FG_INC_GUI_SLIDER_BLOCK
 
     #include "fgGuiWidget.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -70,13 +69,6 @@ namespace fg {
              * 
              */
             virtual ~CSlider();
-
-            /**
-             * 
-             * @return 
-             */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CSlider)
-
 
             /**
              * 
@@ -200,11 +192,11 @@ namespace fg {
                 m_maxValue = maxValue;
             }
 
-        };
-    };
-};
-
-FG_ENUM_FLAGS(fg::gui::CSlider::SliderAlign)
+        }; // class CSlider
+        FG_ENUM_FLAGS(CSlider::SliderAlign);
+        
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_SLIDER_BLOCK
 #endif	/* FG_INC_GUI_SLIDER */

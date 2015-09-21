@@ -72,7 +72,7 @@ fgBool resource::CResourceGroupContentHandler::loadResConfig(const char *path) {
     }
     SResourceHeader *header = &resCfg->getRefHeader();
     if(m_resourceGroup->getFactory()->isRegistered(m_resType)) {
-        m_resourcePtr = m_resourceGroup->getFactory()->createResource(m_resType);
+        m_resourcePtr = m_resourceGroup->getFactory()->create(m_resType);
         m_resourcePtr->setName(header->name);
         m_resourcePtr->setFlags(header->flags);
         m_resourcePtr->setPriority(header->priority);
@@ -205,7 +205,7 @@ void resource::CResourceGroupContentHandler::startElement(const char *localName,
     if(!m_resourceGroup->getFactory()->isRegistered(m_resType) || m_resType == resource::GROUP) {
         m_resourcePtr = NULL;
     } else {
-        m_resourcePtr = m_resourceGroup->getFactory()->createResource(m_resType);
+        m_resourcePtr = m_resourceGroup->getFactory()->create(m_resType);
         if(resPath) {
             std::string newPath = path::join(cfgDirPath, std::string(resPath));
             m_resourcePtr->setFilePath(newPath);
@@ -355,7 +355,7 @@ fgBool resource::CResourceGroup::private_parseIniConfig(void) {
             continue;
         }
 
-        CResource *resource = m_resFactory->createResource(header->resType);
+        CResource *resource = m_resFactory->create(header->resType);
         if(!resource) {
             if(resCfg)
                 delete resCfg;

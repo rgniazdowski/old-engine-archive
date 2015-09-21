@@ -14,7 +14,6 @@
 
     #include "fgGuiWidget.h"
     #include "fgGuiLabel.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -55,20 +54,15 @@ namespace fg {
              * 
              * @return 
              */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CButton)
-
-            /**
-             * 
-             * @return 
-             */
             virtual gfx::BoundingBox3Df updateBounds(void);
             /**
              * 
              */
             virtual void refresh(void);
-        };
-    };
-};
+        }; // class CButton
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_BUTTON_BLOCK
 #endif /* FG_INC_GUI_BUTTON */ 

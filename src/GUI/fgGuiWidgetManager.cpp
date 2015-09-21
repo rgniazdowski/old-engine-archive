@@ -172,7 +172,7 @@ void gui::CWidgetManager::setWidgetsPath(const char* path) {
 }
 //------------------------------------------------------------------------------
 
-gui::CWidgetManager::WidgetVec& gui::CWidgetManager::getRefRootWidgets(void) {
+gui::CWidgetManager::WidgetVec& gui::CWidgetManager::getRootWidgets(void) {
     return m_rootWidgets;
 }//------------------------------------------------------------------------------
 

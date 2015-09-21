@@ -14,31 +14,23 @@
 
     #include "fgTypes.h"
     #include "fgGuiWidget.h"
-    #include "fgGuiWidgetFactoryTypes.h"
-
-    #include <map>
-
+    #include "Util/fgAbstractFactory.h"
+    
 namespace fg {
     namespace gui {
 
         /**
          *
          */
-        class CWidgetFactory {
+        class CWidgetFactory : public util::CAbstractFactory<WidgetType, CWidget> {
         public:
+            ///
+            typedef util::CAbstractFactory<WidgetType, CWidget> base_type;
             ///
             typedef CWidgetFactory self_type;
             ///
             typedef CWidgetFactory type;
-            ///
-            typedef std::map<WidgetType, fgCreateGuiWidgetFn> FactoryMap;
-            ///
-            typedef std::pair<WidgetType, fgCreateGuiWidgetFn> FactoryPair;
-            ///
-            typedef FactoryMap::iterator FactoryMapItor;
-            ///
-            typedef FactoryMap::const_iterator FactoryMapConstItor;
-
+            
         public:
             /**
              * Default empty constructor for Widget Factory object
@@ -48,40 +40,11 @@ namespace fg {
              * Destructor for Widget Factory object
              */
             virtual ~CWidgetFactory();
-
-            /**
-             * Clear all registered Widget creators
-             */
-            void clear(void);
-
-            /**
-             * Register Widget create function based on resource type
-             * @param type
-             * @param function
-             * @return 
-             */
-            fgBool registerWidget(const WidgetType type, fgCreateGuiWidgetFn function);
-
-            /**
-             * Call specific create function for given Widget
-             * @param type
-             * @return 
-             */
-            CWidget* createWidget(const WidgetType type);
-
-            /**
-             * Check if given resource type constructor/create function is registered in factory
-             * @param type
-             * @return 
-             */
-            fgBool isRegistered(const WidgetType type);
-
-        private:
-            /// Map storing create functions for given widget types
-            FactoryMap m_factoryMap;
-        };
-    };
-};
+            
+        }; // class CWidgetFactory
+        
+    } // gui
+} // fg
 
     #undef FG_INC_GUI_WIDGET_FACTORY_BLOCK
 #endif /* FG_INC_GUI_WIDGET_FACTORY */

@@ -12,8 +12,7 @@
     #define FG_INC_FONT_RESOURCE
     #define FG_INC_FONT_RESOURCE_BLOCK
 
-    #include "Resource/fgResource.h"
-    #include "Resource/fgResourceFactoryTypes.h"
+    #include "Resource/fgResource.h"    
     #include "GFX/Textures/fgTextureResource.h"
     #include "fgFontBuiltInTypes.h"
 
@@ -69,12 +68,6 @@ namespace fg {
             virtual ~CFontResource() {
                 CFontResource::destroy();
             }
-
-            /**
-             * 
-             * @return 
-             */
-            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CFontResource)
 
         protected:
             // Clears the class data, this actually does not free allocated memory, 

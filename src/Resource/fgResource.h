@@ -34,8 +34,6 @@ namespace fg {
     };
 };
 
-    #include "fgResourceFactoryTypes.h"
-
     #define FG_TAG_RESOURCE_NAME        "Resource"
     #define FG_TAG_RESOURCE             FG_TAG_TYPE(fg::resource::CResource)
 FG_TAG_TEMPLATE_ID_AUTO(fg::resource::CResource, FG_TAG_RESOURCE_NAME);

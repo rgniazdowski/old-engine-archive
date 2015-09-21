@@ -11,13 +11,10 @@
 #ifndef FG_INC_RESOURCE_CONFIG
     #define FG_INC_RESOURCE_CONFIG
 
-    #ifndef FG_INC_CONFIG
-        #include "Util/fgConfig.h"
-    #endif
+    #include "Util/fgConfig.h"
+    #include "Util/fgBTreeMap.h"
 
-    #ifndef FG_INC_RESOURCE
-        #include "fgResource.h"
-    #endif
+    #include "fgResource.h"
 
 typedef unsigned int fgResourceConfigType;
 
@@ -86,7 +83,7 @@ namespace fg {
             ///
             typedef ::fg::util::CConfig base_type;
             ///
-            typedef std::map<std::string, SResourceHeader> ResourceHeaderMap;
+            typedef util::btree_map<std::string, SResourceHeader> ResourceHeaderMap;
             ///
             typedef ResourceHeaderMap::iterator ResourceHeaderMapItor;
 

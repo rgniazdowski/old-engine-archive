@@ -645,7 +645,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         // SHOULD RESOURCE GROUP HAVE SOME ACCESS TO THIS RES MGR?
         SResourceHeader *header = &resCfg->getRefHeader();
         if(m_pResourceFactory->isRegistered(header->resType)) {
-            resourcePtr = m_pResourceFactory->createResource(header->resType);
+            resourcePtr = m_pResourceFactory->create(header->resType);
             resourcePtr->setName(header->name);
             resourcePtr->setFlags(header->flags);
             resourcePtr->setPriority(header->priority);
@@ -668,7 +668,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         if(forcedType != AUTO)
             resExtType = forcedType;
         if(m_pResourceFactory->isRegistered(resExtType)) {
-            resourcePtr = m_pResourceFactory->createResource(resExtType);
+            resourcePtr = m_pResourceFactory->create(resExtType);
             resourcePtr->setName(info);
             resourcePtr->setPriority(ResourcePriority::LOW);
             resourcePtr->setQuality(Quality::UNIVERSAL);

@@ -13,7 +13,6 @@
     #define FG_INC_GUI_EDITABLE_TEXT_BLOCK
 
     #include "fgGuiTextArea.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -50,21 +49,16 @@ namespace fg {
              * 
              * @return 
              */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CEditableText)
-
-            /**
-             * 
-             * @return 
-             */
             virtual gfx::BoundingBox3Df updateBounds(void);
             /**
              * 
              */
             virtual void refresh(void);
 
-        };
-    };
-};
+        }; // class CEditableText
+        
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_EDITABLE_TEXT_BLOCK
 #endif /* FG_INC_GUI_EDITABLE_TEXT */

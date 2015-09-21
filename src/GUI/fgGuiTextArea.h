@@ -13,8 +13,6 @@
     #define FG_INC_GUI_TEXT_AREA_BLOCK
 
     #include "fgGuiScrollArea.h"
-    #include "fgGuiWidgetFactoryTypes.h"
-
     #include "fgVector.h"
 
 namespace fg {
@@ -68,12 +66,6 @@ namespace fg {
              * 
              */
             virtual ~CTextArea();
-
-            /**
-             * 
-             * @return 
-             */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CTextArea)
 
             /**
              * 
@@ -136,10 +128,10 @@ namespace fg {
                 m_textData.clear_optimised();
                 m_textData.resize(0);
             }
-
-        };
-    };
-};
+        }; // class CTextArea
+        
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_TEXT_AREA_BLOCK
 #endif /* FG_INC_GUI_TEXT_AREA */

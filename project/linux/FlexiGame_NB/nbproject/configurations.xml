@@ -325,7 +325,6 @@
         <itemPath>../../../src/GUI/fgGuiWidget.h</itemPath>
         <itemPath>../../../src/GUI/fgGuiWidgetFactory.cpp</itemPath>
         <itemPath>../../../src/GUI/fgGuiWidgetFactory.h</itemPath>
-        <itemPath>../../../src/GUI/fgGuiWidgetFactoryTypes.h</itemPath>
         <itemPath>../../../src/GUI/fgGuiWidgetManager.cpp</itemPath>
         <itemPath>../../../src/GUI/fgGuiWidgetManager.h</itemPath>
         <itemPath>../../../src/GUI/fgGuiWidgetTypes.h</itemPath>
@@ -398,7 +397,6 @@
         <itemPath>../../../src/Resource/fgResourceErrorCodes.h</itemPath>
         <itemPath>../../../src/Resource/fgResourceFactory.cpp</itemPath>
         <itemPath>../../../src/Resource/fgResourceFactory.h</itemPath>
-        <itemPath>../../../src/Resource/fgResourceFactoryTypes.h</itemPath>
         <itemPath>../../../src/Resource/fgResourceGroup.cpp</itemPath>
         <itemPath>../../../src/Resource/fgResourceGroup.h</itemPath>
         <itemPath>../../../src/Resource/fgResourceManager.cpp</itemPath>
@@ -438,6 +436,7 @@
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="Util" displayName="Util" projectFiles="true">
+        <itemPath>../../../src/Util/fgAbstractFactory.h</itemPath>
         <itemPath>../../../src/Util/fgBTreeMap.h</itemPath>
         <itemPath>../../../src/Util/fgBTreeSet.h</itemPath>
         <itemPath>../../../src/Util/fgConfig.cpp</itemPath>
@@ -1856,11 +1855,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiWidgetFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiWidgetManager.cpp"
             ex="false"
             tool="1"
@@ -2144,11 +2138,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgResourceFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Resource/fgResourceGroup.cpp"
             ex="false"
             tool="1"
@@ -2221,6 +2210,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgAbstractFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3724,11 +3718,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiWidgetFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiWidgetManager.cpp"
             ex="false"
             tool="1"
@@ -4012,11 +4001,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgResourceFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Resource/fgResourceGroup.cpp"
             ex="false"
             tool="1"
@@ -4089,6 +4073,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgAbstractFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -5558,11 +5547,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiWidgetFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiWidgetManager.cpp"
             ex="false"
             tool="1"
@@ -5846,11 +5830,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgResourceFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Resource/fgResourceGroup.cpp"
             ex="false"
             tool="1"
@@ -5923,6 +5902,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgAbstractFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -7378,11 +7362,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiWidgetFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiWidgetManager.cpp"
             ex="false"
             tool="1"
@@ -7666,11 +7645,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgResourceFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Resource/fgResourceGroup.cpp"
             ex="false"
             tool="1"
@@ -7743,6 +7717,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgAbstractFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -9217,11 +9196,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiWidgetFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiWidgetManager.cpp"
             ex="false"
             tool="1"
@@ -9505,11 +9479,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgResourceFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Resource/fgResourceGroup.cpp"
             ex="false"
             tool="1"
@@ -9582,6 +9551,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgAbstractFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -11048,11 +11022,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiWidgetFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiWidgetManager.cpp"
             ex="false"
             tool="1"
@@ -11336,11 +11305,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgResourceFactoryTypes.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Resource/fgResourceGroup.cpp"
             ex="false"
             tool="1"
@@ -11413,6 +11377,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgAbstractFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
       </item>

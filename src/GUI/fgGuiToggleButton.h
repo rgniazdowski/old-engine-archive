@@ -13,7 +13,6 @@
     #define FG_INC_GUI_TOGGLE_BUTTON_BLOCK
 
     #include "fgGuiButton.h"
-    #include "fgGuiWidgetFactoryTypes.h"
 
 namespace fg {
     namespace gui {
@@ -40,20 +39,15 @@ namespace fg {
              */
             virtual ~CToggleButton();
 
-            /**
-             * 
-             * @return 
-             */
-            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CToggleButton)
-
         protected:
             /**
              * 
              */
             virtual void setDefaults(void);
-        };
-    };
-};
+        }; // class CToggleButton
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_TOGGLE_BUTTON_BLOCK
 #endif /* FG_INC_GUI_TOGGLE_BUTTON */

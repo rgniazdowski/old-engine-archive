@@ -39,7 +39,6 @@
     #endif
 
     #include "fgSFXAudioBase.h"
-    #include "Resource/fgResourceFactoryTypes.h"
 
 namespace fg {
     namespace resource {
@@ -91,12 +90,6 @@ namespace fg {
             virtual ~CMusicResource() {
                 CMusicResource::destroy();
             }
-
-            /**
-             * 
-             * @return 
-             */
-            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CMusicResource)
 
         protected:
             /**
