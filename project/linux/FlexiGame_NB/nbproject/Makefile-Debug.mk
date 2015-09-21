@@ -76,6 +76,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o \
+	${OBJECTDIR}/_ext/1008910172/fgGfxNodeFactory.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxOctree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxPortal.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxPortalProcessor.o \
@@ -453,6 +454,11 @@ ${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o: ../../../src/GFX/Scene/fgGfxL
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o ../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp
+
+${OBJECTDIR}/_ext/1008910172/fgGfxNodeFactory.o: ../../../src/GFX/Scene/fgGfxNodeFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxNodeFactory.o ../../../src/GFX/Scene/fgGfxNodeFactory.cpp
 
 ${OBJECTDIR}/_ext/1008910172/fgGfxOctree.o: ../../../src/GFX/Scene/fgGfxOctree.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172

@@ -29,7 +29,9 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CSceneManager::CSceneManager() :
-CDrawingBatch(),
+base_type(),
+drawing_batch_type(),
+handle_mgr_type(),
 m_collisionsInfo(),
 m_triggers(),
 m_pickSelection(),
@@ -44,6 +46,7 @@ m_activeRootNode(NULL),
 m_visibleNodes(),
 m_pResourceMgr(NULL),
 m_sceneEventMgr(NULL),
+m_pNodeFactory(NULL),
 m_basetree(NULL) {
     m_groundGrid.set(Planef::Y, 0.0f);
     m_groundGrid.cellSize = 50.0f;
@@ -70,6 +73,7 @@ void gfx::CSceneManager::clear(void) {
     m_managerType = FG_MANAGER_SCENE;
     m_pResourceMgr = NULL;
     m_basetree = NULL;
+    m_pNodeFactory = NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -1520,20 +1524,12 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
         // the same type as the source node...
         return pNewNode;
     }
-    SceneNodeType nodeType = pSourceNode->getNodeType();
-    switch(nodeType) {
-        case SCENE_NODE_MESH:
-            pNewNode = new CSceneNodeMesh(*(static_cast<CSceneNodeMesh*>(pSourceNode)));
-            break;
-        case SCENE_NODE_OBJECT:
-            pNewNode = new CSceneNodeObject(*(static_cast<CSceneNodeObject*>(pSourceNode)));
-            break;
-        case SCENE_NODE_TRIGGER:
-            pNewNode = new CSceneNodeTrigger(*(static_cast<CSceneNodeTrigger*>(pSourceNode)));
-            break;
-        default:
-            break;
-    }
+    const SceneNodeType nodeType = pSourceNode->getNodeType();
+    if(m_pNodeFactory) {
+        if(m_pNodeFactory->isRegistered(nodeType)) {
+            pNewNode = m_pNodeFactory->recreate(nodeType, pSourceNode);
+        }
+    }    
     if(pNewNode) {
         pNewNode->setName(newNodeNameTag);
         fgBool status = addNode(pNewNode->getRefHandle(), pNewNode, pSourceNode->getParent());

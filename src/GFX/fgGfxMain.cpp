@@ -42,6 +42,7 @@ m_textureMgr(NULL),
 m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
 m_shaderMgr(NULL),
+m_nodeFactory(NULL),
 m_mainWindow(NULL),
 m_3DScene(NULL),
 m_2DScene(NULL),
@@ -58,6 +59,13 @@ m_init(FG_FALSE) {
     m_shaderMgr = new gfx::CShaderManager();
     m_3DScene->setShaderManager(m_shaderMgr);
     m_2DScene->setShaderManager(m_shaderMgr);
+    m_nodeFactory = new CNodeFactory();
+    m_3DScene->setNodeFactory(m_nodeFactory);
+    m_2DScene->setNodeFactory(m_nodeFactory);
+
+    m_nodeFactory->registerObject(SCENE_NODE_OBJECT, new util::CFactoryObject<CSceneNodeObject>());
+    m_nodeFactory->registerObject(SCENE_NODE_MESH, new util::CFactoryObject<CSceneNodeMesh>());
+    m_nodeFactory->registerObject(SCENE_NODE_TRIGGER, new util::CFactoryObject<CSceneNodeTrigger>());
 }
 //------------------------------------------------------------------------------
 
@@ -80,6 +88,10 @@ gfx::CGfxMain::~CGfxMain() {
         FG_LOG_DEBUG("GFX: Destroying the 2D Scene...");
         delete m_2DScene;
         m_2DScene = NULL;
+    }
+    if(m_nodeFactory) {
+        delete m_nodeFactory;
+        m_nodeFactory = NULL;
     }
     if(context::isInit()) {
         context::deleteAllBuffers();

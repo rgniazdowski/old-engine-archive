@@ -373,6 +373,8 @@ namespace fg {
             fg::base::CManager* m_pEventMgr;
             /// Main GFX shader manager
             CShaderManager* m_shaderMgr;
+            ///
+            CNodeFactory* m_nodeFactory;
             /// Main GFX OS specific window
             CWindow* m_mainWindow;
             /// Main 3D scene management

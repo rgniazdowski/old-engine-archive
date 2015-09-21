@@ -121,6 +121,8 @@
           <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxLooseQuadtree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxNodeFactory.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxNodeFactory.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxOctree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxOctree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxPortal.cpp</itemPath>
@@ -1110,6 +1112,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2977,6 +2989,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
@@ -4806,6 +4828,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
@@ -6617,6 +6649,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -8455,6 +8497,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
@@ -10277,6 +10329,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGfxNodeFactory.h"
             ex="false"
             tool="3"
             flavor2="0">

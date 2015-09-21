@@ -28,6 +28,7 @@
     #include "fgGfxSceneSkyBox.h"    
 
     #include "GFX/fgGfxPlaneGrid.h"
+#include "fgGfxNodeFactory.h"
 
     #define FG_MANAGER_SCENE        0x00001000
 
@@ -52,6 +53,8 @@ namespace fg {
             typedef fg::base::CManager base_type;
             ///
             typedef CDrawingBatch batch_type;
+            ///
+            typedef CDrawingBatch drawing_batch_type;
             ///
             typedef fg::util::CHandleManager<CSceneNode *, SceneNodeHandle> handle_mgr_type;
             ///
@@ -173,6 +176,13 @@ namespace fg {
             virtual void setShaderManager(fg::base::CManager* pShaderMgr);
             /**
              * 
+             * @param pNodeFactory
+             */
+            void setNodeFactory(CNodeFactory* pNodeFactory) {
+                m_pNodeFactory = pNodeFactory;
+            }
+            /**
+             * 
              * @return 
              */
             inline event::CEventManager* getInternalEventManager(void) const {
@@ -184,6 +194,13 @@ namespace fg {
              */
             inline fg::base::CManager* getShaderManager(void) const {
                 return m_pShaderMgr;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline CNodeFactory* getNodeFactory(void) const {
+                return m_pNodeFactory;
             }
             /**
              * Set internal pointer to the main resource manager
@@ -1743,6 +1760,8 @@ namespace fg {
             fg::base::CManager* m_pResourceMgr;
             /// This is special manager for scene based events
             event::CEventManager* m_sceneEventMgr;
+            /// External pointer to the Scene Node Factory
+            CNodeFactory* m_pNodeFactory;
 
         protected:
             ///

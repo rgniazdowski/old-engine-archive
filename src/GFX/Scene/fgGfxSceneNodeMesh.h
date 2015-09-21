@@ -47,7 +47,7 @@ namespace fg {
             ///
             typedef traits::CDrawable drawable_type;
 
-        protected:
+        public:
             /**
              * 
              */

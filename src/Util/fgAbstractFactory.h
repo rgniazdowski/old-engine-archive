@@ -52,6 +52,8 @@ namespace fg {
              * @return
              */
             virtual void* create(void) = 0;
+
+            virtual void* recreate(void* pSource) = 0;
         }; // class CFactoryObjectBase
 
         /**
@@ -63,12 +65,18 @@ namespace fg {
             typedef CFactoryObjectBase base_type;
             typedef CFactoryObject<TYPE> self_type;
             typedef CFactoryObject<TYPE> type;
+            typedef TYPE return_type;
 
         public:
             /**
              *
              */
             CFactoryObject() : base_type() { }
+            /**
+             * 
+             * @param orig
+             */
+            CFactoryObject(const self_type& orig) { }
             /**
              *
              */
@@ -80,6 +88,14 @@ namespace fg {
             virtual void* create(void) {
                 return (void*)new TYPE();
             }
+            /**
+             * 
+             * @param pSource
+             * @return
+             */
+            virtual void* recreate(void* pSource) {
+                return (void*)new TYPE(*(static_cast<TYPE*>(pSource)));
+            }
         }; // class CFactoryObject
 
         /**
@@ -88,18 +104,26 @@ namespace fg {
         template <typename KEY, typename TYPE>
         class CAbstractFactory {
         public:
-            typedef btree_map<KEY, CFactoryObjectBase*> FactoryMap;
-            typedef typename FactoryMap::iterator FactoryMapItor;
-            typedef typename FactoryMap::const_iterator FactoryMapConstItor;
-
             typedef KEY key_type;
             typedef TYPE return_type;
+            typedef CFactoryObjectBase object_type;
+            typedef CAbstractFactory<key_type, return_type> self_type;
+            typedef CAbstractFactory<key_type, return_type> type;
+
+            typedef btree_map<key_type, object_type*> FactoryMap;
+            typedef typename FactoryMap::iterator FactoryMapItor;
+            typedef typename FactoryMap::const_iterator FactoryMapConstItor;
 
         public:
             /**
              *
              */
             CAbstractFactory() : m_factoryMap() { }
+            /**
+             * 
+             * @param orig
+             */
+            CAbstractFactory(const self_type& orig) { }
             /**
              *
              */
@@ -165,6 +189,18 @@ namespace fg {
                 *pResult = static_cast<return_type*>(m_factoryMap[key]->create());
                 return FG_TRUE;
             }
+            fgBool recreate(const key_type& key, return_type** pResult, return_type* pSource) {
+                if(!pResult)
+                    return FG_FALSE;
+                if(!isRegistered(key)) {
+                    return FG_FALSE;
+                }
+                if(!m_factoryMap[key]) {
+                    return FG_FALSE;
+                }
+                *pResult = static_cast<return_type*>(m_factoryMap[key]->recreate((void*)pSource));
+                return FG_TRUE;
+            }
             /**
              * 
              * @param key
@@ -178,6 +214,21 @@ namespace fg {
                     return NULL;
                 }
                 return static_cast<return_type *>(m_factoryMap[key]->create());
+            }
+            /**
+             * 
+             * @param key
+             * @param pSource
+             * @return
+             */
+            return_type* recreate(const key_type& key, return_type* pSource) {
+                if(!isRegistered(key)) {
+                    return FG_FALSE;
+                }
+                if(!m_factoryMap[key]) {
+                    return FG_FALSE;
+                }
+                return static_cast<return_type*>(m_factoryMap[key]->recreate((void*)pSource));
             }
 
         private:
