@@ -51,11 +51,11 @@
         <itemPath>../../../src/Event/fgThrownEvent.h</itemPath>
         <itemPath>../../../src/Event/fgTimeoutCallback.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="GameLogic" displayName="GameLogic" projectFiles="true">
-        <itemPath>../../../src/GameLogic/fgGameMain.cpp</itemPath>
-        <itemPath>../../../src/GameLogic/fgGameMain.h</itemPath>
-        <itemPath>../../../src/GameLogic/fgGrid.cpp</itemPath>
-        <itemPath>../../../src/GameLogic/fgGrid.h</itemPath>
+      <logicalFolder name="Game" displayName="Game" projectFiles="true">
+        <itemPath>../../../src/Game/fgGameMain.cpp</itemPath>
+        <itemPath>../../../src/Game/fgGameMain.h</itemPath>
+        <itemPath>../../../src/Game/fgGrid.cpp</itemPath>
+        <itemPath>../../../src/Game/fgGrid.h</itemPath>
       </logicalFolder>
       <logicalFolder name="GFX" displayName="GFX" projectFiles="true">
         <logicalFolder name="f1" displayName="Animation" projectFiles="true">
@@ -1886,19 +1886,13 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
+      <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -3759,19 +3753,13 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -5598,19 +5586,13 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -7423,19 +7405,13 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -9267,19 +9243,13 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
+      <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -11103,19 +11073,13 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
+      <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GameLogic/fgGameMain.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GameLogic/fgGrid.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"

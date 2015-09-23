@@ -21,7 +21,7 @@
 #include "Util/fgTime.h"
 #include "Util/fgProfiling.h"
 /// Game logic
-#include "GameLogic/fgGameMain.h"
+#include "Game/fgGameMain.h"
 /// Resource management
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceFactory.h"

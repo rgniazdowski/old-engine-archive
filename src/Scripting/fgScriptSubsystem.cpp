@@ -74,7 +74,7 @@
 #include "GUI/fgGuiToggleButton.h"
 #include "GUI/fgGuiWindow.h"
 // Game Logic / etc
-#include "GameLogic/fgGameMain.h"
+#include "Game/fgGameMain.h"
 // Special Script Callback
 #include "fgScriptCallback.h"
 // Audio
@@ -322,7 +322,7 @@ fgBool script::CScriptSubsystem::initialize(void) {
     }
 
     if(!registerGameMainManager()) {
-        FG_LOG_ERROR("Script: Failed to register GameLogicManager object");
+        FG_LOG_ERROR("Script: Failed to register GameManager object");
     }
 
     float t2 = timesys::ms();

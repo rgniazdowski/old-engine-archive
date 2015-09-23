@@ -28,7 +28,7 @@
 
     #include "Hardware/fgQualityManager.h"
     #include "Scripting/fgScriptSubsystem.h"
-    #include "GameLogic/fgGameMain.h"
+    #include "Game/fgGameMain.h"
 
 namespace fg {
     class CEngineMain;

@@ -164,8 +164,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiWidgetManager.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiWindow.o \
-	${OBJECTDIR}/_ext/477241454/fgGameMain.o \
-	${OBJECTDIR}/_ext/477241454/fgGrid.o \
+	${OBJECTDIR}/_ext/607599404/fgGameMain.o \
+	${OBJECTDIR}/_ext/607599404/fgGrid.o \
 	${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o \
 	${OBJECTDIR}/_ext/484399070/fgHardwareState.o \
 	${OBJECTDIR}/_ext/484399070/fgQualityManager.o \
@@ -895,15 +895,15 @@ ${OBJECTDIR}/_ext/534589759/fgGuiWindow.o: ../../../src/GUI/fgGuiWindow.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWindow.o ../../../src/GUI/fgGuiWindow.cpp
 
-${OBJECTDIR}/_ext/477241454/fgGameMain.o: ../../../src/GameLogic/fgGameMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/477241454
+${OBJECTDIR}/_ext/607599404/fgGameMain.o: ../../../src/Game/fgGameMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGameMain.o ../../../src/GameLogic/fgGameMain.cpp
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameMain.o ../../../src/Game/fgGameMain.cpp
 
-${OBJECTDIR}/_ext/477241454/fgGrid.o: ../../../src/GameLogic/fgGrid.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/477241454
+${OBJECTDIR}/_ext/607599404/fgGrid.o: ../../../src/Game/fgGrid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGrid.o ../../../src/GameLogic/fgGrid.cpp
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGrid.o ../../../src/Game/fgGrid.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o: ../../../src/Hardware/fgDeviceQuery.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
