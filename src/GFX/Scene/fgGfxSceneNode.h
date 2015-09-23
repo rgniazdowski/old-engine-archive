@@ -57,19 +57,19 @@ namespace fg {
         /// Invalid scene node - initial value
         const SceneNodeType SCENE_NODE_INVALID = 0;
         /// This is a special SceneNode type - it's for specifying root nodes
-        const SceneNodeType SCENE_NODE_ROOT = 1;
+        const SceneNodeType SCENE_NODE_ROOT = (1 << 0);
         /// Node mesh is based on GfxMesh/Shape - Model is made of Shapes
         /// Every shape is made of one mesh. This will be mostly child node.
-        const SceneNodeType SCENE_NODE_MESH = 2;
+        const SceneNodeType SCENE_NODE_MESH = (1 << 1);
         /// This is special type of mesh node - based on GfxModel
         /// this will contain multiple children (mesh/shapes) with
         /// configured draw calls and updated bounding boxes
-        const SceneNodeType SCENE_NODE_OBJECT = 3;
+        const SceneNodeType SCENE_NODE_OBJECT = (1 << 2);
         /// Trigger is a special node type - when collision occurs with it
         /// the special event is thrown - registered callbacks will be called
-        const SceneNodeType SCENE_NODE_TRIGGER = 4;
+        const SceneNodeType SCENE_NODE_TRIGGER = (1 << 3);
         /// Particle emitter special node
-        const SceneNodeType SCENE_NODE_PARTICLE_EMITTER = 5;
+        const SceneNodeType SCENE_NODE_PARTICLE_EMITTER = (1 << 4);
 
         ///
         class CGfxMain;
@@ -163,6 +163,8 @@ namespace fg {
         private:
             /// Current scene node type - set in the constructors
             SceneNodeType m_nodeType;
+            ///
+            SceneNodeType m_nodeTypeMask;
             /// Current node traits
             traits::SceneNode m_nodeTraits;
             /// Children of the current scene node
@@ -213,6 +215,13 @@ namespace fg {
              */
             void setNodeTrait(traits::SceneNode trait) {
                 m_nodeTraits |= trait;
+            }
+            /**
+             * 
+             * @param trait
+             */
+            void setNodeTypeMask(SceneNodeType trait) {
+                m_nodeTypeMask |= trait;
             }
             /**
              *
@@ -761,6 +770,21 @@ namespace fg {
              */
             inline SceneNodeType getNodeType(void) const {
                 return m_nodeType;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline SceneNodeType getNodeTypeMask(void) const {
+                return m_nodeTypeMask;
+            }
+            /**
+             * 
+             * @param trait
+             * @return
+             */
+            inline fgBool checkNodeType(SceneNodeType trait) const {
+                return (fgBool)!!(m_nodeTypeMask & trait);
             }
 
             //------------------------------------------------------------------

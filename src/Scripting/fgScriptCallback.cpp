@@ -477,7 +477,7 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA) {
             //(*(getScriptFunction()))((event::SEvent *)pEvent);
             (*(getScriptFunction())) ((gfx::CSceneNode*)pNodeA, (gfx::CSceneNode*) & dummyNodeB);
             return FG_TRUE;
-        } else /*SCENE_TRIGGER_CALLBACK*/if(pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+        } else /*SCENE_TRIGGER_CALLBACK*/if(pNodeA->checkNodeType(gfx::SCENE_NODE_TRIGGER)) {
             // First argument needs to have type of trigger
             // Second will be empty;        
             (*(getScriptFunction())) ((gfx::CSceneNodeTrigger*)pNodeA, (gfx::CSceneNode*) & dummyNodeB);
@@ -525,10 +525,10 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
     }
 
     if(this->getArgC() == 2) {
-        if(getType() == SCENE_CALLBACK) {
+        if(this->getType() == SCENE_CALLBACK) {
             (*(getScriptFunction())) ((gfx::CSceneNode*)pNodeA, (gfx::CSceneNode*)pNodeB);
             status = FG_TRUE;
-        } else /*SCENE_TRIGGER_CALLBACK*/if(pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+        } else /*SCENE_TRIGGER_CALLBACK*/if(pNodeA->checkNodeType(gfx::SCENE_NODE_TRIGGER)) {
             (*(getScriptFunction())) ((gfx::CSceneNodeTrigger*)pNodeA, (gfx::CSceneNode*)pNodeB);
             status = FG_TRUE;
         }
@@ -538,13 +538,13 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
         event::SSceneEvent sceneEvent;
         memset(&sceneEvent, 0, sizeof (event::SSceneEvent));
 
-        if(getType() == SCENE_CALLBACK) {
+        if(this->getType() == SCENE_CALLBACK) {
             sceneEvent.code = event::SCENE_DUMMY;
             sceneEvent.node.pNodeA = pNodeA;
             sceneEvent.node.pNodeB = pNodeB;
             (*(getScriptFunction())) ((event::SSceneEvent*) & sceneEvent);
             status = FG_TRUE;
-        } else if(pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+        } else if(pNodeA->checkNodeType(gfx::SCENE_NODE_TRIGGER)) {
             sceneEvent.code = event::SCENE_NODE_TRIGGER_FIRED;
             sceneEvent.trigger.pNodeTrigger = (gfx::CSceneNodeTrigger*)pNodeA;
             sceneEvent.trigger.pNodeB = pNodeB;

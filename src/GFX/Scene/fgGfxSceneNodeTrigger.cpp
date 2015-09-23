@@ -23,6 +23,7 @@ gfx::CSceneNodeTrigger::CSceneNodeTrigger() :
 base_type(SCENE_NODE_TRIGGER),
 triggerable_type() {
     this->setNodeTrait(triggerable_type::SELF_TRAIT);
+    this->setNodeTypeMask(SCENE_NODE_TRIGGER);
 }
 //------------------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) :
 base_type(orig),
 triggerable_type(orig) {
     this->setNodeTrait(triggerable_type::SELF_TRAIT);
+    this->setNodeTypeMask(SCENE_NODE_TRIGGER);
 }
 //------------------------------------------------------------------------------
 

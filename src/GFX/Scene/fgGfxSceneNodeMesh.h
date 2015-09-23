@@ -46,6 +46,8 @@ namespace fg {
             typedef CSceneNodeMesh type;
             ///
             typedef traits::CDrawable drawable_type;
+            ///
+            static const SceneNodeType SELF_NODE_TYPE = SCENE_NODE_MESH;
 
         public:
             /**

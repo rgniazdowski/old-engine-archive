@@ -1000,7 +1000,7 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
         return FG_FALSE;
     }
 
-    if(pEventStruct->node.pNodeA->getNodeType() != gfx::SCENE_NODE_OBJECT) {
+    if(!pEventStruct->node.pNodeA->checkNodeType(gfx::SCENE_NODE_OBJECT)) {
         pEventStruct->node.pNodeA->refreshGfxInternals();
         return FG_TRUE; // event handled
     }
@@ -1014,7 +1014,7 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
         if(!pNode) {
             continue;
         }
-        if(pNode->getNodeType() != gfx::SCENE_NODE_MESH) {
+        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
             continue;
         }
         // #FIXME MESH NODE FUBAR

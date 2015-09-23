@@ -52,7 +52,7 @@ void event::SSceneNodeTrigger::reset(void) {
 
 void event::SSceneNodeTrigger::setFirstNode(gfx::CSceneNode* _pNodeA) {
     if(_pNodeA) {
-        if(_pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+        if(_pNodeA->checkNodeType(gfx::SCENE_NODE_TRIGGER)) {
             this->pNodeA = static_cast<gfx::CSceneNodeTrigger*>(_pNodeA);
         }
     } else {
@@ -68,7 +68,7 @@ void event::SSceneNodeTrigger::setFirstNode(gfx::CSceneNode* _pNodeA) {
 
 void event::SSceneNodeTrigger::setSecondNode(gfx::CSceneNode* _pNodeB) {
     if(_pNodeB) {
-        if(_pNodeB->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+        if(_pNodeB->checkNodeType(gfx::SCENE_NODE_TRIGGER)) {
             this->pNodeB = static_cast<gfx::CSceneNodeTrigger*>(_pNodeB);
         }
     } else {

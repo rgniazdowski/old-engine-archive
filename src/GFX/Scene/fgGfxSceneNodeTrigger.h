@@ -43,6 +43,8 @@ namespace fg {
             typedef CSceneNodeTrigger type;
             ///
             typedef traits::CTriggerable triggerable_type;
+            ///
+            static const SceneNodeType SELF_NODE_TYPE = SCENE_NODE_TRIGGER;
 
         public:
             /**

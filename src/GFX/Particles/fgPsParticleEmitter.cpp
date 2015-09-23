@@ -35,6 +35,7 @@ m_pCamera(NULL) {
 
     setCollidable(FG_FALSE);
     setupFromParticleEffect(pEffect);
+    setNodeTypeMask(SCENE_NODE_PARTICLE_EMITTER);
 }
 //------------------------------------------------------------------------------
 

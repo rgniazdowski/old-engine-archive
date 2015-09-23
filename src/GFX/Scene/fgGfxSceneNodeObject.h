@@ -23,6 +23,7 @@
 namespace fg {
     namespace gfx {
 
+        class CNodeFactory;
         class CModelResource;
         struct SMeshBase;
         struct SShape;
@@ -39,6 +40,8 @@ namespace fg {
             typedef CSceneNodeObject self_type;
             ///
             typedef CSceneNodeObject type;
+            ///
+            static const SceneNodeType SELF_NODE_TYPE = SCENE_NODE_OBJECT;
 
         public:
             /**

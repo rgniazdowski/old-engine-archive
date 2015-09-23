@@ -150,7 +150,7 @@ void gfx::CScene3D::sortCalls(void) {
             }
             visibilityResult = 0;
             // Ignore visibility check for node trigger
-            if(pSceneNode->getNodeType() != SCENE_NODE_TRIGGER) {
+            if(!pSceneNode->checkNodeType(SCENE_NODE_TRIGGER)) {
 #if defined(FG_DEBUG)
                 if(g_DebugConfig.isDebugProfiling) {
                     profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
@@ -187,7 +187,7 @@ void gfx::CScene3D::sortCalls(void) {
                 }
                 getDrawableQueue().push(pDrawable);
                 getVisibleNodes().push_back(pSceneNode);
-            } else if(pSceneNode->getNodeType() == SCENE_NODE_OBJECT && visibilityResult > 0) {
+            } else if(pSceneNode->checkNodeType(SCENE_NODE_OBJECT) && visibilityResult > 0) {
                 getVisibleNodes().push_back(pSceneNode);
             }
         } // for every object in tree node
@@ -279,8 +279,8 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
             if(!childNode || childNode == sceneNode) {
                 continue;
             }
-            const SceneNodeType childType = childNode->getNodeType();
-            const SceneNodeType nodeType = sceneNode->getNodeType();
+            const SceneNodeType childTypeMask = childNode->getNodeTypeMask();
+            const SceneNodeType nodeTypeMask = sceneNode->getNodeTypeMask();
             // Fast check for collision - checking nodes large sphere
             const fgBool isCollision = childNode->checkCollisionSphere(sceneNode);
             const fgBool isLastFrameCollision = m_collisionsInfo.check(childNode, sceneNode);
@@ -290,21 +290,22 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
 
                     // Check for special trigger nodes - two trigger nodes cannot collide
                     // It should not be reported
-                    if(childType == gfx::SCENE_NODE_TRIGGER &&
-                       nodeType != gfx::SCENE_NODE_TRIGGER) {
+                    if((childTypeMask & gfx::SCENE_NODE_TRIGGER) &&
+                       !(nodeTypeMask & gfx::SCENE_NODE_TRIGGER)) {
                         STriggerInfo info(NULL, NULL, FG_TRUE);
                         info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
                         info.pNodeB = const_cast<CSceneNode*>(sceneNode);
                         m_triggers.push_back(info);
-                    } else if(childType != gfx::SCENE_NODE_TRIGGER &&
-                              nodeType == gfx::SCENE_NODE_TRIGGER) {
+                    } else if(!(childTypeMask & gfx::SCENE_NODE_TRIGGER) &&
+                              (nodeTypeMask & gfx::SCENE_NODE_TRIGGER)) {
                         STriggerInfo info(NULL, NULL, FG_TRUE);
                         info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
                         info.pNodeB = const_cast<CSceneNode*>(childNode);
                         m_triggers.push_back(info);
                     }
                     m_collisionsInfo.insert(childNode, sceneNode);
-                    if(nodeType != gfx::SCENE_NODE_TRIGGER && childType != gfx::SCENE_NODE_TRIGGER) {
+                    if(!(nodeTypeMask & gfx::SCENE_NODE_TRIGGER) &&
+                       !(childTypeMask & gfx::SCENE_NODE_TRIGGER)) {
                         FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
                         event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getInternalEventManager()->requestEventStruct();
                         collisionEvent->eventType = event::SCENE_NODE_COLLISION;
@@ -321,14 +322,14 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                 }
             } else if(isLastFrameCollision) {
                 // Check for special trigger nodes - two trigger nodes cannot collide                
-                if(childType == gfx::SCENE_NODE_TRIGGER &&
-                   nodeType != gfx::SCENE_NODE_TRIGGER) {
+                if((childTypeMask & gfx::SCENE_NODE_TRIGGER) &&
+                   !(nodeTypeMask & gfx::SCENE_NODE_TRIGGER)) {
                     STriggerInfo info(NULL, NULL, FG_FALSE);
                     info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
                     info.pNodeB = const_cast<CSceneNode*>(sceneNode);
                     m_triggers.push_back(info);
-                } else if(childType != gfx::SCENE_NODE_TRIGGER &&
-                          nodeType == gfx::SCENE_NODE_TRIGGER) {
+                } else if(!(childTypeMask & gfx::SCENE_NODE_TRIGGER) &&
+                          (nodeTypeMask & gfx::SCENE_NODE_TRIGGER)) {
                     STriggerInfo info(NULL, NULL, FG_FALSE);
                     info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
                     info.pNodeB = const_cast<CSceneNode*>(childNode);

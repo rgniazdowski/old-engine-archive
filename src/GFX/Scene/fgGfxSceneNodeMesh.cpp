@@ -34,13 +34,15 @@ drawable_type() {
     m_drawCall->setZIndex(Z_INDEX_OBJECTS_3D);
     setMesh(pMesh);
     setNodeTrait(drawable_type::SELF_TRAIT);
+    setNodeTypeMask(SCENE_NODE_MESH);
 }
 //------------------------------------------------------------------------------
 
 gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) : base_type(orig) {
     if(this != &orig) {
         this->m_drawCall = NULL;
-        CSceneNode::setNodeType(SCENE_NODE_MESH);
+        setNodeType(SCENE_NODE_MESH);
+        setNodeTypeMask(SCENE_NODE_MESH);
         this->m_drawCall = new CDrawCall(DRAW_CALL_MESH,
                                          ATTRIBUTE_POSITION_BIT |
                                          ATTRIBUTE_UVS_BIT |

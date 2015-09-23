@@ -26,7 +26,7 @@ namespace fg {
     namespace gfx {
 
         class CCamera;
-        
+
         /**
          * 
          */
@@ -48,6 +48,8 @@ namespace fg {
             typedef CVector<SParticle> ParticleData;
             /// Iterator for the Particles vector
             typedef ParticleData::iterator ParticleDataItor;
+            ///
+            static const SceneNodeType SELF_NODE_TYPE = SCENE_NODE_PARTICLE_EMITTER;
 
         private:
             /// Pointers to the particle effects to which
@@ -92,7 +94,6 @@ namespace fg {
                     m_maxCount = maxCount;
                 }
             }
-            
             /**
              * 
              * @return 
@@ -123,7 +124,6 @@ namespace fg {
             inline unsigned int getParticleCount(void) const {
                 return m_numParticles;
             }
-
             /**
              * 
              * @param pCamera
@@ -138,9 +138,9 @@ namespace fg {
             inline CCamera *getCamera(void) const {
                 return m_pCamera;
             }
-            
+
             //------------------------------------------------------------------
-            
+
             /**
              * 
              * @param which

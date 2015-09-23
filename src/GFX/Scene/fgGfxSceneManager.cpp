@@ -932,7 +932,7 @@ void gfx::CSceneManager::sortCalls(void) {
             pSceneNode->update(timesys::elapsed()); // update nodes internals when active
         }
         // Ignore visibility check for node trigger
-        if(pSceneNode->getNodeType() != SCENE_NODE_TRIGGER) {
+        if(!pSceneNode->checkNodeType(SCENE_NODE_TRIGGER)) {
 #if defined(FG_DEBUG)
             if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
@@ -973,7 +973,7 @@ void gfx::CSceneManager::sortCalls(void) {
             // push to queue only nodes that have valid handle and are drawable
             m_drawableQueue.push(pDrawable);
             m_visibleNodes.push_back(pSceneNode);
-        } else if(pSceneNode->getNodeType() == SCENE_NODE_OBJECT && visibilityResult > 0) {
+        } else if(pSceneNode->checkNodeType(SCENE_NODE_OBJECT) && visibilityResult > 0) {
             m_visibleNodes.push_back(pSceneNode);
         }
     }
@@ -1039,7 +1039,7 @@ void gfx::CSceneManager::render(void) {
             CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
             SMeshBase* sphereMesh = sphereModel->getShapes()[0]->mesh;
             if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) &&
-               pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
+               pSceneNode->checkNodeType(SCENE_NODE_OBJECT)) {
                 CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
                 if(pSceneObj->getModel()) {
                     m_MVP.calculate(pSceneObj->getFinalModelMatrix());
@@ -1162,7 +1162,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
             status = FG_FALSE;
     }
     if(status) {
-        status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
+        status = (pNode->checkNodeType(gfx::SCENE_NODE_TRIGGER));
     }
     if(status) {
         CSceneNodeTrigger *pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
@@ -1186,7 +1186,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
             status = FG_FALSE;
     }
     if(status) {
-        status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
+        status = (pNode->checkNodeType(gfx::SCENE_NODE_TRIGGER));
     }
     if(status) {
         CSceneNodeTrigger* pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
@@ -1210,7 +1210,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
             status = FG_FALSE;
     }
     if(status) {
-        status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
+        status = (pNode->checkNodeType(gfx::SCENE_NODE_TRIGGER));
     }
     if(status) {
         CSceneNodeTrigger *pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
@@ -1297,7 +1297,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
 
     CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager *>(getShaderManager());
 
-    if(pNode->getNodeType() == SCENE_NODE_OBJECT) {
+    if(pNode->checkNodeType(SCENE_NODE_OBJECT)) {
         CSceneNodeObject* pNodeObject = static_cast<CSceneNodeObject*>(pNode);
         /// This should be somewhere else - initialize shader program pointer from name
         /// for material structure
@@ -1529,7 +1529,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
         if(m_pNodeFactory->isRegistered(nodeType)) {
             pNewNode = m_pNodeFactory->recreate(nodeType, pSourceNode);
         }
-    }    
+    }
     if(pNewNode) {
         pNewNode->setName(newNodeNameTag);
         fgBool status = addNode(pNewNode->getRefHandle(), pNewNode, pSourceNode->getParent());

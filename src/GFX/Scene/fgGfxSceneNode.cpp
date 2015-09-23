@@ -21,6 +21,7 @@ base_type(), // fgManagedObjectBase init
 animated_type(),
 spatial_type(),
 m_nodeType(nodeType), // Current node type
+m_nodeTypeMask(nodeType),
 m_nodeTraits(traits::ANIMATED | traits::SPATIAL),
 m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
