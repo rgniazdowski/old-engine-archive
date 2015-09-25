@@ -71,6 +71,8 @@ namespace fg {
         public:
             virtual fgBool queryTrait(const fg::traits::SceneNode trait, void **pObj);
 
+            virtual void updateAABB(void);
+
         private:
 
         }; // class CEntityMesh

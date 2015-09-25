@@ -25,6 +25,10 @@ physical_type() {
     setNodeType(SELF_NODE_TYPE);
     setNodeTypeMask(SELF_NODE_TYPE);
     setNodeTrait(physical_type::SELF_TRAIT);
+
+    // automatically update collision body
+    physical_type::setupCollisionBody(physics::CCollisionBody::BOX);
+    //physical_type::getCollisionBody()->setHalfSize()
 }
 //------------------------------------------------------------------------------
 
@@ -47,5 +51,19 @@ fgBool game::CEntityMesh::queryTrait(const fg::traits::SceneNode trait, void **p
         status = base_type::queryTrait(trait, pObj);
     }
     return status;
+}
+//------------------------------------------------------------------------------
+
+void game::CEntityMesh::updateAABB(void) {
+    base_type::updateAABB();
+    physics::CCollisionBody* pBody = physical_type::getCollisionBody();
+    if(pBody && getMesh()) {
+        physical_type::getCollisionBody()->setHalfSize(getMesh()->aabb.getExtent());
+    }
+    if(pBody) {
+        // copy to the body current model matrix - two way management
+        // matrix from physical body will be copied after Physical world update
+        pBody->setWorldTransform(getFinalModelMatrix());
+    }
 }
 //------------------------------------------------------------------------------
