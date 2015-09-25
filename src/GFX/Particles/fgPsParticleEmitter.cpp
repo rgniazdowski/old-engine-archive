@@ -45,11 +45,11 @@ gfx::CParticleEmitter::~CParticleEmitter() {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CParticleEmitter::queryTrait(const traits::SceneNode trait, void **pObj) {
+fgBool gfx::CParticleEmitter::queryTrait(const fg::traits::SceneNode trait, void **pObj) {
     fgBool status = hasTraits(trait);
     status = (fgBool)(status && (pObj != NULL));
     if(status) {
-        if(trait & traits::DRAWABLE) {
+        if(trait & fg::traits::DRAWABLE) {
             *pObj = static_cast<traits::CDrawable*>(this);
         }
     } else {

@@ -35,7 +35,7 @@ namespace fg {
             ///
             typedef CScene3D type;
             ///
-            typedef fg::gfx::CSceneManager base_type;
+            typedef CSceneManager base_type;
 
         public:
             /**

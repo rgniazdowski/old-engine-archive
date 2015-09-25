@@ -22,7 +22,7 @@
         #include "Math/fgMathLib.h"
     #endif
     #include "fgBool.h"
-    #include "fgGfxTraits.h"
+    #include "fgTraits.h"
 
 namespace fg {
     namespace gfx {
@@ -39,7 +39,7 @@ namespace fg {
                 typedef CDrawable self_type;
                 typedef CDrawable type;
             public:
-                static const SceneNode SELF_TRAIT = SceneNode::DRAWABLE;
+                static const fg::traits::SceneNode SELF_TRAIT = fg::traits::DRAWABLE;
                 
             public:
                 /**

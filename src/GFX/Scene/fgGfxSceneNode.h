@@ -24,7 +24,8 @@
     #include "fgGfxSpatialObject.h"
 
     #include "Physics/fgCollisionBody.h"
-    #include "fgGfxTraits.h"
+    #include "fgTraits.h"
+    #include "GFX/Scene/fgGfxSceneNodeType.h"
 
     #include <set>
 
@@ -50,26 +51,6 @@ namespace fg {
         typedef FG_TAG_GFX_SCENE_NODE SceneNodeTag;
         /// Special handle type for gfx object (scene object)
         typedef fg::util::CHandle<SceneNodeTag> SceneNodeHandle;
-
-        ///
-        typedef unsigned int SceneNodeType;
-
-        /// Invalid scene node - initial value
-        const SceneNodeType SCENE_NODE_INVALID = 0;
-        /// This is a special SceneNode type - it's for specifying root nodes
-        const SceneNodeType SCENE_NODE_ROOT = (1 << 0);
-        /// Node mesh is based on GfxMesh/Shape - Model is made of Shapes
-        /// Every shape is made of one mesh. This will be mostly child node.
-        const SceneNodeType SCENE_NODE_MESH = (1 << 1);
-        /// This is special type of mesh node - based on GfxModel
-        /// this will contain multiple children (mesh/shapes) with
-        /// configured draw calls and updated bounding boxes
-        const SceneNodeType SCENE_NODE_OBJECT = (1 << 2);
-        /// Trigger is a special node type - when collision occurs with it
-        /// the special event is thrown - registered callbacks will be called
-        const SceneNodeType SCENE_NODE_TRIGGER = (1 << 3);
-        /// Particle emitter special node
-        const SceneNodeType SCENE_NODE_PARTICLE_EMITTER = (1 << 4);
 
         ///
         class CGfxMain;
@@ -166,7 +147,7 @@ namespace fg {
             ///
             SceneNodeType m_nodeTypeMask;
             /// Current node traits
-            traits::SceneNode m_nodeTraits;
+            fg::traits::SceneNode m_nodeTraits;
             /// Children of the current scene node
             /// Note that this is for more logical hierarchy (not spatial)
             ChildrenVec m_children;
@@ -213,7 +194,7 @@ namespace fg {
              * 
              * @param trait
              */
-            void setNodeTrait(traits::SceneNode trait) {
+            void setNodeTrait(fg::traits::SceneNode trait) {
                 m_nodeTraits |= trait;
             }
             /**
@@ -227,7 +208,7 @@ namespace fg {
              *
              */
             void clearNodeTraits(void) {
-                m_nodeTraits = traits::NO_NODE_TRAITS;
+                m_nodeTraits = fg::traits::NO_NODE_TRAITS;
             }
 
         public:
@@ -235,7 +216,7 @@ namespace fg {
              *
              * @return
              */
-            traits::SceneNode getTraits(void) const {
+            fg::traits::SceneNode getTraits(void) const {
                 return m_nodeTraits;
             }
             /**
@@ -243,7 +224,7 @@ namespace fg {
              * @param traits
              * @return
              */
-            fgBool hasTraits(traits::SceneNode trait) const {
+            fgBool hasTraits(fg::traits::SceneNode trait) const {
                 return (fgBool)!!(m_nodeTraits & trait);
             }
             /**
@@ -252,7 +233,7 @@ namespace fg {
              * @param pObj
              * @return
              */
-            virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
+            virtual fgBool queryTrait(const fg::traits::SceneNode trait, void **pObj);
 
             /**
              * Recursively query all children of this node that have given traits
@@ -264,7 +245,7 @@ namespace fg {
              *                      cleared before first addition
              * @return              Number of found children
              */
-            int queryChildrenTraits(const traits::SceneNode trait,
+            int queryChildrenTraits(const fg::traits::SceneNode trait,
                                     ChildrenVec& output,
                                     fgBool shouldClear = FG_FALSE);
 

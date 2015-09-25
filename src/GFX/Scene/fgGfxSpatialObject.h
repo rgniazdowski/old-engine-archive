@@ -19,7 +19,7 @@
     #define FG_INC_GFX_SPATIAL_OBJECT_BLOCK
 
     #include "GFX/fgGfxBoundingVolume.h"
-    #include "fgGfxTraits.h"
+    #include "fgTraits.h"
 
 namespace fg {
     namespace gfx {
@@ -40,7 +40,7 @@ namespace fg {
                 /// Bounding box type - axis-aligned
                 typedef AABoundingBox3Df box_type;
             public:
-                static const SceneNode SELF_TRAIT = SceneNode::SPATIAL;
+                static const fg::traits::SceneNode SELF_TRAIT = fg::traits::SPATIAL;
 
             public:
                 /**

@@ -660,7 +660,7 @@ gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
         }
 #undef v_i
     }
-    if(!pickInfo.result && checkBox || checkBox) {
+    if((!pickInfo.result && checkBox) || checkBox) {
         // if we need to check the picker selection box against the node        
         AABB3Df aabb;
         aabb.invalidate();
@@ -960,7 +960,7 @@ void gfx::CSceneManager::sortCalls(void) {
         // This is due to the fact that node queue sorts objects based on sorting
         // index (which is determined based on the data in the given draw call)
         // The aabb for each object is updated based on the children.
-        if(pSceneNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable) &&
+        if(pSceneNode->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable) &&
            visibilityResult > 0 &&
            !pSceneNode->getRefHandle().isNull()) {
             if(m_pickSelection.shouldCheck) {
@@ -1076,6 +1076,7 @@ void gfx::CSceneManager::render(void) {
             }
 #endif
             //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
+#if 0
             if(FG_DEBUG_CFG_OPTION(physicsBBoxShow)) {
                 physics::CCollisionBody* body = pSceneNode->getCollisionBody();
                 if(body) {
@@ -1084,6 +1085,7 @@ void gfx::CSceneManager::render(void) {
                     }
                 }
             }
+#endif
         } // for(node queue iteration)
     }
     pProgram = pShaderMgr->getCurrentProgram();
@@ -1310,7 +1312,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
         }
     }
     traits::CDrawable* pDrawable = NULL;
-    if(pNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable)) {
+    if(pNode->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable)) {
         CDrawCall* pDrawCall = pDrawable->getDrawCall();
         if(pDrawCall) {
             pDrawCall->setMVP(&m_MVP);
@@ -1327,7 +1329,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
         if(!(*it))
             continue;
         CSceneNode* pChildNode = (*it);
-        if(pChildNode->queryTrait(traits::DRAWABLE, (void **)&pDrawable)) {
+        if(pChildNode->queryTrait(fg::traits::DRAWABLE, (void **)&pDrawable)) {
             CDrawCall* pDrawCall = pDrawable->getDrawCall();
             if(!pDrawCall) {
                 continue;
@@ -1651,7 +1653,7 @@ fgBool gfx::CSceneManager::remove(CSceneNode* pNode) {
         return FG_FALSE;
     }
     traits::CDrawable* pDrawable = NULL;
-    if(!m_drawableQueue.empty() && pNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable)) {
+    if(!m_drawableQueue.empty() && pNode->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable)) {
         // need to check if the scene node
         // is already in the queue - if yes - remove
         DrawablePriorityQueueItor nodesItor, nodesEnd;

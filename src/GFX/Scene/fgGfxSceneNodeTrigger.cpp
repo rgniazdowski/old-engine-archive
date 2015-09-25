@@ -38,11 +38,11 @@ triggerable_type(orig) {
 gfx::CSceneNodeTrigger::~CSceneNodeTrigger() { }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNodeTrigger::queryTrait(const traits::SceneNode trait, void **pObj) {
+fgBool gfx::CSceneNodeTrigger::queryTrait(const fg::traits::SceneNode trait, void **pObj) {
     fgBool status = hasTraits(trait);
     status = (fgBool)(status && (pObj != NULL));
     if(status) {
-        if(trait & traits::TRIGGERABLE) {
+        if(trait & fg::traits::TRIGGERABLE) {
             *pObj = static_cast<traits::CTriggerable*>(this);
         }
     } else {

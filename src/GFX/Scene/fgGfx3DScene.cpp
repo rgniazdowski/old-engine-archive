@@ -174,11 +174,10 @@ void gfx::CScene3D::sortCalls(void) {
             // Set visibility (non-recursive)
             // The second flag is true by default.
             pSceneNode->setVisible(!!visibilityResult, FG_FALSE);
-
             // #FIXME #TREE_TRAVERSE - tree needs also to contain child nodes
             // of scene nodes (like meshes of the object)
             // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes
-            if(pSceneNode->queryTrait(traits::DRAWABLE, (void**)&pDrawable) &&
+            if(pSceneNode->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable) &&
                visibilityResult > 0) {
                 // Checking for pick selection only when node is visible
                 if(m_pickSelection.shouldCheck) {

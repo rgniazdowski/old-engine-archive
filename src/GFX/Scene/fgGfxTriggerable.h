@@ -18,7 +18,7 @@
     #define FG_INC_GFX_TRIGGERABLE
     #define FG_INC_GFX_TRIGGERABLE_BLOCK
 
-    #include "fgGfxTraits.h"
+    #include "fgTraits.h"
     #include "fgBool.h"
     #include "fgVector.h"
 
@@ -43,7 +43,7 @@ namespace fg {
                 typedef CTriggerable type;
 
             public:
-                static const SceneNode SELF_TRAIT = SceneNode::TRIGGERABLE;
+                static const fg::traits::SceneNode SELF_TRAIT = fg::traits::TRIGGERABLE;
 
             public:
 
@@ -81,7 +81,8 @@ namespace fg {
                      * @param callback
                      * @param onActivate
                      */
-                    STriggerInfo(CSceneCallback *callback, TriggerActivation activationType = ON_COLLISION_BEGIN);
+                    STriggerInfo(CSceneCallback *callback,
+                                 TriggerActivation activationType = ON_COLLISION_BEGIN);
                     /**
                      *
                      */
@@ -106,7 +107,8 @@ namespace fg {
                      * @param pNodeA
                      * @param pNodeB
                      */
-                    void Call(CSceneNode* pNodeA, CSceneNode* pNodeB);
+                    void Call(CSceneNode* pNodeA,
+                              CSceneNode* pNodeB);
                 }; // struct TriggerInfo
 
                 ///
@@ -136,7 +138,8 @@ namespace fg {
                  * @param pCallback
                  * @param activationType
                  */
-                void addCallback(CSceneCallback *pCallback, TriggerActivation activationType);
+                void addCallback(CSceneCallback *pCallback,
+                                 TriggerActivation activationType);
                 /**
                  *
                  * @param pCallback

@@ -111,7 +111,7 @@ namespace fg {
              * @param pObj
              * @return
              */
-            virtual fgBool queryTrait(const traits::SceneNode trait, void **pObj);
+            virtual fgBool queryTrait(const fg::traits::SceneNode trait, void **pObj);
 
             using drawable_type::draw;
             /**

@@ -20,7 +20,7 @@
 
     #include "GFX/Animation/fgGfxAnimationInfo.h"
     #include "Util/fgStrings.h"
-    #include "fgGfxTraits.h"
+    #include "fgTraits.h"
 
 namespace fg {
     namespace gfx {
@@ -47,7 +47,7 @@ namespace fg {
                 typedef AnimationsVec::const_iterator AnimationsVecConstItor;
 
             public:
-                static const SceneNode SELF_TRAIT = SceneNode::ANIMATED;
+                static const fg::traits::SceneNode SELF_TRAIT = fg::traits::ANIMATED;
 
             public:
                 /**

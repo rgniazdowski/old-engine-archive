@@ -22,7 +22,7 @@ animated_type(),
 spatial_type(),
 m_nodeType(nodeType), // Current node type
 m_nodeTypeMask(nodeType),
-m_nodeTraits(traits::ANIMATED | traits::SPATIAL),
+m_nodeTraits(fg::traits::ANIMATED | fg::traits::SPATIAL),
 m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
 //m_collisionBody(NULL),
@@ -100,7 +100,7 @@ void gfx::CSceneNode::refreshDrawableFlag(void) {
     for(; it != end; it++) {
         if(!(*it))
             continue;
-        if((*it)->hasTraits(traits::DRAWABLE)) {
+        if((*it)->hasTraits(fg::traits::DRAWABLE)) {
             setFlag(DRAWABLE_CHILDREN, FG_TRUE);
             break;
         }
@@ -108,19 +108,19 @@ void gfx::CSceneNode::refreshDrawableFlag(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneNode::queryTrait(const traits::SceneNode trait, void **pObj) {
+fgBool gfx::CSceneNode::queryTrait(const fg::traits::SceneNode trait, void **pObj) {
     fgBool status = hasTraits(trait);
     if(!pObj)
         status = FG_FALSE;
     if(status) {
         switch(trait) {
-            case traits::ANIMATED:
+            case fg::traits::ANIMATED:
                 *pObj = static_cast<traits::CAnimated*>(this);
                 break;
                 //case traits::DRAWABLE:
                 //   * pObj = static_cast<traits::CDrawable*>(this);
                 //    break;
-            case traits::SPATIAL:
+            case fg::traits::SPATIAL:
                 *pObj = static_cast<traits::CSpatialObject*>(this);
                 break;
             default:
@@ -134,10 +134,10 @@ fgBool gfx::CSceneNode::queryTrait(const traits::SceneNode trait, void **pObj) {
 }
 //------------------------------------------------------------------------------
 
-int gfx::CSceneNode::queryChildrenTraits(const traits::SceneNode trait,
+int gfx::CSceneNode::queryChildrenTraits(const fg::traits::SceneNode trait,
                                          ChildrenVec& output,
                                          fgBool shouldClear) {
-    if(trait == traits::NO_NODE_TRAITS)
+    if(trait == fg::traits::NO_NODE_TRAITS)
         return 0;
     if(!hasChildren())
         return 0;
@@ -421,7 +421,7 @@ fgBool gfx::CSceneNode::addChild(CSceneNode* pChild) {
     if(m_children.find(pChild) != -1)
         status = FG_FALSE; // duplicate, do not add...
     if(status) {
-        if(pChild->hasTraits(traits::DRAWABLE))
+        if(pChild->hasTraits(fg::traits::DRAWABLE))
             setFlag(DRAWABLE_CHILDREN, FG_TRUE);
         m_children.push_back(pChild);
         pChild->setParent(this);
@@ -518,7 +518,7 @@ gfx::CSceneNode* gfx::CSceneNode::removeChild(const std::string& childName) {
     }
     if(m_children.empty()) {
         setFlag(DRAWABLE_CHILDREN, FG_FALSE);
-    } else if(pChild && pChild->hasTraits(traits::DRAWABLE)) {
+    } else if(pChild && pChild->hasTraits(fg::traits::DRAWABLE)) {
         refreshDrawableFlag();
     }
     return pChild;
@@ -542,7 +542,7 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode*& pChild) {
     fgBool status = FG_TRUE;
     fgBool managerValid = FG_FALSE;
     ChildrenVecItor it = m_children.findItor(pChild);
-    const fgBool isDrawable = pChild->hasTraits(traits::DRAWABLE);
+    const fgBool isDrawable = pChild->hasTraits(fg::traits::DRAWABLE);
     if(it == m_children.end()) {
         status = FG_FALSE;
     } else {
@@ -610,7 +610,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     }
     fgBool status = FG_FALSE;
     if(pChild) {
-        isDrawable = pChild->hasTraits(traits::DRAWABLE);
+        isDrawable = pChild->hasTraits(fg::traits::DRAWABLE);
         // The child is found
         if(it != m_children.end()) {
             pChild->setParent(NULL);
