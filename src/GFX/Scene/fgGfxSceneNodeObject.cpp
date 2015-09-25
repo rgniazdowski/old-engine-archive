@@ -30,7 +30,8 @@ using namespace fg;
 
 gfx::CSceneNodeObject::CSceneNodeObject(CModelResource* pModel, gfx::CSceneNode* pParent) :
 base_type(SCENE_NODE_OBJECT, pParent),
-m_pModel(NULL) {
+m_pModel(NULL),
+m_defaultMeshChildType(SCENE_NODE_MESH) {
     // Now need to reset the draw call - this is object based on model
     // it has multiple children - they have their own draw calls
     // One drawcall for model/object is not needed - remove it just in case
@@ -50,6 +51,7 @@ gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_typ
         this->setModel(orig.getModel());
         this->setNodeType(SCENE_NODE_OBJECT);
         this->setNodeTypeMask(SCENE_NODE_OBJECT);
+        this->setDefaultMeshChildType(orig.getDefaultMeshChildType());
     }
 }
 //------------------------------------------------------------------------------
@@ -167,6 +169,11 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         // No need to reinitialize #FIXME
         return;
     }
+    CSceneManager *pSceneMgr = NULL;
+    if(m_pManager) {
+        if(m_pManager->getManagerType() == FG_MANAGER_SCENE)
+            pSceneMgr = static_cast<CSceneManager *>(m_pManager);
+    }
     m_pModel = pModel;
     // Now this object is made of some shapes/meshes
     // they have separate drawcalls so this one (NodeObject) does not
@@ -180,7 +187,9 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         if(!(*it))
             continue;
         CSceneNode* pNode = (*it);
-        if(!pNode->checkNodeType(SCENE_NODE_MESH)) {
+        if(!pNode->checkNodeType(SCENE_NODE_MESH)/* ||
+           !pNode->checkNodeType(m_defaultMeshChildType)*/) {
+            // no need to check
             continue;
         }
         CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
@@ -191,10 +200,8 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         if(!pNodeMesh->isManaged() && isManaged()) {
             // if child node is not managed, can add it
             // .. .. merging
-            if(m_pManager && isManaged() && m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-                static_cast<CSceneManager *>(m_pManager)->addNode(pNodeMesh->getRefHandle(),
-                                                                  pNodeMesh,
-                                                                  this);
+            if(pSceneMgr) {
+                pSceneMgr->addNode(pNodeMesh->getRefHandle(), pNodeMesh, this);
             }
         }
     } // for every child in this node
@@ -214,7 +221,32 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         if(oldShapes.contains(pShape)) {
             continue; // there is already a child with this idx
         }
-        CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
+        // will need to access node factory here
+        // node factory is accessible from manager level
+        // so this can only work when node is already managed
+        CSceneNode *pChildNode = NULL;
+        if(pSceneMgr) {
+            CNodeFactory *pNodeFactory = pSceneMgr->getNodeFactory();
+            if(pNodeFactory)
+                pChildNode = pNodeFactory->create(m_defaultMeshChildType);
+        }
+        if(pChildNode) {
+            // need to check whether or not created node is valid
+            // this can only happen when defaultMeshChildType is wrong...
+            if(!pChildNode->doesExtend(SCENE_NODE_MESH)) {
+                // this node does not extend mesh sub-type
+                delete pChildNode;
+                pChildNode = NULL;
+            } else {
+                // does extend
+                pChildNode->setParent(this);
+                pChildNode->setManager(m_pManager);
+                static_cast<CSceneNodeMesh *>(pChildNode)->setMesh(pMesh);
+            }
+        }
+        if(!pChildNode) {
+            pChildNode = new CSceneNodeMesh(pMesh, this);
+        }
         static_cast<CSceneNodeMesh *>(pChildNode)->setMaterial(pShape->material);
         std::string childName = this->getName();
         childName.append("_");
@@ -232,12 +264,11 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         // If so the drawing procedures for object should be empty - not include
         // the children. The children would be drawn via the scene manager/octree
         // #FIXME #P2 #IMPORTANT
-        if(m_pManager && isManaged()) {
-            if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-                static_cast<CSceneManager *>(m_pManager)->addNode(pChildNode->getRefHandle(),
-                                                                  pChildNode,
-                                                                  this);
-            }
+        if(pSceneMgr && isManaged()) {
+            // add children to the manager only when this node is managed
+            // pointer to the manager can be set also when the node is not yet
+            // in the manager
+            pSceneMgr->addNode(pChildNode->getRefHandle(), pChildNode, this);
         } else {
             // FALLBACK
             // No need to check if it's inserted successfully

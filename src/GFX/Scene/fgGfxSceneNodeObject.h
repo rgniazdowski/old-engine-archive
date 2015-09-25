@@ -118,9 +118,31 @@ namespace fg {
              */
             virtual void rewindAnimations(void);
 
+        public:
+            /**
+             * 
+             * @return 
+             */
+            SceneNodeType getDefaultMeshChildType(void) const {
+                return m_defaultMeshChildType;
+            }
+
+        protected:
+            /**
+             * 
+             * @param childType
+             */
+            void setDefaultMeshChildType(const SceneNodeType childType) {
+                m_defaultMeshChildType = childType;
+            }
+
         private:
             /// Pointer to the external model on which this object is based
             CModelResource *m_pModel;
+            /// Default managed child node type (needs to have MESH type trait)
+            /// This is the node type that is being used when automatically
+            /// adding children based on object model data;
+            SceneNodeType m_defaultMeshChildType;
         }; // class CSceneNodeObject
 
     } // namespace gfx

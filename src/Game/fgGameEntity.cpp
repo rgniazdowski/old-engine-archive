@@ -21,11 +21,14 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 game::CEntity::CEntity(gfx::CModelResource* pModel, CSceneNode* pParent) :
-base_type(pModel, pParent),
+base_type(NULL, pParent),
 intelligent_type() {
     setNodeType(SELF_NODE_TYPE);
     setNodeTypeMask(SELF_NODE_TYPE);
     setNodeTrait(intelligent_type::SELF_TRAIT);
+
+    base_type::setDefaultMeshChildType(GAME_ENTITY_MESH);
+    base_type::setModel(pModel);
 }
 //------------------------------------------------------------------------------
 
