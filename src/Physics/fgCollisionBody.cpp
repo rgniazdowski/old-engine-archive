@@ -1,225 +1,371 @@
 /*******************************************************************************
  * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
  * All rights reserved.
- * 
+ *
  * This file is part of FlexiGame: Flexible Game Engine
- * 
- * FlexiGame source code and any related files can not be copied, modified 
+ *
+ * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/*
- * Interface file for the collision body class.
- *
- * Copyright (c) Icosagon 2003. All Rights Reserved.
- *
- * This software is distributed under license. Use of this software
- * implies agreement with all terms and conditions of the accompanying
- * software license.
- */
 /* 
  * File:   fgCollisionBody.cpp
  * Author: vigilant
  * 
- * Created on February 7, 2015, 1:31 PM
+ * Created on September 24, 2015, 12:16 PM
  */
 
-#include "fgCollisionBody.h"
-
+#include "Physics/fgCollisionBody.h"
+#if defined(FG_USING_BULLET)
+#include "BulletCollision/CollisionShapes/btSphereShape.h"
+#include "BulletCollision/CollisionShapes/btBoxShape.h"
+#include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+#include "BulletCollision/CollisionShapes/btCapsuleShape.h"
+#include "LinearMath/btDefaultMotionState.h"
+#include "fgBulletHelper.h"
+#include "Math/fgDualQuaternion.h"
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 physics::CCollisionBody::CCollisionBody(const BodyType bodyType) :
-m_collisionPrim(NULL),
-m_bodyType(INVALID) {
-    setBodyType(bodyType);
+base_type(CRigidBody::btRigidBodyConstructionInfo(1.0f, NULL, NULL)),
+m_bodyType(INVALID),
+m_motionState(NULL) {
+    m_motionState = new btDefaultMotionState();
+    this->setMotionState(m_motionState);    
+    if(bodyType != INVALID)
+        setupBody(bodyType);
+    //this->getMotionState()->getWorldTransform();
 }
 //------------------------------------------------------------------------------
 
-physics::CCollisionBody::CCollisionBody(const CCollisionBody& orig) {
-    if(&orig != this) {
-        this->m_bodyType = orig.m_bodyType;
-        if(this->m_bodyType == BOX) {
-            this->m_collisionPrim = new CCollisionBox();
-            if(orig.m_collisionPrim) {
-                *(this->m_collisionPrim) = *(orig.m_collisionPrim);
-            }
-            this->m_collisionPrim->body = this;
-            this->setHalfSize(orig.getHalfSize());
-            // #TODO
-        } else if(this->m_bodyType == SPHERE) {
-            this->m_collisionPrim = new CCollisionSphere();
-            if(orig.m_collisionPrim) {
-                *(this->m_collisionPrim) = *(orig.m_collisionPrim);
-            }
-            this->m_collisionPrim->body = this;
-            this->setRadius(orig.getRadius());
+physics::CCollisionBody::CCollisionBody(const self_type& orig) : base_type(orig) { }
+//------------------------------------------------------------------------------
+
+physics::CCollisionBox* physics::CCollisionBody::getCollisionBox(void) const {
+    if(m_bodyType == BOX) {
+        return static_cast<CCollisionBox*>(m_collisionShape);
+    }
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionSphere* physics::CCollisionBody::getCollisionSphere(void) const {
+    if(m_bodyType == SPHERE) {
+        return static_cast<CCollisionSphere*>(m_collisionShape);
+    }
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionCapsule* physics::CCollisionBody::getCollisionCapsule(void) const {
+    if(m_bodyType == CAPSULE) {
+        return static_cast<CCollisionCapsule*>(m_collisionShape);
+    }
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionTriangleMesh* physics::CCollisionBody::getCollisionTriangleMesh(void) const {
+    if(m_bodyType == TRIANGLE_MESH) {
+        return static_cast<CCollisionTriangleMesh*>(m_collisionShape);
+    }
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+physics::CRigidBody* physics::CCollisionBody::getRigidBody(void) {
+    return static_cast<CRigidBody*>(this);
+}
+//------------------------------------------------------------------------------
+
+physics::CRigidBody const* physics::CCollisionBody::getRigidBody(void) const {
+    return static_cast<CRigidBody const*>(this);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setHalfSize(const Vector3f& halfExtent) {
+    btVector3 bt_ext;
+    bt_ext.setValue(halfExtent.x, halfExtent.y, halfExtent.z);
+    if(m_bodyType == BOX) {
+        getCollisionBox()->setImplicitShapeDimensions(bt_ext);
+    } else if(m_bodyType == SPHERE) {
+        btVector3 localScaling = getCollisionSphere()->getLocalScaling();
+        float newRadius = math::length(halfExtent) * localScaling.getX();
+        getCollisionSphere()->setUnscaledRadius(newRadius);
+        //getCollisionSphere()->setLocalScaling()
+    } else if(m_bodyType == CAPSULE) {
+        // tricky
+    } else if(m_bodyType == TRIANGLE_MESH) {
+        // ignore
+    }
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setHalfSizeAndMass(const Vector3f& halfExtent, float mass) {
+    setHalfSize(halfExtent);
+    setMass(mass);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setRadius(const float radius) {
+    float newRadius = math::abs(radius);
+    if(m_bodyType == SPHERE) {
+        btVector3 localScaling = getCollisionSphere()->getLocalScaling();
+        newRadius *= localScaling.getX();
+        getCollisionSphere()->setUnscaledRadius(newRadius);
+    } else if(m_bodyType == BOX) {
+        getCollisionBox()->setImplicitShapeDimensions(btVector3(newRadius, newRadius, newRadius));
+    } else if(m_bodyType == CAPSULE) {
+        // tricky
+    } else if(m_bodyType == TRIANGLE_MESH) {
+        // ignore
+    }
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setMass(float mass) { 
+    if(!getCollisionShape())
+        return;
+    btVector3 inertia;
+    getCollisionShape()->calculateLocalInertia(mass, inertia);
+    getRigidBody()->setMassProps(mass, inertia);
+    getRigidBody()->updateInertiaTensor();
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setAcceleration(const Vector3f& acceleration) {
+    // manipulate the gravity?
+    // #FIXME
+}
+
+//------------------------------------------------------------------
+
+void physics::CCollisionBody::setAngularVelocity(const Vector3f& velocity) {
+    base_type::setAngularVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setAngularVelocity(float x, float y, float z) {
+    base_type::setAngularVelocity(btVector3(x, y, z));
+}
+//------------------------------------------------------------------
+
+void physics::CCollisionBody::getAngularVelocity(Vector3f& outVelocity) const {
+    const btVector3& a_vec = base_type::getAngularVelocity();
+    outVelocity.x = a_vec.x();
+    outVelocity.y = a_vec.y();
+    outVelocity.z = a_vec.z();
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getAngularVelocity(float& x, float& y, float& z) const {
+    const btVector3& a_vec = base_type::getAngularVelocity();
+    x = a_vec.x();
+    y = a_vec.y();
+    z = a_vec.z();
+}
+//------------------------------------------------------------------
+
+void physics::CCollisionBody::setLinearVelocity(const Vector3f& velocity) {
+    base_type::setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setVelocity(const Vector3f& velocity) {
+    base_type::setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setVelocity(float x, float y, float z) {
+    base_type::setLinearVelocity(btVector3(x, y, z));
+}
+//------------------------------------------------------------------
+
+const Vector3f& physics::CCollisionBody::getVelocity(void) const {
+    static Vector3f velocity = Vector3f();
+    this->getVelocity(velocity);
+    return velocity;
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getVelocity(Vector3f& outVelocity) const {
+    const btVector3& velocity = base_type::getLinearVelocity();
+    outVelocity.x = velocity.x();
+    outVelocity.y = velocity.y();
+    outVelocity.z = velocity.z();
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getVelocity(float& x, float& y, float& z) const {
+    const btVector3& velocity = base_type::getLinearVelocity();
+    x = velocity.x();
+    y = velocity.y();
+    z = velocity.z();
+}
+//------------------------------------------------------------------
+
+const Quaternionf& physics::CCollisionBody::getRotation(void) const {
+    static Quaternionf quat = Quaternionf();
+    bullet_helper::copyQuat(quat, m_worldTransform.getRotation());
+    return quat;
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getRotation(Matrix3f& outMatrix) const {
+    btTransform trans;
+    this->getMotionState()->getWorldTransform(trans);
+    bullet_helper::copyMatrix3x3(outMatrix, trans.getBasis());
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getRotation(Quaternionf& outRotation) const {
+    btTransform trans;
+    //btQuaternion q;
+    this->getMotionState()->getWorldTransform(trans);
+    trans.getBasis().getRotation(*((btQuaternion*) & outRotation));
+    //bullet_helper::copyQuat(outRotation, trans.getRotation());
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getRotation(Vector3f& outRotation) const {
+    getRotation(outRotation.x, outRotation.y, outRotation.z);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getRotation(float& x, float& y, float& z) const {
+    // #FIXME
+    // need to return all three angles in radians
+}
+//------------------------------------------------------------------
+
+void physics::CCollisionBody::setPosition(const Vector3f& position) {
+    m_worldTransform.getOrigin().setValue(position.x, position.y, position.z);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setPosition(float x, float y, float z) {
+    m_worldTransform.getOrigin().setValue(x, y, z);
+}
+
+//------------------------------------------------------------------
+
+const Vector3f& physics::CCollisionBody::getPosition(void) const {
+    static Vector3f position = Vector3f();
+    const btVector3& translation = m_worldTransform.getOrigin();
+    position.x = translation.x();
+    position.y = translation.y();
+    position.z = translation.z();
+    return position;
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getPosition(Vector3f& outPosition) const {
+    const btVector3& translation = m_worldTransform.getOrigin();
+    outPosition.x = translation.x();
+    outPosition.y = translation.y();
+    outPosition.z = translation.z();
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getPosition(float& x, float& y, float& z) const {
+    const btVector3& translation = m_worldTransform.getOrigin();
+    x = translation.x();
+    y = translation.y();
+    z = translation.z();
+}
+//------------------------------------------------------------------
+
+void physics::CCollisionBody::translate(const Vector3f& translation) {
+    m_worldTransform.getOrigin() += btVector3(translation.x,
+                                              translation.y,
+                                              translation.z);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::translate(float x, float y, float z) {
+    m_worldTransform.getOrigin() += btVector3(x, y, z);
+}
+//------------------------------------------------------------------
+
+const Matrix4f& physics::CCollisionBody::getWorldMatrix(void) const {
+    static Matrix4f matrix = Matrix4f();
+    getWorldTransform(matrix);
+    return matrix;
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getWorldTransform(DualQuaternionf& outDQ) const {
+    static Matrix4f matrix = Matrix4f();
+    bullet_helper::copyMatrix4x4(matrix, m_worldTransform);
+    outDQ.initializeFrom(matrix);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getWorldTransform(Matrix4f& outMatrix) const {
+    bullet_helper::copyMatrix4x4(outMatrix, m_worldTransform);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::getWorldTransform(float* outMatrix) const {
+    m_worldTransform.getOpenGLMatrix(outMatrix);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setupBody(BodyType bodyType) {
+    if(m_bodyType == bodyType)
+        return;
+    float invMass = this->getInvMass();
+    float mass = 0.0f;
+    if(invMass != 0.0f)
+        mass = 1.0f / invMass;
+    btCollisionShape *pOriginalShape = this->getCollisionShape();
+    if(pOriginalShape) {
+        this->setCollisionShape(NULL);
+        delete pOriginalShape;
+        m_collisionShape = NULL;
+    }
+    m_bodyType = bodyType;
+    fgBool isDynamic = (fgBool)(mass != 0.f);
+    btVector3 localInertia(0, 0, 0);
+
+    btCollisionShape* pNewShape = NULL;
+    if(m_bodyType == BOX) {
+        pNewShape = new CCollisionBox(btVector3(1.0f, 1.0f, 1.0f));
+    } else if(m_bodyType == SPHERE) {
+        pNewShape = new CCollisionSphere(1.0f);
+    } else if(m_bodyType == CAPSULE) {
+        // mostly for bones...
+        pNewShape = new CCollisionCapsule(0.1f, 0.8f);
+    } else if(m_bodyType == COMPLEX) {
+        //
+    } else if(m_bodyType == TRIANGLE_MESH) {
+        //pNewShape = new CCollisionTriangleMesh();
+    }
+
+    if(isDynamic && pNewShape)
+        pNewShape->calculateLocalInertia(mass, localInertia);
+    if(pNewShape) {
+        this->setCollisionShape(pNewShape);
+        if(isDynamic) {
+            this->setMassProps(mass, localInertia);
+            this->updateInertiaTensor();
         }
-        this->setMass(orig.getMass());
-        this->setInverseInertiaTensor(orig.getInverseInertiaTensor());
-        
-        this->setDamping(orig.getLinearDamping(), orig.getAngularDamping());
-        this->setAcceleration(orig.getAcceleration());
-        this->setPosition(orig.getPosition());
-        this->setOrientation(orig.getOrientation());
-        this->setRotation(orig.getRotation());
-        
-        this->setAwake(orig.getAwake());
-        this->setCanSleep(orig.getCanSleep());
-        
-        this->calculateDerivedData();
-        this->integrate(0.0f);
     }
 }
 //------------------------------------------------------------------------------
 
 physics::CCollisionBody::~CCollisionBody() {
-    if(m_collisionPrim) {
-        m_collisionPrim->body = NULL;
-        delete m_collisionPrim;
+    if(this->getMotionState()) {
+        delete this->getMotionState();
+        this->setMotionState(NULL);
+    }
+    m_motionState = NULL;
+    btCollisionShape *pShape = getRigidBody()->getCollisionShape();
+    if(pShape) {
+        getRigidBody()->setCollisionShape(NULL);
+        delete pShape;
+        m_bodyType = INVALID;
     }
 }
 //------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setInertiaTensor(void) { 
-    if(m_bodyType == BOX) {
-        setInertiaTensor(getHalfSize(), getMass());
-    } else if(m_bodyType == SPHERE) {
-        setInertiaTensor(getRadius(), getMass());
-    }
-}
-//------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setInertiaTensor(const Vector3f& halfSize, float mass) {
-    setMass(mass);
-    setHalfSize(halfSize);
-    setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
-}
-//------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setInertiaTensor(float radius, float mass) {
-    setMass(mass);
-    setRadius(radius);
-    //float volume = (4.0f)/3.0f * M_PIF * math::pow(radius, 3.0f); 
-    // 2/5 * Mass * radius * radius
-    float sphereI = 2.0f / 5.0f * mass * radius * radius;
-	setInertiaTensor(physics::setInertiaTensorCoeffs<float, math::precision::defaultp>(sphereI, sphereI, sphereI));
-    //setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
-}
-//------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setMassPerUnit(float mass) {
-    if(mass < FG_EPSILON)
-        return;
-    if(m_collisionPrim && m_bodyType == BOX) {
-        const Vector3f& halfSize = getCollisionBox()->halfSize;
-        setMass(mass * halfSize.x * halfSize.y * halfSize.z);
-    } else if(m_collisionPrim && m_bodyType == SPHERE) {
-        real a = (2.0f * getCollisionSphere()->radius) / M_SQRT2;
-        setMass(mass * a * a * a);
-    }
-}
-//------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setHalfSize(const Vector3f& halfSize) {
-    if(m_collisionPrim && m_bodyType == BOX) {
-        getCollisionBox()->halfSize = halfSize;
-    } else if(m_collisionPrim && m_bodyType == SPHERE) {
-        getCollisionSphere()->radius = math::length(halfSize);
-    }
-}
-//------------------------------------------------------------------------------
-
-Vector3f physics::CCollisionBody::getHalfSize(void) const {
-    if(m_collisionPrim && m_bodyType == BOX) {
-        return getCollisionBox()->halfSize;
-    } else if(m_collisionPrim && m_bodyType == SPHERE) {
-        //float a = (2.0f * getCollisionSphere()->radius) / M_SQRT2;
-        float a = math::sqrt((getCollisionSphere()->radius * getCollisionSphere()->radius) / 3.0f);
-        return Vector3f(a, a, a);
-    }
-    return Vector3f();
-}
-//------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setRadius(real radius) {
-    if(radius < 0.0f)
-        radius *= -1.0f;
-    if(m_collisionPrim && m_bodyType == BOX) {
-        //real a = (2.0f * radius) / M_SQRT2;
-        real a = math::sqrt((radius * radius) / 3.0f);
-        getCollisionBox()->halfSize = Vector3f(a, a, a);
-    } else if(m_collisionPrim && m_bodyType == SPHERE) {
-        getCollisionSphere()->radius = radius;
-    }
-}
-//------------------------------------------------------------------------------
-
-float physics::CCollisionBody::getRadius(void) const {
-    if(m_collisionPrim && m_bodyType == BOX) {
-        return math::length(getCollisionBox()->halfSize);
-    } else if(m_collisionPrim && m_bodyType == SPHERE) {
-        return getCollisionSphere()->radius;
-    }
-    return 0.0f;
-}
-//------------------------------------------------------------------------------
-
-void physics::CCollisionBody::setBodyType(const BodyType bodyType) {
-    if(m_collisionPrim && m_bodyType == bodyType)
-        return;
-    m_bodyType = bodyType;
-    if(m_bodyType == BOX) {
-        m_collisionPrim = new CCollisionBox();
-        m_collisionPrim->body = this;
-    } else {
-        m_collisionPrim = new CCollisionSphere();
-        m_collisionPrim->body = this;
-    }
-}
-//------------------------------------------------------------------------------
-
-fgBool physics::CCollisionBody::checkCollision(CCollisionBody* body,
-                                               SCollisionData *cData) {
-    if(!body || !cData) {
-        return FG_FALSE;
-    }
-    bool collide = false;
-    // #LOL
-    if(m_bodyType == BOX) {
-        if(body->getBodyType() == BOX) {
-            collide = CCollisionDetector::boxAndBox(*getCollisionBox(),
-                                                    *(body->getCollisionBox()), cData);
-        } else if(body->getBodyType() == SPHERE) {
-            collide = CCollisionDetector::boxAndSphere(*getCollisionBox(),
-                                                       *(body->getCollisionSphere()), cData);
-        }
-    } else if(m_bodyType == SPHERE) {
-        if(body->getBodyType() == BOX) {
-            collide = CCollisionDetector::boxAndSphere(*(body->getCollisionBox()),
-                                                       *getCollisionSphere(), cData);
-        } else if(body->getBodyType() == SPHERE) {
-            collide = CCollisionDetector::sphereAndSphere(*getCollisionSphere(),
-                                                          *(body->getCollisionSphere()), cData);
-        }
-    } else {
-
-    }
-    return (fgBool)collide;
-}
-//------------------------------------------------------------------------------
-
-fgBool physics::CCollisionBody::checkCollision(const CCollisionPlane& plane,
-                                               SCollisionData* cData) {
-    if(!cData) {
-        return false;
-    }
-    bool collide = false;
-    if(m_bodyType == BOX) {
-        collide = CCollisionDetector::boxAndHalfSpace(*getCollisionBox(), plane, cData);
-    } else if(m_bodyType == SPHERE) {
-        collide = CCollisionDetector::sphereAndTruePlane(*getCollisionSphere(), plane, cData);
-    }
-    return collide;
-}
-//------------------------------------------------------------------------------
+#endif /* FG_USING_BULLET */

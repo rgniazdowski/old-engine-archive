@@ -389,8 +389,14 @@
           <itemPath>../../../src/Physics/Cyclone/fgWorld.cpp</itemPath>
           <itemPath>../../../src/Physics/Cyclone/fgWorld.h</itemPath>
         </logicalFolder>
+        <itemPath>../../../src/Physics/fgBulletHelper.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgBulletHelper.h</itemPath>
+        <itemPath>../../../src/Physics/fgBulletMaskTypes.h</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
+        <itemPath>../../../src/Physics/fgPhysicalWorld.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgPhysicalWorld.h</itemPath>
+        <itemPath>../../../src/Physics/fgPhysics.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
         <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
@@ -605,12 +611,14 @@
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
             <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_ASSIMP</Elem>
+            <Elem>FG_USING_BULLET</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
             <Elem>FG_USING_LUA_PLUS</Elem>
@@ -659,6 +667,10 @@
               </makeArtifact>
             </linkerLibProjectItem>
             <linkerLibFileItem>../../../modules/assimp/lib/libassimp.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/BulletDynamics/libBulletDynamics.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/BulletCollision/libBulletCollision.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/BulletSoftBody/libBulletSoftBody.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/LinearMath/libLinearMath.a</linkerLibFileItem>
           </linkerLibItems>
           <commandLine>-rdynamic</commandLine>
         </linkerTool>
@@ -2134,23 +2146,46 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -2531,10 +2566,12 @@
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
             <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_ASSIMP</Elem>
+            <Elem>FG_USING_BULLET</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
             <Elem>FG_USING_LUA_PLUS</Elem>
@@ -2588,6 +2625,10 @@
               </makeArtifact>
             </linkerLibProjectItem>
             <linkerLibFileItem>../../../modules/assimp/lib/libassimp.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/BulletDynamics/libBulletDynamics.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/BulletCollision/libBulletCollision.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/BulletSoftBody/libBulletSoftBody.a</linkerLibFileItem>
+            <linkerLibFileItem>../../../modules/bullet/bullet3/src/LinearMath/libLinearMath.a</linkerLibFileItem>
           </linkerLibItems>
           <commandLine>-Wl,--gc-sections</commandLine>
         </linkerTool>
@@ -4052,23 +4093,47 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -5936,6 +6001,43 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Resource/fgResourceManager.cpp"
             ex="false"
             tool="1"
@@ -7731,8 +7833,49 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysical.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysical.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -9605,12 +9748,43 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -11475,12 +11649,44 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletHelper.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       </item>
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysicalWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"

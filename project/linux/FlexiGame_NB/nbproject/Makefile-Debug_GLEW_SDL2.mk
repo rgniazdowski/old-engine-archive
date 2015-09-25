@@ -190,6 +190,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/94644411/fgWorld.o \
 	${OBJECTDIR}/_ext/1611265229/fgBulletHelper.o \
 	${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o \
+	${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o \
 	${OBJECTDIR}/_ext/942373304/fgResource.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceConfigParser.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
