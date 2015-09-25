@@ -565,7 +565,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgBool isPickSelectionPickerActive(void) const {
+            fgBool isPickSelectionPickerActive(void) const {
                 return (fgBool)!!(m_stateFlags & PICK_SELECTION_PICKER_ACTIVE);
             }
             /**
@@ -573,7 +573,7 @@ namespace fg {
              * @param rayEye
              * @param rayDir
              */
-            inline void getPickSelectionRayInfo(Vec3f& rayEye, Vec3f& rayDir) {
+            void getPickSelectionRayInfo(Vec3f& rayEye, Vec3f& rayDir) {
                 rayDir = m_pickSelection.rayDir;
                 rayEye = m_pickSelection.rayEye;
             }
@@ -620,34 +620,6 @@ namespace fg {
                 return m_pickSelection.pickBox;
             }
         public:
-            //------------------------------------------------------------------
-            /**
-             * 
-             * @return 
-             */
-            virtual int getZIndex(void) const {
-                return m_zIndex;
-            }
-            /**
-             * 
-             * @param zIndex
-             */
-            virtual void setZIndex(const int zIndex) {
-                m_zIndex = zIndex;
-            }
-            /**
-             * 
-             */
-            virtual void upZIndex(void) {
-                m_zIndex++;
-            }
-            /**
-             * 
-             */
-            virtual void downZIndex(void) {
-                m_zIndex--;
-            }
-
             //------------------------------------------------------------------
 
             void refreshGfxInternals(void);
@@ -940,13 +912,19 @@ namespace fg {
 
             //------------------------------------------------------------------
 
+        protected:
+            CSceneNode* addFromModel(const SceneNodeType nodeType,
+                                     CModelResource* pModelRes,
+                                     const std::string& nameTag);
+
+        public:
             /**
              *
              * @param pModelRes
              * @param nameTag
              * @return
              */
-            CSceneNode *addFromModel(CModelResource *pModelRes,
+            CSceneNode* addFromModel(CModelResource *pModelRes,
                                      const std::string& nameTag);
             /**
              *
@@ -954,7 +932,7 @@ namespace fg {
              * @param nameTag
              * @return
              */
-            CSceneNode *addFromModel(const std::string& modelNameTag,
+            CSceneNode* addFromModel(const std::string& modelNameTag,
                                      const std::string& nameTag);
             /**
              *
@@ -962,7 +940,7 @@ namespace fg {
              * @param nameTag
              * @return
              */
-            CSceneNode *addFromModel(const char *modelNameTag,
+            CSceneNode* addFromModel(const char *modelNameTag,
                                      const char *nameTag);
 
             //------------------------------------------------------------------

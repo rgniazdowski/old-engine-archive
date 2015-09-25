@@ -1596,12 +1596,25 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const char* sourceNodeNameTag,
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode* gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
+gfx::CSceneNode* gfx::CSceneManager::addFromModel(const SceneNodeType nodeType,
+                                                  CModelResource* pModelRes,
                                                   const std::string& nameTag) {
-    if(!pModelRes) {
+    if(!pModelRes || nodeType == SCENE_NODE_INVALID) {
         return NULL;
     }
-    CSceneNode *pNode = new CSceneNodeObject(NULL, NULL);
+    if(nameTag.empty()) {
+        return NULL;
+    }
+    if(!m_pNodeFactory)
+        return NULL;
+    CSceneNode* pNode = m_pNodeFactory->create(nodeType);
+    if(!pNode)
+        return NULL;
+    if(!pNode->doesExtend(SCENE_NODE_OBJECT)) {
+        // does not extend
+        delete pNode;
+        return NULL;
+    }
     pNode->setName(nameTag);
     if(!addNode(pNode->getRefHandle(), pNode)) {
         delete pNode;
@@ -1611,6 +1624,13 @@ gfx::CSceneNode* gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
     initializeNode(pNode);
     FG_LOG_DEBUG("GFX: SceneManager: Inserted object: '%s'", nameTag.c_str());
     return pNode;
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode* gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
+                                                  const std::string& nameTag) {
+    
+    return addFromModel(SCENE_NODE_OBJECT, pModelRes, nameTag);
 }
 //------------------------------------------------------------------------------
 
