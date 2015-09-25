@@ -942,6 +942,12 @@ fgBool CEngineMain::preRender(void) {
 #endif
     m_guiMain->preRender();
 #if defined(FG_DEBUG)
+    gui::CDrawer* pDrawer = m_guiMain->getDrawer();
+    pDrawer->setColor(Color3f(1.0f, 1.0f, 1.0f));
+    pDrawer->setFont("StbConsolasBold");
+    pDrawer->print(20, 20, 20, "%.2f", m_hardwareState->getFPS());
+#endif
+#if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
 
         profile::g_debugProfiling->end("GUI::preRender");
@@ -980,10 +986,6 @@ fgBool CEngineMain::render(void) {
     }
 #endif
     fpsc++;
-    //FG_LOG_DEBUG(".......... RENDER [%d] ....................\n", fpsc);
-    if(fpsc % 256 == 0) {
-        FG_LOG_INFO("# FPS: %.2f", m_hardwareState->getFPS());
-    }
     if(fpsc > 256) {
         fpsc = 0;
     }
@@ -1016,10 +1018,8 @@ fgBool CEngineMain::render(void) {
         profile::g_debugProfiling->begin("GUI::render");
     }
 #endif
-
-   // m_gfxMain->getShaderManager()->useProgram(m_guiMain->getDrawer()->getDefaultShader());
-   
     m_guiMain->render();
+
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
 

@@ -215,11 +215,10 @@ fgBool gui::CGuiMain::initialize(void) {
     if(!createBuiltInFont("StbConsolasBold", 32)) {
         FG_LOG_ERROR("GUI: Failed to create built-in font (StbConsolasBold)");
     }
-    unsigned int courierSize = 50;
-    if(!createBuiltInFont("StbCourier", courierSize)) {
+    if(!createBuiltInFont("StbCourier", 32)) {
         FG_LOG_ERROR("GUI: Failed to create built-in font (StbCourier)");
     }
-    if(!createBuiltInFont("StbCourierBold", courierSize)) {
+    if(!createBuiltInFont("StbCourierBold", 32)) {
         FG_LOG_ERROR("GUI: Failed to create built-in font (StbCourierBold)");
     }
 
