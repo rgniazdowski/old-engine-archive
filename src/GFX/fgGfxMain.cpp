@@ -24,7 +24,6 @@
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventManager.h"
 #include "Util/fgProfiling.h"
-#include "Physics/fgCycloneCoreMath.h"
 
 #include "fgLog.h"
 

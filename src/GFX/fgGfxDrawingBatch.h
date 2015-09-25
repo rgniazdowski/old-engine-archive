@@ -29,6 +29,10 @@ namespace fg {
         public:
             ///
             typedef CLayer base_type;
+            ///
+            typedef CDrawingBatch self_type;
+            ///
+            typedef CDrawingBatch type;
 
         protected:
             ///
@@ -66,9 +70,7 @@ namespace fg {
 
         protected:
             /// Relative move
-            Vector3f m_relMove;
-            /// Internal MVP matrix to use
-            CMVPMatrix m_MVP;
+            Vector3f m_relMove;            
             /// Pointer to external Shader Manager
             fg::base::CManager* m_pShaderMgr;
             ///
@@ -124,13 +126,7 @@ namespace fg {
              * 
              */
             virtual ~CDrawingBatch();
-            /**
-             *
-             * @return
-             */
-            inline CMVPMatrix* getMVP(void) {
-                return &m_MVP;
-            }
+            
             /**
              * 
              * @return 
@@ -142,7 +138,7 @@ namespace fg {
              *
              * @return
              */
-            inline fg::gfx::base::CShader* getDefaultShader(void) const {
+            inline CShaderProgram* getDefaultShader(void) const {
                 return m_pDefaultShader;
             }
 
@@ -201,40 +197,40 @@ namespace fg {
              */
             CDrawCall* removeDrawCall(int index);
             /**
-             * 
+             * Remove given draw call from batch
              * @param drawCall
              * @return 
              */
             fgBool removeDrawCall(CDrawCall* drawCall);
             /**
-             * 
+             * Delete selected draw call
              * @param index
              * @return 
              */
             fgBool deleteDrawCall(int index);
             /**
-             * 
+             * Delete given draw call (will also remove from batch)
              * @param drawCall
              * @return 
              */
             fgBool deleteDrawCall(CDrawCall*& drawCall);
             /**
-             * 
-             * @return 
+             * Get current number of active DrawCalls in the batch.
+             * @return  Number of active DrawCalls.
              */
             unsigned int count(void) const {
                 return m_numDrawCalls;
             }
             /**
-             * 
-             * @return 
+             * Get current number of active DrawCalls in the batch.
+             * @return  Number of active DrawCalls.
              */
             unsigned int size(void) const {
                 return m_numDrawCalls;
             }
             /**
-             *
-             * @return
+             * Get current capacity of Drawing batch.
+             * @return  Maximum number of supported DrawCalls.
              */
             unsigned int capacity(void) const {
                 return m_reservedSize;
@@ -252,7 +248,7 @@ namespace fg {
             fgBool empty(void) const {
                 return (fgBool)(m_numDrawCalls == 0);
             }
-
+            //------------------------------------------------------------------
             /**
              * 
              */
@@ -265,6 +261,7 @@ namespace fg {
              * 
              */
             virtual void render(void);
+            //------------------------------------------------------------------
             /**
              * 
              * @param n

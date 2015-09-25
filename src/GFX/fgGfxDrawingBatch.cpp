@@ -25,7 +25,6 @@ m_defaultDrawCallType(drawCallType),
 m_defaultAttribMask(attribMask),
 m_scissorBox(0, 0, 0, 0),
 m_relMove(),
-m_MVP(),
 m_pShaderMgr(NULL),
 m_pDefaultShader(NULL) {
     reserve(reservedSize);
@@ -106,8 +105,12 @@ gfx::CDrawCall* gfx::CDrawingBatch::requestDrawCall(int& index,
     }
     // fgGfxDrawCall *drawCall = new fgGfxDrawCall(type, attribMask);
     if(m_pShaderMgr && !pProgram) {
-        CShaderManager* shaderMgrPtr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
-        drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
+        if(!this->getDefaultShader()) {
+            CShaderManager* shaderMgrPtr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
+            drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
+        } else {
+            drawCall->setShaderProgram(getDefaultShader());
+        }
     } else {
         drawCall->setShaderProgram(pProgram);
     }
@@ -119,6 +122,7 @@ gfx::CDrawCall* gfx::CDrawingBatch::requestDrawCall(int& index,
     drawCall->setColor(Color3f(1.0f, 1.0f, 1.0f));
     drawCall->setRelMove(m_relMove);
     drawCall->setScissorBox(m_scissorBox);
+    drawCall->setMVP(&m_MVP);
     //m_drawCalls.push_back(drawCall);
     return drawCall;
 }

@@ -121,6 +121,8 @@ namespace fg {
                 this->m_center = camera->getCenter();
                 this->m_up = camera->getUp();
                 this->m_viewMatrix = camera->getViewMatrix();
+                this->m_viewProjMatrix = m_projMatrix * m_viewMatrix;
+                this->m_frustum.set(m_viewProjMatrix);
             }
             /*
              * Getters for MVP raw matrix

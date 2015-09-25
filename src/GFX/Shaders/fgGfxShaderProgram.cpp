@@ -331,6 +331,8 @@ fgBool gfx::CShaderProgram::link(void) {
     this->setUniform(shaders::UNIFORM_ENVIRONMENT_MAP, texture::UNIT_ENVIRONMENT);
     this->setUniform(shaders::UNIFORM_CUBE_TEXTURE, texture::UNIT_CUBE);
     //this->setUniform(shaders::UNIFORM_3D_TEXTURE, texture::UNIT_3D);
+    this->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
+    this->setUniform(shaders::UNIFORM_USE_TEXTURE, 1.0f);
     return status;
 }
 //------------------------------------------------------------------------------
