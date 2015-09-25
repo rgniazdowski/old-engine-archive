@@ -28,7 +28,7 @@
     #include "fgGfxSceneSkyBox.h"    
 
     #include "GFX/fgGfxPlaneGrid.h"
-#include "fgGfxNodeFactory.h"
+    #include "fgGfxNodeFactory.h"
 
     #define FG_MANAGER_SCENE        0x00001000
 
@@ -44,7 +44,7 @@ namespace fg {
          */
         class CSceneManager :
         public fg::base::CManager,
-        protected CDrawingBatch,
+        public CDrawingBatch,
         protected fg::util::CHandleManager<CSceneNode *, SceneNodeHandle> {
         public:
             ///
@@ -216,13 +216,15 @@ namespace fg {
             }
 
             ////////////////////////////////////////////////////////////////////
-
+        protected:
             /**
              * 
              * @param flags
              * @param toggle
              */
             void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+
+        public:
             /**
              * 
              * @return 
@@ -1137,6 +1139,15 @@ namespace fg {
                 // this function is repeated here because CDrawingBatch
                 // is protected
                 return &m_MVP;
+            }
+            inline int getLayerID(void) const {
+                return drawing_batch_type::getLayerID();
+            }
+            inline std::string& getLayerName(void) {
+                return drawing_batch_type::getLayerName();
+            }
+            inline std::string const& getLayerName(void) const {
+                return drawing_batch_type::getLayerName();
             }
             /**
              * 
