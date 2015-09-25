@@ -47,3 +47,10 @@ fgBool game::CGameWorld::destroy(void) {
     return status;
 }
 //------------------------------------------------------------------------------
+
+void game::CGameWorld::update(float delta) {
+    base_type::update(delta); // intelligent world
+
+    physical_world::update(delta);
+}
+//------------------------------------------------------------------------------

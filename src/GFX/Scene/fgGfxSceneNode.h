@@ -457,9 +457,9 @@ namespace fg {
              */
             inline void setHalfSizeAndMass(const Vector3f& halfSize, float mass) {
                 //if(m_collisionBody) {
-                 //   m_collisionBody->setHalfSizeAndMass(halfSize, mass);
+                //   m_collisionBody->setHalfSizeAndMass(halfSize, mass);
                 //} else {
-                    setHalfSize(halfSize);
+                setHalfSize(halfSize);
                 //}
             }
             /**
@@ -473,7 +473,7 @@ namespace fg {
                 //if(m_collisionBody) {
                 //    m_collisionBody->setHalfSizeAndMass(Vector3f(x, y, z), mass);
                 //} else {
-                    setHalfSize(Vector3f(x, y, z));
+                setHalfSize(Vector3f(x, y, z));
                 //}
             }
 

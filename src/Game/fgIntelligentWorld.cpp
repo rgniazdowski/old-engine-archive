@@ -37,3 +37,8 @@ fgBool game::CIntelligentWorld::destroy(void) {
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
+
+void game::CIntelligentWorld::update(float delta) {
+
+}
+//------------------------------------------------------------------------------

@@ -36,7 +36,10 @@ m_finalModelMat() {
 
     if(pParent) {
         if(!m_pManager) {
+            // copy manager pointer
+            // if parent is managed then the child will be managed later
             m_pManager = pParent->getManager();
+            // do not copy isManaged flag ... this needs to be done by the manager object
         }
     }
 }

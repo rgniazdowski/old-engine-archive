@@ -15,6 +15,7 @@
  */
 
 #include "fg3DGameWorld.h"
+#include "Physics/fgPhysical.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -47,5 +48,50 @@ fgBool game::CGameWorld3D::destroy(void) {
     status = (fgBool)(scene_type::destroy() && status);
 
     return status;
+}
+//------------------------------------------------------------------------------
+
+void game::CGameWorld3D::update(float delta) {
+    // after sorting calls need to copy model matrix from rigid body to proper
+    // game entity node (the ones that have Physical trait).
+    // this will happen after update stage from GameWorld (physical & intelligent)
+    /// // // // // // // //
+    // game world update function - intelligent & physical world
+    base_type::update(delta);
+    // update function of scene_type calls internal event manager callbacks
+    scene_type::update(delta);
+
+    // now need to copy matrices from rigid bodies
+    // linear traverse - only active nodes (any visibility)
+    m_traverse.rewind();
+    while(m_traverse.next(getActiveRootNode())) {
+        gfx::CSceneNode* pSceneNode = m_traverse.current;
+        if(!pSceneNode)
+            continue;
+        if(pSceneNode->getNodeType() == gfx::SCENE_NODE_ROOT) {
+            continue; // skip root nodes
+        }
+        if(!pSceneNode->isActive()) {
+            continue; // skip not active node
+        }
+        physics::traits::CPhysical* pPhysical = NULL;
+        if(pSceneNode->queryTrait(fg::traits::PHYSICAL, (void**)&pPhysical)) {
+            if(!pPhysical->getCollisionBody())
+                continue; // skip
+            physics::CCollisionBody* pBody = pPhysical->getCollisionBody();
+            if(!pBody->isActive())
+                continue; // skip inactive ??
+            if(pBody->isStaticObject())
+                continue; // skip static
+            // quick copy
+            // cant just copy matrix
+            // node's model matrix is relative to the parents matrix
+            Matrix4f matrix;
+            pBody->getWorldTransform(matrix);
+            if(pSceneNode->getParent())
+                matrix = matrix * math::inverse(pSceneNode->getParent()->getFinalModelMatrix());
+            pSceneNode->setModelMatrix(matrix);
+        }
+    }
 }
 //------------------------------------------------------------------------------

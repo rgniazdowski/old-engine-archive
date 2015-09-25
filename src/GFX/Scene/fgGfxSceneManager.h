@@ -667,7 +667,7 @@ namespace fg {
             /**
              *
              */
-            virtual void update(void);
+            virtual void update(float delta = 0.0f);
 
             //------------------------------------------------------------------
 

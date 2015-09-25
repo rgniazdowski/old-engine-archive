@@ -56,6 +56,8 @@ namespace fg {
             virtual fgBool initialize(void);
             virtual fgBool destroy(void);
 
+            virtual void update(float delta = 0.0f);
+
         private:
 
         }; // class CGameWorld3D

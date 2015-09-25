@@ -865,7 +865,7 @@ gfx::CSceneNode* gfx::CSceneManager::STraverse::next(CSceneNode* pRoot) {
 
 //------------------------------------------------------------------------------
 
-void gfx::CSceneManager::update(void) {
+void gfx::CSceneManager::update(float delta) {
     while(m_triggers.size()) {
         STriggerInfo &info = m_triggers.back();
         CSceneNodeTrigger::TriggerActivation activation;
