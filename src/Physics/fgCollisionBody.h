@@ -30,6 +30,10 @@ namespace fg {
 
     namespace physics {
 
+        namespace traits {
+            class CPhysical;
+        } // namespace traits
+
         const float DEFAULT_LINEAR_DAMPING = 0.95f;
         const float DEFAULT_ANGULAR_DAMPING = 0.8f;
 
@@ -37,6 +41,8 @@ namespace fg {
          *
          */
         class CCollisionBody : public CRigidBody {
+            friend class traits::CPhysical;
+        public:
             ///
             typedef CRigidBody base_type;
             ///
@@ -150,7 +156,12 @@ namespace fg {
             void getWorldTransform(DualQuaternionf& outDQ) const;
             void getWorldTransform(Matrix4f& outMatrix) const;
             void getWorldTransform(float *outMatrix) const;
-            
+
+            using base_type::setWorldTransform;
+            void setWorldTransform(const Matrix4f& matrix);
+            void setWorldTransform(const DualQuaternionf& dq);
+            void setWorldTransform(float* matrix);
+
             //------------------------------------------------------------------
         protected:
             void setupBody(BodyType bodyType);

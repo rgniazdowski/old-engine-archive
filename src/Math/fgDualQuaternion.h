@@ -161,12 +161,12 @@ namespace fg {
          * 
          * @param t
          */
-        inline void getTranslation(vec3_type& t) {
+        inline void getTranslation(vec3_type& t) const {
             T n = math::length(q0);
             // translation vector from dual quaternion part:
-            t.x = 2.f * (-qe.w * q0.x + qe.x * q0.w - qe.y * q0.z + qe.z() * q0.y) / n;
-            t.y = 2.f * (-qe.w * q0.y + qe.x * q0.z + qe.y * q0.w - qe.z() * q0.x) / n;
-            t.z = 2.f * (-qe.w * q0.z - qe.x * q0.y + qe.y * q0.x + qe.z() * q0.w) / n;
+            t.x = 2.f * (-qe.w * q0.x + qe.x * q0.w - qe.y * q0.z + qe.z * q0.y) / n;
+            t.y = 2.f * (-qe.w * q0.y + qe.x * q0.z + qe.y * q0.w - qe.z * q0.x) / n;
+            t.z = 2.f * (-qe.w * q0.z - qe.x * q0.y + qe.y * q0.x + qe.z * q0.w) / n;
             //quat_type q = (qe * 2.0f) * math::conjugate(q0);
             //t.x = q.x;
             //t.y = q.y;
@@ -176,7 +176,7 @@ namespace fg {
          * 
          * @param t
          */
-        inline void getTranslation(vec4_type& t) {
+        inline void getTranslation(vec4_type& t) const {
             vec3_type t3;
             getTranslation(t3);
             t.x = t3.x;
@@ -187,7 +187,7 @@ namespace fg {
          *
          * @return
          */
-        inline vec3_type getTranslation(void) {
+        inline vec3_type getTranslation(void) const {
             vec3_type t;
             getTranslation(t);
             return t;
@@ -198,7 +198,7 @@ namespace fg {
          * @param v
          * @return
          */
-        inline vec3_type transform(const vec3_type& v) {
+        inline vec3_type transform(const vec3_type& v) const {
             // As the dual quaternions may be the results from a
             // linear blending we have to normalize it :
             T norm = math::length(q0);
@@ -219,7 +219,7 @@ namespace fg {
          * @param v
          * @return 
          */
-        inline vec4_type transform(const vec4_type& v) {
+        inline vec4_type transform(const vec4_type& v) const {
             vec3_type rv3 = transform(vec3_type(v.x, v.y, v.z));
             return vec4_type(rv3.x, rv3.y, rv3.z, (T)0.0);
         }
@@ -237,7 +237,7 @@ namespace fg {
          * @param v
          * @return
          */
-        inline vec3_type rotate(const vec3_type& v) {
+        inline vec3_type rotate(const vec3_type& v) const {
             quat_type tmp = math::normalize(q0);
             return math::rotate(tmp, v);
         }
@@ -246,7 +246,7 @@ namespace fg {
          * @param v
          * @return
          */
-        inline vec4_type rotate(const vec4_type& v) {
+        inline vec4_type rotate(const vec4_type& v) const {
             quat_type tmp = math::normalize(q0);
             return math::rotate(tmp, v);
         }
@@ -255,7 +255,7 @@ namespace fg {
          * 
          * @return 
          */
-        mat4_type toMat4(void) {
+        mat4_type toMat4(void) const {
             // rotation matrix from non-dual part
             mat4_type mat = math::toMat4(q0);
             getTranslation(mat[3]);
@@ -265,7 +265,7 @@ namespace fg {
          * 
          * @return 
          */
-        mat3_type toMat3(void) {
+        mat3_type toMat3(void) const {
             mat3_type mat = math::toMat3(q0);
             return mat;
         }
@@ -273,7 +273,7 @@ namespace fg {
          * 
          * @param outMat
          */
-        void toMat4(mat4_type& outMat) {
+        void toMat4(mat4_type& outMat) const {
             outMat = math::toMat4(q0);
             getTranslation(outMat[3]);
         }
@@ -281,7 +281,7 @@ namespace fg {
          * 
          * @param outMat
          */
-        void toMat3(mat3_type& outMat) {
+        void toMat3(mat3_type& outMat) const {
             outMat = math::toMat3(q0);
         }
         //----------------------------------------------------------------------

@@ -31,7 +31,7 @@ base_type(CRigidBody::btRigidBodyConstructionInfo(1.0f, NULL, NULL)),
 m_bodyType(INVALID),
 m_motionState(NULL) {
     m_motionState = new btDefaultMotionState();
-    this->setMotionState(m_motionState);    
+    this->setMotionState(m_motionState);
     if(bodyType != INVALID)
         setupBody(bodyType);
     //this->getMotionState()->getWorldTransform();
@@ -123,7 +123,7 @@ void physics::CCollisionBody::setRadius(const float radius) {
 }
 //------------------------------------------------------------------------------
 
-void physics::CCollisionBody::setMass(float mass) { 
+void physics::CCollisionBody::setMass(float mass) {
     if(!getCollisionShape())
         return;
     btVector3 inertia;
@@ -308,6 +308,25 @@ void physics::CCollisionBody::getWorldTransform(Matrix4f& outMatrix) const {
 
 void physics::CCollisionBody::getWorldTransform(float* outMatrix) const {
     m_worldTransform.getOpenGLMatrix(outMatrix);
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setWorldTransform(const Matrix4f& matrix) {
+    m_worldTransform.setFromOpenGLMatrix(math::value_ptr(matrix));
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setWorldTransform(const DualQuaternionf& dq) {
+    static Matrix4f matrix;
+    dq.toMat4(matrix);
+    m_worldTransform.setFromOpenGLMatrix(math::value_ptr(matrix));
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setWorldTransform(float* matrix) {
+    if(!matrix)
+        return;
+    m_worldTransform.setFromOpenGLMatrix((btScalar*)matrix);
 }
 //------------------------------------------------------------------------------
 

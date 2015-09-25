@@ -37,15 +37,44 @@ namespace fg {
                 static const fg::traits::SceneNode SELF_TRAIT = fg::traits::PHYSICAL;
 
             public:
+                /**
+                 *
+                 */
                 CPhysical();
+                /**
+                 *
+                 * @param orig
+                 */
                 CPhysical(const self_type& orig);
+                /**
+                 *
+                 */
                 virtual ~CPhysical();
                 
             public:
+                /**
+                 *
+                 * @return
+                 */
                 CCollisionBody* getCollisionBody(void);
+                /**
+                 *
+                 * @return
+                 */
                 CCollisionBody const* getCollisionBody(void) const;
-                
+                /**
+                 *
+                 * @return
+                 */
                 CCollisionBody::BodyType getBodyType(void) const;
+                /**
+                 * 
+                 * @return
+                 */
+                fgBool hasCollisionBody(void) const;
+
+            protected:
+                fgBool setupCollisionBody(CCollisionBody::BodyType bodyType);
 
             private:
                 CCollisionBody* m_collisionBody;

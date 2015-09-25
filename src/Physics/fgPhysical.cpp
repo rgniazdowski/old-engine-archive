@@ -45,3 +45,43 @@ physics::traits::CPhysical::~CPhysical() {
     m_collisionBody = NULL;
 }
 //------------------------------------------------------------------------------
+
+physics::CCollisionBody* physics::traits::CPhysical::getCollisionBody(void) {
+    return m_collisionBody;
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionBody const* physics::traits::CPhysical::getCollisionBody(void) const {
+    return m_collisionBody;
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionBody::BodyType physics::traits::CPhysical::getBodyType(void) const {
+    if(!m_collisionBody)
+        return CCollisionBody::INVALID;
+    return m_collisionBody->getBodyType();
+}
+//------------------------------------------------------------------------------
+
+fgBool physics::traits::CPhysical::hasCollisionBody(void) const {
+    return (fgBool)!!(m_collisionBody != NULL);
+}
+//------------------------------------------------------------------------------
+
+fgBool physics::traits::CPhysical::setupCollisionBody(CCollisionBody::BodyType bodyType) {
+    if(bodyType == CCollisionBody::INVALID)
+        return FG_FALSE;
+
+    if(getBodyType() != bodyType) {
+        if(!m_collisionBody) {
+            m_collisionBody = new physics::CCollisionBody(bodyType);
+        } else {
+            m_collisionBody->setupBody(bodyType); // cause we friends...
+        }
+        // now we cannot setup collision body so easily,
+        // just create a new one....
+        // if the collision body is already inside of physical world,
+        // it needs to be removed first and then reinserted smoothly
+    }
+}
+//------------------------------------------------------------------------------
