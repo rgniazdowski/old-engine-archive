@@ -60,6 +60,9 @@
 #include "fgUnistd.h"
 /// Plugin resource
 #include "fgPluginResource.h"
+#include "Game/fgGameEntityType.h"
+#include "Game/fgGameEntity.h"
+#include "Game/fgGameEntityMesh.h"
 
 using namespace fg;
 
@@ -72,6 +75,8 @@ m_updateFixedFPS(DEFAULT_UPDATE_FIXED_FPS),
 m_argc(argc),
 m_argv(argv),
 m_gfxMain(NULL),
+m_pShaderMgr(NULL),
+m_pNodeFactory(NULL),
 m_guiMain(NULL),
 m_settings(NULL),
 m_mainConfig(NULL),
@@ -83,6 +88,8 @@ m_joypadController(NULL),
 m_scriptSubsystem(NULL),
 m_soundMgr(NULL),
 m_gameMain(NULL),
+m_3DGameWorld(NULL),
+m_2DGameWorld(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL),
@@ -140,6 +147,18 @@ CEngineMain::~CEngineMain() {
         FG_LOG_DEBUG("Destroying the GFX Subsystem...");
         delete m_gfxMain;
         m_gfxMain = NULL;
+    }
+    m_pShaderMgr = NULL;
+    m_pNodeFactory = NULL;
+    if(m_3DGameWorld) {
+        FG_LOG_DEBUG("GFX: Destroying the 3D Game World...");
+        delete m_3DGameWorld;
+        m_3DGameWorld = NULL;
+    }
+    if(m_2DGameWorld) {
+        FG_LOG_DEBUG("GFX: Destroying the 2D Game World...");
+        delete m_2DGameWorld;
+        m_2DGameWorld = NULL;
     }
     if(m_guiMain) {
         m_guiMain->setShaderManager(NULL);
@@ -237,11 +256,13 @@ CEngineMain::~CEngineMain() {
     colors::freeColors();
     // Unregister all error codes #FIXME
     fgErrorCodes::unregisterAll();
+    //error_codes::unregisterAll();
     // Delete the global instance of Message Subsystem singleton
     // MessageSubsystem is a special LOG wrapper
     FG_MessageSubsystem->deleteInstance();
     // >> Main Game object destruction - end
     FG_LOG_DEBUG("FlexiGame::Engine object is destroyed.");
+
 }
 //------------------------------------------------------------------------------
 
@@ -259,7 +280,7 @@ fgBool CEngineMain::closeSybsystems(void) {
     if(m_gfxMain)
         m_gfxMain->releaseTextures();
 
-    CEngineMain::releaseResources();
+    self_type::releaseResources();
     if(m_inputHandler)
         m_inputHandler->setEventManager(NULL);
     // DEVICE YIELD
@@ -368,7 +389,6 @@ fgBool CEngineMain::initialize(void) {
     // DEVICE YIELD
     if(m_gfxMain)
         return FG_FALSE;
-    //base_type::initialize();
     m_gfxMain = new gfx::CGfxMain();
     int w, h;
     w = m_mainConfig->getParameterInt("MainConfig.hardware", "screenWidth");
@@ -377,6 +397,8 @@ fgBool CEngineMain::initialize(void) {
     if(!m_gfxMain->initGFX()) {
         return FG_FALSE;
     }
+    m_pShaderMgr = m_gfxMain->getShaderManager();
+    m_pNodeFactory = m_gfxMain->getNodeFactory();
     if(!m_guiMain) {
         // Provide styles and widgets path
         std::string mainModPath = m_settings->getMainModPath();
@@ -430,6 +452,33 @@ fgBool CEngineMain::initialize(void) {
     m_resourceMgr->setMaximumMemory(128 * 1024 * 1024 - 1024 * 1024 * 10); // #FIXME #TODO
     m_resourceMgr->initialize();
 #endif // FG_USING_MARMALADE
+    {
+        // Register additional game entity objects
+        m_pNodeFactory->registerObject(game::GAME_ENTITY, new util::CFactoryObject<game::CEntity>());
+        m_pNodeFactory->registerObject(game::GAME_ENTITY_MESH, new util::CFactoryObject<game::CEntityMesh>());
+        if(!m_3DGameWorld)
+            m_3DGameWorld = new game::CGameWorld3D();
+        m_3DGameWorld->setShaderManager(m_pShaderMgr);
+        m_3DGameWorld->getMVP()->setPerspective(45.0f, m_gfxMain->getMainWindow()->getAspect());
+        if(!m_2DGameWorld)
+            m_2DGameWorld = new game::CGameWorld2D();
+        m_2DGameWorld->setShaderManager(m_pShaderMgr);
+        m_2DGameWorld->getMVP()->setOrtho(0.0f,
+                                          (float)gfx::context::getScreenSize().x,
+                                          (float)gfx::context::getScreenSize().y, 0.0f);
+
+        m_gfxMain->set3DScene(m_3DGameWorld);
+        m_gfxMain->set2DScene(m_2DGameWorld);
+        m_gfxMain->getParticleSystem()->setSceneManager(m_3DGameWorld);
+        m_3DGameWorld->initialize();
+        m_2DGameWorld->initialize();
+        m_gfxMain->addLayer(m_3DGameWorld);
+        m_gfxMain->addLayer(m_2DGameWorld);
+
+        m_guiMain->getDrawer()->getMVP()->setOrtho(0.0f,
+                                                   (float)gfx::context::getScreenSize().x,
+                                                   (float)gfx::context::getScreenSize().y, 0.0f);
+    }
     // Setup GFX Main external pointers
     m_gfxMain->setupResourceManager(m_resourceMgr);
     //m_gfxMain->generateBuiltInData();
@@ -801,7 +850,22 @@ fgBool CEngineMain::loadResources(void) {
     //#if defined(FG_USING_OPENGL_ES)
     m_gfxMain->getShaderManager()->setUniformAutoUpdate(FG_TRUE);
     //#endif
-
+    {
+        if(m_3DGameWorld && m_pShaderMgr) {
+            m_3DGameWorld->setDefaultShader(m_pShaderMgr->request(gfx::shaders::USAGE_DEFAULT_BIT | gfx::shaders::USAGE_LOW_QUALITY_BIT));
+            if(!m_3DGameWorld->getDefaultShader())
+                m_3DGameWorld->setDefaultShader(m_pShaderMgr->request(gfx::shaders::USAGE_FALLBACK_BIT));
+        }
+        if(m_2DGameWorld && m_pShaderMgr) {
+            m_2DGameWorld->setDefaultShader(m_pShaderMgr->request(gfx::shaders::USAGE_2D_RENDER_BIT));
+            if(!m_2DGameWorld->getDefaultShader())
+                m_2DGameWorld->setDefaultShader(m_pShaderMgr->request(gfx::shaders::USAGE_FALLBACK_BIT));
+        }
+        if(m_guiMain && m_pShaderMgr) {
+            gfx::CShaderProgram* pGuiProgram = m_gfxMain->getShaderManager()->request(gfx::shaders::USAGE_GUI_RENDER_BIT);
+            m_guiMain->getDrawer()->setDefaultShader(pGuiProgram);
+        }
+    }
 
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
@@ -952,22 +1016,9 @@ fgBool CEngineMain::render(void) {
         profile::g_debugProfiling->begin("GUI::render");
     }
 #endif
-    gfx::CShaderProgram* pGuiProgram = m_gfxMain->getShaderManager()->request(gfx::shaders::USAGE_GUI_RENDER_BIT);
-    m_gfxMain->getShaderManager()->useProgram(pGuiProgram);
-    Matrix4f modelMat = math::translate(Matrix4f(), Vec3f(0.0f, 0.0f, 0.0f));
-    float screenW = 1024.0f, screenH = 600.0f;
-    if(m_gfxMain->getMainWindow()) {
-        screenW = (float)m_gfxMain->getMainWindow()->getWidth();
-        screenH = (float)m_gfxMain->getMainWindow()->getHeight();
-    }
-    gfx::CMVPMatrix mvp;
-    mvp.identity();
-    mvp.setOrtho(0.0f,
-                 screenW,
-                 screenH,
-                 0.0f);
-    mvp.calculate(modelMat);
-    pGuiProgram->setUniform(&mvp);
+
+   // m_gfxMain->getShaderManager()->useProgram(m_guiMain->getDrawer()->getDefaultShader());
+   
     m_guiMain->render();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {

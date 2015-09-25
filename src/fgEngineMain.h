@@ -29,6 +29,8 @@
     #include "Hardware/fgQualityManager.h"
     #include "Scripting/fgScriptSubsystem.h"
     #include "Game/fgGameMain.h"
+    #include "Game/fg3DGameWorld.h"
+    #include "Game/fg2DGameWorld.h"
 
 namespace fg {
     class CEngineMain;
@@ -164,78 +166,92 @@ namespace fg {
          * 
          * @return 
          */
-        inline gfx::CGfxMain *getGfxMain(void) const {
+        inline gfx::CGfxMain* getGfxMain(void) const {
             return m_gfxMain;
         }
         /**
          * 
          * @return 
          */
-        inline gui::CGuiMain *getGuiMain(void) const {
+        inline gui::CGuiMain* getGuiMain(void) const {
             return m_guiMain;
         }
         /**
          * 
          * @return 
          */
-        inline CSettings *getSettings(void) const {
+        inline CSettings* getSettings(void) const {
             return m_settings;
         }
         /**
          * 
          * @return 
          */
-        inline util::CConfig *getMainConfig(void) const {
+        inline util::CConfig* getMainConfig(void) const {
             return m_mainConfig;
         }
         /**
          * 
          * @return 
          */
-        inline resource::CResourceManager *getResourceManager(void) const {
+        inline resource::CResourceManager* getResourceManager(void) const {
             return m_resourceMgr;
         }
         /**
          * 
          * @return 
          */
-        inline event::CEventManager *getEventManager(void) {
+        inline event::CEventManager* getEventManager(void) {
             return static_cast<event::CEventManager *>(this);
         }
         /**
          * 
          * @return 
          */
-        inline event::CInputHandler *getInputHandler(void) const {
+        inline event::CInputHandler* getInputHandler(void) const {
             return m_inputHandler;
         }
         /**
          * 
          * @return 
          */
-        inline event::CJoypadController *getJoypadController(void) const {
+        inline event::CJoypadController* getJoypadController(void) const {
             return m_joypadController;
         }
         /**
          * 
          * @return 
          */
-        inline script::CScriptSubsystem *getScriptSubsystem(void) const {
+        inline script::CScriptSubsystem* getScriptSubsystem(void) const {
             return m_scriptSubsystem;
         }
         /**
          * 
          * @return 
          */
-        inline sfx::CSfxManager *getSoundManager(void) const {
+        inline sfx::CSfxManager* getSoundManager(void) const {
             return m_soundMgr;
         }
         /**
          * 
          * @return 
          */
-        inline game::CGameMain *getGameMain(void) const {
+        inline game::CGameMain* getGameMain(void) const {
             return m_gameMain;
+        }
+        /**
+         *
+         * @return
+         */
+        inline game::CGameWorld3D* get3DGameWorld(void) const {
+            return m_3DGameWorld;
+        }
+        /**
+         * 
+         * @return
+         */
+        inline game::CGameWorld2D* get2DGameWorld(void) const {
+            return m_2DGameWorld;
         }
 
     public:
@@ -335,33 +351,41 @@ namespace fg {
         /// Number of the arguments passed to program
         int m_argc;
         /// Array of arguments passed to program
-        char **m_argv;
+        char** m_argv;
         /// Main GFX subsystem object
-        gfx::CGfxMain *m_gfxMain;
-        /// Main GUI (User Interface))
-        gui::CGuiMain *m_guiMain;
-        /// Main, hard settings
-        CSettings *m_settings;
-        /// Main config 
-        util::CConfig *m_mainConfig;
-        /// Main Quality Manager
-        CQualityManager *m_qualityMgr;
+        gfx::CGfxMain* m_gfxMain;
+        /// Pointer to the GFXmain internal ShaderManager
+        gfx::CShaderManager* m_pShaderMgr;
         ///
-        CHardwareState *m_hardwareState;
+        gfx::CNodeFactory* m_pNodeFactory;
+        /// Main GUI (User Interface))
+        gui::CGuiMain* m_guiMain;
+        /// Main, hard settings
+        CSettings* m_settings;
+        /// Main config 
+        util::CConfig* m_mainConfig;
+        /// Main Quality Manager
+        CQualityManager* m_qualityMgr;
+        ///
+        CHardwareState* m_hardwareState;
         /// Main Resource Manager
-        resource::CResourceManager *m_resourceMgr;
+        resource::CResourceManager* m_resourceMgr;
         /// Resource factory object - registers create() methods for Resource Objects
-        resource::CResourceFactory *m_resourceFactory;
+        resource::CResourceFactory* m_resourceFactory;
         /// 
-        event::CInputHandler *m_inputHandler;
+        event::CInputHandler* m_inputHandler;
         /// Joypad/Joystick controller object
-        event::CJoypadController *m_joypadController;
+        event::CJoypadController* m_joypadController;
         /// Builtin script subsystem - it needs access to all main managers
-        script::CScriptSubsystem *m_scriptSubsystem;
+        script::CScriptSubsystem* m_scriptSubsystem;
         /// Sound manager - loading, playing sounds
-        sfx::CSfxManager *m_soundMgr;
+        sfx::CSfxManager* m_soundMgr;
         /// Inner game logic
-        game::CGameMain *m_gameMain;
+        game::CGameMain* m_gameMain;
+        ///
+        game::CGameWorld3D* m_3DGameWorld;
+        ///
+        game::CGameWorld2D* m_2DGameWorld;
 
         /// Callback for Touch events
         event::CFunctionCallback* m_gameTouchCallback;
@@ -371,9 +395,9 @@ namespace fg {
         event::CFunctionCallback* m_gameFreeLookCallback;
         ///
         event::CFunctionCallback* m_gameKeyboardCallback;
-
     }; // class CEngineMain
+
 } // namespace fg
 
     #undef FG_INC_ENGINE_MAIN_BLOCK
-#endif /* FG_INC_GAME_MAIN */
+#endif /* FG_INC_ENGINE_MAIN */

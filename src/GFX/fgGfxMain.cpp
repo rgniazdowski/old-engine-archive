@@ -43,24 +43,24 @@ m_pEventMgr(NULL),
 m_shaderMgr(NULL),
 m_nodeFactory(NULL),
 m_mainWindow(NULL),
-m_3DScene(NULL),
-m_2DScene(NULL),
+m_p3DScene(NULL),
+m_p2DScene(NULL),
 m_particleSystem(NULL),
 m_resourceCreatedCallback(NULL),
 m_sceneNodeInsertedCallback(NULL),
 m_programEventCallback(NULL),
 m_init(FG_FALSE) {
-    m_3DScene = new gfx::CScene3D();
-    m_2DScene = new gfx::CScene2D();
+    //m_p3DScene = new gfx::CScene3D();
+    //m_p2DScene = new gfx::CScene2D();
     m_particleSystem = new gfx::CParticleSystem();
-    m_particleSystem->setSceneManager(m_3DScene);
+    //m_particleSystem->setSceneManager(m_p3DScene);
 
     m_shaderMgr = new gfx::CShaderManager();
-    m_3DScene->setShaderManager(m_shaderMgr);
-    m_2DScene->setShaderManager(m_shaderMgr);
+    //m_p3DScene->setShaderManager(m_shaderMgr);
+    //m_p2DScene->setShaderManager(m_shaderMgr);
     m_nodeFactory = new CNodeFactory();
-    m_3DScene->setNodeFactory(m_nodeFactory);
-    m_2DScene->setNodeFactory(m_nodeFactory);
+    //m_p3DScene->setNodeFactory(m_nodeFactory);
+    //m_p2DScene->setNodeFactory(m_nodeFactory);
 
     m_nodeFactory->registerObject(SCENE_NODE_OBJECT, new util::CFactoryObject<CSceneNodeObject>());
     m_nodeFactory->registerObject(SCENE_NODE_MESH, new util::CFactoryObject<CSceneNodeMesh>());
@@ -78,16 +78,18 @@ gfx::CGfxMain::~CGfxMain() {
         delete m_particleSystem;
         m_particleSystem = NULL;
     }
-    if(m_3DScene) {
+#if 0
+    if(m_p3DScene) {
         FG_LOG_DEBUG("GFX: Destroying the 3D Scene...");
-        delete m_3DScene;
-        m_3DScene = NULL;
+        delete m_p3DScene;
+        m_p3DScene = NULL;
     }
-    if(m_2DScene) {
+    if(m_p2DScene) {
         FG_LOG_DEBUG("GFX: Destroying the 2D Scene...");
-        delete m_2DScene;
-        m_2DScene = NULL;
+        delete m_p2DScene;
+        m_p2DScene = NULL;
     }
+#endif
     if(m_nodeFactory) {
         delete m_nodeFactory;
         m_nodeFactory = NULL;
@@ -178,23 +180,21 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CGfxMain::registerSceneCallbacks(void) {
-    if(!m_3DScene || !m_2DScene)
-        return;
-
     if(!m_sceneNodeInsertedCallback)
         m_sceneNodeInsertedCallback = new event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::sceneNodeInsertedHandler);
 
-    m_3DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
-    m_2DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    if(m_p3DScene)
+        m_p3DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    if(m_p2DScene)
+        m_p2DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
 //------------------------------------------------------------------------------
 
 void gfx::CGfxMain::unregisterSceneCallbacks(void) {
-    if(!m_3DScene || !m_2DScene)
-        return;
-
-    m_3DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
-    m_2DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    if(m_p3DScene)
+        m_p3DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    if(m_p2DScene)
+        m_p2DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -288,7 +288,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
         context::viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         context::setScreenSize(m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
+        //m_p2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
         m_init = FG_TRUE;
     }
     if(status && m_shaderMgr) {
@@ -301,9 +301,9 @@ fgBool gfx::CGfxMain::initGFX(void) {
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
     if(status) {
-        m_3DScene->initialize();
-        m_2DScene->initialize();
-        registerSceneCallbacks();
+        //m_p3DScene->initialize();
+        //m_p2DScene->initialize();
+        //registerSceneCallbacks();
         m_shaderMgr->getUniformUpdater()->enable(shaders::UNIFORM_DIRECTIONAL_LIGHT);
     }
     float t2 = timesys::ms();
@@ -655,29 +655,38 @@ void gfx::CGfxMain::preRender(void) {
     if(m_particleSystem) {
         m_particleSystem->calculate();
     }
-    m_3DScene->flush();
-    m_2DScene->flush();
+    LayerPriorityQueueItor itor = m_layersQueue.begin(),
+            end = m_layersQueue.end();
+    for(; itor != end; itor++) {
+        CLayer* pLayer = *itor;
+        pLayer->flush();
+        pLayer->sortCalls();
+    }
+#if 0
+    m_p3DScene->flush();
+    m_p2DScene->flush();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::sortCalls");
     }
 #endif
-    m_3DScene->sortCalls();
+    m_p3DScene->sortCalls();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::3DScene::sortCalls");
         profile::g_debugProfiling->begin("GFX::2DScene::sortCalls");
     }
 #endif
-    m_2DScene->sortCalls();
+    m_p2DScene->sortCalls();
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::2DScene::sortCalls");
     }
 #endif
+#endif
 
-    m_3DScene->update();
-    m_2DScene->update();
+    m_p3DScene->update();
+    m_p2DScene->update();
 }
 //------------------------------------------------------------------------------
 
@@ -707,7 +716,7 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
     mainLight.ambient = Color4f(0.25f, 0.25f, 0.25f, 1.0f);
     mainLight.diffuse = Color4f(1.0f, 1.0f, 0.9f, 1.0f);
     mainLight.specular = Color4f(0.9f, 0.7f, 0.5f, 1.0f);
-    Vec4f lightDir = m_3DScene->getMVP()->getViewMatrix() * Vec4f(mainLight.direction, 0.0f);
+    Vec4f lightDir = m_p3DScene->getMVP()->getViewMatrix() * Vec4f(mainLight.direction, 0.0f);
     mainLight.direction = Vec3f(lightDir);
 
     m_shaderMgr->getUniformUpdater()->update(shaders::UNIFORM_DIRECTIONAL_LIGHT, mainLight);
@@ -717,13 +726,13 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CGfxMain::render(void) {
-    m_3DScene->getCamera()->update();
-    m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
-    m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
+    //m_p3DScene->getCamera()->setSpeed(350.0f);
+    m_p3DScene->getCamera()->update();
+    m_p3DScene->getMVP()->setCamera(m_p3DScene->getCamera());
+    //m_p3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
+    
     //
-    // OH MY GOD HOW THIS SUX #FIXME
-    //
-
+    // OH MY GOD HOW THIS SUX #FIXME    
     if(true) {
         // Load proper texture
         static resource::CResource *pResourceX = NULL;
@@ -733,10 +742,17 @@ void gfx::CGfxMain::render(void) {
             gfx::CTexture *pTexture = static_cast<gfx::CTexture *>(pResourceX);
             if(pTexture) {
                 STextureID &texID = pTexture->getRefGfxID();
-                m_3DScene->getSkyBox()->setTexture(texID);
+                m_p3DScene->getSkyBox()->setTexture(texID);
             }
         }
     }
+    LayerPriorityQueueItor itor = m_layersQueue.begin(),
+            end = m_layersQueue.end();
+    for(; itor != end; itor++) {
+        CLayer* pLayer = *itor;        
+        pLayer->render();
+    }
+#if 0
 
     CShaderProgram *pDefaultProgram = m_shaderMgr->request(shaders::USAGE_DEFAULT_BIT | shaders::USAGE_LOW_QUALITY_BIT);
     if(!pDefaultProgram) {
@@ -757,7 +773,7 @@ void gfx::CGfxMain::render(void) {
     // 
     // RENDER THE 3D SCENE
     //
-    m_3DScene->render();
+    m_p3DScene->render();
 
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
@@ -777,11 +793,13 @@ void gfx::CGfxMain::render(void) {
     m_shaderMgr->useProgram(p2DProgram);
     p2DProgram->setUniform(shaders::UNIFORM_CUSTOM_COLOR, 1.0f, 1.0f, 1.0f, 1.0f);
     //context::setBlend(FG_TRUE);
-    m_2DScene->getMVP()->setOrtho(0.0f,
-                                  (float)m_mainWindow->getWidth(),
-                                  (float)m_mainWindow->getHeight(),
-                                  0.0f);
-    m_2DScene->render();
+
+    m_p2DScene->getMVP()->setOrtho(0.0f,
+                                   (float)m_mainWindow->getWidth(),
+                                   (float)m_mainWindow->getHeight(),
+                                   0.0f);
+    m_p2DScene->render();
+#endif
 
 }
 //------------------------------------------------------------------------------
@@ -797,14 +815,14 @@ fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager)
     else
         m_textureMgr->setResourceManager(pResourceManager);
     m_pResourceMgr = pResourceManager;
-    if(m_3DScene)
-        m_3DScene->setResourceManager(m_pResourceMgr);
-    if(m_2DScene)
-        m_2DScene->setResourceManager(m_pResourceMgr);
+    if(m_p3DScene)
+        m_p3DScene->setResourceManager(m_pResourceMgr);
+    if(m_p2DScene)
+        m_p2DScene->setResourceManager(m_pResourceMgr);
     if(m_particleSystem) {
         m_particleSystem->setResourceManager(m_pResourceMgr);
         //m_particleSystem->setSceneManager(m_2DScene);
-        m_particleSystem->setSceneManager(m_3DScene); // Particle system working in 3D space
+        //m_particleSystem->setSceneManager(m_p3DScene); // Particle system working in 3D space
         m_particleSystem->initialize();
     }
     fg::base::CManager *pEventMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr)->getEventManager();
@@ -833,6 +851,122 @@ fgBool gfx::CGfxMain::preLoadShaders(void) {
         m_shaderMgr->initialize();
     fgBool status = m_shaderMgr->preLoadShaders();
     return status;
+}
+//------------------------------------------------------------------------------
+
+int gfx::CGfxMain::addLayer(CLayer* pLayer) {
+    if(!pLayer)
+        return -1;
+    int index = m_layers.find(pLayer);
+    if(index < 0) {
+        // layer not found
+        m_layers.push_back(pLayer);
+        index = (int)m_layers.size() - 1;
+        refreshLayersQueue();
+    }
+    return index;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CGfxMain::removeLayer(CLayer* pLayer) {
+    if(!pLayer)
+        return FG_FALSE;
+    int index = m_layers.find(pLayer);
+    if(index >= 0) {
+        m_layers.remove(index);
+        refreshLayersQueue();
+    }
+    return (fgBool)(index >= 0);
+}
+//------------------------------------------------------------------------------
+
+gfx::CLayer* gfx::CGfxMain::getLayer(const std::string& layerName) {
+    if(layerName.empty())
+        return NULL;
+    return getLayer(layerName.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::CLayer const* gfx::CGfxMain::getLayer(const std::string& layerName) const {
+    if(layerName.empty())
+        return NULL;
+    return getLayer(layerName.c_str());
+}
+//------------------------------------------------------------------------------
+
+gfx::CLayer* gfx::CGfxMain::getLayer(const char* name) {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
+    const unsigned int n = m_layers.size();
+    CLayer* pResult = NULL;
+    for(unsigned int i = 0; i < n; i++) {
+        CLayer* pLayer = m_layers[i];
+        if(pLayer->getLayerName().compare(name) == 0) {
+            pResult = pLayer;
+            break;
+        }
+    }
+    return pResult;
+}
+//------------------------------------------------------------------------------
+
+gfx::CLayer const* gfx::CGfxMain::getLayer(const char* name) const {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
+    const unsigned int n = m_layers.size();
+    const CLayer* pResult = NULL;
+    for(unsigned int i = 0; i < n; i++) {
+        const CLayer* pLayer = m_layers[i];
+        if(pLayer->getLayerName().compare(name) == 0) {
+            pResult = pLayer;
+            break;
+        }
+    }
+    return pResult;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CGfxMain::setLayerID(CLayer* pLayer, int layerID) {
+    int index = m_layers.find(pLayer);
+    if(index < 0)
+        return FG_FALSE;
+    pLayer->setLayerID(layerID);
+    refreshLayersQueue();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CGfxMain::setLayerID(const std::string& name, int layerID) {
+    CLayer* pLayer = getLayer(name);
+    if(pLayer) {
+        pLayer->setLayerID(layerID);
+        refreshLayersQueue();
+    }
+    return (fgBool)(pLayer != NULL);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CGfxMain::setLayerID(const char* name, int layerID) {
+    CLayer* pLayer = getLayer(name);
+    if(pLayer) {
+        pLayer->setLayerID(layerID);
+        refreshLayersQueue();
+    }
+    return (fgBool)(pLayer != NULL);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CGfxMain::refreshLayersQueue(void) {
+    m_layersQueue.clear();
+    const unsigned int n = m_layers.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_layers[i])
+            m_layersQueue.push(m_layers[i]);
+    }
 }
 //------------------------------------------------------------------------------
 

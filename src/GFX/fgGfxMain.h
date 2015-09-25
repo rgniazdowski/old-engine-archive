@@ -30,8 +30,8 @@
 namespace fg {
     namespace gfx {
         class CGfxMain;
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #define FG_TAG_GFX_MAIN_NAME	"GfxMain"
     #define FG_TAG_GFX_MAIN		FG_TAG_TYPE(fg::gfx::CGfxMain)
@@ -54,6 +54,13 @@ namespace fg {
             typedef CGfxMain type;
             ///
             typedef GfxMainTag tag_type;
+
+            typedef CVector<CLayer*> LayersVec;
+            typedef LayersVec::iterator LayersVecItor;
+
+            typedef CPriorityQueue<CLayer*, std::deque<CLayer*>, fgPtrLessEq<CLayer*> > LayerPriorityQueue;
+            typedef LayerPriorityQueue::const_iterator LayerPriorityQueueConstItor;
+            typedef LayerPriorityQueue::iterator LayerPriorityQueueItor;
 
         public:
             /**
@@ -101,7 +108,7 @@ namespace fg {
              */
             static fgBool handleMainWindowBufferSwap(void* pSystemData, void* pUserData);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -148,7 +155,7 @@ namespace fg {
              */
             void generateBuiltInData(void);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * 
@@ -161,7 +168,7 @@ namespace fg {
              */
             fgBool resumeGFX(void);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             /**
              * Now main display function creates the buffer (vertex/color/texture coords buffers)
@@ -170,16 +177,17 @@ namespace fg {
              * This will generate the list of visible objects, do frustum culling
              */
             void preRender(void);
-
             /**
              * Begins the proper render of the created buffers
              */
             void render(void);
-
+            /**
+             * 
+             * @return
+             */
             fgBool prepareFrame(void);
 
-            ////////////////////////////////////////////////////////////////////
-
+            //------------------------------------------------------------------
             /**
              * This will preload needed textures for the GFX::Loader - splash/progress
              */
@@ -195,7 +203,68 @@ namespace fg {
              */
             fgBool preLoadShaders(void);
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
+
+            /**
+             * 
+             * @param pLayer
+             * @return
+             */
+            int addLayer(CLayer* pLayer);
+            /**
+             *
+             * @param pLayer
+             * @return
+             */
+            fgBool removeLayer(CLayer* pLayer);
+            /**
+             *
+             * @param layerName
+             * @return
+             */
+            CLayer* getLayer(const std::string& layerName);
+            /**
+             *
+             * @param layerName
+             * @return
+             */
+            CLayer const* getLayer(const std::string& layerName) const;
+            /**
+             *
+             * @param name
+             * @return
+             */
+            CLayer* getLayer(const char* name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            CLayer const* getLayer(const char* name) const;
+
+            /**
+             *
+             * @param pLayer
+             * @param layerID
+             * @return
+             */
+            fgBool setLayerID(CLayer* pLayer, int layerID);
+            /**
+             *
+             * @param name
+             * @param layerID
+             * @return
+             */
+            fgBool setLayerID(const std::string& name, int layerID);
+            /**
+             *
+             * @param name
+             * @param layerID
+             * @return
+             */
+            fgBool setLayerID(const char* name, int layerID);
+
+            //------------------------------------------------------------------
             /**
              * Returns the pointer to the Texture Manager
              * @return
@@ -225,6 +294,13 @@ namespace fg {
                 return m_shaderMgr;
             }
             /**
+             * Returns the pointer to the main node factory.
+             * @param pScene
+             */
+            inline CNodeFactory* getNodeFactory(void) const {
+                return m_nodeFactory;
+            }
+            /**
              * Returns the pointer to the main GFX windows - OS specific main window
              * @return 
              */
@@ -232,27 +308,55 @@ namespace fg {
                 return m_mainWindow;
             }
             /**
+             *
+             * @param pScene
+             */
+            inline void set3DScene(CScene3D* pScene) {
+                if(m_p3DScene && m_p3DScene != pScene)
+                    unregisterSceneCallbacks();
+                m_p3DScene = pScene;
+                registerSceneCallbacks();
+                if(m_pResourceMgr)
+                    m_p3DScene->setResourceManager(m_pResourceMgr);
+                m_p3DScene->setShaderManager(m_shaderMgr);
+                m_p3DScene->setNodeFactory(m_nodeFactory);
+            }
+            /**
              * Getter for the Scene3D object
              * @return 
              */
             inline CScene3D* get3DScene(void) const {
-                return m_3DScene;
+                return m_p3DScene;
+            }
+            /**
+             * 
+             * @param pScene
+             */
+            inline void set2DScene(CScene2D* pScene) {
+                if(m_p2DScene && m_p2DScene != pScene)
+                    unregisterSceneCallbacks();
+                m_p2DScene = pScene;
+                registerSceneCallbacks();
+                if(m_pResourceMgr)
+                    m_p2DScene->setResourceManager(m_pResourceMgr);
+                m_p2DScene->setShaderManager(m_shaderMgr);
+                m_p2DScene->setNodeFactory(m_nodeFactory);
             }
             /**
              * Returns the pointer to the main 2D scene - may be NULL
              * @return 
              */
             inline CScene2D* get2DScene(void) const {
-                return m_2DScene;
+                return m_p2DScene;
             }
             /**
              * Returns the pointer to the main 3D scene camera - may be NULL
              * @return 
              */
             inline CCameraAnimation* get3DSceneCamera(void) const {
-                if(!m_3DScene)
+                if(!m_p3DScene)
                     return NULL;
-                return m_3DScene->getCamera();
+                return m_p3DScene->getCamera();
             }
             /**
              * 
@@ -275,8 +379,6 @@ namespace fg {
             inline fgBool isInit(void) const {
                 return m_init;
             }
-
-            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @param w
@@ -285,7 +387,7 @@ namespace fg {
             inline void setScreenSize(int w, int h) {
                 context::setScreenSize(w, h);
             }
-
+            //------------------------------------------------------------------
         public:
 
             /**
@@ -359,9 +461,31 @@ namespace fg {
                 Matrix4f m_mat;
                 /// Progress of the loading - from 0 to 100
                 float m_progress;
-            };
+            }; // class CLoader
+
+        protected:
+            /**
+             * 
+             * @return 
+             */
+            inline LayersVec& getLayers(void) {
+                return m_layers;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline LayersVec const& getLayers(void) const {
+                return m_layers;
+            }
+
+            void refreshLayersQueue(void);
 
         private:
+            /// All currently displayed layers
+            LayersVec m_layers;
+            /// Sorted layers queue
+            LayerPriorityQueue m_layersQueue;
             /// Loader object - displays splash screen and progress bar at the early 
             /// stages of initialization - before GUI subsystem full initialization
             CLoader* m_loader;
@@ -377,10 +501,10 @@ namespace fg {
             CNodeFactory* m_nodeFactory;
             /// Main GFX OS specific window
             CWindow* m_mainWindow;
-            /// Main 3D scene management
-            CScene3D* m_3DScene;
-            /// Main 2D scene management
-            CScene2D* m_2DScene;
+            /// Pointer to the external main 3D scene
+            CScene3D* m_p3DScene;
+            /// Pointer to the external main 2D scene
+            CScene2D* m_p2DScene;
             /// Main Particle System
             CParticleSystem* m_particleSystem;
             /// 

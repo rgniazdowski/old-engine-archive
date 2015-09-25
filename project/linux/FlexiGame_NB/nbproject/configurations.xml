@@ -52,10 +52,25 @@
         <itemPath>../../../src/Event/fgTimeoutCallback.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Game" displayName="Game" projectFiles="true">
+        <itemPath>../../../src/Game/fg2DGameWorld.cpp</itemPath>
+        <itemPath>../../../src/Game/fg2DGameWorld.h</itemPath>
+        <itemPath>../../../src/Game/fg3DGameWorld.cpp</itemPath>
+        <itemPath>../../../src/Game/fg3DGameWorld.h</itemPath>
+        <itemPath>../../../src/Game/fgGameEntity.cpp</itemPath>
+        <itemPath>../../../src/Game/fgGameEntity.h</itemPath>
+        <itemPath>../../../src/Game/fgGameEntityMesh.cpp</itemPath>
+        <itemPath>../../../src/Game/fgGameEntityMesh.h</itemPath>
+        <itemPath>../../../src/Game/fgGameEntityType.h</itemPath>
         <itemPath>../../../src/Game/fgGameMain.cpp</itemPath>
         <itemPath>../../../src/Game/fgGameMain.h</itemPath>
+        <itemPath>../../../src/Game/fgGameWorld.cpp</itemPath>
+        <itemPath>../../../src/Game/fgGameWorld.h</itemPath>
         <itemPath>../../../src/Game/fgGrid.cpp</itemPath>
         <itemPath>../../../src/Game/fgGrid.h</itemPath>
+        <itemPath>../../../src/Game/fgIntelligent.cpp</itemPath>
+        <itemPath>../../../src/Game/fgIntelligent.h</itemPath>
+        <itemPath>../../../src/Game/fgIntelligentWorld.cpp</itemPath>
+        <itemPath>../../../src/Game/fgIntelligentWorld.h</itemPath>
       </logicalFolder>
       <logicalFolder name="GFX" displayName="GFX" projectFiles="true">
         <logicalFolder name="f1" displayName="Animation" projectFiles="true">
@@ -146,10 +161,10 @@
           <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeObject.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeType.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxSpatialObject.h</itemPath>
-          <itemPath>../../../src/GFX/Scene/fgGfxTraits.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxTriggerable.cpp</itemPath>
@@ -394,6 +409,8 @@
         <itemPath>../../../src/Physics/fgBulletMaskTypes.h</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
+        <itemPath>../../../src/Physics/fgPhysical.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgPhysical.h</itemPath>
         <itemPath>../../../src/Physics/fgPhysicalWorld.cpp</itemPath>
         <itemPath>../../../src/Physics/fgPhysicalWorld.h</itemPath>
         <itemPath>../../../src/Physics/fgPhysics.h</itemPath>
@@ -527,6 +544,7 @@
       <itemPath>../../../src/fgPluginResource.cpp</itemPath>
       <itemPath>../../../src/fgSingleton.h</itemPath>
       <itemPath>../../../src/fgStatus.h</itemPath>
+      <itemPath>../../../src/fgTraits.h</itemPath>
       <itemPath>../../../src/fgTypes.h</itemPath>
       <itemPath>../../../src/fgUnistd.h</itemPath>
       <itemPath>../../../src/fgVector.h</itemPath>
@@ -1257,6 +1275,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -1268,11 +1291,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1902,13 +1920,67 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fg2DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg2DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fgGameWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -2171,9 +2243,12 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
             tool="1"
             flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysical.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysicalWorld.cpp"
             ex="false"
@@ -2496,6 +2571,8 @@
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgTraits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3204,6 +3281,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -3215,11 +3297,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3849,13 +3926,67 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fg2DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg2DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fgGameWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -4118,10 +4249,12 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysicalWorld.cpp"
             ex="false"
@@ -4444,6 +4577,8 @@
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgTraits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -5112,6 +5247,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -5123,11 +5263,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5757,13 +5892,67 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fg2DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg2DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fgGameWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -6026,6 +6215,13 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysical.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgPhysicalWorld.cpp"
             ex="false"
             tool="1"
@@ -6037,6 +6233,63 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgDataManagerBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedDataFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceConfigParser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceConfigParser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceFactory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceFactory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceGroup.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgResourceGroup.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgResourceManager.cpp"
             ex="false"
@@ -6290,6 +6543,8 @@
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgTraits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -6944,6 +7199,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -6955,11 +7215,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7589,13 +7844,67 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fg2DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg2DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fgGameWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -8186,6 +8495,8 @@
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgTraits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -8859,6 +9170,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -8870,11 +9186,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9504,13 +9815,67 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fg2DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg2DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fgGameWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -9773,6 +10138,12 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPhysical.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysicalWorld.cpp"
             ex="false"
@@ -10095,6 +10466,8 @@
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgTraits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -10760,6 +11133,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -10771,11 +11149,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGfxSpatialObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxTraits.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -11405,13 +11778,67 @@
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fg2DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg2DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fg3DGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntity.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameEntityType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGameMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Game/fgGameMain.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Game/fgGameWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgGameWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Game/fgGrid.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Game/fgGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligent.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Game/fgIntelligentWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgDeviceQuery.cpp"
             ex="false"
@@ -11674,7 +12101,12 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgPhysical.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysicalWorld.cpp"
             ex="false"
@@ -11997,6 +12429,8 @@
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgTraits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgTypes.h" ex="false" tool="3" flavor2="0">
       </item>

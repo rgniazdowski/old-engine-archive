@@ -100,7 +100,7 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     int index = 0;
     gfx::CTexture *pTexture = NULL;
     SBackground &background = style.getBackground();
-    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);    
+    gfx::CDrawCall *drawCall = requestDrawCall(index, gfx::DRAW_CALL_INTERNAL_ARRAY);
     drawCall->setComponentActive(gfx::ATTRIBUTE_POSITION_BIT | gfx::ATTRIBUTE_UVS_BIT | gfx::ATTRIBUTE_COLOR_BIT, FG_TRUE);
     if(!background.texture.empty()) {
         // Get or request ?
