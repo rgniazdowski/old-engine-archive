@@ -2121,10 +2121,11 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
 
             .ObjectDirect("isCollidable", (gfx::CSceneNode *)0, &gfx::CSceneNode::isCollidable)
             .ObjectDirect("setCollidable", (gfx::CSceneNode *)0, &gfx::CSceneNode::setCollidable)
-
+#if 0
             .ObjectDirect("activateCollisionBody", (gfx::CSceneNode *)0, &gfx::CSceneNode::setCollisionBodyType)
             .ObjectDirect("removeCollisionBody", (gfx::CSceneNode *)0, &gfx::CSceneNode::removeCollisionBody)
             .ObjectDirect("setCollisionBodyType", (gfx::CSceneNode *)0, &gfx::CSceneNode::setCollisionBodyType)
+#endif
             ;
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
 

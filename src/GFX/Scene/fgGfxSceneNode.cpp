@@ -25,7 +25,7 @@ m_nodeTypeMask(nodeType),
 m_nodeTraits(traits::ANIMATED | traits::SPATIAL),
 m_children(), // Children set
 m_stateFlags(StateFlags::NO_FLAGS),
-m_collisionBody(NULL),
+//m_collisionBody(NULL),
 m_pParent(pParent), // Pointer to the parent node
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
@@ -47,9 +47,12 @@ gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
         this->m_nodeType = orig.m_nodeType;
         this->m_pTreeNode = NULL;
         this->m_pParent = NULL;
+#if 0
         if(orig.getCollisionBody()) {
             this->m_collisionBody = new physics::CCollisionBody(*orig.m_collisionBody);
         }
+
+#endif
         //this->m_children; // ?? ?? 
         this->m_stateFlags = orig.m_stateFlags;
         this->m_scale = orig.m_scale;
@@ -82,10 +85,11 @@ gfx::CSceneNode::~CSceneNode() {
     m_pManager = NULL;
     m_children.clear();
     m_aabb.invalidate();
+    /*
     if(m_collisionBody) {
         delete m_collisionBody;
         m_collisionBody = NULL;
-    }
+    }*/
 }
 //------------------------------------------------------------------------------
 
@@ -183,95 +187,97 @@ void gfx::CSceneNode::setVisible(const fgBool toggle, const fgBool recursive) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setPosition(const Vec3f& position) {
-    if(m_collisionBody) {
+    /*if(m_collisionBody) {
         m_collisionBody->setPosition(position);
         //m_collisionBody->calculateDerivedData(); // #FIXME
-    } else {
-        m_modelMat[3].x = position.x;
-        m_modelMat[3].y = position.y;
-        m_modelMat[3].z = position.z;
-    }
+    } else {*/
+    m_modelMat[3].x = position.x;
+    m_modelMat[3].y = position.y;
+    m_modelMat[3].z = position.z;
+    //}
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setPosition(float x, float y, float z) {
-    if(m_collisionBody) {
+    /*if(m_collisionBody) {
         m_collisionBody->setPosition(x, y, z);
         //m_collisionBody->calculateDerivedData(); // #FIXME
-    } else {
-        m_modelMat[3].x = x;
-        m_modelMat[3].y = y;
-        m_modelMat[3].z = z;
-    }
+    } else {*/
+    m_modelMat[3].x = x;
+    m_modelMat[3].y = y;
+    m_modelMat[3].z = z;
+    //}
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRotation(const Vector3f& rotation) {
-    if(m_collisionBody) {
+    /*if(m_collisionBody) {
         m_collisionBody->setRotation(rotation);
-    }
-}
+    }*/ }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRotation(float x, float y, float z) {
-    if(m_collisionBody) {
+    /*if(m_collisionBody) {
         m_collisionBody->setRotation(x, y, z);
-    }
-}
+    }*/ }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
 
-    if(m_collisionBody) {
+    /*if(m_collisionBody) {
         m_collisionBody->setHalfSize(halfSize);
-    } else {
-        // Update this when there is no physics collision body
-        m_aabb.min = -halfSize;
-        m_aabb.max = halfSize;
-        m_aabb.refresh();
-        m_aabb.radius = math::length(halfSize);
-        m_aabb.transform(m_modelMat);
-    }
+    } else {*/
+    // Update this when there is no physics collision body
+    m_aabb.min = -halfSize;
+    m_aabb.max = halfSize;
+    m_aabb.refresh();
+    m_aabb.radius = math::length(halfSize);
+    m_aabb.transform(m_modelMat);
+    //}
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRadius(float radius) {
     if(radius < 0.0f)
         radius *= -1.0f;
-    if(m_collisionBody) {
-        m_collisionBody->setRadius(radius);
-    } else {
-        // This will be set where there is no collision body
-        // It is not necessary with the collision body (physics)
-        // because the nodes internal AABB will be updated in update(*) function
-        //float a = (2.0f* radius) / M_SQRT2;
-        float a = math::sqrt(radius * radius / 3.0f);
-        m_aabb.min = -Vector3f(a, a, a);
-        m_aabb.max = Vector3f(a, a, a);
-        m_aabb.radius = radius;
-        m_aabb.refresh();
-        m_aabb.transform(m_modelMat);
-    }
+    /*
+        if(m_collisionBody) {
+            m_collisionBody->setRadius(radius);
+        } else {
+     */
+    // This will be set where there is no collision body
+    // It is not necessary with the collision body (physics)
+    // because the nodes internal AABB will be updated in update(*) function
+    //float a = (2.0f* radius) / M_SQRT2;
+    float a = math::sqrt(radius * radius / 3.0f);
+    m_aabb.min = -Vector3f(a, a, a);
+    m_aabb.max = Vector3f(a, a, a);
+    m_aabb.radius = radius;
+    m_aabb.refresh();
+    m_aabb.transform(m_modelMat);
+    //} #FIXME
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setScale(const Vector3f& scale) {
-    if(!m_collisionBody) {
-        const Vector4f translation = m_modelMat[3];
-        m_modelMat = math::scale(m_modelMat, scale / m_scale);
-        m_scale = scale;
-        m_modelMat[3].x = translation.x;
-        m_modelMat[3].y = translation.y;
-        m_modelMat[3].z = translation.z;
-        m_modelMat[3].w = translation.w;
+    //if(!m_collisionBody) {
+    const Vector4f translation = m_modelMat[3];
+    m_modelMat = math::scale(m_modelMat, scale / m_scale);
+    m_scale = scale;
+    m_modelMat[3].x = translation.x;
+    m_modelMat[3].y = translation.y;
+    m_modelMat[3].z = translation.z;
+    m_modelMat[3].w = translation.w;
+#if 0
+} else if(!isAutoScale()) {
+    //Vector3f halfSize = m_collisionBody->getHalfSize();
+    //halfSize *= scale / m_scale;
+    //this->setHalfSize(halfSize);
+    //m_collisionBody->setHalfSize(halfSize);
+    m_scale = scale;
+}
+#endif
 
-    } else if(!isAutoScale()) {
-        //Vector3f halfSize = m_collisionBody->getHalfSize();
-        //halfSize *= scale / m_scale;
-        //this->setHalfSize(halfSize);
-        //m_collisionBody->setHalfSize(halfSize);
-        m_scale = scale;
-    }
 }
 //------------------------------------------------------------------------------
 
@@ -310,6 +316,7 @@ void gfx::CSceneNode::updateAABB(void) {
     //
     // sphere radius should be taken from aabb of the model/mesh/collision box
     //
+#if 0
     if(m_collisionBody) {
         if(m_collisionBody->getBodyType() == physics::CCollisionBody::BOX) {
             Vector3f &extent = m_collisionBody->getCollisionBox()->halfSize;
@@ -337,6 +344,7 @@ void gfx::CSceneNode::updateAABB(void) {
         // #FUBAR - no reset performed
         // m_aabb.transform(m_modelMat);
     }
+#endif
 }
 //------------------------------------------------------------------------------
 
@@ -347,13 +355,13 @@ void gfx::CSceneNode::update(float delta) {
     // The collision body is present
     // Need to update the scene node model matrix based on the one
     // from the physics subsystem (CollisionBody/RigidBody)
-    if(m_collisionBody) {
-        // This will also call calculateInternals() for the underlying
-        // collision primitive (box/sphere/custom/...)
-        m_collisionBody->integrate(delta);
-        m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
+    //if(m_collisionBody) {
+    // This will also call calculateInternals() for the underlying
+    // collision primitive (box/sphere/custom/...)
+    //    m_collisionBody->integrate(delta);
+    //    m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
 
-    }
+    //}
     if(getParent()) {
         m_finalModelMat = m_modelMat * getParent()->getFinalModelMatrix();
     } else {
@@ -368,6 +376,7 @@ void gfx::CSceneNode::update(float delta) {
 
 }
 //------------------------------------------------------------------------------
+#if 0
 
 void gfx::CSceneNode::activateCollisionBody(const physics::CCollisionBody::BodyType bodyType) {
     setCollisionBodyType(bodyType);
@@ -403,6 +412,7 @@ void gfx::CSceneNode::setCollisionBodyType(const physics::CCollisionBody::BodyTy
     }
 }
 //------------------------------------------------------------------------------
+#endif
 
 fgBool gfx::CSceneNode::addChild(CSceneNode* pChild) {
     if(!pChild)

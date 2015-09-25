@@ -17,7 +17,7 @@
 #include "GFX/Textures/fgTextureResource.h"
 
 #include "Resource/fgResourceManager.h"
-#include "Physics/fgWorld.h"
+//#include "Physics/fgWorld.h"
 #include "Util/fgMemory.h"
 
 #include "fgDebugConfig.h"
@@ -29,14 +29,14 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CScene3D::CScene3D() :
-CSceneManager(),
-m_physicsWorld(NULL),
+base_type(),
+//m_physicsWorld(NULL),
 m_octree(NULL),
 m_octNodes() {
     getMVP()->setPerspective(45.0f, 4.0f / 3.0f);
     m_octree = new CLooseOctree();
     m_basetree = (CBasetree *)m_octree;
-    m_physicsWorld = new physics::CWorld(256);
+    //m_physicsWorld = new physics::CWorld(256);
     m_octNodes.reserve(64);
     setWorldSize(COctree::DEFAULT_WORLD_SIZE, COctree::DEFAULT_WORLD_SIZE, COctree::DEFAULT_WORLD_SIZE);
 }
@@ -49,10 +49,12 @@ gfx::CScene3D::~CScene3D() {
     m_octree = NULL;
     m_octNodes.clear();
     m_basetree = NULL;
+    /*
     if(m_physicsWorld) {
         delete m_physicsWorld;
     }
     m_physicsWorld = NULL;
+     */
 }
 //------------------------------------------------------------------------------
 
@@ -65,9 +67,10 @@ void gfx::CScene3D::sortCalls(void) {
         return;
     }
     batch_type::sortCalls();
+    /*
     if(m_physicsWorld) {
         m_physicsWorld->startFrame();
-    }
+    }*/
     // Update the MVP based on the main camera properties
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum const& frustum = getMVP()->getFrustum();
@@ -192,9 +195,12 @@ void gfx::CScene3D::sortCalls(void) {
             }
         } // for every object in tree node
     } // traverse octree
+
+    /*
     if(m_physicsWorld) {
         m_physicsWorld->finishFrame();
     }
+     */
     m_pickSelection.end(getStateFlags());
 }
 //------------------------------------------------------------------------------
@@ -244,6 +250,7 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
     if(!sceneNode)
         return;
 
+    /*
     if(m_physicsWorld) {
         if(m_physicsWorld->hasMoreContacts() && m_physicsWorld->isGroundPlane()) {
             // Create the ground plane data
@@ -255,7 +262,7 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
             }
         }
     }
-
+     */
     m_octree->rewind();
     while(m_octree->next()) {
         SOctreeNode *treeNode = static_cast<SOctreeNode *>(m_octree->current());
@@ -339,20 +346,21 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                 m_collisionsInfo.remove(childNode, sceneNode);
                 FG_LOG_DEBUG("*REMOVING*  Collision ENDED between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
             }
-
-            if(isCollision && m_physicsWorld->hasMoreContacts()) {
-                //FG_LOG_DEBUG("*YES*  Collision occurred between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
-                {
-                    // #FIXME - physics fine collision detect / update
-                    physics::CCollisionBody *b1 = sceneNode->getCollisionBody();
-                    physics::CCollisionBody *b2 = childNode->getCollisionBody();
-                    if(b1 && b2) {
-                        // now can check fine collisions
-                        const fgBool isFineCollision = b1->checkCollision(b2, &m_physicsWorld->getCollisionData());
-                        // ? Now hwat? Another event? For fine collision detection?
-                    }
-                }
-            }
+            /*
+                        if(isCollision && m_physicsWorld->hasMoreContacts()) {
+                            //FG_LOG_DEBUG("*YES*  Collision occurred between: '%s'--'%s'", sceneNode->getNameStr(), childNode->getNameStr());
+                            {
+                                // #FIXME - physics fine collision detect / update
+                                physics::CCollisionBody *b1 = sceneNode->getCollisionBody();
+                                physics::CCollisionBody *b2 = childNode->getCollisionBody();
+                                if(b1 && b2) {
+                                    // now can check fine collisions
+                                    const fgBool isFineCollision = b1->checkCollision(b2, &m_physicsWorld->getCollisionData());
+                                    // ? Now hwat? Another event? For fine collision detection?
+                                }
+                            }
+                        }
+             */
         }
     }
 } // gfx::CScene3D::checkCollisions()

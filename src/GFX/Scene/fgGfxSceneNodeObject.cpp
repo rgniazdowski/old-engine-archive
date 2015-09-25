@@ -112,7 +112,7 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNodeObject::updateAABB(void) {
-
+#if 0
     physics::CCollisionBody *body = getCollisionBody();
     if(body) {
         if(m_pModel && !isAutoScale()) {
@@ -128,6 +128,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
         // it will do the required transformations (based on the physics)
         base_type::updateAABB();
     }
+#endif 
     if(m_pModel) {
         if(!m_pModel->isAnimated()) {
             m_aabb.min = m_pModel->getAABB().min;
@@ -149,11 +150,11 @@ void gfx::CSceneNodeObject::updateAABB(void) {
                 m_aabb.merge(pNodeMesh->getBoundingVolume());
             }
         }
-        if(body && !isAutoScale()) {
-            m_aabb.radius = body->getRadius();
-        } else {
-            m_aabb.radius = math::length(m_aabb.getExtent());
-        }
+        //if(body && !isAutoScale()) {
+        //    m_aabb.radius = body->getRadius();
+        //} else {
+        m_aabb.radius = math::length(m_aabb.getExtent());
+        //}
     }
 }
 //------------------------------------------------------------------------------

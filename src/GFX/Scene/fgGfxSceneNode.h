@@ -174,7 +174,7 @@ namespace fg {
             StateFlags m_stateFlags;
             /// Collision body used for physics, it can be BOX, SPHERE or more
             /// complex convex volume
-            physics::CCollisionBody* m_collisionBody;
+            //physics::CCollisionBody* m_collisionBody;
             /// Scene node father/parent node pointer
             self_type* m_pParent;
 
@@ -280,8 +280,8 @@ namespace fg {
              * @param velocity
              */
             inline void setVelocity(const Vector3f& velocity) {
-                if(m_collisionBody)
-                    m_collisionBody->setVelocity(velocity);
+                //if(m_collisionBody)
+                //  m_collisionBody->setVelocity(velocity);
             }
             /**
              * 
@@ -290,16 +290,16 @@ namespace fg {
              * @param z
              */
             inline void setVelocity(float x, float y, float z) {
-                if(m_collisionBody)
-                    m_collisionBody->setVelocity(x, y, z);
+                //    if(m_collisionBody)
+                //      m_collisionBody->setVelocity(x, y, z);
             }
             /**
              * 
              * @return 
              */
             inline Vector3f getVelocity(void) const {
-                if(m_collisionBody)
-                    return m_collisionBody->getVelocity();
+                //if(m_collisionBody)
+                //  return m_collisionBody->getVelocity();
                 return Vector3f();
             }
             /**
@@ -307,8 +307,8 @@ namespace fg {
              * @param acceleration
              */
             inline void setAcceleration(const Vector3f& acceleration) {
-                if(m_collisionBody)
-                    m_collisionBody->setAcceleration(acceleration);
+                //                if(m_collisionBody)
+                //                  m_collisionBody->setAcceleration(acceleration);
             }
             /**
              * 
@@ -317,16 +317,16 @@ namespace fg {
              * @param z
              */
             inline void setAcceleration(float x, float y, float z) {
-                if(m_collisionBody)
-                    m_collisionBody->setAcceleration(x, y, z);
+                //            if(m_collisionBody)
+                //              m_collisionBody->setAcceleration(x, y, z);
             }
             /**
              * 
              * @return 
              */
             inline Vector3f getAcceleration(void) const {
-                if(m_collisionBody)
-                    return m_collisionBody->getAcceleration();
+                //        if(m_collisionBody)
+                //          return m_collisionBody->getAcceleration();
                 return Vector3f();
             }
             /**
@@ -379,9 +379,9 @@ namespace fg {
              * @return 
              */
             inline Vector3f getRotation(void) const {
-                if(m_collisionBody) {
-                    return m_collisionBody->getRotation();
-                }
+                //if(m_collisionBody) {
+                //    return m_collisionBody->getRotation();
+                // }
                 return Vector3f();
             }
             /**
@@ -429,13 +429,13 @@ namespace fg {
             inline virtual void rotate(float angle, const Vec3f& axis) {
                 // should scale?
                 Vec3f oldScale;
-                if(!m_collisionBody) {
-                    oldScale = m_scale;
-                    this->setScale(1.0f, 1.0f, 1.0f);
-                }
+                //if(!m_collisionBody) {
+                oldScale = m_scale;
+                this->setScale(1.0f, 1.0f, 1.0f);
+                //}
                 m_modelMat = math::rotate(m_modelMat, angle, axis);
-                if(!m_collisionBody)
-                    this->setScale(oldScale);
+                //if(!m_collisionBody)
+                this->setScale(oldScale);
             }
             /**
              * 
@@ -446,13 +446,13 @@ namespace fg {
              */
             inline virtual void rotate(float angle, float x, float y, float z) {
                 Vec3f oldScale;
-                if(!m_collisionBody) {
-                    oldScale = m_scale;
-                    this->setScale(1.0f, 1.0f, 1.0f);
-                }
+                //if(!m_collisionBody) {
+                oldScale = m_scale;
+                this->setScale(1.0f, 1.0f, 1.0f);
+                //}
                 m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));
-                if(!m_collisionBody)
-                    this->setScale(oldScale);
+                //if(!m_collisionBody)
+                this->setScale(oldScale);
             }
 
             /**
@@ -475,11 +475,11 @@ namespace fg {
              * @param mass
              */
             inline void setHalfSizeAndMass(const Vector3f& halfSize, float mass) {
-                if(m_collisionBody) {
-                    m_collisionBody->setHalfSizeAndMass(halfSize, mass);
-                } else {
+                //if(m_collisionBody) {
+                 //   m_collisionBody->setHalfSizeAndMass(halfSize, mass);
+                //} else {
                     setHalfSize(halfSize);
-                }
+                //}
             }
             /**
              * 
@@ -489,11 +489,11 @@ namespace fg {
              * @param mass
              */
             inline void setHalfSizeAndMass(float x, float y, float z, float mass) {
-                if(m_collisionBody) {
-                    m_collisionBody->setHalfSizeAndMass(Vector3f(x, y, z), mass);
-                } else {
+                //if(m_collisionBody) {
+                //    m_collisionBody->setHalfSizeAndMass(Vector3f(x, y, z), mass);
+                //} else {
                     setHalfSize(Vector3f(x, y, z));
-                }
+                //}
             }
 
             /**
@@ -506,21 +506,22 @@ namespace fg {
              * @return 
              */
             inline float getMass(void) const {
-                if(m_collisionBody)
-                    return m_collisionBody->getMass();
+                //if(m_collisionBody)
+                //    return m_collisionBody->getMass();
                 return 0.0f;
             }
             /**
              * 
              */
             inline void setMass(float mass) const {
-                if(m_collisionBody)
-                    m_collisionBody->setMass(mass);
+                //if(m_collisionBody)
+                //    m_collisionBody->setMass(mass);
             }
 
             ////////////////////////////////////////////////////////////////////
 
         public:
+    #if 0
             /**
              *
              */
@@ -541,6 +542,8 @@ namespace fg {
             physics::CCollisionBody* getCollisionBody(void) const {
                 return m_collisionBody;
             }
+
+    #endif
 
             ////////////////////////////////////////////////////////////////////
 

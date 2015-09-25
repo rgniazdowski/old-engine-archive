@@ -337,6 +337,15 @@
         #endif
     #endif
 
+// No profiling in Bullet physics engine
+    #if defined(FG_USING_BULLET)
+        // if btScalar was 'double' instead of 'float' there would be a problem
+        // with data copying from btTransform to fg::Matrix4f
+        #undef BT_USE_DOUBLE_PRECISION // just floats for now...
+        #undef BT_NO_PROFILE
+        #define BT_NO_PROFILE 1
+    #endif
+
 /************************************* AUDIO / SOUND FIX ******************************/
 
     #if defined(FG_USING_SDL2)

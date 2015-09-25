@@ -25,6 +25,8 @@ namespace fg {
         public:
             ///
             typedef CSceneManager base_type;
+            typedef CScene2D self_type;
+            typedef CScene2D type;
 
         private:
 
@@ -44,9 +46,10 @@ namespace fg {
             //    virtual void sortCalls(void);
             //    virtual void render(void);
 
-        };
-    };
-};
+        }; // class CScene2D
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_2D_SCENE_BLOCK
 #endif /* FG_INC_GFX_2D_SCENE */

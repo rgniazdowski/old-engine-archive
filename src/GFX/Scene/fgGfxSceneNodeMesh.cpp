@@ -165,7 +165,7 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNodeMesh::updateAABB(void) {
-
+#if 0
     physics::CCollisionBody *body = getCollisionBody();
     if(body) {
         if(m_pMesh && !isAutoScale()) {
@@ -181,6 +181,7 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
         // it will do the required transformations (based on the physics)
         base_type::updateAABB();
     }
+#endif
     if(m_pMesh) {
         if(!m_pMesh->isSkinnedMesh()) {
             m_aabb.min = m_pMesh->aabb.min;
@@ -220,11 +221,11 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
             }
             m_aabb.transform(m_finalModelMat);
         }
-        if(body && !isAutoScale()) {
-            m_aabb.radius = body->getRadius();
-        } else {
-            m_aabb.radius = math::length(m_aabb.getExtent());
-        }
+        //if(body && !isAutoScale()) {
+        //    m_aabb.radius = body->getRadius();
+        //} else {
+        m_aabb.radius = math::length(m_aabb.getExtent());
+        //}
     }
 }
 //------------------------------------------------------------------------------
