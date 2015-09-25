@@ -7,10 +7,10 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/* 
+/*
  * File:   fgGameEntity.cpp
  * Author: vigilant
- * 
+ *
  * Created on September 23, 2015, 8:04 PM
  */
 
@@ -33,4 +33,18 @@ game::CEntity::CEntity(const CEntity& orig) { }
 //------------------------------------------------------------------------------
 
 game::CEntity::~CEntity() { }
+//------------------------------------------------------------------------------
+
+fgBool game::CEntity::queryTrait(const fg::traits::SceneNode trait, void **pObj) {
+    fgBool status = hasTraits(trait);
+    status = (fgBool)(status && (pObj != NULL));
+    if(status) {
+        if(trait & intelligent_type::SELF_TRAIT) {
+            *pObj = static_cast<intelligent_type*>(this);
+        }
+    } else {
+        status = base_type::queryTrait(trait, pObj);
+    }
+    return status;
+}
 //------------------------------------------------------------------------------

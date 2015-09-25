@@ -51,9 +51,30 @@ namespace fg {
             static const gfx::SceneNodeType SELF_NODE_TYPE = GAME_ENTITY;
 
         public:
+            /**
+             *
+             * @param pModel
+             * @param pParent
+             */
             CEntity(gfx::CModelResource* pModel = NULL, gfx::CSceneNode* pParent = NULL);
+            /**
+             *
+             * @param orig
+             */
             CEntity(const self_type& orig);
+            /**
+             * 
+             */
             virtual ~CEntity();
+
+        public:
+            /**
+             * 
+             * @param trait
+             * @param pObj
+             * @return
+             */
+            virtual fgBool queryTrait(const fg::traits::SceneNode trait, void **pObj);
 
         private:
 

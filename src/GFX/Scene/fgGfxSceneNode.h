@@ -770,6 +770,14 @@ namespace fg {
             inline fgBool checkNodeType(SceneNodeType trait) const {
                 return (fgBool)!!(m_nodeTypeMask & trait);
             }
+            /**
+             * 
+             * @param trait
+             * @return
+             */
+            inline fgBool doesExtend(SceneNodeType trait) const {
+                return (fgBool)!!(m_nodeTypeMask & trait);
+            }
 
             //------------------------------------------------------------------
             /**

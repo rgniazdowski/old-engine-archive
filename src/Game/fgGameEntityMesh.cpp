@@ -30,9 +30,22 @@ physical_type() {
 
 game::CEntityMesh::CEntityMesh(const CEntityMesh& orig) :
 base_type(orig),
-physical_type(orig) {
- }
+physical_type(orig) { }
 //------------------------------------------------------------------------------
 
 game::CEntityMesh::~CEntityMesh() { }
+//------------------------------------------------------------------------------
+
+fgBool game::CEntityMesh::queryTrait(const fg::traits::SceneNode trait, void **pObj) {
+    fgBool status = hasTraits(trait);
+    status = (fgBool)(status && (pObj != NULL));
+    if(status) {
+        if(trait & physical_type::SELF_TRAIT) {
+            *pObj = static_cast<physical_type*>(this);
+        }
+    } else {
+        status = base_type::queryTrait(trait, pObj);
+    }
+    return status;
+}
 //------------------------------------------------------------------------------

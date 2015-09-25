@@ -52,12 +52,28 @@ namespace fg {
             static const gfx::SceneNodeType SELF_NODE_TYPE = GAME_ENTITY_MESH;
 
         public:
+            /**
+             *
+             * @param pMesh
+             * @param pParent
+             */
             CEntityMesh(gfx::SMeshBase* pMesh = NULL, gfx::CSceneNode* pParent = NULL);
+            /**
+             *
+             * @param orig
+             */
             CEntityMesh(const self_type& orig);
+            /**
+             * 
+             */
             virtual ~CEntityMesh();
+
+        public:
+            virtual fgBool queryTrait(const fg::traits::SceneNode trait, void **pObj);
+
         private:
 
-        };
+        }; // class CEntityMesh
 
     } // namespace game
 } // namespace fg
