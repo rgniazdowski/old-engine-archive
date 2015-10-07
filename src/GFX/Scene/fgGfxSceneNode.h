@@ -258,70 +258,16 @@ namespace fg {
         public:
             /**
              * 
-             * @param velocity
-             */
-            inline void setVelocity(const Vector3f& velocity) {
-                //if(m_collisionBody)
-                //  m_collisionBody->setVelocity(velocity);
-            }
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            inline void setVelocity(float x, float y, float z) {
-                //    if(m_collisionBody)
-                //      m_collisionBody->setVelocity(x, y, z);
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline Vector3f getVelocity(void) const {
-                //if(m_collisionBody)
-                //  return m_collisionBody->getVelocity();
-                return Vector3f();
-            }
-            /**
-             * 
-             * @param acceleration
-             */
-            inline void setAcceleration(const Vector3f& acceleration) {
-                //                if(m_collisionBody)
-                //                  m_collisionBody->setAcceleration(acceleration);
-            }
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            inline void setAcceleration(float x, float y, float z) {
-                //            if(m_collisionBody)
-                //              m_collisionBody->setAcceleration(x, y, z);
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline Vector3f getAcceleration(void) const {
-                //        if(m_collisionBody)
-                //          return m_collisionBody->getAcceleration();
-                return Vector3f();
-            }
-            /**
-             * 
              * @param position
              */
-            virtual void setPosition(const Vec3f& position);
+            void setPosition(const Vec3f& position);
             /**
              * 
              * @param x
              * @param y
              * @param z
              */
-            virtual void setPosition(float x, float y, float z);
+            void setPosition(float x, float y, float z);
             /**
              * 
              * @return 
@@ -345,32 +291,9 @@ namespace fg {
             }
             /**
              * 
-             * @param rotation
-             */
-            virtual void setRotation(const Vector3f& rotation);
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            virtual void setRotation(float x, float y, float z);
-            /**
-             * 
-             * @return 
-             */
-            inline Vector3f getRotation(void) const {
-                //if(m_collisionBody) {
-                //    return m_collisionBody->getRotation();
-                // }
-                return Vector3f();
-            }
-            /**
-             * 
              * @param translation
              */
-            inline virtual void translate(const Vec3f& translation) {
-                //m_modelMat = math::translate(m_modelMat, translation);
+            inline void translate(const Vec3f& translation) {
                 m_modelMat[3].x += translation.x;
                 m_modelMat[3].y += translation.y;
                 m_modelMat[3].z += translation.z;
@@ -381,7 +304,7 @@ namespace fg {
              * @param y
              * @param z
              */
-            inline virtual void translate(float x, float y, float z) {
+            inline void translate(float x, float y, float z) {
                 m_modelMat[3].x += x;
                 m_modelMat[3].y += y;
                 m_modelMat[3].z += z;
@@ -390,7 +313,7 @@ namespace fg {
              * 
              * @param translateion
              */
-            inline virtual void translateMatrix(const Vec3f& translation) {
+            inline void translateMatrix(const Vec3f& translation) {
                 m_modelMat = math::translate(m_modelMat, translation);
             }
             /**
@@ -399,7 +322,7 @@ namespace fg {
              * @param y
              * @param z
              */
-            inline virtual void translateMatrix(float x, float y, float z) {
+            inline void translateMatrix(float x, float y, float z) {
                 m_modelMat = math::translate(m_modelMat, Vec3f(x, y, z));
             }
             /**
@@ -407,7 +330,7 @@ namespace fg {
              * @param angle
              * @param axis
              */
-            inline virtual void rotate(float angle, const Vec3f& axis) {
+            inline void rotate(float angle, const Vec3f& axis) {
                 // should scale?
                 Vec3f oldScale;
                 //if(!m_collisionBody) {
@@ -425,7 +348,7 @@ namespace fg {
              * @param y
              * @param z
              */
-            inline virtual void rotate(float angle, float x, float y, float z) {
+            inline void rotate(float angle, float x, float y, float z) {
                 Vec3f oldScale;
                 //if(!m_collisionBody) {
                 oldScale = m_scale;
@@ -482,50 +405,6 @@ namespace fg {
              * @param radius
              */
             void setRadius(float radius);
-            /**
-             * 
-             * @return 
-             */
-            inline float getMass(void) const {
-                //if(m_collisionBody)
-                //    return m_collisionBody->getMass();
-                return 0.0f;
-            }
-            /**
-             * 
-             */
-            inline void setMass(float mass) const {
-                //if(m_collisionBody)
-                //    m_collisionBody->setMass(mass);
-            }
-
-            ////////////////////////////////////////////////////////////////////
-
-        public:
-    #if 0
-            /**
-             *
-             */
-            void activateCollisionBody(const physics::CCollisionBody::BodyType bodyType);
-            /**
-             * 
-             */
-            void removeCollisionBody(void);
-            /**
-             * 
-             * @param bodyType
-             */
-            virtual void setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType);
-            /**
-             * 
-             * @return 
-             */
-            physics::CCollisionBody* getCollisionBody(void) const {
-                return m_collisionBody;
-            }
-
-    #endif
-
             ////////////////////////////////////////////////////////////////////
 
         protected:
@@ -569,14 +448,14 @@ namespace fg {
              * 
              * @param scale
              */
-            virtual void setScale(const Vector3f& scale);
+            void setScale(const Vector3f& scale);
             /**
              * 
              * @param x
              * @param y
              * @param z
              */
-            inline virtual void setScale(float x, float y, float z) {
+            inline void setScale(float x, float y, float z) {
                 setScale(Vector3f(x, y, z));
             }
 
@@ -615,13 +494,13 @@ namespace fg {
              * @param childName
              * @return 
              */
-            self_type *removeChild(const std::string& childName);
+            self_type* removeChild(const std::string& childName);
             /**
              * 
              * @param childName
              * @return 
              */
-            self_type *removeChild(const char *childName);
+            self_type* removeChild(const char *childName);
 
             /**
              * 

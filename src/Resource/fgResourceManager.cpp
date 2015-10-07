@@ -516,6 +516,8 @@ resource::CResource* resource::CResourceManager::get(const std::string& nameTag)
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::get(const char *nameTag) {
+    if(!nameTag)
+        return NULL;
     return get(std::string(nameTag));
 }
 //------------------------------------------------------------------------------
@@ -526,6 +528,8 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
 //------------------------------------------------------------------------------
 
 resource::CResource* resource::CResourceManager::request(const char *info) {
+    if(!info)
+        return NULL;
     return request(std::string(info), AUTO);
 }
 //------------------------------------------------------------------------------

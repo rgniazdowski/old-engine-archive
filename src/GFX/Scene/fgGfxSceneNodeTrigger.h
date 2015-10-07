@@ -71,41 +71,6 @@ namespace fg {
 
             //------------------------------------------------------------------
 
-            /**
-             * 
-             * @param position
-             */
-            virtual void setPosition(const Vec3f& position);
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            virtual void setPosition(float x, float y, float z);
-            /**
-             * 
-             * @param translation
-             */
-            virtual void translate(const Vec3f& translation);
-
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            virtual void translate(float x, float y, float z);
-
-            using base_type::setScale;
-
-            /**
-             * 
-             * @param scale
-             */
-            virtual void setScale(const Vector3f& scale);
-
-            //------------------------------------------------------------------
         }; // class CSceneNodeTrigger
 
     } // namespace gfx

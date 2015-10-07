@@ -44,8 +44,11 @@ fgBool game::CEntity::queryTrait(const fg::traits::SceneNode trait, void **pObj)
     if(status) {
         if(trait & intelligent_type::SELF_TRAIT) {
             *pObj = static_cast<intelligent_type*>(this);
+        } else {
+            status = FG_FALSE;
         }
-    } else {
+    }
+    if(!status) {
         status = base_type::queryTrait(trait, pObj);
     }
     return status;

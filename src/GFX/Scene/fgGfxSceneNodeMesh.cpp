@@ -115,8 +115,11 @@ fgBool gfx::CSceneNodeMesh::queryTrait(const fg::traits::SceneNode trait, void *
     if(status) {
         if(trait & drawable_type::SELF_TRAIT) {
             *pObj = static_cast<drawable_type*>(this);
+        } else {
+            status = FG_FALSE;
         }
-    } else {
+    }
+    if(!status) {
         status = base_type::queryTrait(trait, pObj);
     }
     return status;

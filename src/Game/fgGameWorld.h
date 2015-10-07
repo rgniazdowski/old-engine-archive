@@ -71,6 +71,10 @@ namespace fg {
         protected:            
             gfx::CSceneManager* getSceneManager(void) const;
 
+            void registerCallbacks(void);
+            void unregisterCallbacks(void);
+
+            fgBool sceneNodeInsertedHandler(event::CArgumentList* argv);
 
         private:
             ///

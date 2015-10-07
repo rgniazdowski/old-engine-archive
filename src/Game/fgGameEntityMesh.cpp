@@ -28,7 +28,8 @@ physical_type() {
 
     // automatically update collision body
     physical_type::setupCollisionBody(physics::CCollisionBody::BOX);
-    //physical_type::getCollisionBody()->setHalfSize()
+    if(pMesh)
+        physical_type::getCollisionBody()->setHalfSize(pMesh->aabb.getExtent());
 }
 //------------------------------------------------------------------------------
 
@@ -46,8 +47,11 @@ fgBool game::CEntityMesh::queryTrait(const fg::traits::SceneNode trait, void **p
     if(status) {
         if(trait & physical_type::SELF_TRAIT) {
             *pObj = static_cast<physical_type*>(this);
+        } else {
+            status = FG_FALSE;
         }
-    } else {
+    }
+    if(!status) {
         status = base_type::queryTrait(trait, pObj);
     }
     return status;
