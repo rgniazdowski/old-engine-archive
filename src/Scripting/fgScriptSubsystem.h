@@ -23,6 +23,7 @@
     #include "fgBuildConfig.h"
     #include "fgManagerBase.h"
     #include "Util/fgMemory.h"
+    #include "Util/fgBTreeMap.h"
     #include "Util/fgTag.h"
 
     #define FG_MANAGER_SCRIPT       0x00004000
@@ -43,16 +44,14 @@ struct lua_State {
 };
     #endif
 
-    #include <map>
-
     #include "Resource/fgManagedObject.h"
     #include "Event/fgCallback.h"
 
 namespace fg {
     namespace script {
         class CScriptSubsystem;
-    };
-};
+    } // namespace script
+} // namespace fg
 
     #define FG_TAG_SCRIPT_MANAGER_NAME  "ScriptSubsystem"
     #define FG_TAG_SCRIPT_SUBSYSTEM_NAME FG_TAG_SCRIPT_MANAGER_NAME
@@ -85,7 +84,7 @@ namespace fg {
 
         private:
 
-            struct userDataObject {
+            struct SUserDataObject {
     #if defined(FG_USING_LUA_PLUS)
                 ///
                 LuaPlus::LuaObject obj;
@@ -94,13 +93,13 @@ namespace fg {
                 /**
                  * 
                  */
-                userDataObject() : obj(), isBound(FG_FALSE) { }
+                SUserDataObject() : obj(), isBound(FG_FALSE) { }
                 /**
                  * 
                  * @param _obj
                  * @param _isBound
                  */
-                userDataObject(LuaPlus::LuaObject &_obj, fgBool _isBound = FG_FALSE) :
+                SUserDataObject(LuaPlus::LuaObject &_obj, fgBool _isBound = FG_FALSE) :
                 isBound(_isBound) {
                     obj = _obj;
                 }
@@ -108,9 +107,9 @@ namespace fg {
     #endif
             };
             ///
-            typedef std::map<uintptr_t, userDataObject> userDataObjectMap;
+            typedef util::btree_map<uintptr_t, SUserDataObject> UserDataObjectMap;
             ///
-            typedef userDataObjectMap::iterator userDataObjectMapItor;
+            typedef UserDataObjectMap::iterator UserDataObjectMapItor;
 
             /**
              * This enum correspond to ones in fgScriptMT/Metatables - just managers
@@ -151,7 +150,7 @@ namespace fg {
             ///
             static LuaPlus::LuaObject m_fgObj;
             ///
-            static userDataObjectMap m_userDataObjectMap;
+            static UserDataObjectMap m_userDataObjectMap;
             /// Storage for metatables
             LuaPlus::LuaObject m_mgrMetatables[NUM_MGR_METATABLES];
 
@@ -356,6 +355,15 @@ namespace fg {
         protected:
             /**
              * 
+             * @param L
+             * @return 
+             */
+            static int __isValid(lua_State*L);
+
+            static int __destroy(lua_State* L);
+
+            /**
+             * 
              * @param state
              * @return 
              */
@@ -521,6 +529,16 @@ namespace fg {
             fgBool register3DSceneManager(void);
             /**
              * 
+             * @return 
+             */
+            fgBool registerPhysics(void);
+            /**
+             * 
+             * @return
+             */
+            fgBool registerGameEntities(void);
+            /**
+             * 
              * @return
              */
             fgBool registerParticleSystem(void);
@@ -560,38 +578,38 @@ namespace fg {
 template<class Type, fg::script::CMetatables::METAID METATABLE_ID>
 int fg::script::CScriptSubsystem::managedObjectTypedNewEvent(lua_State* L) {
     if(!L)
-        return 1;
+        return 0;
     #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
     if(!m_isBindingComplete) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
-        nilObj.SetMetatable(LuaPlus::LuaObject());
-        nilObj.AssignNil();
+        nilObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         return 1;
     }
     // Using new operator to create data
     Type *ptr = new Type();
     if(!ptr) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
-        nilObj.SetMetatable(LuaPlus::LuaObject());
-        nilObj.AssignNil();
+        nilObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         return 1;
     }
     LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
     uintptr_t offset = (uintptr_t)ptr;
-    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    UserDataObjectMapItor it = m_userDataObjectMap.find(offset);
     FG_LOG_DEBUG("Script: Simple Typed New: ptr[%p], [offset=%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
     const char *metatableName = fgScriptMT->getMetatableName(METATABLE_ID);
     if(!metatableName) {
-        newObj.SetMetatable(LuaPlus::LuaObject());
+        newObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         FG_LOG_DEBUG("Script: Simple Typed New: metatable will be empty");
     } else {
-        newObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG_DEBUG("Script: Simple Typed New: metatable: id[%d], name[%s]", METATABLE_ID, metatableName);
+        //newObj.SetMetatable(state->GetRegistry()[metatableName]);
+        newObj.SetMetatable(fgScriptMT->getMetatable(METATABLE_ID).metaObj);
+        FG_LOG_DEBUG("Script: Simple Typed New: metatable: id[%d], name[%s]",
+                     METATABLE_ID, metatableName);
         ptr->registerOnDestruct(&CScriptSubsystem::managedObjectDestructorCallback, NULL);
 
     }
@@ -633,7 +651,7 @@ int fg::script::CScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
     typedef fg::resource::CManagedObject<HandleType> object_type;
     object_type *pManagedObject = (object_type *)unboxed;
     uintptr_t offset = (uintptr_t)pManagedObject;
-    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    UserDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
         FG_LOG_DEBUG("Script: Managed Object Typed GC: pointer is not registered: ptr[%p], [offset: %lu], HandleType[%s]", unboxed, offset, HandleType::getTagName());
@@ -658,14 +676,13 @@ int fg::script::CScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
 template<class Type, fg::script::CMetatables::METAID METATABLE_ID>
 int fg::script::CScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     if(!L)
-        return 1;
+        return 0;
     #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
     if(!m_isBindingComplete) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
-        nilObj.SetMetatable(LuaPlus::LuaObject());
-        nilObj.AssignNil();
+        nilObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         return 1;
     }
     // This will not check for any arguments...
@@ -673,25 +690,26 @@ int fg::script::CScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     Type *ptr = fgMalloc<Type>();
     if(!ptr) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
-        nilObj.SetMetatable(LuaPlus::LuaObject());
-        nilObj.AssignNil();
+        nilObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         return 1;
     }
     new (ptr)Type();
     LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
     uintptr_t offset = (uintptr_t)ptr;
-    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    UserDataObjectMapItor it = m_userDataObjectMap.find(offset);
     FG_LOG_DEBUG("Script: Simple Typed Malloc: ptr[%p], offset[%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
     const char *metatableName = fgScriptMT->getMetatableName(METATABLE_ID);
     if(!metatableName) {
-        newObj.SetMetatable(LuaPlus::LuaObject());
+        newObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         FG_LOG_DEBUG("Script: Simple Typed Malloc: metatable will be empty");
     } else {
-        newObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG_DEBUG("Script: Simple Typed Malloc: metatable: id[%d], name[%s]", METATABLE_ID, metatableName);
+        //newObj.SetMetatable(state->GetRegistry()[metatableName]);
+        newObj.SetMetatable(fgScriptMT->getMetatable(METATABLE_ID).metaObj);
+        FG_LOG_DEBUG("Script: Simple Typed Malloc: metatable: id[%d], name[%s]",
+                     METATABLE_ID, metatableName);
     }
     #endif /* FG_USING_LUA_PLUS */
     return 1;
@@ -727,7 +745,7 @@ int fg::script::CScriptSubsystem::simpleTypedFreeGCEvent(lua_State* L) {
         return 0;
     }
     uintptr_t offset = (uintptr_t)unboxed;
-    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    UserDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
         FG_LOG_DEBUG("Script: Simple Typed GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
@@ -751,14 +769,13 @@ int fg::script::CScriptSubsystem::simpleTypedFreeGCEvent(lua_State* L) {
 template<class Type, fg::script::CMetatables::METAID METATABLE_ID>
 int fg::script::CScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
     if(!L)
-        return 1;
+        return 0;
     #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
     if(!m_isBindingComplete) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
-        nilObj.SetMetatable(LuaPlus::LuaObject());
-        nilObj.AssignNil();
+        nilObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         return 1;
     }
     // This will not check for any arguments...
@@ -767,24 +784,25 @@ int fg::script::CScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
     LuaPlus::LuaObject newObj = state->NewUserdata(sizeof (Type));
     void *ptr = newObj.GetUserdata();
     if(!ptr) {
-        newObj.SetMetatable(LuaPlus::LuaObject());
-        newObj.AssignNil();
+        newObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
         return 1;
     }
     // Create constructor - creates object in specified memory holder (Lua side)
     new (ptr)Type();
     uintptr_t offset = (uintptr_t)ptr;
-    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    UserDataObjectMapItor it = m_userDataObjectMap.find(offset);
     FG_LOG_DEBUG("Script: Simple In Place Typed New: ptr[%p], offset[%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
     const char *metatableName = fgScriptMT->getMetatableName(METATABLE_ID);
     if(!metatableName) {
-        newObj.SetMetatable(LuaPlus::LuaObject());
+        newObj.SetMetatable(fgScriptMT->getMetatable(CMetatables::EMPTY_MT_ID).metaObj);
     } else {
-        newObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG_DEBUG("Script: Simple In Place Typed New: metatable: id[%d], name[%s]", METATABLE_ID, metatableName);
+        //newObj.SetMetatable(state->GetRegistry()[metatableName]);
+        newObj.SetMetatable(fgScriptMT->getMetatable(METATABLE_ID).metaObj);
+        FG_LOG_DEBUG("Script: Simple In Place Typed New: metatable: id[%d], name[%s]",
+                     METATABLE_ID, metatableName);
     }
     #endif /* FG_USING_LUA_PLUS */
     return 1;
@@ -821,7 +839,7 @@ int fg::script::CScriptSubsystem::simpleInPlaceTypedGCEvent(lua_State* L) {
         return 0;
     }
     uintptr_t offset = (uintptr_t)unboxed;
-    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    UserDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
         FG_LOG_DEBUG("Script: Simple In Place Typed GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);

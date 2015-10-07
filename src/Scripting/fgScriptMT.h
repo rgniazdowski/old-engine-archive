@@ -18,10 +18,13 @@
     #define FG_INC_SCRIPT_MT
     #define FG_INC_SCRIPT_MT_BLOCK
 
-    #ifndef FG_INC_TYPES
-        #include "fgTypes.h"
-    #endif
+    #include "fgBuildConfig.h"
+    #include "fgTypes.h"
     #include "fgSingleton.h"
+
+    #if defined(FG_USING_LUA_PLUS)
+        #include "LuaPlus/LuaPlus.h"
+    #endif /* FG_USING_LUA_PLUS */
 
 namespace fg {
     namespace script {
@@ -61,6 +64,8 @@ namespace fg {
                 STYLE_MANAGER_MT_ID,
                 SOUND_MANAGER_MT_ID,
                 GAME_MAIN_MGR_MT_ID,
+
+                USER_DATA_MT_ID, // base metatable type 
 
                 //
                 // Vectors / Color
@@ -165,12 +170,23 @@ namespace fg {
                 SHADER_PROGRAM_MT_ID,
 
                 //
+                // Physics
+                //
+                COLLISION_BODY_MT_ID,
+
+                //
+                // Game objects
+                //
+                GAME_ENTITY_MT_ID,
+                GAME_ENTITY_MESH_MT_ID,
+
+                //
                 // 3D/2D GFX Scene Node & other types
                 //
                 SCENE_NODE_MT_ID, // gfx::CSceneNode
                 SCENE_NODE_OBJECT_MT_ID, // gfx::CSceneNodeObject
                 SCENE_NODE_TRIGGER_MT_ID, // gfx::CSceneNodeTrigger
-                
+
                 EVENT_SCENE_NODE_MT_ID, // event::SSceneNode
                 EVENT_SCENE_NODE_COLLISION_MT_ID, // event::SSceneNodeCollision
                 EVENT_SCENE_NODE_TRIGGER_MT_ID, // event::SSceneNodeTrigger
@@ -190,6 +206,10 @@ namespace fg {
                 unsigned short int id;
                 ///
                 char name[NAME_MAX_LENGTH];
+                ///
+    #if defined(FG_USING_LUA_PLUS)
+                LuaPlus::LuaObject metaObj;
+    #endif /* FG_USING_LUA_PLUS */
                 /**
                  * 
                  */
@@ -237,6 +257,11 @@ namespace fg {
                 SMetatableInfo(const unsigned short int _id, const char *prefix, const char *suffix) : id(_id) {
                     randomizeName(prefix, suffix);
                 }
+                ~SMetatableInfo() {
+    #if defined(FG_USING_LUA_PLUS)
+                    // ?
+    #endif
+                }
                 /**
                  * 
                  * @param prefix
@@ -283,7 +308,7 @@ namespace fg {
                     }
                     return name;
                 }
-            };
+            }; // struct SMetatableInfo
 
             ///
             typedef fg::CVector<SMetatableInfo> MetatableInfoVec;
@@ -324,12 +349,23 @@ namespace fg {
              * @return 
              */
             inline const char *getMetatableName(const unsigned short int metatableID) {
-                const char *failedName = "__NO_B33F_";
+                //const char *failedName = "__NO_B33F_";
+                const char *failedName = m_metatableInfoVec[EMPTY_MT_ID].name;
                 if(m_metatableInfoVec.empty())
                     return failedName; // #FIXME
                 if(metatableID >= m_metatableInfoVec.size())
                     return failedName;
                 return m_metatableInfoVec[metatableID].name;
+            }
+            inline SMetatableInfo& getMetatable(const unsigned short int metatableID) {
+                if(metatableID >= m_metatableInfoVec.size())
+                    return m_metatableInfoVec[0];
+                return m_metatableInfoVec[metatableID];
+            }
+            inline SMetatableInfo const& getMetatable(const unsigned short int metatableID) const {
+                if(metatableID >= m_metatableInfoVec.size())
+                    return m_metatableInfoVec[0];
+                return m_metatableInfoVec[metatableID];
             }
 
             /**
@@ -338,6 +374,8 @@ namespace fg {
              * @return 
              */
             METAID getMetatableIDFromWidgetType(const unsigned int widgetType);
+
+            unsigned int getWidgetTypeFromMetatableID(const unsigned int metatableID);
             /**
              * 
              * @param widgetType
@@ -353,6 +391,8 @@ namespace fg {
              * @return 
              */
             METAID getMetatableIDFromResourceType(const unsigned int resourceType);
+
+            unsigned int getResourceTypeFromMetatableID(const unsigned short int metatableID);
             /**
              * 
              * @param resourceType
@@ -361,10 +401,10 @@ namespace fg {
             inline const char *getMetatableNameFromResourceType(const unsigned int resourceType) {
                 return getMetatableName(getMetatableIDFromResourceType(resourceType));
             }
-
         };
-    };
-};
+
+    } // namespace script
+} // namespace fg
 
     #define fgScriptMT fg::script::CMetatables::getInstance()
 

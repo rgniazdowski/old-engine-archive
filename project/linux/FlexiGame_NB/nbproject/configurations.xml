@@ -433,6 +433,14 @@
       </logicalFolder>
       <logicalFolder name="Scripting" displayName="Scripting" projectFiles="true">
         <itemPath>../../../src/Scripting/fgScriptCD.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Event.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Game.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Gfx.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Gui.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Math.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Physics.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Resource.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCD_Scene.h</itemPath>
         <itemPath>../../../src/Scripting/fgScriptCallback.cpp</itemPath>
         <itemPath>../../../src/Scripting/fgScriptCallback.h</itemPath>
         <itemPath>../../../src/Scripting/fgScriptErrorCodes.h</itemPath>
@@ -2330,6 +2338,46 @@
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Game.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gfx.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gui.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Math.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Physics.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Resource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Scene.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4340,6 +4388,46 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD_Event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Game.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gfx.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gui.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Math.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Physics.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Resource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Scene.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptCallback.cpp"
             ex="false"
             tool="1"
@@ -6306,6 +6394,46 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD_Event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Game.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gfx.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gui.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Math.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Physics.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Resource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Scene.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptCallback.cpp"
             ex="false"
             tool="1"
@@ -8254,6 +8382,46 @@
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Game.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gfx.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gui.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Math.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Physics.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Resource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Scene.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -10229,6 +10397,46 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD_Event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Game.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gfx.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gui.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Math.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Physics.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Resource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Scene.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptCallback.cpp"
             ex="false"
             tool="1"
@@ -12188,6 +12396,46 @@
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Game.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gfx.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Gui.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Math.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Physics.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Resource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCD_Scene.h"
             ex="false"
             tool="3"
             flavor2="0">
