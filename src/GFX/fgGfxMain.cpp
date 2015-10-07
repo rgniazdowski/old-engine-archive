@@ -180,13 +180,19 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
 //------------------------------------------------------------------------------
 
 void gfx::CGfxMain::registerSceneCallbacks(void) {
-    if(!m_sceneNodeInsertedCallback)
-        m_sceneNodeInsertedCallback = new event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::sceneNodeInsertedHandler);
-
-    if(m_p3DScene)
-        m_p3DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
-    if(m_p2DScene)
-        m_p2DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    if(!m_sceneNodeInsertedCallback) {
+        m_sceneNodeInsertedCallback =
+                new event::CMethodCallback<self_type>(this,
+                                                      &self_type::sceneNodeInsertedHandler);
+    }
+    if(m_p3DScene) {
+        m_p3DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED,
+                                                           m_sceneNodeInsertedCallback);
+    }
+    if(m_p2DScene) {
+        m_p2DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED,
+                                                           m_sceneNodeInsertedCallback);
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -685,8 +691,8 @@ void gfx::CGfxMain::preRender(void) {
 #endif
 #endif
 
-    m_p3DScene->update();
-    m_p2DScene->update();
+    m_p3DScene->update(timesys::elapsed(timesys::TICK_PRERENDER));
+    m_p2DScene->update(timesys::elapsed(timesys::TICK_PRERENDER));
 }
 //------------------------------------------------------------------------------
 
@@ -730,7 +736,7 @@ void gfx::CGfxMain::render(void) {
     m_p3DScene->getCamera()->update();
     m_p3DScene->getMVP()->setCamera(m_p3DScene->getCamera());
     //m_p3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
-    
+
     //
     // OH MY GOD HOW THIS SUX #FIXME    
     if(true) {
@@ -749,7 +755,7 @@ void gfx::CGfxMain::render(void) {
     LayerPriorityQueueItor itor = m_layersQueue.begin(),
             end = m_layersQueue.end();
     for(; itor != end; itor++) {
-        CLayer* pLayer = *itor;        
+        CLayer* pLayer = *itor;
         pLayer->render();
     }
 #if 0
@@ -1110,8 +1116,8 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(event::CArgumentList* argv) {
 fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
-    event::SSceneEvent *pEventStruct = (event::SSceneEvent *)argv->getValueByID(0);
-    CSceneManager* pSceneManager = (CSceneManager *)argv->getValueByID(1);
+    event::SSceneEvent* pEventStruct = (event::SSceneEvent*)argv->getValueByID(0);
+    CSceneManager* pSceneManager = (CSceneManager*)argv->getValueByID(1);
     if(!pEventStruct)
         return FG_FALSE;
     event::EventType type = pEventStruct->code;
@@ -1125,7 +1131,7 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
     if(!pSceneManager->isManaged(pEventStruct->node.handleNodeA)) {
         // the handle is no longer valid
         // probably before this event was handled the node was removed/deleted
-        // the pointer wont be valid (50% chance)
+        // the pointer wont be valid
         return FG_FALSE;
     }
 
@@ -1133,7 +1139,7 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(event::CArgumentList* argv) {
         return FG_FALSE;
     }
 
-    if(!pEventStruct->node.pNodeA->checkNodeType(gfx::SCENE_NODE_OBJECT)) {
+    if(!pEventStruct->node.pNodeA->doesExtend(gfx::SCENE_NODE_OBJECT)) {
         pEventStruct->node.pNodeA->refreshGfxInternals();
         return FG_TRUE; // event handled
     }

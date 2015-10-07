@@ -53,6 +53,8 @@ namespace fg {
             ///
             typedef CGfxMain type;
             ///
+            typedef CGfxMain self_type;
+            ///
             typedef GfxMainTag tag_type;
 
             typedef CVector<CLayer*> LayersVec;
