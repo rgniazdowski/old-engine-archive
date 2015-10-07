@@ -21,6 +21,7 @@
 #include "Util/fgStrings.h"
 
 #include "fgDebugConfig.h"
+
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
 #endif
@@ -37,6 +38,7 @@ m_triggers(),
 m_pickSelection(),
 m_traverse(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
+m_defaultNodeObjectType(SCENE_NODE_OBJECT),
 m_groundGrid(),
 m_worldSize(),
 m_camera(CCameraAnimation::FREE),
@@ -60,7 +62,7 @@ m_basetree(NULL) {
 //------------------------------------------------------------------------------
 
 gfx::CSceneManager::~CSceneManager() {
-    CSceneManager::destroy();
+    self_type::destroy();
     if(m_sceneEventMgr) {
         delete m_sceneEventMgr;
         m_sceneEventMgr = NULL;
@@ -1449,7 +1451,8 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     }
     //unsigned int index = pObj->getHandle().getIndex();
 
-    initializeNode(pNode);
+    if(shouldInitializeNode())
+        initializeNode(pNode);
 
     if(m_basetree && nodeType != SCENE_NODE_ROOT) {
         // add to the spatial tree structure
@@ -1616,10 +1619,12 @@ gfx::CSceneNode* gfx::CSceneManager::addFromModel(const SceneNodeType nodeType,
         return NULL;
     }
     pNode->setName(nameTag);
+    setFlag(INITIALIZE_NODE, FG_FALSE);
     if(!addNode(pNode->getRefHandle(), pNode)) {
         delete pNode;
         pNode = NULL;
     }
+    setFlag(INITIALIZE_NODE, FG_TRUE);
     static_cast<CSceneNodeObject*>(pNode)->setModel(pModelRes);
     initializeNode(pNode);
     FG_LOG_DEBUG("GFX: SceneManager: Inserted object: '%s'", nameTag.c_str());
@@ -1629,8 +1634,8 @@ gfx::CSceneNode* gfx::CSceneManager::addFromModel(const SceneNodeType nodeType,
 
 gfx::CSceneNode* gfx::CSceneManager::addFromModel(CModelResource* pModelRes,
                                                   const std::string& nameTag) {
-    
-    return addFromModel(SCENE_NODE_OBJECT, pModelRes, nameTag);
+
+    return addFromModel(m_defaultNodeObjectType, pModelRes, nameTag);
 }
 //------------------------------------------------------------------------------
 

@@ -16,16 +16,22 @@
 
 #include "fg3DGameWorld.h"
 #include "Physics/fgPhysical.h"
+#include "fgGameEntityType.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
 
 game::CGameWorld3D::CGameWorld3D() :
-base_type(),
-scene_type() { }
+base_type(this),
+scene_type() {
+    this->setLayerName("game::CGameWorld3D");
+    this->setLayerID(12); // ?
+    scene_type::setDefaultNodeObjectType(GAME_ENTITY);
+    //scene_type::addFromModel()
+}
 //------------------------------------------------------------------------------
 
-game::CGameWorld3D::CGameWorld3D(const CGameWorld3D& orig) {
+game::CGameWorld3D::CGameWorld3D(const CGameWorld3D& orig) : self_type() {
     // #FIXME
 }
 //------------------------------------------------------------------------------
@@ -61,6 +67,9 @@ void game::CGameWorld3D::update(float delta) {
     // update function of scene_type calls internal event manager callbacks
     scene_type::update(delta);
 
+    // this copying below should be done at the same rate as sortCalls procedure
+    // --- need to fix fps for this: <= 60.0 fps
+    // and after successful sortCalls()/preRender()
     // now need to copy matrices from rigid bodies
     // linear traverse - only active nodes (any visibility)
     m_traverse.rewind();

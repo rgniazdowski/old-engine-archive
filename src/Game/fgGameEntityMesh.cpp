@@ -22,8 +22,8 @@ using namespace fg;
 game::CEntityMesh::CEntityMesh(gfx::SMeshBase* pMesh, gfx::CSceneNode* pParent) :
 base_type(pMesh, pParent),
 physical_type() {
-    setNodeType(SELF_NODE_TYPE);
-    setNodeTypeMask(SELF_NODE_TYPE);
+    setNodeType(self_type::SELF_ENTITY_TYPE);
+    setNodeTypeMask(self_type::SELF_ENTITY_TYPE);
     setNodeTrait(physical_type::SELF_TRAIT);
 
     // automatically update collision body

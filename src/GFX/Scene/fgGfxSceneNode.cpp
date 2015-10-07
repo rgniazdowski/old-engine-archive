@@ -23,9 +23,8 @@ spatial_type(),
 m_nodeType(nodeType), // Current node type
 m_nodeTypeMask(nodeType),
 m_nodeTraits(fg::traits::ANIMATED | fg::traits::SPATIAL),
-m_children(), // Children set
+m_children(), // Children vector
 m_stateFlags(StateFlags::NO_FLAGS),
-//m_collisionBody(NULL),
 m_pParent(pParent), // Pointer to the parent node
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
@@ -50,12 +49,6 @@ gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
         this->m_nodeType = orig.m_nodeType;
         this->m_pTreeNode = NULL;
         this->m_pParent = NULL;
-#if 0
-        if(orig.getCollisionBody()) {
-            this->m_collisionBody = new physics::CCollisionBody(*orig.m_collisionBody);
-        }
-
-#endif
         //this->m_children; // ?? ?? 
         this->m_stateFlags = orig.m_stateFlags;
         this->m_scale = orig.m_scale;
@@ -88,11 +81,6 @@ gfx::CSceneNode::~CSceneNode() {
     m_pManager = NULL;
     m_children.clear();
     m_aabb.invalidate();
-    /*
-    if(m_collisionBody) {
-        delete m_collisionBody;
-        m_collisionBody = NULL;
-    }*/
 }
 //------------------------------------------------------------------------------
 
@@ -166,7 +154,6 @@ void gfx::CSceneNode::refreshGfxInternals(void) {
     if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
         return;
     }
-    // ?? #FIXME
 }
 //------------------------------------------------------------------------------
 
@@ -190,26 +177,16 @@ void gfx::CSceneNode::setVisible(const fgBool toggle, const fgBool recursive) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setPosition(const Vec3f& position) {
-    /*if(m_collisionBody) {
-        m_collisionBody->setPosition(position);
-        //m_collisionBody->calculateDerivedData(); // #FIXME
-    } else {*/
     m_modelMat[3].x = position.x;
     m_modelMat[3].y = position.y;
     m_modelMat[3].z = position.z;
-    //}
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setPosition(float x, float y, float z) {
-    /*if(m_collisionBody) {
-        m_collisionBody->setPosition(x, y, z);
-        //m_collisionBody->calculateDerivedData(); // #FIXME
-    } else {*/
     m_modelMat[3].x = x;
     m_modelMat[3].y = y;
     m_modelMat[3].z = z;
-    //}
 }
 //------------------------------------------------------------------------------
 

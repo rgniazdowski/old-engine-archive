@@ -20,14 +20,14 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 game::CGameWorld2D::CGameWorld2D() :
-base_type(),
+base_type(this),
 scene_type() {
     this->setLayerName("game::CGameWorld2D");
     this->setLayerID(16);
 }
 //------------------------------------------------------------------------------
 
-game::CGameWorld2D::CGameWorld2D(const CGameWorld2D& orig) {
+game::CGameWorld2D::CGameWorld2D(const CGameWorld2D& orig) : self_type() {
     //#FIXME
 }
 //------------------------------------------------------------------------------

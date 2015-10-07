@@ -15,16 +15,21 @@
  */
 
 #include "fgGameWorld.h"
+#include "GFX/Scene/fgGfxSceneManager.h"
+#include "Physics/fgPhysical.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
 
-game::CGameWorld::CGameWorld() :
+game::CGameWorld::CGameWorld(gfx::CSceneManager* pSceneMgr) :
 base_type(),
-physical_world() { }
+physical_world(),
+m_pSceneMgr(pSceneMgr),
+m_sceneNodeInsertedCallback(NULL) {
+}
 //------------------------------------------------------------------------------
 
-game::CGameWorld::CGameWorld(const CGameWorld& orig) {
+game::CGameWorld::CGameWorld(const CGameWorld& orig) : self_type(orig.m_pSceneMgr) {
     // #FIXME
 }
 //------------------------------------------------------------------------------
@@ -35,7 +40,6 @@ game::CGameWorld::~CGameWorld() { }
 fgBool game::CGameWorld::initialize(void) {
     fgBool status = base_type::initialize();
     status = (fgBool)(physical_world::initialize() && status);
-
     return status;
 }
 //------------------------------------------------------------------------------
@@ -43,7 +47,7 @@ fgBool game::CGameWorld::initialize(void) {
 fgBool game::CGameWorld::destroy(void) {
     fgBool status = base_type::destroy();
     status = (fgBool)(physical_world::destroy() && status);
-
+    m_pSceneMgr = NULL;
     return status;
 }
 //------------------------------------------------------------------------------
@@ -52,5 +56,10 @@ void game::CGameWorld::update(float delta) {
     base_type::update(delta); // intelligent world
 
     physical_world::update(delta);
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneManager* game::CGameWorld::getSceneManager(void) const {
+    return m_pSceneMgr;
 }
 //------------------------------------------------------------------------------

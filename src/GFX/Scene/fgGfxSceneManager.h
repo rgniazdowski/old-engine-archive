@@ -129,8 +129,10 @@ namespace fg {
                 ///
                 SHOW_GROUND_GRID = 0x08000, // 32768
                 ///
-                SKYBOX_FOLLOWS_CAMERA = 0x10000 // 65536
-            };
+                SKYBOX_FOLLOWS_CAMERA = 0x10000, // 65536
+                ///
+                INITIALIZE_NODE = 0x20000
+            }; // enum StateFlags
 
         protected:
             /**
@@ -223,6 +225,27 @@ namespace fg {
              * @param toggle
              */
             void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+            /**
+             * 
+             * @return
+             */
+            fgBool shouldInitializeNode(void) const {
+                return (fgBool)!!(m_stateFlags & INITIALIZE_NODE);
+            }
+            /**
+             * 
+             * @param objectType
+             */
+            void setDefaultNodeObjectType(SceneNodeType objectType) {
+                m_defaultNodeObjectType = objectType;
+            }
+            /**
+             * 
+             * @return
+             */
+            SceneNodeType getDefaultNodeObjectType(void) const {
+                return m_defaultNodeObjectType;
+            }
 
         public:
             /**
@@ -1726,6 +1749,8 @@ namespace fg {
         private:
             /// Internal flags, changing the default behavior of the Scene Manager
             StateFlags m_stateFlags;
+            ///
+            SceneNodeType m_defaultNodeObjectType;
             ///
             SPlaneGridf m_groundGrid;
             ///

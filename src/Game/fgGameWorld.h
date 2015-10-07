@@ -22,6 +22,16 @@
     #include "Physics/fgPhysicalWorld.h"
     
 namespace fg {
+    namespace event {
+        class CArgumentList;
+        class CFunctionCallback;
+    }
+    namespace gfx {
+        class CSceneManager;
+        class CSceneNode;
+        class CSceneNodeObject;
+        class CSceneNodeMesh;
+    }
     namespace game {
 
         /**
@@ -41,7 +51,7 @@ namespace fg {
             /**
              *
              */
-            CGameWorld();
+            CGameWorld(gfx::CSceneManager* pSceneMgr);
             /**
              *
              * @param orig
@@ -58,8 +68,15 @@ namespace fg {
             virtual fgBool destroy(void);
             virtual void update(float delta = 0.0f);
 
-        private:
+        protected:            
+            gfx::CSceneManager* getSceneManager(void) const;
 
+
+        private:
+            ///
+            gfx::CSceneManager* m_pSceneMgr;
+            ///
+            fg::event::CFunctionCallback* m_sceneNodeInsertedCallback;
         }; // class CGameWorld
 
     } // namespace game
