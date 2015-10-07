@@ -83,5 +83,6 @@ fgBool physics::traits::CPhysical::setupCollisionBody(CCollisionBody::BodyType b
         // if the collision body is already inside of physical world,
         // it needs to be removed first and then reinserted smoothly
     }
+    return (fgBool)(m_collisionBody != NULL);
 }
 //------------------------------------------------------------------------------

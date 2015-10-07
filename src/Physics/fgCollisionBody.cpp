@@ -88,13 +88,15 @@ void physics::CCollisionBody::setHalfSize(const Vector3f& halfExtent) {
     bt_ext.setValue(halfExtent.x, halfExtent.y, halfExtent.z);
     if(m_bodyType == BOX) {
         getCollisionBox()->setImplicitShapeDimensions(bt_ext);
+        //getCollisionBox()->setLocalScaling() // ?
     } else if(m_bodyType == SPHERE) {
         btVector3 localScaling = getCollisionSphere()->getLocalScaling();
         float newRadius = math::length(halfExtent) * localScaling.getX();
         getCollisionSphere()->setUnscaledRadius(newRadius);
         //getCollisionSphere()->setLocalScaling()
     } else if(m_bodyType == CAPSULE) {
-        // tricky
+        // tricky        
+        getCollisionCapsule()->setImplicitShapeDimensions(bt_ext);
     } else if(m_bodyType == TRIANGLE_MESH) {
         // ignore
     }
@@ -117,8 +119,48 @@ void physics::CCollisionBody::setRadius(const float radius) {
         getCollisionBox()->setImplicitShapeDimensions(btVector3(newRadius, newRadius, newRadius));
     } else if(m_bodyType == CAPSULE) {
         // tricky
+        CCollisionCapsule* pCapsule = getCollisionCapsule();
+        const btVector3& dimensions = pCapsule->getImplicitShapeDimensions();
+        int upAxis = pCapsule->getUpAxis();
+        //float radius = pCapsule->getRadius();
+        int radiusAxis = (upAxis + 2) % 3;
+        //float radius = dimensions[radiusAxis]; // current radius
+        // capsule true half size is radius + half height,
+        // and complete height is radius*2 + half height*2
+        btVector3 newDimensions = dimensions;
+        newDimensions[radiusAxis] = newRadius;
+        pCapsule->setImplicitShapeDimensions(newDimensions);
     } else if(m_bodyType == TRIANGLE_MESH) {
         // ignore
+    }
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setHeight(const float height) {
+    float newHeight = math::abs(height);
+    if(m_bodyType == SPHERE) {
+        btVector3 localScaling = getCollisionSphere()->getLocalScaling();
+        newHeight *= localScaling.getX();
+        getCollisionSphere()->setUnscaledRadius(newHeight / 2.0f);
+    } else if(m_bodyType == BOX) {
+        const btVector3& dimensions = getCollisionBox()->getImplicitShapeDimensions();
+        getCollisionBox()->setImplicitShapeDimensions(btVector3(dimensions.getX(),
+                                                                newHeight,
+                                                                dimensions.getZ()));
+    } else if(m_bodyType == CAPSULE) {
+        CCollisionCapsule* pCapsule = getCollisionCapsule();
+        const btVector3& dimensions = pCapsule->getImplicitShapeDimensions();
+        int upAxis = pCapsule->getUpAxis();
+        //float radius = pCapsule->getRadius();        
+        //int radiusAxis = (upAxis + 2) % 3;
+        //float radius = dimensions[radiusAxis]; // current radius
+        // capsule true half size is radius + half height,
+        // and complete height is radius*2 + half height*2
+        btVector3 newDimensions = dimensions;
+        newDimensions[upAxis] = newHeight / 2.0f;
+        pCapsule->setImplicitShapeDimensions(newDimensions);
+    } else if(m_bodyType == TRIANGLE_MESH) {
+
     }
 }
 //------------------------------------------------------------------------------

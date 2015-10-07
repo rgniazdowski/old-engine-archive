@@ -101,6 +101,7 @@ namespace fg {
             void setHalfSize(const Vector3f& halfExtent);
             void setHalfSizeAndMass(const Vector3f& halfExtent, float mass);
             void setRadius(const float radius);
+            void setHeight(const float height);
             void setMass(float mass);
 
         public:
