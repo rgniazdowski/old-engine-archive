@@ -20,6 +20,7 @@
 #include "BulletCollision/CollisionShapes/btBoxShape.h"
 #include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
 #include "BulletCollision/CollisionShapes/btCapsuleShape.h"
+#include "BulletDynamics/Dynamics/btDynamicsWorld.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "fgBulletHelper.h"
 #include "Math/fgDualQuaternion.h"
@@ -29,7 +30,9 @@ using namespace fg;
 physics::CCollisionBody::CCollisionBody(const BodyType bodyType) :
 base_type(CRigidBody::btRigidBodyConstructionInfo(1.0f, NULL, NULL)),
 m_bodyType(INVALID),
-m_motionState(NULL) {
+m_mass(1.0),
+m_motionState(NULL),
+m_pOwner(NULL) {
     m_motionState = new btDefaultMotionState();
     this->setMotionState(m_motionState);
     if(bodyType != INVALID)
@@ -103,6 +106,11 @@ void physics::CCollisionBody::setHalfSize(const Vector3f& halfExtent) {
 }
 //------------------------------------------------------------------------------
 
+void physics::CCollisionBody::setHalfSize(float x, float y, float z) {
+    setHalfSize(Vector3f(x, y, z));
+}
+//------------------------------------------------------------------------------
+
 void physics::CCollisionBody::setHalfSizeAndMass(const Vector3f& halfExtent, float mass) {
     setHalfSize(halfExtent);
     setMass(mass);
@@ -172,6 +180,50 @@ void physics::CCollisionBody::setMass(float mass) {
     getCollisionShape()->calculateLocalInertia(mass, inertia);
     getRigidBody()->setMassProps(mass, inertia);
     getRigidBody()->updateInertiaTensor();
+    m_mass = mass;
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setMassProps(btScalar mass, const btVector3& inertia) {
+    base_type::setMassProps(mass, inertia);
+    m_mass = mass;
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setLocalScaling(const Vector3f& scale) {
+    if(!getCollisionShape())
+        return;
+    if(m_pOwner) {
+        m_pOwner->getBroadphase()->
+                getOverlappingPairCache()->
+                cleanProxyFromPairs(this->getBroadphaseHandle(),
+                                    m_pOwner->getDispatcher());
+        m_pOwner->removeRigidBody(getRigidBody());
+    }
+    getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));    
+    // this for quick update of local inertia
+    setMass(m_mass); // is this an overkill?
+    if(m_pOwner) {
+        m_pOwner->addRigidBody(getRigidBody());
+    }
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setLocalScaling(float x, float y, float z) {
+    if(!getCollisionShape())
+        return;
+    if(m_pOwner) {
+        m_pOwner->getBroadphase()->
+                getOverlappingPairCache()->
+                cleanProxyFromPairs(this->getBroadphaseHandle(),
+                                    m_pOwner->getDispatcher());
+        m_pOwner->removeRigidBody(getRigidBody());
+    }
+    getCollisionShape()->setLocalScaling(btVector3(x, y, z));    
+    setMass(m_mass);
+    if(m_pOwner) {
+        m_pOwner->addRigidBody(getRigidBody());
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -179,8 +231,7 @@ void physics::CCollisionBody::setAcceleration(const Vector3f& acceleration) {
     // manipulate the gravity?
     // #FIXME
 }
-
-//------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void physics::CCollisionBody::setAngularVelocity(const Vector3f& velocity) {
     base_type::setAngularVelocity(btVector3(velocity.x, velocity.y, velocity.z));
@@ -244,7 +295,23 @@ void physics::CCollisionBody::getVelocity(float& x, float& y, float& z) const {
     y = velocity.y();
     z = velocity.z();
 }
-//------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setRotation(float angle, const Vector3f& axis) {
+    btTransform& trans = this->getWorldTransform();
+    Quaternionf rotation = math::rotate(Quaternionf(), angle, axis);
+    // fast copy
+    trans.getBasis().setRotation(*((btQuaternion*) & rotation));
+}
+//------------------------------------------------------------------------------
+
+void physics::CCollisionBody::setRotation(float angle, float x, float y, float z) {
+    btTransform& trans = this->getWorldTransform();
+    Quaternionf rotation = math::rotate(Quaternionf(), angle, Vec3f(x, y, z));
+    // fast copy
+    trans.setRotation(*((btQuaternion*) & rotation));
+}
+//------------------------------------------------------------------------------
 
 const Quaternionf& physics::CCollisionBody::getRotation(void) const {
     static Quaternionf quat = Quaternionf();
@@ -407,6 +474,7 @@ void physics::CCollisionBody::setupBody(BodyType bodyType) {
         pNewShape->calculateLocalInertia(mass, localInertia);
     if(pNewShape) {
         this->setCollisionShape(pNewShape);
+        pNewShape->setMargin(0.01f);
         if(isDynamic) {
             this->setMassProps(mass, localInertia);
             this->updateInertiaTensor();
@@ -416,6 +484,11 @@ void physics::CCollisionBody::setupBody(BodyType bodyType) {
 //------------------------------------------------------------------------------
 
 physics::CCollisionBody::~CCollisionBody() {
+    if(m_pOwner) {
+        // ?
+        //m_pOwner->removeRigidBody(getRigidBody());
+    }
+    m_pOwner = NULL;
     if(this->getMotionState()) {
         delete this->getMotionState();
         this->setMotionState(NULL);

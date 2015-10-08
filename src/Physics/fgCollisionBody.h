@@ -25,11 +25,12 @@
         #include "Math/fgDualQuaternion.h"
         #include "BulletDynamics/Dynamics/btRigidBody.h"
         #include "BulletCollision/CollisionShapes/btCollisionShape.h"
+        class btDynamicsWorld;
 
 namespace fg {
 
     namespace physics {
-
+        class CPhysicalWorld;
         namespace traits {
             class CPhysical;
         } // namespace traits
@@ -42,6 +43,7 @@ namespace fg {
          */
         class CCollisionBody : public CRigidBody {
             friend class traits::CPhysical;
+            friend class CPhysicalWorld;
         public:
             ///
             typedef CRigidBody base_type;
@@ -99,11 +101,16 @@ namespace fg {
 
         public:
             void setHalfSize(const Vector3f& halfExtent);
+            void setHalfSize(float x, float y, float z);
             void setHalfSizeAndMass(const Vector3f& halfExtent, float mass);
             void setRadius(const float radius);
             void setHeight(const float height);
             void setMass(float mass);
+            void setMassProps(btScalar mass, const btVector3& inertia);
 
+            void setLocalScaling(const Vector3f& scale);
+            void setLocalScaling(float x, float y, float z);
+            
         public:
             void setAcceleration(const Vector3f& acceleration);
 
@@ -128,6 +135,9 @@ namespace fg {
             const Vector3f& getVelocity(void) const;
             void getVelocity(Vector3f& outVelocity) const;
             void getVelocity(float& x, float& y, float& z) const;
+
+            void setRotation(float angle, const Vector3f& axis);
+            void setRotation(float angle, float x, float y, float z);
 
             //------------------------------------------------------------------
             const Quaternionf& getRotation(void) const;
@@ -167,11 +177,22 @@ namespace fg {
         protected:
             void setupBody(BodyType bodyType);
 
+            btDynamicsWorld* getOwner(void) const {
+                return m_pOwner;
+            }
+
+            void setOwner(btDynamicsWorld* pOwner) {
+                m_pOwner = pOwner;
+            }
         private:
             ///
             BodyType m_bodyType;
             ///
+            float m_mass;
+            ///
             btMotionState* m_motionState;
+            ///
+            btDynamicsWorld* m_pOwner;
         }; // class CCollisionBody
 
     } // namespace physics

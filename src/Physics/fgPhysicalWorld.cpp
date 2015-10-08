@@ -123,6 +123,7 @@ int physics::CPhysicalWorld::add(CCollisionBody* pBody) {
     if(index < 0) {
         m_collisionBodies.push_back(pBody);
         m_dynamicsWorld->addRigidBody(pBody);
+        pBody->setOwner(m_dynamicsWorld);
         index = m_collisionBodies.size() - 1;
         return index;
     }
@@ -134,11 +135,14 @@ int physics::CPhysicalWorld::add(CCollisionBody* pBody) {
         CRigidBody* pRigidBody = CRigidBody::upcast(pObject);
         if(pRigidBody == static_cast<CRigidBody*>(pBody)) {
             found = FG_TRUE;
+            pBody->setOwner(m_dynamicsWorld);
             break;
         }
     } // for every collision object
     if(!found) {
         m_dynamicsWorld->addRigidBody(pBody);
+        m_dynamicsWorld->updateSingleAabb(pBody);
+        pBody->setOwner(m_dynamicsWorld);
     }
     return index;
 }
@@ -151,8 +155,11 @@ fgBool physics::CPhysicalWorld::remove(CCollisionBody* pBody) {
     if(index >= 0) {
         m_collisionBodies.remove(index);
 
-        if(m_dynamicsWorld)
-            m_dynamicsWorld->removeCollisionObject(pBody);
+        if(m_dynamicsWorld) {
+            //m_dynamicsWorld->removeCollisionObject(pBody);
+            m_dynamicsWorld->removeRigidBody(pBody);
+            pBody->setOwner(NULL);
+        }
     }
     return (fgBool)(index >= 0);
 }
@@ -169,6 +176,7 @@ fgBool physics::CPhysicalWorld::removeAllCollisionBodies(void) {
         if(!pBody)
             continue;
         m_dynamicsWorld->removeRigidBody(pBody);
+        pBody->setOwner(NULL);
     }
     m_collisionBodies.clear();
     return FG_TRUE;

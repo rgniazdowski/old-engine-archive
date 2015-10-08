@@ -54,6 +54,12 @@ namespace fg {
              */
             virtual ~CPhysicalWorld();
 
+        protected:
+            btDiscreteDynamicsWorld* getDynamicsWorld(void) const {
+                return m_dynamicsWorld;
+            }
+
+
         public:
             /**
              *
