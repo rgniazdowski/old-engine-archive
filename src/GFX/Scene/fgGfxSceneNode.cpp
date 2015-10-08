@@ -197,6 +197,22 @@ void gfx::CSceneNode::rotate(float angle, float x, float y, float z) {
     m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));    
 }
 //------------------------------------------------------------------------------
+
+void gfx::CSceneNode::setRotation(float angle, const Vec3f& axis) {    
+    const Vector4f translation = m_modelMat[3];
+    m_modelMat = math::rotate(Matrix4f(), angle, axis);
+    m_modelMat[3] = translation;    
+    // ignore scaling - when rotating - need to preserve whole translation
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNode::setRotation(float angle, float x, float y, float z) {
+    const Vector4f translation = m_modelMat[3];
+    m_modelMat = math::rotate(Matrix4f(), angle, Vec3f(x, y, z));    
+    m_modelMat[3] = translation;
+}
+//------------------------------------------------------------------------------
+
 void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
     m_aabb.min = -halfSize;
     m_aabb.max = halfSize;
@@ -303,7 +319,7 @@ void gfx::CSceneNode::update(float delta) {
     //    m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
     //}
     if(getParent()) {
-        m_finalModelMat = m_modelMat * getParent()->getFinalModelMatrix();
+        m_finalModelMat = getParent()->getFinalModelMatrix() * m_modelMat;
     } else {
         m_finalModelMat = m_modelMat;
     }

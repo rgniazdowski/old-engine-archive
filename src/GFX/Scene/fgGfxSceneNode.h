@@ -337,6 +337,9 @@ namespace fg {
              */
             void rotate(float angle, float x, float y, float z);
 
+            void setRotation(float angle, const Vec3f& axis);
+            void setRotation(float angle, float x, float y, float z);
+
             /**
              * 
              * @param halfSize

@@ -17,6 +17,10 @@
 #include "fg3DGameWorld.h"
 #include "Physics/fgPhysical.h"
 #include "fgGameEntityType.h"
+#include "Util/fgStrings.h"
+#if defined(FG_USING_BULLET)
+#include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
+#endif
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -98,8 +102,13 @@ void game::CGameWorld3D::update(float delta) {
             Matrix4f matrix;
             pBody->getWorldTransform(matrix);
             if(pSceneNode->getParent())
-                matrix = matrix * math::inverse(pSceneNode->getParent()->getFinalModelMatrix());
+                matrix = math::inverse(pSceneNode->getParent()->getFinalModelMatrix()) * matrix;
+            // reset the scaling factor?           
+            // set the proper (local) model matrix for this node
             pSceneNode->setModelMatrix(matrix);
+            // #TODO - maybe should use dual quaternions? so just rotation and
+            // translation, scaling in separate vector 4+4+3 -> 11 floats
+            getDynamicsWorld()->updateSingleAabb(pBody);
         }
     }
 }
