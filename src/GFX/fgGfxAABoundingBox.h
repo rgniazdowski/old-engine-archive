@@ -697,14 +697,14 @@ namespace fg {
              * 
              * @param m
              */
-            virtual void transform(typename Matrix3T<TValueType>::type const & m) {
+            virtual void transform(typename Matrix3T<TValueType>::type const & m, const vec_type& scale) {
                 vector_type translation(m[2]);
                 vector_type oldmin, oldmax;
                 value_type a, b;
                 int i, j;
                 // Copy box A into min and max array.
-                oldmin = this->min;
-                oldmax = this->max;
+                oldmin = this->min * scale;
+                oldmax = this->max * scale;
                 // Begin at T.
                 this->min = translation;
                 this->max = translation;
@@ -1049,14 +1049,14 @@ namespace fg {
              * 
              * @param m
              */
-            virtual void transform(typename Matrix4T<TValueType>::type const & m) {
+            virtual void transform(typename Matrix4T<TValueType>::type const & m, const vec_type& scale) {
                 vector_type translation(m[3]);
                 vector_type oldmin, oldmax;
                 value_type a, b;
                 int i, j;
                 // Copy box A into min and max array.
-                oldmin = this->min;
-                oldmax = this->max;
+                oldmin = this->min * scale;
+                oldmax = this->max * scale;
                 // Begin at T.
                 this->min = translation;
                 this->max = translation;

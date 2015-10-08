@@ -71,6 +71,10 @@ namespace fg {
         public:
             virtual fgBool queryTrait(const fg::traits::SceneNode trait, void **pObj);
 
+            virtual void setScale(const Vector3f& scale);
+
+            virtual void setMesh(gfx::SMeshBase* pMesh);
+
             virtual void updateAABB(void);
 
         private:

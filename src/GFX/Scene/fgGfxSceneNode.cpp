@@ -26,7 +26,6 @@ m_nodeTraits(fg::traits::ANIMATED | fg::traits::SPATIAL),
 m_children(), // Children vector
 m_stateFlags(StateFlags::NO_FLAGS),
 m_pParent(pParent), // Pointer to the parent node
-m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
 m_finalModelMat() {
     setActive(FG_TRUE);
@@ -189,12 +188,21 @@ void gfx::CSceneNode::setPosition(float x, float y, float z) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CSceneNode::rotate(float angle, const Vec3f& axis) {
+    m_modelMat = math::rotate(m_modelMat, angle, axis);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNode::rotate(float angle, float x, float y, float z) {    
+    m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));    
+}
+//------------------------------------------------------------------------------
 void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
     m_aabb.min = -halfSize;
     m_aabb.max = halfSize;
     m_aabb.refresh();
     m_aabb.radius = math::length(halfSize);
-    m_aabb.transform(m_finalModelMat);
+    m_aabb.transform(m_finalModelMat, m_scale);
 }
 //------------------------------------------------------------------------------
 
@@ -210,28 +218,7 @@ void gfx::CSceneNode::setRadius(float radius) {
     m_aabb.max = Vector3f(a, a, a);
     m_aabb.radius = radius;
     m_aabb.refresh();
-    m_aabb.transform(m_finalModelMat);
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNode::setScale(const Vector3f& scale) {
-    //if(!m_collisionBody) {
-    const Vector4f translation = m_modelMat[3];
-    m_modelMat = math::scale(m_modelMat, scale / m_scale);
-    m_scale = scale;
-    m_modelMat[3].x = translation.x;
-    m_modelMat[3].y = translation.y;
-    m_modelMat[3].z = translation.z;
-    m_modelMat[3].w = translation.w;
-#if 0
-} else if(!isAutoScale()) {
-    //Vector3f halfSize = m_collisionBody->getHalfSize();
-    //halfSize *= scale / m_scale;
-    //this->setHalfSize(halfSize);
-    //m_collisionBody->setHalfSize(halfSize);
-    m_scale = scale;
-}
-#endif
+    m_aabb.transform(m_finalModelMat, m_scale);
 }
 //------------------------------------------------------------------------------
 

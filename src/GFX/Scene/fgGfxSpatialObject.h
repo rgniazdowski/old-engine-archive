@@ -46,7 +46,13 @@ namespace fg {
                 /**
                  *
                  */
-                CSpatialObject() : m_pTreeNode(0) { }
+                CSpatialObject() : m_pTreeNode(0),
+                m_aabb(),
+                m_scale(),
+                m_finalScale() {
+                    m_scale = Vec3f(1.0f, 1.0f, 1.0f);
+                    m_finalScale = Vec3f(1.0f, 1.0f, 1.0f);
+                }
                 /**
                  *
                  */
@@ -97,6 +103,31 @@ namespace fg {
                 inline BoundingVolume3Df const& getBoundingVolume(void) const {
                     return m_aabb;
                 }
+                virtual void setScale(const Vec3f& scale) {
+                    m_aabb.min *= scale / m_scale;
+                    m_aabb.max *= scale / m_scale;
+                    m_aabb.refresh();
+                    m_aabb.radius = math::length(m_aabb.getExtent());
+                    m_scale = scale;
+                }
+                /**
+                 *
+                 * @param x
+                 * @param y
+                 * @param z
+                 */
+                inline void setScale(float x, float y, float z) {
+                    setScale(Vector3f(x, y, z));
+                }
+                void resetScale(void) {
+                    setScale(Vec3f(1.0f, 1.0f, 1.0f));
+                }
+                inline Vector3f& getScale(void) {
+                    return m_scale;
+                }
+                inline const Vector3f& getScale(void) const {
+                    return m_scale;
+                }
 
             protected:
                 /// Pointer to the tree node in which this (3d/2d/abstract)
@@ -104,6 +135,10 @@ namespace fg {
                 STreeNodeBase* m_pTreeNode;
                 /// Bounding volume (aabb + sphere)
                 BoundingVolume3Df m_aabb;
+                ///
+                Vector3f m_scale;
+                ///
+                Vector3f m_finalScale;
             }; // CSpatialObject
 
         } // namespace traits

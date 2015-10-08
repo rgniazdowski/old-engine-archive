@@ -135,7 +135,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
         if(!m_pModel->isAnimated()) {
             m_aabb.min = m_pModel->getAABB().min;
             m_aabb.max = m_pModel->getAABB().max;
-            m_aabb.transform(m_finalModelMat);
+            m_aabb.transform(m_finalModelMat, m_scale);
         } else {
             m_aabb.invalidate();
             // should now just merge with aabb's of the meshes? lol

@@ -159,10 +159,7 @@ namespace fg {
             /// Scene node father/parent node pointer
             self_type* m_pParent;
 
-        protected:
-            /// Current scale of the scene node - scale is automatically
-            /// applied to the displayed data (mesh/shape/model/...)
-            Vector3f m_scale;
+        protected:            
             /// Internal object specific model matrix (local)
             Matrix4f m_modelMat;
             /// Final model matrix (chain transformation, world, based on parent)
@@ -330,17 +327,7 @@ namespace fg {
              * @param angle
              * @param axis
              */
-            inline void rotate(float angle, const Vec3f& axis) {
-                // should scale?
-                Vec3f oldScale;
-                //if(!m_collisionBody) {
-                oldScale = m_scale;
-                this->setScale(1.0f, 1.0f, 1.0f);
-                //}
-                m_modelMat = math::rotate(m_modelMat, angle, axis);
-                //if(!m_collisionBody)
-                this->setScale(oldScale);
-            }
+            void rotate(float angle, const Vec3f& axis);
             /**
              * 
              * @param angle
@@ -348,16 +335,7 @@ namespace fg {
              * @param y
              * @param z
              */
-            inline void rotate(float angle, float x, float y, float z) {
-                Vec3f oldScale;
-                //if(!m_collisionBody) {
-                oldScale = m_scale;
-                this->setScale(1.0f, 1.0f, 1.0f);
-                //}
-                m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));
-                //if(!m_collisionBody)
-                this->setScale(oldScale);
-            }
+            void rotate(float angle, float x, float y, float z);
 
             /**
              * 
@@ -372,33 +350,7 @@ namespace fg {
              */
             inline void setHalfSize(float x, float y, float z) {
                 setHalfSize(Vector3f(x, y, z));
-            }
-            /**
-             * 
-             * @param halfSize
-             * @param mass
-             */
-            inline void setHalfSizeAndMass(const Vector3f& halfSize, float mass) {
-                //if(m_collisionBody) {
-                //   m_collisionBody->setHalfSizeAndMass(halfSize, mass);
-                //} else {
-                setHalfSize(halfSize);
-                //}
-            }
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             * @param mass
-             */
-            inline void setHalfSizeAndMass(float x, float y, float z, float mass) {
-                //if(m_collisionBody) {
-                //    m_collisionBody->setHalfSizeAndMass(Vector3f(x, y, z), mass);
-                //} else {
-                setHalfSize(Vector3f(x, y, z));
-                //}
-            }
+            }            
 
             /**
              * 
@@ -429,35 +381,7 @@ namespace fg {
              */
             inline void setAutoScale(fgBool toggle = FG_TRUE) {
                 setFlag(AUTO_SCALE, toggle);
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline Vector3f& getScale(void) {
-                return m_scale;
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline Vector3f const& getScale(void) const {
-                return m_scale;
-            }
-            /**
-             * 
-             * @param scale
-             */
-            void setScale(const Vector3f& scale);
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            inline void setScale(float x, float y, float z) {
-                setScale(Vector3f(x, y, z));
-            }
+            }                       
 
         public:
             /**

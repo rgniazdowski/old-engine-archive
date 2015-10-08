@@ -58,15 +58,32 @@ fgBool game::CEntityMesh::queryTrait(const fg::traits::SceneNode trait, void **p
 }
 //------------------------------------------------------------------------------
 
+void game::CEntityMesh::setScale(const Vector3f& scale) {
+    base_type::setScale(scale);
+    physics::CCollisionBody* pBody = physical_type::getCollisionBody();
+    if(pBody) {
+        pBody->setLocalScaling(this->getScale());
+    }
+}
+//------------------------------------------------------------------------------
+
+void game::CEntityMesh::setMesh(gfx::SMeshBase* pMesh) {
+    base_type::setMesh(pMesh);
+    physics::CCollisionBody* pBody = physical_type::getCollisionBody();
+    if(pMesh && pBody) {
+        physical_type::getCollisionBody()->setHalfSize(getMesh()->aabb.getExtent());
+    }
+}
+//------------------------------------------------------------------------------
+
 void game::CEntityMesh::updateAABB(void) {
     base_type::updateAABB();
     physics::CCollisionBody* pBody = physical_type::getCollisionBody();
-    if(pBody && getMesh()) {
-        physical_type::getCollisionBody()->setHalfSize(getMesh()->aabb.getExtent());
-    }
     if(pBody) {
+        //pBody->setLocalScaling(this->getScale());
         // copy to the body current model matrix - two way management
         // matrix from physical body will be copied after Physical world update
+        // the matrix should be without scaling...
         pBody->setWorldTransform(getFinalModelMatrix());
     }
 }

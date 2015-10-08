@@ -264,34 +264,45 @@ namespace fg {
              * 
              * @return 
              */
-            inline vector_type getCenter(void) {
-                center = 0.5f * (this->min + this->max);
-                radius = 0.0f;
-                radius = math::max(radius, extent.x);
-                radius = math::max(radius, extent.y);
+            inline vector_type& getCenter(void) {
+                center = 0.5f * (this->min + this->max);                
+                return center;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline vector_type const& getCenter(void) const {
                 return center;
             }
             /**
              * 
              * @return 
              */
-            inline vector_type getExtent(void) {
-                extent = 0.5f * (this->max - this->min);
-                radius = 0.0f;
-                radius = math::max(radius, extent.x);
-                radius = math::max(radius, extent.y);
+            inline vector_type& getExtent(void) {
+                extent = 0.5f * (this->max - this->min);                
+                return extent;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline vector_type const& getExtent(void) const {
                 return extent;
             }
             /**
              * 
              * @param m
              */
-            virtual void transform(typename Matrix3T<TValueType>::type const& m) {
-                base_type::transform(m);
+            virtual void transform(typename Matrix3T<TValueType>::type const& m,
+                                   const vec_type& scale) {
+                vector_type ext = 0.5f * (this->max - this->min);
+                radius = math::length(ext * scale);
+                base_type::transform(m, scale);
                 this->refresh();
             }
 
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
             using base_type::test;
             /**
              * 
@@ -575,29 +586,36 @@ namespace fg {
              * 
              * @return 
              */
-            inline vector_type getCenter(void) {
+            inline vector_type& getCenter(void) {
                 center = 0.5f * (this->min + this->max);
+                return center;
+            }
+            inline vector_type const& getCenter(void) const {
                 return center;
             }
             /**
              * 
              * @return 
              */
-            inline vector_type getExtent(void) {
+            inline vector_type& getExtent(void) {
                 extent = 0.5f * (this->max - this->min);
+                return extent;
+            }
+            inline vector_type const& getExtent(void) const {
                 return extent;
             }
             /**
              * 
              * @param m
              */
-            virtual void transform(typename Matrix4T<TValueType>::type const& m) {
-                Vector3f ext = 0.5f * (this->max - this->min);
-                radius = math::length(ext);
-                base_type::transform(m);
+            virtual void transform(typename Matrix4T<TValueType>::type const& m,
+                                   const vec_type& scale) {
+                vector_type ext = 0.5f * (this->max - this->min);
+                radius = math::length(ext * scale);
+                base_type::transform(m, scale);
                 this->refresh();
             }
-            ////////////////////////////////////////////////////////////////////
+            //------------------------------------------------------------------
 
             using base_type::test;
             /**

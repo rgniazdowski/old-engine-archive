@@ -89,8 +89,7 @@ gfx::SSkinnedMesh* gfx::CSceneNodeMesh::getSkinnedMesh(void) const {
 void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     m_pMesh = pMesh;
     if(!pMesh)
-        return;
-    base_type::setNodeType(SCENE_NODE_MESH);
+        return;    
     if(m_drawCall) {
         m_drawCall->setupFromMesh(pMesh);
     }
@@ -163,7 +162,7 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
                                  animations[0].curFrame.dualQuaternions);
         }
     }
-    m_drawCall->draw(m_finalModelMat * modelMat);
+    m_drawCall->draw(math::scale(m_finalModelMat, getScale()) * modelMat);
 }
 //------------------------------------------------------------------------------
 
@@ -189,7 +188,7 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
         if(!m_pMesh->isSkinnedMesh()) {
             m_aabb.min = m_pMesh->aabb.min;
             m_aabb.max = m_pMesh->aabb.max;
-            m_aabb.transform(m_finalModelMat);
+            m_aabb.transform(m_finalModelMat, m_scale);
         } else {
             m_aabb.invalidate();
             animated_type::AnimationsVec& animations = getAnimations();
@@ -222,7 +221,7 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
                 // that updates the aabb based on the children size
                 // but too soon for that !TODO
             }
-            m_aabb.transform(m_finalModelMat);
+            m_aabb.transform(m_finalModelMat, m_scale);
         }
         //if(body && !isAutoScale()) {
         //    m_aabb.radius = body->getRadius();
