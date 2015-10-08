@@ -34,9 +34,45 @@
             #include "fgLog.h"
         #endif
         #include "fgScriptMT.h"
+        #include "fgScriptCD_TypeBoxPtrEasy.h"
 
+        #include "Game/fgGameEntity.h"
+        #include "Game/fgGameEntityMesh.h"
+        
 namespace LPCD {
 
+    //--------------------------------------------------------------------------
+
+    template<> struct Type<fg::game::CEntity*> :
+    public TypeBoxPtrEasy<fg::game::CEntity*,
+    fg::script::CMetatables::GAME_ENTITY_MT_ID> {
+    };
+
+    template<> struct Type<fg::game::CEntity*&> :
+    public Type<fg::game::CEntity*> {
+    };
+
+    //template<> struct Type<const fg::game::CEntity*&> :
+    //public Type<fg::game::CEntity*> {
+    //};
+
+    //--------------------------------------------------------------------------
+
+    template<> struct Type<fg::game::CEntityMesh*> :
+    public TypeBoxPtrEasy<fg::game::CEntityMesh*,
+    fg::script::CMetatables::GAME_ENTITY_MESH_MT_ID> {
+    };
+
+    template<> struct Type<fg::game::CEntityMesh*&> :
+    public Type<fg::game::CEntityMesh*> {
+    };
+
+    //template<> struct Type<const fg::game::CEntityMesh*&> :
+    //public Type<fg::game::CEntityMesh*> {
+    //};
+
+    //--------------------------------------------------------------------------
+    
 } // namespace LPCD
 
     #endif /* FG_USING_LUA_PLUS */

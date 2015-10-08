@@ -917,6 +917,8 @@ int script::CScriptSubsystem::__isValid(lua_State *L) {
         LuaPlus::LuaObject obj = args[1];
         void* pUnboxed = state->UnBoxPointer(args[1].m_stackIndex);
         uintptr_t offset = (uintptr_t)pUnboxed;
+        if(offset > 0)
+            returnValue = 1; // #FIXME
         UserDataObjectMapItor itor = m_userDataObjectMap.find(offset);
         if(itor != m_userDataObjectMap.end() && offset > 0) {
             if(itor->second.obj == obj && itor->second.isBound) {
@@ -2193,7 +2195,12 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_4X)(float, float, float, float);
     typedef fgBool(gfx::CSceneNode::*SCENENODE_Bool_C_STR_UINT_IN)(const char*, unsigned int);
 
+    typedef Vector3f& (gfx::CSceneNode::*FUNC_getScale)(void);
+    typedef void (gfx::CSceneNode::*FUNC_setScale)(float, float, float);
+    
     const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
+    const char* metatableSceneNodeObjectName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_OBJECT_MT_ID);
+    const char* metatableSceneNodeMeshName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MESH_MT_ID);
     const char* metatableSceneNodeTriggerName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_TRIGGER_MT_ID);
     // Register Base GfxSceneNode metatable
 
@@ -2207,6 +2214,7 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             .ObjectDirect("getPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec4fref_void>(&gfx::CSceneNode::getPosition))
             .ObjectDirect("setPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setPosition))
 
+            .ObjectDirect("setRotation", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_4X>(&gfx::CSceneNode::setRotation))
             //.ObjectDirect("getRotation", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec3f_void_const>(&gfx::CSceneNode::getRotation))
             //.ObjectDirect("setRotation", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setRotation))
 
@@ -2217,17 +2225,19 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             //.ObjectDirect("setAcceleration", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setAcceleration))
 
             .ObjectDirect("translate", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::translate))
+            .ObjectDirect("translateMatrix", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::translateMatrix))
             .ObjectDirect("rotate", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_4X>(&gfx::CSceneNode::rotate))
 
             .ObjectDirect("setHalfSize", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setHalfSize))
-            .ObjectDirect("setHalfSizeAndMass", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_4X>(&gfx::CSceneNode::setHalfSizeAndMass))
             .ObjectDirect("setRadius", (gfx::CSceneNode *)0, &gfx::CSceneNode::setRadius)
 
             .ObjectDirect("isAutoScale", (gfx::CSceneNode *)0, &gfx::CSceneNode::isAutoScale)
             .ObjectDirect("setAutoScale", (gfx::CSceneNode *)0, &gfx::CSceneNode::setAutoScale)
 
-            .ObjectDirect("getScale", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec3fref_void>(&gfx::CSceneNode::getScale))
-            .ObjectDirect("setScale", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setScale))
+            .ObjectDirect("getScale", (gfx::CSceneNode *)0,
+                          static_cast<FUNC_getScale>(&gfx::CSceneNode::getScale))
+            .ObjectDirect("setScale", (gfx::CSceneNode *)0,
+                          static_cast<FUNC_setScale>(&gfx::CSceneNode::setScale))
 
             //.ObjectDirect("setMass", (gfx::CSceneNode *)0, &gfx::CSceneNode::setMass)
             //.ObjectDirect("getMass", (gfx::CSceneNode *)0, &gfx::CSceneNode::getMass)
@@ -2235,6 +2245,7 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             .ObjectDirect("isEmpty", (gfx::CSceneNode *)0, &gfx::CSceneNode::isEmpty)
             .ObjectDirect("hasChildren", (gfx::CSceneNode *)0, &gfx::CSceneNode::hasChildren)
             .ObjectDirect("getChildrenCount", (gfx::CSceneNode *)0, &gfx::CSceneNode::getChildrenCount)
+            .ObjectDirect("getChildByIndex", (gfx::CSceneNode *)0, &gfx::CSceneNode::getChildByIndex)
 
             .ObjectDirect("isVisible", (gfx::CSceneNode *)0, &gfx::CSceneNode::isVisible)
             .ObjectDirect("setVisible", (gfx::CSceneNode *)0, &gfx::CSceneNode::setVisible)
@@ -2254,6 +2265,14 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     LPCD::Class(m_luaState->GetCState(), metatableSceneNodeTriggerName, metatableSceneNodeName)
             .ObjectDirect("numCallbacks", (gfx::CSceneNodeTrigger::triggerable_type*)0, &gfx::CSceneNodeTrigger::triggerable_type::getCallbacksCount)
             .ObjectDirect("hasCallbacks", (gfx::CSceneNodeTrigger::triggerable_type*)0, &gfx::CSceneNodeTrigger::triggerable_type::hasCallbacks)
+            ;
+
+    // Register GfxSceneNodeObject metatable
+    LPCD::Class(m_luaState->GetCState(), metatableSceneNodeObjectName, metatableSceneNodeName)
+            ;
+
+    // Register GfxSceneNodeMesh metatable
+    LPCD::Class(m_luaState->GetCState(), metatableSceneNodeMeshName, metatableSceneNodeName)
             ;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -2313,7 +2332,47 @@ fgBool script::CScriptSubsystem::registerPhysics(void) {
 
 #if defined(FG_USING_LUA_PLUS)
 
+    const char* metatableCollisionBodyName = fgScriptMT->getMetatableName(CMetatables::COLLISION_BODY_MT_ID);
 
+    typedef void (physics::CCollisionBody::*FUNC_setHalfSize)(float, float, float);
+    typedef void (physics::CCollisionBody::*FUNC_setLocalScaling)(float, float, float);
+    typedef void (physics::CCollisionBody::*FUNC_activate)(bool) const;
+    typedef void (physics::CCollisionBody::*FUNC_setRotation)(float, float, float, float);
+
+    // Register physics::CCollisionBody
+    LPCD::Class(m_luaState->GetCState(), metatableCollisionBodyName)
+            .ObjectDirect("getBodyType",
+                          (physics::CCollisionBody*)0,
+                          &physics::CCollisionBody::getBodyType)
+            .ObjectDirect("setHalfSize",
+                          (physics::CCollisionBody*)0,
+                          static_cast<FUNC_setHalfSize>
+                          (&physics::CCollisionBody::setHalfSize))
+            .ObjectDirect("setHalfSizeAndMass",
+                          (physics::CCollisionBody*)0,
+                          &physics::CCollisionBody::setHalfSizeAndMass)
+            .ObjectDirect("setRadius",
+                          (physics::CCollisionBody*)0,
+                          &physics::CCollisionBody::setRadius)
+            .ObjectDirect("setHeight",
+                          (physics::CCollisionBody*)0,
+                          &physics::CCollisionBody::setHeight)
+            .ObjectDirect("setMass",
+                          (physics::CCollisionBody*)0,
+                          &physics::CCollisionBody::setMass)
+            .ObjectDirect("setRotation",
+                          (physics::CCollisionBody*)0,
+                          static_cast<FUNC_setRotation>
+                          (&physics::CCollisionBody::setRotation))
+            .ObjectDirect("setLocalScaling",
+                          (physics::CCollisionBody*)0,
+                          static_cast<FUNC_setLocalScaling>
+                          (&physics::CCollisionBody::setLocalScaling))
+            .ObjectDirect("activate",
+                          (physics::CCollisionBody*)0,
+                          static_cast<FUNC_activate>
+                          (&physics::CCollisionBody::activate))
+            ;
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
@@ -2324,7 +2383,43 @@ fgBool script::CScriptSubsystem::registerGameEntities(void) {
         return FG_TRUE;
 
 #if defined(FG_USING_LUA_PLUS)
+    const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
+    const char* metatableSceneNodeObjectName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_OBJECT_MT_ID);
+    const char* metatableSceneNodeMeshName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MESH_MT_ID);
+    const char* metatableGameEntityName = fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_MT_ID);
+    const char* metatableGameEntityMeshName = fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_MESH_MT_ID);
 
+    // Register game::CEntity metatable
+    LPCD::Class(m_luaState->GetCState(), metatableGameEntityName, metatableSceneNodeObjectName)
+            ;
+
+    // need to statically cast function pointers to be called from CEntityMesh pointer type
+    // even if they belong to secondary base class (in this case physics::traits::CPhysical)
+    // it is because most functions return CSceneNode as pointer and from this level it's
+    // impossible to call functions of physical traits class.
+    // game::CEntityMesh extends CSceneNodeMesh and physical traits, it's quite problematic.
+    // Another reason for such hax is that Lua does not support something like type casting.
+    // Need to add functions for checking specific type of the object and
+    // up-casting it manually if needed - up-casting in this case means changing the
+    // metatable of the given Lua side object.
+    typedef physics::CCollisionBody * (game::CEntityMesh::*FUNC_getCollisionBodyType)(void);
+    typedef fgBool(game::CEntityMesh::*FUNC_hasCollisionBody)(void)const;
+    typedef physics::CCollisionBody::BodyType(game::CEntityMesh::*FUNC_getBodyType)(void)const;
+    // Register game::CEntityMesh metatable
+    LPCD::Class(m_luaState->GetCState(), metatableGameEntityMeshName, metatableSceneNodeMeshName)
+            .ObjectDirect("hasCollisionBody",
+                          (game::CEntityMesh *)0,
+                          static_cast<FUNC_hasCollisionBody>
+                          (&game::CEntityMesh::hasCollisionBody))
+            .ObjectDirect("getBodyType",
+                          (game::CEntityMesh*)0,
+                          static_cast<FUNC_getBodyType>
+                          (&game::CEntityMesh::getBodyType))
+            .ObjectDirect("getCollisionBody",
+                          (game::CEntityMesh*)0,
+                          static_cast<FUNC_getCollisionBodyType>
+                          (&game::CEntityMesh::getCollisionBody))
+            ;
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;

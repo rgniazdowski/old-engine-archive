@@ -7,10 +7,10 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/* 
+/*
  * File:   fgCollisionBody.cpp
  * Author: vigilant
- * 
+ *
  * Created on September 24, 2015, 12:16 PM
  */
 
@@ -98,7 +98,7 @@ void physics::CCollisionBody::setHalfSize(const Vector3f& halfExtent) {
         getCollisionSphere()->setUnscaledRadius(newRadius);
         //getCollisionSphere()->setLocalScaling()
     } else if(m_bodyType == CAPSULE) {
-        // tricky        
+        // tricky
         getCollisionCapsule()->setImplicitShapeDimensions(bt_ext);
     } else if(m_bodyType == TRIANGLE_MESH) {
         // ignore
@@ -159,7 +159,7 @@ void physics::CCollisionBody::setHeight(const float height) {
         CCollisionCapsule* pCapsule = getCollisionCapsule();
         const btVector3& dimensions = pCapsule->getImplicitShapeDimensions();
         int upAxis = pCapsule->getUpAxis();
-        //float radius = pCapsule->getRadius();        
+        //float radius = pCapsule->getRadius();
         //int radiusAxis = (upAxis + 2) % 3;
         //float radius = dimensions[radiusAxis]; // current radius
         // capsule true half size is radius + half height,
@@ -200,7 +200,7 @@ void physics::CCollisionBody::setLocalScaling(const Vector3f& scale) {
                                     m_pOwner->getDispatcher());
         m_pOwner->removeRigidBody(getRigidBody());
     }
-    getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));    
+    getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
     // this for quick update of local inertia
     setMass(m_mass); // is this an overkill?
     if(m_pOwner) {
@@ -219,7 +219,7 @@ void physics::CCollisionBody::setLocalScaling(float x, float y, float z) {
                                     m_pOwner->getDispatcher());
         m_pOwner->removeRigidBody(getRigidBody());
     }
-    getCollisionShape()->setLocalScaling(btVector3(x, y, z));    
+    getCollisionShape()->setLocalScaling(btVector3(x, y, z));
     setMass(m_mass);
     if(m_pOwner) {
         m_pOwner->addRigidBody(getRigidBody());

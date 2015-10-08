@@ -185,6 +185,7 @@ namespace fg {
                 //
                 SCENE_NODE_MT_ID, // gfx::CSceneNode
                 SCENE_NODE_OBJECT_MT_ID, // gfx::CSceneNodeObject
+                SCENE_NODE_MESH_MT_ID, // gfx::CSceneNodeMesh
                 SCENE_NODE_TRIGGER_MT_ID, // gfx::CSceneNodeTrigger
 
                 EVENT_SCENE_NODE_MT_ID, // event::SSceneNode
@@ -368,6 +369,8 @@ namespace fg {
                 return m_metatableInfoVec[metatableID];
             }
 
+            //------------------------------------------------------------------
+
             /**
              * 
              * @param widgetType
@@ -385,6 +388,8 @@ namespace fg {
                 return getMetatableName(getMetatableIDFromWidgetType(widgetType));
             }
 
+            //------------------------------------------------------------------
+
             /**
              * 
              * @param resourceType
@@ -401,6 +406,15 @@ namespace fg {
             inline const char *getMetatableNameFromResourceType(const unsigned int resourceType) {
                 return getMetatableName(getMetatableIDFromResourceType(resourceType));
             }
+
+            //------------------------------------------------------------------
+
+            METAID getMetatableIDFromNodeType(const unsigned int nodeType);
+            unsigned int getNodeTypeFromMetatableID(const unsigned short int metatableID);
+            inline const char *getMetatableNameFromNodeType(const unsigned int nodeType) {
+                return getMetatableName(getMetatableIDFromNodeType(nodeType));
+            }
+            //------------------------------------------------------------------
         };
 
     } // namespace script

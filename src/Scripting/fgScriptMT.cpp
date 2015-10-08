@@ -18,6 +18,8 @@
 #include "GUI/fgGuiWidgetTypes.h"
 #include "Resource/fgResource.h"
 #include "fgLog.h"
+#include "GFX/Scene/fgGfxSceneNodeType.h"
+#include "Game/fgGameEntityType.h"
 
 template <>
 bool CSingleton<fg::script::CMetatables>::instanceFlag = false;
@@ -155,6 +157,7 @@ script::CMetatables::METAID script::CMetatables::getMetatableIDFromResourceType(
     }
     return metaID;
 }
+//------------------------------------------------------------------------------
 
 unsigned int script::CMetatables::getResourceTypeFromMetatableID(const unsigned short int metatableID) {
     resource::ResourceType resourceType = resource::INVALID;
@@ -182,6 +185,58 @@ unsigned int script::CMetatables::getResourceTypeFromMetatableID(const unsigned 
     };
     return (unsigned int)resourceType;
 }
+//------------------------------------------------------------------------------
+
+script::CMetatables::METAID script::CMetatables::getMetatableIDFromNodeType(const unsigned int nodeType) {
+    METAID metaID = CMetatables::EMPTY_MT_ID;
+    if(nodeType == gfx::SCENE_NODE_ROOT) {
+        metaID = CMetatables::SCENE_NODE_MT_ID; // #FIXME
+    } else if(nodeType == gfx::SCENE_NODE_MESH) {
+        metaID = CMetatables::SCENE_NODE_MESH_MT_ID;
+    } else if(nodeType == gfx::SCENE_NODE_OBJECT) {
+        metaID = CMetatables::SCENE_NODE_OBJECT_MT_ID;
+    } else if(nodeType == gfx::SCENE_NODE_TRIGGER) {
+        metaID = CMetatables::SCENE_NODE_TRIGGER_MT_ID;
+    } else if(nodeType == gfx::SCENE_NODE_INTERIOR) {
+        metaID = CMetatables::SCENE_NODE_MT_ID; // #FIXME
+    } else if(nodeType == gfx::SCENE_NODE_LANDSCAPE) {
+        metaID = CMetatables::SCENE_NODE_MT_ID; // #FIXME
+    } else if(nodeType == gfx::SCENE_NODE_PARTICLE_EMITTER) {
+        metaID = CMetatables::SCENE_NODE_MT_ID; // #FIXME
+    } else if(nodeType == game::GAME_ENTITY) {
+        metaID = CMetatables::GAME_ENTITY_MT_ID;
+    } else if(nodeType == game::GAME_ENTITY_MESH) {
+        metaID = CMetatables::GAME_ENTITY_MESH_MT_ID;
+    }
+    return metaID;
+}
+
+unsigned int script::CMetatables::getNodeTypeFromMetatableID(const unsigned short int metatableID) {
+    gfx::SceneNodeType nodeType = gfx::SCENE_NODE_INVALID;
+    switch((METAID)metatableID) {
+        case SCENE_NODE_MT_ID:
+            break;
+        case SCENE_NODE_MESH_MT_ID:
+            nodeType = gfx::SCENE_NODE_MESH;
+            break;
+        case SCENE_NODE_OBJECT_MT_ID:
+            nodeType = gfx::SCENE_NODE_OBJECT;
+            break;
+        case SCENE_NODE_TRIGGER_MT_ID:
+            nodeType = gfx::SCENE_NODE_TRIGGER;
+            break;
+        case GAME_ENTITY_MT_ID:
+            nodeType = game::GAME_ENTITY;
+            break;
+        case GAME_ENTITY_MESH_MT_ID:
+            nodeType = game::GAME_ENTITY_MESH;
+            break;
+        default:
+            break;
+    };
+    return (unsigned int)nodeType;
+}
+
 //------------------------------------------------------------------------------
 
 void script::CMetatables::generateMetatableNames(void) {
@@ -312,6 +367,7 @@ void script::CMetatables::generateMetatableNames(void) {
     // GFX Scene Node type
     m_metatableInfoVec[SCENE_NODE_MT_ID] = SMetatableInfo("FG_SCENE_NODE", "T");
     m_metatableInfoVec[SCENE_NODE_OBJECT_MT_ID] = SMetatableInfo("FG_SCENE_NODE_OBJ", "T");
+    m_metatableInfoVec[SCENE_NODE_MESH_MT_ID] = SMetatableInfo("FG_SCENE_NODE_MESH", "T");
     m_metatableInfoVec[SCENE_NODE_TRIGGER_MT_ID] = SMetatableInfo("FG_SCENE_NODE_TRIGGER", "T");
 
     // GFX Scene Event types

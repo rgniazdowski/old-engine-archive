@@ -34,6 +34,8 @@
             #include "fgLog.h"
         #endif
         #include "fgScriptMT.h"
+        #include "fgScriptCD_TypeBoxPtrEasy.h"
+
         #include "GFX/Scene/fgGfxSceneNode.h"
         #include "GFX/Scene/fgGfxSceneNodeTrigger.h"
         #include "GFX/Scene/fgGfxSceneEvent.h"
@@ -48,17 +50,30 @@ namespace LPCD {
      * fgGfxSceneNode pointer parameter *
      **************************************************************************/
 
-    template<> struct Type<fg::gfx::CSceneNode *> {
-        static inline void Push(lua_State* L, const fg::gfx::CSceneNode * value) {
+    template<> struct Type<fg::gfx::CSceneNode*> {
+        typedef fg::gfx::CSceneNode* value_type;
+        static inline void Push(lua_State* L, const fg::gfx::CSceneNode* value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
+            LuaPlus::LuaObject obj;
+            //void* upCast = NULL;
+            if(!value) {
+                obj = state->BoxPointer((void*)0);
+            } else if(value->getNodeType() == fg::gfx::SCENE_NODE_INVALID) {
+                obj = state->BoxPointer((void*)0);
+            } else {
+                fg::gfx::SceneNodeType nodeType = value->getNodeType();
+                obj = state->BoxPointer((void*)value);
+            }
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type[gfx::CSceneNode]",
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type[%s]",
                          value,
                          (uintptr_t)value,
-                         value->getNameStr());
+                         (value != NULL ? value->getNameStr() : NULL),
+                         fg::gfx::CSceneNode::tag_type::name());
         #endif
-            fg::script::CMetatables::METAID metaID = fg::script::CMetatables::SCENE_NODE_MT_ID;
+            unsigned short int metaID = fg::script::CMetatables::SCENE_NODE_MT_ID;
+            if(value)
+                metaID = fgScriptMT->getMetatableIDFromNodeType(value->getNodeType());
             obj.SetMetatable(fgScriptMT->getMetatable(metaID).metaObj);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -67,59 +82,65 @@ namespace LPCD {
             if(!obj.IsUserdata())
                 return false;
             int metaEnum = (int)obj.GetMetatable().Get("__meta_enum").GetInteger();
-            bool result = (metaEnum == (int)fg::script::CMetatables::SCENE_NODE_MT_ID);
-            //FG_LOG_DEBUG("Script: LPCD Match: type[gfx::CSceneNode] -> result[%d]", (int)result);
-            return result;
+            return (metaEnum == (int)fg::script::CMetatables::SCENE_NODE_MT_ID);
         }
-        static inline fg::gfx::CSceneNode * Get(lua_State* L, int idx) {
+        static inline fg::gfx::CSceneNode* Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            fg::gfx::CSceneNode *pSceneNode = (fg::gfx::CSceneNode *)state->UnBoxPointer(idx);
-            return pSceneNode;
+            value_type pObject = (value_type)state->UnBoxPointer(idx);
+            return pObject;
         }
     };
 
     template<> struct Type<fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
     };
 
-    template<> struct Type<const fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
-    };
+    //template<> struct Type<const fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
+    //};
 
     //--------------------------------------------------------------------------
 
-    template<> struct Type<fg::gfx::CSceneNodeTrigger *> {
-        static inline void Push(lua_State* L, const fg::gfx::CSceneNodeTrigger * value) {
-            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
-        #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type[gfx::CSceneNodeTrigger]",
-                         value,
-                         (uintptr_t)value,
-                         value->getNameStr());
-        #endif
-            const unsigned short int metaID = fg::script::CMetatables::SCENE_NODE_TRIGGER_MT_ID;
-            obj.SetMetatable(fgScriptMT->getMetatable(metaID).metaObj);
-        }
-        static inline bool Match(lua_State* L, int idx) {
-            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->Stack(idx);
-            if(!obj.IsUserdata())
-                return false;
-            int metaEnum = (int)obj.GetMetatable().Get("__meta_enum").GetInteger();
-            bool result = (metaEnum == (int)fg::script::CMetatables::SCENE_NODE_TRIGGER_MT_ID);
-            return result;
-        }
-        static inline fg::gfx::CSceneNodeTrigger * Get(lua_State* L, int idx) {
-            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            fg::gfx::CSceneNodeTrigger *pSceneNodeTrigger = (fg::gfx::CSceneNodeTrigger *)state->UnBoxPointer(idx);
-            return pSceneNodeTrigger;
-        }
+    template<> struct Type<fg::gfx::CSceneNodeObject*> :
+    public TypeBoxPtrEasy<fg::gfx::CSceneNodeObject*,
+    fg::script::CMetatables::SCENE_NODE_OBJECT_MT_ID> {
     };
 
-    template<> struct Type<fg::gfx::CSceneNodeTrigger *&> : public Type<fg::gfx::CSceneNodeTrigger *> {
+    template<> struct Type<fg::gfx::CSceneNodeObject *&> :
+    public Type<fg::gfx::CSceneNodeObject *> {
     };
 
-    template<> struct Type<const fg::gfx::CSceneNodeTrigger *&> : public Type<fg::gfx::CSceneNodeTrigger *> {
+    //template<> struct Type<const fg::gfx::CSceneNodeObject *&> :
+    //public Type<fg::gfx::CSceneNodeObject *> {
+    //};
+
+    //--------------------------------------------------------------------------
+
+    template<> struct Type<fg::gfx::CSceneNodeMesh*> :
+    public TypeBoxPtrEasy<fg::gfx::CSceneNodeMesh*,
+    fg::script::CMetatables::SCENE_NODE_MESH_MT_ID> {
     };
+
+    template<> struct Type<fg::gfx::CSceneNodeMesh*&> :
+    public Type<fg::gfx::CSceneNodeMesh*> {
+    };
+
+    //template<> struct Type<const fg::gfx::CSceneNodeMesh*&> :
+    //public Type<fg::gfx::CSceneNodeMesh*> {
+    //};
+
+    //--------------------------------------------------------------------------
+
+    template<> struct Type<fg::gfx::CSceneNodeTrigger*> :
+    public TypeBoxPtrEasy<fg::gfx::CSceneNodeTrigger*,
+    fg::script::CMetatables::SCENE_NODE_TRIGGER_MT_ID> {
+    };
+
+    template<> struct Type<fg::gfx::CSceneNodeTrigger *&> :
+    public Type<fg::gfx::CSceneNodeTrigger *> {
+    };
+
+    //template<> struct Type<const fg::gfx::CSceneNodeTrigger *&> :
+    //public Type<fg::gfx::CSceneNodeTrigger *> {
+    //};
 
     //--------------------------------------------------------------------------
 

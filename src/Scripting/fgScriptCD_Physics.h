@@ -34,7 +34,9 @@
             #include "fgLog.h"
         #endif
         #include "fgScriptMT.h"
+        #include "fgScriptCD_TypeBoxPtrEasy.h"
         #include "Physics/fgCollisionBody.h"
+
 
 namespace LPCD {
 
@@ -42,7 +44,7 @@ namespace LPCD {
      * FG PHYSICS / COLLISION BODY ENUMERATION TYPES -> INT / UNSIGNED
      **************************************************************************/
 
-        #define FG_CONV_CD_TYPE fg::physics::CCollisionBody::BodyType
+    #define FG_CONV_CD_TYPE fg::physics::CCollisionBody::BodyType
 
     template<> struct Type<FG_CONV_CD_TYPE> : public Type<unsigned int> {
         static inline void Push(lua_State* L, FG_CONV_CD_TYPE value) {
@@ -56,10 +58,25 @@ namespace LPCD {
     template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
-    };
+    //template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    //};
 
         #undef FG_CONV_CD_TYPE
+
+    //--------------------------------------------------------------------------
+
+    template<> struct Type<fg::physics::CCollisionBody*> :
+    public TypeBoxPtrEasy<fg::physics::CCollisionBody*,
+    fg::script::CMetatables::COLLISION_BODY_MT_ID> {
+    };
+
+    template<> struct Type<fg::physics::CCollisionBody*&> :
+    public Type<fg::physics::CCollisionBody*> {
+    };
+
+    //template<> struct Type<const fg::physics::CCollisionBody*&> :
+    //public Type<fg::physics::CCollisionBody*> {
+    //};
 
     //--------------------------------------------------------------------------
 
