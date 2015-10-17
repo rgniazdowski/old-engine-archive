@@ -89,7 +89,7 @@ gfx::SSkinnedMesh* gfx::CSceneNodeMesh::getSkinnedMesh(void) const {
 void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     m_pMesh = pMesh;
     if(!pMesh)
-        return;    
+        return;
     if(m_drawCall) {
         m_drawCall->setupFromMesh(pMesh);
     }

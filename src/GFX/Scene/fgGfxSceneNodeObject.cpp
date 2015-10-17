@@ -118,7 +118,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
     physics::CCollisionBody *body = getCollisionBody();
     if(body) {
         if(m_pModel && !isAutoScale()) {
-            if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
+            if(body->getBodyType() == physics::CCollisionBody::BODY_SPHERE) {
                 body->setRadius(math::length(m_scale * m_pModel->getAABB().getExtent()));
             } else {
                 body->setHalfSize(m_scale * (m_pModel->getAABB().getExtent()));
@@ -155,7 +155,7 @@ void gfx::CSceneNodeObject::updateAABB(void) {
         //if(body && !isAutoScale()) {
         //    m_aabb.radius = body->getRadius();
         //} else {
-        m_aabb.radius = math::length(m_aabb.getExtent());
+        m_aabb.radius = math::length(m_aabb.extent);
         //}
     }
 }

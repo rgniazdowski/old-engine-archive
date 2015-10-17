@@ -275,7 +275,7 @@ void gfx::CSceneNode::updateAABB(void) {
     //
 #if 0
     if(m_collisionBody) {
-        if(m_collisionBody->getBodyType() == physics::CCollisionBody::BOX) {
+        if(m_collisionBody->getBodyType() == physics::BODY_BOX) {
             Vector3f &extent = m_collisionBody->getCollisionBox()->halfSize;
             m_aabb.min = -extent;
             m_aabb.max = extent;
@@ -283,7 +283,7 @@ void gfx::CSceneNode::updateAABB(void) {
                 m_scale = extent * 2.0f;
             }
             //m_aabb.radius = math::sqrt(extent.x* extent.x + extent.y* extent.y + extent.z* extent.z);
-        } else if(m_collisionBody->getBodyType() == physics::CCollisionBody::SPHERE) {
+        } else if(m_collisionBody->getBodyType() == physics::BODY_SPHERE) {
             float radius = m_collisionBody->getCollisionSphere()->radius;
             float tmp = math::sqrt((radius * radius) / 3.0f);
             Vector3f extent = Vector3f(tmp, tmp, tmp);

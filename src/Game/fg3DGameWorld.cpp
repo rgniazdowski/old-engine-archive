@@ -54,8 +54,8 @@ fgBool game::CGameWorld3D::initialize(void) {
 //------------------------------------------------------------------------------
 
 fgBool game::CGameWorld3D::destroy(void) {
-    fgBool status = base_type::destroy();
-    status = (fgBool)(scene_type::destroy() && status);
+    fgBool status = scene_type::destroy();
+    status = (fgBool)(base_type::destroy() && status);
 
     return status;
 }
@@ -89,6 +89,9 @@ void game::CGameWorld3D::update(float delta) {
         }
         physics::traits::CPhysical* pPhysical = NULL;
         if(pSceneNode->queryTrait(fg::traits::PHYSICAL, (void**)&pPhysical)) {
+            if(pPhysical->isRagdoll()) {
+                continue;
+            }
             if(!pPhysical->getCollisionBody())
                 continue; // skip
             physics::CCollisionBody* pBody = pPhysical->getCollisionBody();

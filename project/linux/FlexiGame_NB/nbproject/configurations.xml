@@ -405,6 +405,9 @@
           <itemPath>../../../src/Physics/Cyclone/fgWorld.cpp</itemPath>
           <itemPath>../../../src/Physics/Cyclone/fgWorld.h</itemPath>
         </logicalFolder>
+        <itemPath>../../../src/Physics/fgAbstractCollisionBody.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgAbstractCollisionBody.h</itemPath>
+        <itemPath>../../../src/Physics/fgBoneSmallInfo.h</itemPath>
         <itemPath>../../../src/Physics/fgBulletHelper.cpp</itemPath>
         <itemPath>../../../src/Physics/fgBulletHelper.h</itemPath>
         <itemPath>../../../src/Physics/fgBulletMaskTypes.h</itemPath>
@@ -416,6 +419,9 @@
         <itemPath>../../../src/Physics/fgPhysicalWorld.cpp</itemPath>
         <itemPath>../../../src/Physics/fgPhysicalWorld.h</itemPath>
         <itemPath>../../../src/Physics/fgPhysics.h</itemPath>
+        <itemPath>../../../src/Physics/fgRagdollBoneType.h</itemPath>
+        <itemPath>../../../src/Physics/fgRagdollCollisionBody.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgRagdollCollisionBody.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
         <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
@@ -2234,6 +2240,21 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBoneSmallInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
@@ -2282,6 +2303,21 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollBoneType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -4295,6 +4331,21 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBoneSmallInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
@@ -4343,6 +4394,21 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollBoneType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -6316,6 +6382,21 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBoneSmallInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
@@ -6364,6 +6445,21 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollBoneType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -8323,6 +8419,21 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBoneSmallInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
@@ -8371,6 +8482,21 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollBoneType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -10349,6 +10475,21 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBoneSmallInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
@@ -10397,6 +10538,21 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollBoneType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -12367,6 +12523,21 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgAbstractCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBoneSmallInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgBulletHelper.cpp"
             ex="false"
             tool="1"
@@ -12415,6 +12586,21 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollBoneType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRagdollCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"

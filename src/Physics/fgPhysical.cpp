@@ -56,6 +56,16 @@ physics::CCollisionBody const* physics::traits::CPhysical::getCollisionBody(void
 }
 //------------------------------------------------------------------------------
 
+physics::CRagdollCollisionBody* physics::traits::CPhysical::getRagdollCollisionBody(void) {
+    return CRagdollCollisionBody::upcast(m_collisionBody);
+}
+//------------------------------------------------------------------------------
+
+physics::CRagdollCollisionBody const* physics::traits::CPhysical::getRagdollCollisionBody(void) const {
+    return CRagdollCollisionBody::upcast(m_collisionBody);
+}
+//------------------------------------------------------------------------------
+
 physics::CAbstractCollisionBody* physics::traits::CPhysical::getAbstractCollisionBody(void) {
     return m_collisionBody;
 }

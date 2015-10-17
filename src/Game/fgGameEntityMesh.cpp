@@ -27,7 +27,7 @@ physical_type() {
     setNodeTrait(physical_type::SELF_TRAIT);
 
     // automatically update collision body
-    physical_type::setupCollisionBody(physics::CCollisionBody::BOX);
+    physical_type::setupCollisionBody(physics::BODY_BOX);
     if(pMesh)
         physical_type::getCollisionBody()->setHalfSize(pMesh->aabb.getExtent());
 }

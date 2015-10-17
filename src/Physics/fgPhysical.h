@@ -20,6 +20,7 @@
 
     #include "fgTraits.h"
     #include "Physics/fgCollisionBody.h"
+    #include "Physics/fgRagdollCollisionBody.h"
 
 namespace fg {
     namespace physics {
@@ -62,10 +63,18 @@ namespace fg {
                  * @return
                  */
                 CCollisionBody const* getCollisionBody(void) const;
+
+                /**
+                 * 
+                 * @return
+                 */
+                CRagdollCollisionBody* getRagdollCollisionBody(void);
                 /**
                  *
                  * @return
                  */
+                CRagdollCollisionBody const* getRagdollCollisionBody(void) const;
+
                 /**
                  *
                  * @return

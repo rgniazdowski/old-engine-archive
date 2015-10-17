@@ -25,8 +25,7 @@ game::CGameWorld::CGameWorld(gfx::CSceneManager* pSceneMgr) :
 base_type(),
 physical_world(),
 m_pSceneMgr(pSceneMgr),
-m_sceneNodeInsertedCallback(NULL) {
-}
+m_sceneNodeInsertedCallback(NULL) { }
 //------------------------------------------------------------------------------
 
 game::CGameWorld::CGameWorld(const CGameWorld& orig) : self_type(orig.m_pSceneMgr) {
@@ -57,7 +56,7 @@ fgBool game::CGameWorld::destroy(void) {
 void game::CGameWorld::update(float delta) {
     base_type::update(delta); // intelligent world
 
-    physical_world::update(delta);
+    physical_world::update(delta); // #FIXME
 }
 //------------------------------------------------------------------------------
 
@@ -114,7 +113,10 @@ fgBool game::CGameWorld::sceneNodeInsertedHandler(event::CArgumentList* argv) {
     physics::traits::CPhysical* pPhysical = NULL;
     fgBool status = FG_FALSE;
     if(pEventStruct->node.pNodeA->queryTrait(fg::traits::PHYSICAL, (void**)&pPhysical)) {
-        if(pPhysical->hasCollisionBody()) {
+        if(pPhysical->isRagdoll()) {
+            physical_world::setupOwnerFor(pPhysical->getAbstractCollisionBody());
+            status = FG_TRUE;
+        } else if(pPhysical->hasCollisionBody()) {
             physical_world::add(pPhysical->getCollisionBody());
             status = FG_TRUE;
         }

@@ -1082,8 +1082,8 @@ void gfx::CSceneManager::render(void) {
             if(FG_DEBUG_CFG_OPTION(physicsBBoxShow)) {
                 physics::CCollisionBody* body = pSceneNode->getCollisionBody();
                 if(body) {
-                    if(body->getBodyType() == physics::CCollisionBody::BOX) {
-                    } else if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
+                    if(body->getBodyType() == physics::BODY_BOX) {
+                    } else if(body->getBodyType() == physics::BODY_SPHERE) {
                     }
                 }
             }
@@ -1299,7 +1299,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
         return;
     }
 
-    CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager *>(getShaderManager());
+    CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager*>(getShaderManager());
 
     if(pNode->checkNodeType(SCENE_NODE_OBJECT)) {
         CSceneNodeObject* pNodeObject = static_cast<CSceneNodeObject*>(pNode);
@@ -1644,11 +1644,11 @@ gfx::CSceneNode* gfx::CSceneManager::addFromModel(const std::string& modelNameTa
     if(modelNameTag.empty() || nameTag.empty()) {
         return NULL;
     }
-    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager *>(getResourceManager());
+    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager*>(getResourceManager());
     if(!pResourceManager) {
         return NULL;
     }
-    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->request(modelNameTag));
+    CModelResource *pModelRes = static_cast<CModelResource*>(pResourceManager->request(modelNameTag));
     if(!pModelRes) {
         return NULL;
     }
@@ -1661,11 +1661,11 @@ gfx::CSceneNode* gfx::CSceneManager::addFromModel(const char *modelNameTag,
     if(!modelNameTag || !nameTag) {
         return NULL;
     }
-    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager *>(getResourceManager());
+    resource::CResourceManager *pResourceManager = static_cast<resource::CResourceManager*>(getResourceManager());
     if(!pResourceManager) {
         return NULL;
     }
-    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->request(modelNameTag));
+    CModelResource *pModelRes = static_cast<CModelResource*>(pResourceManager->request(modelNameTag));
     if(!pModelRes) {
         return NULL;
     }
