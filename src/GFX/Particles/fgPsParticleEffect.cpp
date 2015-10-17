@@ -539,7 +539,7 @@ void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
 //------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
-    const float elapsed =  timesys::elapsed();
+    const float elapsed = timesys::elapsed();
     // MOVEMENT
     outputParticle->bbox.pos.x += outputParticle->velocity.x * elapsed;
     outputParticle->bbox.pos.y += outputParticle->velocity.y * elapsed;

@@ -58,7 +58,7 @@ namespace fg {
              * 
              */
             virtual void render(void);
-            
+
         public:
             /**
              * 

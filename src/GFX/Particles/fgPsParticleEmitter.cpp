@@ -111,36 +111,6 @@ fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticle
 }
 //------------------------------------------------------------------------------
 
-Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& indest) {
-    Vector3f start = math::normalize(instart);
-    Vector3f dest = math::normalize(indest);
-    float cosTheta = math::dot(start, dest);
-    Vector3f rotationAxis;
-
-    if(cosTheta < -1 + 0.001f) {
-        // special case when vectors in opposite directions:
-        // there is no "ideal" rotation axis
-        // So guess one; any will do as long as it's perpendicular to start
-        rotationAxis = math::cross(Vector3f(0.0f, 0.0f, 1.0f), start);
-        if(math::length2(rotationAxis) < 0.01) // bad luck, they were parallel, try again!
-            rotationAxis = math::cross(Vector3f(1.0f, 0.0f, 0.0f), start);
-
-        rotationAxis = math::normalize(rotationAxis);
-        return math::angleAxis(M_PIF, rotationAxis);
-    }
-
-    rotationAxis = math::cross(start, dest);
-    float s = math::sqrt((1.0f + cosTheta)*2.0f);
-    float invs = 1.0f / s;
-
-    return Quaternionf(s * 0.5f,
-                       rotationAxis.x * invs,
-                       rotationAxis.y * invs,
-                       rotationAxis.z * invs);
-
-}
-//------------------------------------------------------------------------------
-
 void gfx::CParticleEmitter::calculate(void) {
     CVertexData *pVertexData = NULL;
     if(m_drawCall) {
@@ -253,7 +223,7 @@ void gfx::CParticleEmitter::calculate(void) {
 
             // Find the rotation between the front of the object (that we assume towards +Z, 
             // but this depends on your model) and the desired direction 
-            Quatf rot1 = RotationBetweenVectors(Vec3f(0.0f, 1.0f, 0.0f), direction);
+            Quatf rot1 = math::rotation(Vec3f(0.0f, 1.0f, 0.0f), direction);
 #if 0
             // Recompute desiredUp so that it's perpendicular to the direction
             // You can skip that part if you really want to force desiredUp
@@ -283,7 +253,7 @@ void gfx::CParticleEmitter::calculate(void) {
 
             // Find the rotation between the front of the object (that we assume towards +Z, 
             // but this depends on your model) and the desired direction 
-            Quatf rot1 = RotationBetweenVectors(Vec3f(0.0f, 0.0f, 1.0f), direction);
+            Quatf rot1 = math::rotation(Vec3f(0.0f, 0.0f, 1.0f), direction);
             mat = math::toMat3(rot1);
 
             V1 = mat * V1;
