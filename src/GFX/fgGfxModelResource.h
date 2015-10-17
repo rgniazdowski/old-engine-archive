@@ -17,7 +17,7 @@
     #include "fgGfxShape.h"
     #include "Resource/fgResource.h"
     #include "Util/fgStrings.h"
-    
+
     #if defined(FG_USING_ASSIMP)
 namespace Assimp {
     class Importer;
@@ -202,6 +202,9 @@ namespace fg {
                  * @return
                  */
                 fgBool loadFromFile(const char* path);
+
+                void translatePositionKeys(const std::string& targetName,
+                                           const Vector3f& translation);
             }; // protected struct SModelSkinning
 
         public:

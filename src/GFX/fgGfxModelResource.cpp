@@ -309,6 +309,34 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CModelResource::SModelSkinning::translatePositionKeys(const std::string& targetName,
+                                                                const Vector3f& translation) {
+
+    if(targetName.empty())
+        return;
+    unsigned int nAnims = this->animations.size();
+    for(unsigned int i = 0; i < nAnims; i++) {
+        anim::CAnimation* pAnim = this->animations[i];
+        if(!pAnim)
+            continue;
+        const unsigned int nChannels = pAnim->getChannels().size();
+        for(unsigned int idChannel = 0; idChannel < nChannels; idChannel++) {
+            anim::SAnimationChannel& refChannel = pAnim->getChannels()[idChannel];
+            if(refChannel.targetName.compare(targetName) == 0) {
+                // get Armature channel - ignore the rest
+                // now pre-translate properly all translation keys
+                const unsigned int nKeys = refChannel.positionKeys.size();
+                for(unsigned int idxKey = 0; idxKey < nKeys; idxKey++) {
+                    refChannel.positionKeys[idxKey].value += translation;
+                    // so now the model should display properly
+                }
+                break;
+            }
+        } // for every channel
+    } // for every animation
+}
+//------------------------------------------------------------------------------
+
 gfx::CModelResource::CModelResource() :
 base_type(),
 m_skinning(),
@@ -493,6 +521,9 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
     this->m_size += m_materialOverride->getDataSize();
     FG_LOG_DEBUG("GFX.Model: '%s': vertices[%d], normals[%d], indices[%d], uvs[%d], size(B)[%d]", getNameStr(),
                  m_numVertices, m_numNormals, m_numIndices, m_numUVs, m_size);
+    if(m_skinning.pArmature) {
+        m_skinning.pArmature->refreshInternals();
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -931,28 +962,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
             // one should not change the offset
             // just change the translation keys of all animations
             // this makes sense ?
-            unsigned int nAnims = m_skinning.animations.size();
-            for(unsigned int i = 0; i < nAnims; i++) {
-                anim::CAnimation* pAnim = m_skinning.animations[i];
-                if(!pAnim)
-                    continue;
-                const unsigned int nChannels = pAnim->getChannels().size();
-                for(unsigned int idChannel = 0; idChannel < nChannels; idChannel++) {
-                    anim::SAnimationChannel& refChannel = pAnim->getChannels()[idChannel];
-                    if(refChannel.targetName.compare("Armature") == 0) {
-                        // get Armature channel - ignore the rest
-                        // now pre-translate properly all translation keys
-                        const unsigned int nKeys = refChannel.positionKeys.size();
-                        for(unsigned int idxKey = 0; idxKey < nKeys; idxKey++) {
-                            refChannel.positionKeys[idxKey].value -= Vec3f(offsetArmature); /*Vec3f(aiTransform.a4,
-                                                                           aiTransform.b4,
-                                                                           aiTransform.c4);*/
-                            // so now the model should display properly
-                        }
-                        break;
-                    }
-                }
-            }
+            m_skinning.translatePositionKeys(std::string("Armature"), -Vec3f(offsetArmature));
             aiTransform.a4 = 0.0f;
             aiTransform.b4 = 0.0f;
             aiTransform.c4 = 0.0f;
@@ -1068,8 +1078,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 pBone->offset *= transformInv;
             }
         }
-    } // while (stack not empty)
-    //m_skinning.pArmature = pArmature;
+    } // while (stack not empty)    
     s_objImporter->FreeScene();
     // load additional skinning info file
     std::string& currentPath = this->getCurrentFilePath();
@@ -1327,19 +1336,16 @@ void gfx::CModelResource::updateAABB(void) {
     }
     if(isFixCenter()) {
         const Vector3f offCenter = m_aabb.getCenter();
-        //        printf("%s: offCenter: %.2f %.2f %.2f\n",
-        //               this->getNameStr(), offCenter.x, offCenter.y, offCenter.z);
+        //printf("%s: offCenter: %.2f %.2f %.2f\n",
+        //       this->getNameStr(), offCenter.x, offCenter.y, offCenter.z);
         const Matrix4f offMatInv = math::inverse(math::translate(Matrix4f(), -offCenter));
         if(m_skinning.pArmature) {
             const unsigned int nBones = m_skinning.pArmature->getBones().size();
             for(unsigned int i = 0; i < nBones; i++) {
                 anim::SBone* pBone = m_skinning.pArmature->getBones()[i];
-                if(!pBone) continue;
+                if(!pBone)
+                    continue;
                 pBone->offset *= offMatInv;
-                //                printf("%.2f %.2f %.2f INV\n",
-                //                       offMatInv[3].x,
-                //                       offMatInv[3].y,
-                //                       offMatInv[3].z);
             }
         }
         m_aabb.min -= offCenter;
@@ -1353,12 +1359,6 @@ void gfx::CModelResource::updateAABB(void) {
             }
         }
     }
-
-    //    printf("aabb:%s: min: %.2f %.2f %.2f | max: %.2f %.2f %.2f | center: %.2f %.2f %.2f\n",
-    //           this->getNameStr(),
-    //           m_aabb.min.x, m_aabb.min.y, m_aabb.min.z,
-    //           m_aabb.max.x, m_aabb.max.y, m_aabb.max.z,
-    //           m_aabb.getCenter().x, m_aabb.getCenter().y, m_aabb.getCenter().z);
 }
 //------------------------------------------------------------------------------
 
