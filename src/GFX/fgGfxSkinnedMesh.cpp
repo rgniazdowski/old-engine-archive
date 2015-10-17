@@ -291,8 +291,7 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
                 blendWeights[weight.vertexIdx][subIdx] = weight.weight;
                 blendIndices[weight.vertexIdx][subIdx] = boneIdx; //pBone->index;
                 Vector3f point(0.0f, 0.0f, 0.0f);
-                getVertexPos(pMeshSuper->front(), pMeshSuper->stride(),
-                             weight.vertexIdx, point);
+                pMeshSuper->getPosition(weight.vertexIdx, point);
                 boneBoxes[boneIdx].merge(point);
                 boneEdges[boneIdx].merge(weight.vertexIdx, point);
             }
@@ -316,6 +315,7 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
         // need also to match properly animations, attack should use upper bones
         // where for example run should use lower bones
         // need automatic bones groups
+#if 0
         if(0) {
             anim::CAnimation* pFirst = blendPairsInfo[pairIdx].animation.first;
             anim::CAnimation* pSecond = blendPairsInfo[pairIdx].animation.second;
@@ -325,6 +325,7 @@ void gfx::SSkinnedMesh::refreshSkinningInfo(SMeshBase* pMeshSuper) {
             anim::getBonesForStandardAction(firstAction, firstBones);
             anim::getBonesForStandardAction(secondAction, secondBones);
         }
+#endif
         // copy proper info
         for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
             anim::SBone* pBone = bones[boneIdx];

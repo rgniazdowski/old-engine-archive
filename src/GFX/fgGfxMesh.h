@@ -40,6 +40,30 @@ container, which you can get via:
 namespace fg {
     namespace gfx {
 
+        enum MeshType {
+            /// Invalid mesh type - no info 
+            MESH_INVALID = 0,
+            /// Mesh represents a standard cube - it doesn't matter how many
+            /// triangles it will contain - what matters is the end shape
+            MESH_CUBE = 1,
+            /// Mesh represents a standard sphere
+            MESH_SPHERE = 2,
+            /// Mesh represents a capsule
+            MESH_CAPSULE = 3,
+            /// Mesh is complex - many triangles and sub-meshes - it's just a hint.
+            /// This could be anything really (car, building, tree, gun, person...)
+            MESH_COMPLEX = 4,
+            /// Mesh represents a single triangle shape
+            MESH_TRIANGLE = 5,
+            /// Mesh represents a single quad shape
+            MESH_QUAD = 6,
+            /// Mesh represents hexagonal prism
+            MESH_HEXAGONAL_PRISM = 7,
+            /// Mesh represents octagonal prism
+            MESH_OCTAGONAL_PRISM = 8,
+            
+        }; // enum MeshType
+
         /**
          * Base abstract class type for Mesh data
          */
@@ -50,10 +74,15 @@ namespace fg {
             Vector3f displacement;
             ////
             PrimitiveMode primMode;
+            ////
+            MeshType meshType;
             /**
              * 
              */
-            SMeshBase() : aabb(), displacement(), primMode(PrimitiveMode::TRIANGLES) { }
+            SMeshBase() : aabb(),
+            displacement(),
+            primMode(PrimitiveMode::TRIANGLES),
+            meshType(MESH_INVALID) { }
             /**
              * 
              */
@@ -83,7 +112,10 @@ namespace fg {
                 return FG_FALSE;
             }
 
-
+            virtual void getPosition(unsigned int index, Vector3f& outPosition) const = 0;
+            virtual void getNormal(unsigned int index, Vector3f& outNormal) const = 0;
+            virtual void getUV(unsigned int index, Vector2f& outUV) const = 0;
+            virtual void getColor(unsigned int index, Color4f& outColor) const = 0;
         }; // struct SMeshBase
 
         /**
@@ -449,6 +481,28 @@ namespace fg {
              */
             virtual bool empty(void) const {
                 return (bool) vertices.empty();
+            }
+            virtual void getPosition(unsigned int index, Vector3f& outPosition) const {
+                if(index * 3 >= vertices.size())
+                    return;
+                outPosition.x = vertices[index*3 + 0];
+                outPosition.y = vertices[index*3 + 1];
+                outPosition.z = vertices[index*3 + 2];
+            }
+            virtual void getNormal(unsigned int index, Vector3f& outNormal) const {
+                if(index * 3 >= normals.size())
+                    return;
+                outNormal.x = normals[index*3 + 0];
+                outNormal.y = normals[index*3 + 1];
+                outNormal.z = normals[index*3 + 2];
+            }
+            virtual void getUV(unsigned int index, Vector2f& outUV) const {
+                if(index * 2 >= uvs.size())
+                    return;
+                outUV.x = uvs[index*2 + 0];
+                outUV.y = uvs[index*2 + 1];
+            }
+            virtual void getColor(unsigned int index, Color4f& outColor) const {
             }
         }; // struct SMeshSoA
 
@@ -854,6 +908,45 @@ namespace fg {
              */
             virtual bool empty(void) const {
                 return (bool) this->vertices->empty();
+            }
+            virtual void getPosition(unsigned int index, Vector3f& outPosition) const {
+                if(!this->vertices)
+                    return;
+                if(!(this->vertices->attribMask() & ATTRIBUTE_POSITION_BIT))
+                    return;
+                if(!this->vertices->stride())
+                    return;
+                uintptr_t offset = (uintptr_t)this->vertices->front();
+                const unsigned char innerMax = 3;
+                const void* current = (const void *)(offset + index * this->vertices->stride());
+                const float* values = (const float*)current;
+                for(unsigned char i = 0; i < innerMax; i++) {
+                    outPosition[i] = *(values + i);
+                }
+            }
+            virtual void getNormal(unsigned int index, Vector3f& outNormal) const {
+                if(!this->vertices)
+                    return;
+                if(!(this->vertices->attribMask() & ATTRIBUTE_NORMAL_BIT))
+                    return;
+                if(!this->vertices->stride())
+                    return;
+            }
+            virtual void getUV(unsigned int index, Vector2f& outUV) const {
+                if(!this->vertices)
+                    return;
+                if(!(this->vertices->attribMask() & ATTRIBUTE_TEXTURE_COORD_BIT))
+                    return;
+                if(!this->vertices->stride())
+                    return;
+            }
+            virtual void getColor(unsigned int index, Color4f& outColor) const {
+                if(!this->vertices)
+                    return;
+                if(!(this->vertices->attribMask() & ATTRIBUTE_COLOR_BIT))
+                    return;
+                if(!this->vertices->stride())
+                    return;
             }
         }; // struct SMeshAoS
 

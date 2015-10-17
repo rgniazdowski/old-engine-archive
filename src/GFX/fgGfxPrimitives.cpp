@@ -456,24 +456,24 @@ void gfx::primitives::drawSkyBoxOptimized(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
+void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase* pMesh,
                                        unsigned int rings,
                                        unsigned int sectors,
                                        float radius) {
-    if(!mesh) {
+    if(!pMesh) {
         return;
     }
     float const R = 1.0f / (float)(rings - 1);
     float const S = 1.0f / (float)(sectors - 1);
-    mesh->clear();
-    mesh->reserve(rings * sectors);
+    pMesh->clear();
+    pMesh->reserve(rings * sectors);
     for(unsigned int r = 0; r < rings; ++r) {
         for(unsigned int s = 0; s < sectors; ++s) {
             float const y = math::sin(-M_PI_2 + M_PI * r * R);
             float const x = math::cos(2 * M_PI * s * S) * math::sin(M_PI * r * R);
             float const z = math::sin(2 * M_PI * s * S) * math::sin(M_PI * r * R);
 
-            mesh->append(Vector3f(x * radius, y * radius, z * radius),
+            pMesh->append(Vector3f(x * radius, y * radius, z * radius),
                          Vector2f(s*S, r * R));
             //texcoords.push_back(vec2(s*S, r * R));
             //vertices.push_back();
@@ -482,17 +482,18 @@ void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
                 int curRow = r * sectors;
                 int nextRow = (r + 1) * sectors;
 
-                mesh->appendIndice(curRow + s);
-                mesh->appendIndice(nextRow + s);
-                mesh->appendIndice(nextRow + (s + 1));
+                pMesh->appendIndice(curRow + s);
+                pMesh->appendIndice(nextRow + s);
+                pMesh->appendIndice(nextRow + (s + 1));
 
-                mesh->appendIndice(curRow + s);
-                mesh->appendIndice(nextRow + (s + 1));
-                mesh->appendIndice(curRow + (s + 1));
+                pMesh->appendIndice(curRow + s);
+                pMesh->appendIndice(nextRow + (s + 1));
+                pMesh->appendIndice(curRow + (s + 1));
             }
         }
     }
-    mesh->primMode = PrimitiveMode::TRIANGLES;
+    pMesh->primMode = PrimitiveMode::TRIANGLES;
+    pMesh->meshType = MESH_SPHERE;
 }
 //------------------------------------------------------------------------------
 
@@ -548,12 +549,11 @@ static fgBool createMeshFromRawData_Helper(gfx::SMeshBase* pMesh,
         pMesh->appendIndice(pIndices[i]);
     }
     pMesh->primMode = primMode;
-
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::createHexagonalPrismMesh(fg::gfx::SMeshBase *pMesh,
+void gfx::primitives::createHexagonalPrismMesh(fg::gfx::SMeshBase* pMesh,
                                                float scale, fgBool shouldPreRotate,
                                                float angle, const Vec3f& axis) {
     if(!pMesh) {
@@ -566,10 +566,11 @@ void gfx::primitives::createHexagonalPrismMesh(fg::gfx::SMeshBase *pMesh,
                                  gfx::PrimitiveMode::TRIANGLE_STRIP,
                                  Vec3f(scale, scale, scale),
                                  shouldPreRotate, angle, axis);
+    pMesh->meshType = MESH_HEXAGONAL_PRISM;
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::createOctagonalPrismMesh(fg::gfx::SMeshBase *pMesh,
+void gfx::primitives::createOctagonalPrismMesh(fg::gfx::SMeshBase* pMesh,
                                                float scale, fgBool shouldPreRotate,
                                                float angle, const Vec3f& axis) {
     if(!pMesh) {
@@ -582,12 +583,13 @@ void gfx::primitives::createOctagonalPrismMesh(fg::gfx::SMeshBase *pMesh,
                                  gfx::PrimitiveMode::TRIANGLE_STRIP,
                                  Vec3f(scale, scale, scale),
                                  shouldPreRotate, angle, axis);
+    pMesh->meshType = MESH_OCTAGONAL_PRISM;
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
+void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase* pMesh,
                                      float scale) {
-    if(!mesh) {
+    if(!pMesh) {
         return;
     }
     if(scale < 0.0f) {
@@ -597,25 +599,26 @@ void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
         scale = 1.0f;
     }
 
-    mesh->clear();
+    pMesh->clear();
     int n = sizeof (c_stripCube1x1) / sizeof (c_stripCube1x1[0]);
-    mesh->reserve(n);
+    pMesh->reserve(n);
     for(int i = 0; i < n; i++) {
-        mesh->append(c_stripCube1x1[i].position*scale,
+        pMesh->append(c_stripCube1x1[i].position*scale,
                      c_stripCube1x1[i].normal,
                      c_stripCube1x1[i].uv);
     }
     n = sizeof (c_stripCube1x1Idx) / sizeof (c_stripCube1x1Idx[0]);
     for(int i = 0; i < n; i++) {
-        mesh->appendIndice(c_stripCube1x1Idx[i]);
+        pMesh->appendIndice(c_stripCube1x1Idx[i]);
     }
-    mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+    pMesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+    pMesh->meshType = MESH_CUBE;
 }
 //------------------------------------------------------------------------------
 
-void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* mesh,
+void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* pMesh,
                                      float scale) {
-    if(!mesh) {
+    if(!pMesh) {
         return;
     }
     if(scale < 0.0f) {
@@ -624,19 +627,16 @@ void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* mesh,
     if(scale <= FG_EPSILON) {
         scale = 1.0f;
     }
-    mesh->clear();
+    pMesh->clear();
     int n = sizeof (c_stripSquare1x1) / sizeof (c_stripSquare1x1[0]);
-    mesh->reserve(n);
+    pMesh->reserve(n);
     for(int i = 0; i < n; i++) {
-        mesh->append(c_stripSquare1x1[i].position*scale,
+        pMesh->append(c_stripSquare1x1[i].position*scale,
                      c_stripSquare1x1[i].normal,
                      c_stripSquare1x1[i].uv);
-    }
-    //mesh->appendIndice(0);
-    //mesh->appendIndice(1);
-    //mesh->appendIndice(2);
-    //mesh->appendIndice(3);
-    mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+    }    
+    pMesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+    pMesh->meshType = MESH_QUAD;
 }
 
 //------------------------------------------------------------------------------
@@ -1011,7 +1011,7 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                      sizeof (Vertex4v),
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
-    glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
+    context::drawElements(mode, indices.size(), &indices.front());
     GLCheckError("glDrawElements");
 }
 //------------------------------------------------------------------------------
@@ -1086,8 +1086,8 @@ void gfx::primitives::drawVertexData(const CVertexData *inputData,
         context::drawArrays(mode, 0, drawingInfo.count);
     }
     // #FIXME
-    context::bindBuffer(GL_ARRAY_BUFFER, 0);
-    context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    context::bindBuffer(gfx::ARRAY_BUFFER, 0);
+    context::bindBuffer(gfx::ELEMENT_ARRAY_BUFFER, 0);
 }
 //------------------------------------------------------------------------------
 

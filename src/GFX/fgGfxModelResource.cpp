@@ -10,13 +10,14 @@
 
 #include "fgGfxModelResource.h"
 #include "fgGfxSkinnedMesh.h"
+
 #include "Animation/fgGfxArmature.h"
 #include "Animation/fgGfxBoneAnimation.h"
-#include "fgTinyObj.h"
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceErrorCodes.h"
 #include "Util/fgStrings.h"
 #include "Util/fgPath.h"
+#include "fgTinyObj.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------

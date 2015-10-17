@@ -323,7 +323,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         // ERROR
         return;
     }
-
+    resource::CResourceManager* pResourceMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr);
     /// Will now create built in model shapes
     SMeshAoS *builtin_cube_mesh = new SMeshAoS();
     SShape *builtin_cube_shape = new SShape();
@@ -337,15 +337,15 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_cube_shape->material->diffuseTexName = "empty.tga";
     builtin_cube_shape->material->shaderName = "sPlainEasy";
     cubeModel->addShape(builtin_cube_shape);
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
-    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(cubeModel)) {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(cubeModel);
+    pResourceMgr->request("empty.tga");
+    if(!pResourceMgr->insert(cubeModel)) {
+        pResourceMgr->remove(cubeModel);
         delete cubeModel;
     }
     // Should not call create manually on the 3D Model
     // This wont call the function for VBO upload
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinCube1x1");
-    //---------------------------------------------
+    pResourceMgr->request("builtinCube1x1");
+    //--------------------------------------------------------------------------
 
     SMeshAoS *builtin_sphere_mesh = new SMeshAoS();
     SShape *builtin_sphere_shape = new SShape();
@@ -359,13 +359,13 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_sphere_shape->material->diffuseTexName = "empty.tga";
     builtin_sphere_shape->material->shaderName = "sPlainEasy";
     sphereModel->addShape(builtin_sphere_shape);
-    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
-    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(sphereModel)) {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(sphereModel);
+    //pResourceMgr->request("empty.tga");
+    if(!pResourceMgr->insert(sphereModel)) {
+        pResourceMgr->remove(sphereModel);
         delete sphereModel;
     }
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
-    //---------------------------------------------
+    pResourceMgr->request("builtinSphere");
+    //--------------------------------------------------------------------------
 
     SMeshAoS *builtin_quad_mesh = new SMeshAoS();
     SShape *builtin_quad_shape = new SShape();
@@ -379,13 +379,13 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_quad_shape->material->diffuseTexName = "empty.tga";
     builtin_quad_shape->material->shaderName = "sPlainEasy";
     quadModel->addShape(builtin_quad_shape);
-    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
-    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(quadModel)) {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(quadModel);
+    //pResourceMgr->request("empty.tga");
+    if(!pResourceMgr->insert(quadModel)) {
+        pResourceMgr->remove(quadModel);
         delete quadModel;
     }
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinQuad1x1");
-    //---------------------------------------------
+    pResourceMgr->request("builtinQuad1x1");
+    //--------------------------------------------------------------------------
 
     SMeshAoS *builtin_hex_prism_mesh = new SMeshAoS();
     SShape *builtin_hex_prism_shape = new SShape();
@@ -400,14 +400,14 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_hex_prism_shape->material->diffuseTexName = "empty.tga";
     builtin_hex_prism_shape->material->shaderName = "sPlainEasy";
     hexPrismModel->addShape(builtin_hex_prism_shape);
-    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
-    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(hexPrismModel)) {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(hexPrismModel);
+    //pResourceMgr->request("empty.tga");
+    if(!pResourceMgr->insert(hexPrismModel)) {
+        pResourceMgr->remove(hexPrismModel);
         delete hexPrismModel;
     }
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinHexagonalPrism");
+    pResourceMgr->request("builtinHexagonalPrism");
 
-    //---------------------------------------------
+    //--------------------------------------------------------------------------
     SMeshAoS *builtin_oct_prism_mesh = new SMeshAoS();
     SShape *builtin_oct_prism_shape = new SShape();
     primitives::createOctagonalPrismMesh(builtin_oct_prism_mesh, 1.0f, FG_TRUE,
@@ -421,14 +421,14 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_oct_prism_shape->material->diffuseTexName = "empty.tga";
     builtin_oct_prism_shape->material->shaderName = "sPlainEasy";
     octPrismModel->addShape(builtin_oct_prism_shape);
-    //static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("empty.tga");
-    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(octPrismModel)) {
-        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(octPrismModel);
+    //pResourceMgr->request("empty.tga");
+    if(!pResourceMgr->insert(octPrismModel)) {
+        pResourceMgr->remove(octPrismModel);
         delete octPrismModel;
     }
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinOctagonalPrism");
+    pResourceMgr->request("builtinOctagonalPrism");
 
-    //---------------------------------------------
+    //--------------------------------------------------------------------------
 }
 
 ////////////////////////////////////////////////////////////////////////////////
