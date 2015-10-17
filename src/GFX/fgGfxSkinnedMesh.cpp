@@ -493,7 +493,8 @@ void gfx::SSkinnedMesh::calculate(anim::SAnimationInfo& animationInfo,
     anim::CAnimation* pAnimation = animationInfo.pAnimation;
     if(!pAnimation)
         return;
-    if(pAnimation->getType() != anim::Type::BONE)
+    if(pAnimation->getType() != anim::Type::BONE &&
+       pAnimation->getType() != anim::Type::BONE_RAGDOLL)
         return;
     //if(!isAnimationCompatible(pAnimation))
     //    return;

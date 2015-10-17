@@ -37,7 +37,8 @@ namespace fg {
                 NODE = 1,
                 OBJECT = Type::NODE,
                 BONE = 2,
-                CAMERA = 3
+                BONE_RAGDOLL = 3,
+                CAMERA = 4
             };
 
             /**
@@ -286,6 +287,20 @@ namespace fg {
                  */
                 void setInterpolation(fgBool toggle = FG_TRUE) {
                     m_shouldInterpolate = toggle;
+                }
+
+            public:
+                fgBool isBoneAnimation(void) const {
+                    return (fgBool)(m_type == Type::BONE || m_type == Type::BONE_RAGDOLL);
+                }
+                fgBool isRagdollAnimation(void) const {
+                    return (fgBool)(m_type == Type::BONE_RAGDOLL);
+                }
+                fgBool isCameraAnimation(void) const {
+                    return (fgBool)(m_type == Type::CAMERA);
+                }
+                fgBool isNodeAnimation(void) const {
+                    return (fgBool)(m_type == Type::NODE);
                 }
 
             protected:

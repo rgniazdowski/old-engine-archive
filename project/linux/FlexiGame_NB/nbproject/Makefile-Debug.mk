@@ -57,6 +57,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1082467756/fgGfxBone.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxBoneAnimation.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o \
+	${OBJECTDIR}/_ext/1082467756/fgGfxRagdollBoneAnimation.o \
 	${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o \
 	${OBJECTDIR}/_ext/293675389/fgParticleSystem.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o \
@@ -195,10 +196,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/94644411/fgRandom.o \
 	${OBJECTDIR}/_ext/94644411/fgRigidBody.o \
 	${OBJECTDIR}/_ext/94644411/fgWorld.o \
+	${OBJECTDIR}/_ext/1611265229/fgAbstractCollisionBody.o \
 	${OBJECTDIR}/_ext/1611265229/fgBulletHelper.o \
 	${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o \
 	${OBJECTDIR}/_ext/1611265229/fgPhysical.o \
 	${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o \
+	${OBJECTDIR}/_ext/1611265229/fgRagdollCollisionBody.o \
 	${OBJECTDIR}/_ext/942373304/fgResource.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceConfigParser.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
@@ -370,6 +373,11 @@ ${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o: ../../../src/GFX/Animation/
 	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o ../../../src/GFX/Animation/fgGfxObjectAnimation.cpp
+
+${OBJECTDIR}/_ext/1082467756/fgGfxRagdollBoneAnimation.o: ../../../src/GFX/Animation/fgGfxRagdollBoneAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxRagdollBoneAnimation.o ../../../src/GFX/Animation/fgGfxRagdollBoneAnimation.cpp
 
 ${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o: ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
@@ -1061,6 +1069,11 @@ ${OBJECTDIR}/_ext/94644411/fgWorld.o: ../../../src/Physics/Cyclone/fgWorld.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgWorld.o ../../../src/Physics/Cyclone/fgWorld.cpp
 
+${OBJECTDIR}/_ext/1611265229/fgAbstractCollisionBody.o: ../../../src/Physics/fgAbstractCollisionBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgAbstractCollisionBody.o ../../../src/Physics/fgAbstractCollisionBody.cpp
+
 ${OBJECTDIR}/_ext/1611265229/fgBulletHelper.o: ../../../src/Physics/fgBulletHelper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
 	${RM} "$@.d"
@@ -1080,6 +1093,11 @@ ${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o: ../../../src/Physics/fgPhysicalW
 	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o ../../../src/Physics/fgPhysicalWorld.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgRagdollCollisionBody.o: ../../../src/Physics/fgRagdollCollisionBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgRagdollCollisionBody.o ../../../src/Physics/fgRagdollCollisionBody.cpp
 
 ${OBJECTDIR}/_ext/942373304/fgResource.o: ../../../src/Resource/fgResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
