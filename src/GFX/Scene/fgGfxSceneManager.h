@@ -1730,6 +1730,19 @@ namespace fg {
             } m_traverse;
 
         public:
+            inline void traverseRewind(void) {
+                m_traverse.rewind();
+            }
+            
+            inline void traverseSkip(void) {
+                m_traverse.skip(getActiveRootNode());
+            }
+            
+            inline CSceneNode* traverseNext(void) {
+                return m_traverse.next(getActiveRootNode());
+            }
+
+        public:
             /**
              * 
              * @return
