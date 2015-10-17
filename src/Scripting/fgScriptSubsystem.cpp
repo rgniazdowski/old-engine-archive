@@ -690,11 +690,13 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     // PHYSICS CONSTANTS (COLLISION BODY/OTHER)
     //
 
-    m_fgObj.SetInteger("BODY_INVALID", (int)physics::CCollisionBody::INVALID);
-    m_fgObj.SetInteger("BODY_BOX", (int)physics::CCollisionBody::BOX);
-    m_fgObj.SetInteger("BODY_CUBE", (int)physics::CCollisionBody::BOX);
-    m_fgObj.SetInteger("BODY_SPHERE", (int)physics::CCollisionBody::SPHERE);
-    m_fgObj.SetInteger("BODY_COMPLEX", (int)physics::CCollisionBody::COMPLEX);
+    m_fgObj.SetInteger("BODY_INVALID", (int)physics::BODY_INVALID);
+    m_fgObj.SetInteger("BODY_BOX", (int)physics::BODY_BOX);
+    m_fgObj.SetInteger("BODY_CUBE", (int)physics::BODY_BOX);
+    m_fgObj.SetInteger("BODY_SPHERE", (int)physics::BODY_SPHERE);
+    m_fgObj.SetInteger("BODY_COMPLEX", (int)physics::BODY_COMPLEX);
+    m_fgObj.SetInteger("BODY_TRIANGLE_MESH", (int)physics::BODY_TRIANGLE_MESH);
+    m_fgObj.SetInteger("BODY_RAGDOLL", (int)physics::BODY_RAGDOLL);
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -2339,18 +2341,23 @@ fgBool script::CScriptSubsystem::registerPhysics(void) {
     typedef void (physics::CCollisionBody::*FUNC_activate)(bool) const;
     typedef void (physics::CCollisionBody::*FUNC_setRotation)(float, float, float, float);
 
+    typedef physics::BodyType (physics::CCollisionBody::*FUNC_getBodyType)(void) const;
+    typedef void (physics::CCollisionBody::*FUNC_setHalfSizeAndMass)(float, float, float, float);
+
     // Register physics::CCollisionBody
     LPCD::Class(m_luaState->GetCState(), metatableCollisionBodyName)
             .ObjectDirect("getBodyType",
                           (physics::CCollisionBody*)0,
-                          &physics::CCollisionBody::getBodyType)
+                          static_cast<FUNC_getBodyType>
+                          (&physics::CCollisionBody::getBodyType))
             .ObjectDirect("setHalfSize",
                           (physics::CCollisionBody*)0,
                           static_cast<FUNC_setHalfSize>
                           (&physics::CCollisionBody::setHalfSize))
             .ObjectDirect("setHalfSizeAndMass",
                           (physics::CCollisionBody*)0,
-                          &physics::CCollisionBody::setHalfSizeAndMass)
+                          static_cast<FUNC_setHalfSizeAndMass>
+                          (&physics::CCollisionBody::setHalfSizeAndMass))
             .ObjectDirect("setRadius",
                           (physics::CCollisionBody*)0,
                           &physics::CCollisionBody::setRadius)
@@ -2402,9 +2409,9 @@ fgBool script::CScriptSubsystem::registerGameEntities(void) {
     // Need to add functions for checking specific type of the object and
     // up-casting it manually if needed - up-casting in this case means changing the
     // metatable of the given Lua side object.
-    typedef physics::CCollisionBody * (game::CEntityMesh::*FUNC_getCollisionBodyType)(void);
+    typedef physics::CCollisionBody * (game::CEntityMesh::*FUNC_getCollisionBody)(void);
     typedef fgBool(game::CEntityMesh::*FUNC_hasCollisionBody)(void)const;
-    typedef physics::CCollisionBody::BodyType(game::CEntityMesh::*FUNC_getBodyType)(void)const;
+    typedef physics::BodyType(game::CEntityMesh::*FUNC_getBodyType)(void)const;
     // Register game::CEntityMesh metatable
     LPCD::Class(m_luaState->GetCState(), metatableGameEntityMeshName, metatableSceneNodeMeshName)
             .ObjectDirect("hasCollisionBody",
@@ -2417,7 +2424,7 @@ fgBool script::CScriptSubsystem::registerGameEntities(void) {
                           (&game::CEntityMesh::getBodyType))
             .ObjectDirect("getCollisionBody",
                           (game::CEntityMesh*)0,
-                          static_cast<FUNC_getCollisionBodyType>
+                          static_cast<FUNC_getCollisionBody>
                           (&game::CEntityMesh::getCollisionBody))
             ;
 

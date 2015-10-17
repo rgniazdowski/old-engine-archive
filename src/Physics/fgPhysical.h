@@ -50,7 +50,7 @@ namespace fg {
                  *
                  */
                 virtual ~CPhysical();
-                
+
             public:
                 /**
                  *
@@ -66,18 +66,89 @@ namespace fg {
                  *
                  * @return
                  */
-                CCollisionBody::BodyType getBodyType(void) const;
+                /**
+                 *
+                 * @return
+                 */
+                CAbstractCollisionBody* getAbstractCollisionBody(void);
+                /**
+                 * 
+                 * @return
+                 */
+                CAbstractCollisionBody const* getAbstractCollisionBody(void) const;
+                /**
+                 *
+                 * @return
+                 */
+                BodyType getBodyType(void) const;
                 /**
                  * 
                  * @return
                  */
                 fgBool hasCollisionBody(void) const;
 
+            public:
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isBox(void) const {
+                    if(!hasCollisionBody())
+                        return FG_FALSE;
+                    return m_collisionBody->isBox();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isSphere(void) const {
+                    if(!hasCollisionBody())
+                        return FG_FALSE;
+                    return m_collisionBody->isSphere();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isCapsule(void) const {
+                    if(!hasCollisionBody())
+                        return FG_FALSE;
+                    return m_collisionBody->isCapsule();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isTriangleMesh(void) const {
+                    if(!hasCollisionBody())
+                        return FG_FALSE;
+                    return m_collisionBody->isTriangleMesh();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isComplex(void) const {
+                    if(!hasCollisionBody())
+                        return FG_FALSE;
+                    return m_collisionBody->isComplex();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isRagdoll(void) const {
+                    if(!hasCollisionBody())
+                        return FG_FALSE;
+                    return m_collisionBody->isRagdoll();
+                }
+
+                //--------------------------------------------------------------
             protected:
-                fgBool setupCollisionBody(CCollisionBody::BodyType bodyType);
+                virtual fgBool setupCollisionBody(BodyType bodyType);
 
             private:
-                CCollisionBody* m_collisionBody;
+                CAbstractCollisionBody* m_collisionBody;
 
             }; // class CPhysical
 

@@ -44,7 +44,7 @@ namespace LPCD {
      * FG PHYSICS / COLLISION BODY ENUMERATION TYPES -> INT / UNSIGNED
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::physics::CCollisionBody::BodyType
+    #define FG_CONV_CD_TYPE fg::physics::BodyType
 
     template<> struct Type<FG_CONV_CD_TYPE> : public Type<unsigned int> {
         static inline void Push(lua_State* L, FG_CONV_CD_TYPE value) {

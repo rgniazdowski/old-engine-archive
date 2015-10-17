@@ -47,18 +47,28 @@ physics::traits::CPhysical::~CPhysical() {
 //------------------------------------------------------------------------------
 
 physics::CCollisionBody* physics::traits::CPhysical::getCollisionBody(void) {
-    return m_collisionBody;
+    return CCollisionBody::upcast(m_collisionBody);
 }
 //------------------------------------------------------------------------------
 
 physics::CCollisionBody const* physics::traits::CPhysical::getCollisionBody(void) const {
+    return CCollisionBody::upcast(m_collisionBody);
+}
+//------------------------------------------------------------------------------
+
+physics::CAbstractCollisionBody* physics::traits::CPhysical::getAbstractCollisionBody(void) {
     return m_collisionBody;
 }
 //------------------------------------------------------------------------------
 
-physics::CCollisionBody::BodyType physics::traits::CPhysical::getBodyType(void) const {
+physics::CAbstractCollisionBody const* physics::traits::CPhysical::getAbstractCollisionBody(void) const {
+    return m_collisionBody;
+}
+//------------------------------------------------------------------------------
+
+physics::BodyType physics::traits::CPhysical::getBodyType(void) const {
     if(!m_collisionBody)
-        return CCollisionBody::INVALID;
+        return BODY_INVALID;
     return m_collisionBody->getBodyType();
 }
 //------------------------------------------------------------------------------
@@ -68,13 +78,17 @@ fgBool physics::traits::CPhysical::hasCollisionBody(void) const {
 }
 //------------------------------------------------------------------------------
 
-fgBool physics::traits::CPhysical::setupCollisionBody(CCollisionBody::BodyType bodyType) {
-    if(bodyType == CCollisionBody::INVALID)
+fgBool physics::traits::CPhysical::setupCollisionBody(BodyType bodyType) {
+    if(bodyType == BODY_INVALID)
         return FG_FALSE;
 
     if(getBodyType() != bodyType) {
         if(!m_collisionBody) {
-            m_collisionBody = new physics::CCollisionBody(bodyType);
+            if(bodyType != BODY_RAGDOLL) {
+                m_collisionBody = new physics::CCollisionBody(bodyType);
+            } else {
+                m_collisionBody = new physics::CRagdollCollisionBody();
+            }
         } else {
             m_collisionBody->setupBody(bodyType); // cause we friends...
         }

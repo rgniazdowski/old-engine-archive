@@ -25,8 +25,15 @@
         #include "fgBulletHelper.h"
         #include "fgCollisionBody.h"
         #include "fgPhysicalWorld.h"
-    #endif
 
+        #include "LinearMath/btDefaultMotionState.h"
+        #include "LinearMath/btAlignedObjectArray.h"
+        #include "BulletDynamics/Dynamics/btRigidBody.h"        
+        #include "BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+        #include "BulletDynamics/Dynamics/btDynamicsWorld.h"
+        #include "BulletCollision/CollisionShapes/btCollisionShape.h"
+
+    #endif
 
     #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE_INTERNAL)
         #include "Cyclone/fgCollisionBody.h"

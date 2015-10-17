@@ -81,6 +81,11 @@ namespace fg {
             /**
              *
              * @param pBody
+             */
+            void setupOwnerFor(CAbstractCollisionBody* pBody);
+            /**
+             *
+             * @param pBody
              * @return
              */
             int add(CCollisionBody* pBody);

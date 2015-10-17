@@ -38,6 +38,7 @@ class btCollisionDispatcher;
 class btConstraintSolver;
 //class btMultiBodyConstraintSolver;
 class btMotionState;
+class btTypedConstraint;
 
 namespace fg {
     namespace physics {

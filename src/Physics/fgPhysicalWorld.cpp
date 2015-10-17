@@ -116,6 +116,11 @@ void physics::CPhysicalWorld::update(float delta) {
 }
 //------------------------------------------------------------------------------
 
+void physics::CPhysicalWorld::setupOwnerFor(CAbstractCollisionBody* pBody) {
+    pBody->setOwner(m_dynamicsWorld);
+}
+//------------------------------------------------------------------------------
+
 int physics::CPhysicalWorld::add(CCollisionBody* pBody) {
     if(!pBody)
         return -1;

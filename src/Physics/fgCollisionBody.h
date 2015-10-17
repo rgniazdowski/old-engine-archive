@@ -19,13 +19,16 @@
     #define FG_INC_COLLISION_BODY_BLOCK
 
     #include "fgBulletMaskTypes.h"
+    #include "fgAbstractCollisionBody.h"
     #include "fgBool.h"
+
     #if defined(FG_USING_BULLET)
         #include "Math/fgMathLib.h"
         #include "Math/fgDualQuaternion.h"
         #include "BulletDynamics/Dynamics/btRigidBody.h"
         #include "BulletCollision/CollisionShapes/btCollisionShape.h"
-        class btDynamicsWorld;
+
+class btDynamicsWorld;
 
 namespace fg {
 
@@ -41,42 +44,24 @@ namespace fg {
         /**
          *
          */
-        class CCollisionBody : public CRigidBody {
+        class CCollisionBody : public CAbstractCollisionBody, public CRigidBody {
             friend class traits::CPhysical;
             friend class CPhysicalWorld;
         public:
             ///
-            typedef CRigidBody base_type;
+            typedef CAbstractCollisionBody base_type;
+            ///
+            typedef CRigidBody rigid_body;
             ///
             typedef CCollisionBody self_type;
             ///
             typedef CCollisionBody type;
 
         public:
-
             /**
              *
              */
-            enum BodyType {
-                ///
-                INVALID,
-                ///
-                BOX,
-                ///
-                SPHERE,
-                ///
-                CAPSULE,
-                ///
-                COMPLEX,
-                ///
-                TRIANGLE_MESH
-            }; // enum BodyType
-
-        public:
-            /**
-             *
-             */
-            CCollisionBody(const BodyType bodyType = BOX);
+            CCollisionBody(const BodyType bodyType = BODY_BOX);
             /**
              *
              * @param orig
@@ -88,54 +73,93 @@ namespace fg {
             virtual ~CCollisionBody();
 
         public:
-            BodyType getBodyType(void) const {
-                return m_bodyType;
+            static self_type* upcast(base_type* pBase) {
+                if(!pBase)
+                    return NULL;
+                const BodyType bodyType = pBase->getBodyType();
+                if(bodyType != BODY_INVALID &&
+                        bodyType != BODY_COMPLEX &&
+                        bodyType != BODY_RAGDOLL) {
+                    return static_cast<self_type*>(pBase);
+                }
+                return NULL;
             }
-            CCollisionBox* getCollisionBox(void) const;
-            CCollisionSphere* getCollisionSphere(void) const;
-            CCollisionCapsule* getCollisionCapsule(void) const;
-            //CCollisionComplex* getCollisionComplex(void) const;
-            CCollisionTriangleMesh* getCollisionTriangleMesh(void) const;
-            CRigidBody* getRigidBody(void);
-            CRigidBody const* getRigidBody(void) const;
+            static self_type const* upcast(base_type const* pBase) {
+                if(!pBase)
+                    return NULL;
+                const BodyType bodyType = pBase->getBodyType();
+                if(bodyType != BODY_INVALID &&
+                        bodyType != BODY_COMPLEX &&
+                        bodyType != BODY_RAGDOLL) {
+                    return static_cast<self_type const*>(pBase);
+                }
+                return NULL;
+            }
 
         public:
-            void setHalfSize(const Vector3f& halfExtent);
-            void setHalfSize(float x, float y, float z);
-            void setHalfSizeAndMass(const Vector3f& halfExtent, float mass);
-            void setRadius(const float radius);
-            void setHeight(const float height);
-            void setMass(float mass);
+
+            virtual CCollisionBox* getCollisionBox(void) const;
+            virtual CCollisionSphere* getCollisionSphere(void) const;
+            virtual CCollisionCapsule* getCollisionCapsule(void) const;
+            //CCollisionComplex* getCollisionComplex(void) const;
+            virtual CCollisionTriangleMesh* getCollisionTriangleMesh(void) const;
+            virtual CRigidBody* getRigidBody(void);
+            virtual CRigidBody const* getRigidBody(void) const;
+            virtual fgBool hasCollisionShape(void) const {
+                return (fgBool)(getCollisionShape() != NULL);
+            }
+            virtual fgBool hasRigidBody(void) const {
+                return FG_TRUE;
+            }
+            virtual fgBool hasRigidBodies(void) const {
+                // this collision body has only one rigid body (self)
+                // so return false
+                return FG_FALSE;
+            }
+            virtual fgBool isBodyTypeCompatible(const BodyType bodyType) const {
+                return (fgBool)(bodyType != BODY_INVALID &&
+                        bodyType != BODY_COMPLEX &&
+                        bodyType != BODY_RAGDOLL);
+            }
+
+        public:
+            using base_type::setHalfSize;
+            virtual void setHalfSize(const Vector3f& halfExtent);
+            virtual void setRadius(const float radius);
+            virtual void setHeight(const float height);
+            virtual void setMass(float mass);
+
             void setMassProps(btScalar mass, const btVector3& inertia);
 
-            void setLocalScaling(const Vector3f& scale);
-            void setLocalScaling(float x, float y, float z);
-            
+            using base_type::setLocalScaling;
+            virtual void setLocalScaling(const Vector3f& scale);
+
         public:
-            void setAcceleration(const Vector3f& acceleration);
+            // // //void setAcceleration(const Vector3f& acceleration);
 
             //------------------------------------------------------------------
-            using base_type::setAngularVelocity;
+            using rigid_body::setAngularVelocity;
             void setAngularVelocity(const Vector3f& velocity);
             void setAngularVelocity(float x, float y = 0.0f, float z = 0.0f);
 
             //------------------------------------------------------------------
-            using base_type::getAngularVelocity;
+            using rigid_body::getAngularVelocity;
             void getAngularVelocity(Vector3f& outVelocity) const;
             void getAngularVelocity(float& x, float& y, float& z) const;
 
             //------------------------------------------------------------------
-            using base_type::setLinearVelocity;
+            using rigid_body::setLinearVelocity;
             void setLinearVelocity(const Vector3f& velocity);
             void setVelocity(const Vector3f& velocity);
             void setVelocity(float x, float y = 0.0f, float z = 0.0f);
 
             //------------------------------------------------------------------
-            using base_type::getLinearVelocity;
+            using rigid_body::getLinearVelocity;
             const Vector3f& getVelocity(void) const;
             void getVelocity(Vector3f& outVelocity) const;
             void getVelocity(float& x, float& y, float& z) const;
 
+            void setRotation(const Quaternionf& rotation);
             void setRotation(float angle, const Vector3f& axis);
             void setRotation(float angle, float x, float y, float z);
 
@@ -156,43 +180,32 @@ namespace fg {
             void getPosition(float& x, float& y, float& z) const;
 
             //------------------------------------------------------------------
-            using base_type::translate;
+            using rigid_body::translate;
             void translate(const Vector3f& translation);
             void translate(float x, float y, float z);
 
             //------------------------------------------------------------------
             const Matrix4f& getWorldMatrix(void) const;
 
-            using base_type::getWorldTransform;
+            using rigid_body::getWorldTransform;
             void getWorldTransform(DualQuaternionf& outDQ) const;
             void getWorldTransform(Matrix4f& outMatrix) const;
             void getWorldTransform(float *outMatrix) const;
 
-            using base_type::setWorldTransform;
+            using rigid_body::setWorldTransform;
             void setWorldTransform(const Matrix4f& matrix);
             void setWorldTransform(const DualQuaternionf& dq);
             void setWorldTransform(float* matrix);
 
             //------------------------------------------------------------------
         protected:
-            void setupBody(BodyType bodyType);
+            virtual void setupBody(BodyType bodyType);
 
-            btDynamicsWorld* getOwner(void) const {
-                return m_pOwner;
-            }
-
-            void setOwner(btDynamicsWorld* pOwner) {
-                m_pOwner = pOwner;
-            }
         private:
-            ///
-            BodyType m_bodyType;
             ///
             float m_mass;
             ///
-            btMotionState* m_motionState;
-            ///
-            btDynamicsWorld* m_pOwner;
+            btMotionState* m_motionState;            
         }; // class CCollisionBody
 
     } // namespace physics
