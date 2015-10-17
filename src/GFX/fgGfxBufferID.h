@@ -18,9 +18,7 @@
     #define FG_INC_GFX_BUFFERID
     #define FG_INC_GFX_BUFFERID_BLOCK
 
-    #ifndef FG_INC_GFX_GL
-        #include "fgGfxGL.h"
-    #endif
+    #include "fgGfxGL.h"
 
 namespace fg {
     namespace gfx {

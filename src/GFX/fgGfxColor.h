@@ -11,9 +11,7 @@
 #ifndef FG_INC_GFX_COLOR
     #define FG_INC_GFX_COLOR
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
+    #include "fgBuildConfig.h"
 
     #if defined(FG_USING_GLM)
         #include "glm/vec3.hpp"

@@ -18,15 +18,8 @@
     #define FG_INC_GFX_ATTRIBUTE_DATA
     #define FG_INC_GFX_ATTRIBUTE_DATA_BLOCK
 
-    #ifndef FG_INC_GFX_GL
-        #include "fgGfxGL.h"
-    #endif
-
-    #ifndef FG_INC_GFX_ATTRIB_BITS
-        #include "fgGfxAttribBits.h"
-    #endif
-
-
+    #include "fgGfxGL.h"
+    #include "fgGfxAttribBits.h"
 
 namespace fg {
     namespace gfx {

@@ -72,6 +72,7 @@
             <word>bitplanes</word>
             <word>bitstring</word>
             <word>body's</word>
+            <word>bones'</word>
             <word>bool</word>
             <word>broadphase</word>
             <word>bsp</word>
@@ -240,6 +241,9 @@
             <word>quadtree</word>
             <word>quaternions</word>
             <word>Radoslaw</word>
+            <word>ragdoll</word>
+            <word>ragdolling</word>
+            <word>ragdolls</word>
             <word>rasterized</word>
             <word>readdir</word>
             <word>realloc</word>

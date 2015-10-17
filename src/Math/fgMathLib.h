@@ -165,7 +165,7 @@ namespace fg {
                     v1.w * v2.w);
         }
 
-    }; /* namespace math; */
+    } /* namespace math */
 
         #if !defined(FG_MATH_GLM_VECTOR_MASK)
             #define FG_MATH_GLM_VECTOR_MASK
@@ -1720,7 +1720,7 @@ namespace fg {
     typedef Quaterniond Quatd;
     #endif /* FG_MATH_GLM_QUAT_MASK */
 
-}; /* namespace fg; */
+} /* namespace fg; */
 
     #undef FG_INC_MATHLIB_BLOCK
 #endif /* FG_INC_MATHLIB */
