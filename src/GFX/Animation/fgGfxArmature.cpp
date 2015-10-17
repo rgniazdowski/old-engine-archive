@@ -171,7 +171,7 @@ fgBool gfx::anim::CArmature::remove(const std::string& name) {
     }
     unsigned int n = m_bones.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(m_bones[i]->name.compare(name) == 0) {            
+        if(m_bones[i]->name.compare(name) == 0) {
             delete m_bones[i];
             m_bones[i] = NULL;
             m_bones.remove(i, n);
@@ -192,5 +192,18 @@ void gfx::anim::CArmature::clear(void) {
         m_bones[i] = NULL;
     }
     m_bones.clear();
+}
+//------------------------------------------------------------------------------
+
+void gfx::anim::CArmature::refreshInternals(void) {
+    const unsigned int n = m_bones.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(!m_bones[i])
+            continue;
+        SBone* pBone = m_bones[i];
+        if(!pBone->pParent)
+            continue;
+        pBone->refreshLength();
+    }
 }
 //------------------------------------------------------------------------------

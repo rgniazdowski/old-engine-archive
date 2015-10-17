@@ -143,6 +143,12 @@ namespace fg {
                  */
                 void clear(void);
 
+                /**
+                 * 
+                 */
+                void refreshInternals(void);
+                //--------------------------------------------------------------
+
             private:
                 ///
                 BonesVec m_bones;
