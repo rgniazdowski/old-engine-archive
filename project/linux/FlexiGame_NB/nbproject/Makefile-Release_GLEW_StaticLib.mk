@@ -168,6 +168,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/607599404/fg2DGameWorld.o \
 	${OBJECTDIR}/_ext/607599404/fg3DGameWorld.o \
 	${OBJECTDIR}/_ext/607599404/fgGameEntity.o \
+	${OBJECTDIR}/_ext/607599404/fgGameEntityActor.o \
 	${OBJECTDIR}/_ext/607599404/fgGameEntityMesh.o \
 	${OBJECTDIR}/_ext/607599404/fgGameMain.o \
 	${OBJECTDIR}/_ext/607599404/fgGameWorld.o \
@@ -930,6 +931,11 @@ ${OBJECTDIR}/_ext/607599404/fgGameEntity.o: ../../../src/Game/fgGameEntity.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameEntity.o ../../../src/Game/fgGameEntity.cpp
+
+${OBJECTDIR}/_ext/607599404/fgGameEntityActor.o: ../../../src/Game/fgGameEntityActor.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_ASSIMP -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameEntityActor.o ../../../src/Game/fgGameEntityActor.cpp
 
 ${OBJECTDIR}/_ext/607599404/fgGameEntityMesh.o: ../../../src/Game/fgGameEntityMesh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/607599404

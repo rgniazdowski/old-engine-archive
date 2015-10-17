@@ -23,15 +23,15 @@
 namespace fg {
     namespace game {
 
-        typedef gfx::SceneNodeType GameEntityType;
+        typedef gfx::SceneNodeType GameEntityType; // last value gfx shift scene -> 6
 
         const GameEntityType GAME_ENTITY_INVALID = gfx::SCENE_NODE_INVALID;
 
-        const GameEntityType GAME_ENTITY = (1 << (gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 1));
-        const GameEntityType GAME_ENTITY_MESH = (1 << (gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 2));
+        const GameEntityType GAME_ENTITY = (1 << (gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 1)); // 7
+        const GameEntityType GAME_ENTITY_MESH = (1 << (gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 2)); // 8
+        const GameEntityType GAME_ENTITY_ACTOR = (1 << (gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 3)); // 9
 
-
-        const unsigned int LAST_VALUE_SHIFT_GAME_ENTITY = gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 2;
+        const unsigned int LAST_VALUE_SHIFT_GAME_ENTITY = gfx::LAST_VALUE_SHIFT_GFX_SCENE_NODE + 3; // 9
 
     } // namespace game
 } // namespace fg

@@ -207,6 +207,8 @@ script::CMetatables::METAID script::CMetatables::getMetatableIDFromNodeType(cons
         metaID = CMetatables::GAME_ENTITY_MT_ID;
     } else if(nodeType == game::GAME_ENTITY_MESH) {
         metaID = CMetatables::GAME_ENTITY_MESH_MT_ID;
+    } else if(nodeType == game::GAME_ENTITY_ACTOR) {
+        metaID = CMetatables::GAME_ENTITY_MT_ID; // #FIXME
     }
     return metaID;
 }
@@ -231,6 +233,9 @@ unsigned int script::CMetatables::getNodeTypeFromMetatableID(const unsigned shor
         case GAME_ENTITY_MESH_MT_ID:
             nodeType = game::GAME_ENTITY_MESH;
             break;
+            //case GAME_ENTITY_ACTOR_MT_ID:
+            //    nodeType = game::GAME_ENTITY_ACTOR;
+            //    break;
         default:
             break;
     };

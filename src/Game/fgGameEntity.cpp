@@ -28,11 +28,13 @@ intelligent_type() {
     setNodeTrait(intelligent_type::SELF_TRAIT);
 
     base_type::setDefaultMeshChildType(GAME_ENTITY_MESH);
-    base_type::setModel(pModel);
+    this->setModel(pModel);
 }
 //------------------------------------------------------------------------------
 
-game::CEntity::CEntity(const CEntity& orig) { }
+game::CEntity::CEntity(const CEntity& orig) {
+
+}
 //------------------------------------------------------------------------------
 
 game::CEntity::~CEntity() { }

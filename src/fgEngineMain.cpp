@@ -63,6 +63,7 @@
 #include "Game/fgGameEntityType.h"
 #include "Game/fgGameEntity.h"
 #include "Game/fgGameEntityMesh.h"
+#include "Game/fgGameEntityActor.h"
 
 using namespace fg;
 
@@ -456,6 +457,7 @@ fgBool CEngineMain::initialize(void) {
         // Register additional game entity objects
         m_pNodeFactory->registerObject(game::GAME_ENTITY, new util::CFactoryObject<game::CEntity>());
         m_pNodeFactory->registerObject(game::GAME_ENTITY_MESH, new util::CFactoryObject<game::CEntityMesh>());
+        m_pNodeFactory->registerObject(game::GAME_ENTITY_ACTOR, new util::CFactoryObject<game::CEntityActor>());
         if(!m_3DGameWorld)
             m_3DGameWorld = new game::CGameWorld3D();
         m_3DGameWorld->setShaderManager(m_pShaderMgr);

@@ -455,8 +455,8 @@ int SDLCALL CMainModule::filterSDLEvents(void* userdata, SDL_Event* event) {
 }
 
 event::KeyVirtualCode CMainModule::translateKeyboardCode(const SDL_KeyboardEvent& event) {
-    const unsigned int index = (unsigned int) event.keysym.scancode;
-    const unsigned int maxIndex = sizeof(event::KeyTranslate)/sizeof(event::KeyVirtualCode);
+    const unsigned int index = (unsigned int)event.keysym.scancode;
+    const unsigned int maxIndex = sizeof (event::KeyTranslate) / sizeof (event::KeyVirtualCode);
     if(index >= maxIndex)
         return event::FG_KEY_NULL;
     const event::KeyVirtualCode keyCode = event::KeyTranslate[index];
@@ -536,7 +536,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 break;
             case SDL_SYSWMEVENT: /**< System specific event */
                 break;
-                
+
                 /* Keyboard events */
             case SDL_KEYDOWN: /**< Key pressed */
                 if(this->m_engineMain) {
@@ -544,7 +544,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 }
                 break;
             case SDL_KEYUP: /**< Key released */
-                if(this->m_engineMain) {                    
+                if(this->m_engineMain) {
                     this->m_engineMain->getInputHandler()->addKeyUp(translateKeyboardCode(event.key));
                 }
                 break;
