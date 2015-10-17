@@ -408,6 +408,7 @@
         <itemPath>../../../src/Physics/fgBulletHelper.cpp</itemPath>
         <itemPath>../../../src/Physics/fgBulletHelper.h</itemPath>
         <itemPath>../../../src/Physics/fgBulletMaskTypes.h</itemPath>
+        <itemPath>../../../src/Physics/fgBulletUniversalTransform.h</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
         <itemPath>../../../src/Physics/fgPhysical.cpp</itemPath>
@@ -2244,6 +2245,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4304,6 +4310,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletUniversalTransform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgCollisionBody.cpp"
             ex="false"
             tool="1"
@@ -6320,6 +6331,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletUniversalTransform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgCollisionBody.cpp"
             ex="false"
             tool="1"
@@ -8318,6 +8334,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -10343,6 +10364,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgBulletUniversalTransform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgCollisionBody.cpp"
             ex="false"
             tool="1"
@@ -12352,6 +12378,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/Physics/fgBulletMaskTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgBulletUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
