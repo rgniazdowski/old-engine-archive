@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGfxPlatform.h"
 #include "Util/fgMemory.h"
@@ -26,12 +26,15 @@ void *fg::gfx::CPlatform::m_defaultConfig = 0;
 #endif
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 gfx::CPlatform::CPlatform() { }
+//------------------------------------------------------------------------------
 
 gfx::CPlatform::~CPlatform() {
     context::destroy();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CPlatform::initialize(fgBool reinit) {
     if(gfx::CPlatform::m_init && !reinit)
@@ -188,6 +191,7 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
         CPlatform::m_init = FG_TRUE;
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CPlatform::quit(fgBool suspend) {
     fgBool status = FG_TRUE;
@@ -230,6 +234,7 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 #if defined(FG_USING_SDL2)
 
@@ -240,19 +245,23 @@ fgBool gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
         return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 #endif
 
 fgBool gfx::CPlatform::isInit(void) {
     return gfx::CPlatform::m_init;
 }
+//------------------------------------------------------------------------------
 
 void *gfx::CPlatform::getDefaultDisplay(void) {
     return gfx::CPlatform::m_defaultDisplay;
 }
+//------------------------------------------------------------------------------
 
 void *gfx::CPlatform::getDefaultConfig(void) {
     return gfx::CPlatform::m_defaultConfig;
 }
+//------------------------------------------------------------------------------
 
 #if defined(FG_USING_EGL)
 
@@ -391,5 +400,5 @@ void gfx::CPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
         };
     }
 }
-
+//------------------------------------------------------------------------------
 #endif /* FG_USING_EGL */

@@ -1846,46 +1846,6 @@ void gfx::context::blendFunc(const fgGFXenum srcRGB,
 }
 //------------------------------------------------------------------------------
 
-void gfx::context::useProgram(const fgGFXuint program) {
-    if(g_params[gfx::CURRENT_PROGRAM].intVal != (fgGFXint)program) {
-        g_params[gfx::CURRENT_PROGRAM].set((fgGFXint)program);
-    }
-}
-//------------------------------------------------------------------------------
-
-fgGFXuint gfx::context::activeProgram(void) {
-    return g_params[gfx::CURRENT_PROGRAM];
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::viewport(void) {
-    viewport(0, 0, g_screenSize.x, g_screenSize.y);
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::viewport(const fgGFXint x,
-                            const fgGFXint y,
-                            const fgGFXint width,
-                            const fgGFXint height) {
-    fgGFXuint areaQ = x * y + width*height;
-    if(areaQ != g_viewportAreaQ) {
-        g_viewportAreaQ = areaQ;
-        g_params[gfx::VIEWPORT].set(x, y, width, height);
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::viewport(const Vector2i& pos,
-                            const Vector2i& size) {
-    viewport(pos.x, pos.y, size.x, size.y);
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::viewport(const Vector4i& dimensions) {
-    viewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
-}
-//------------------------------------------------------------------------------
-
 Vector4i gfx::context::getViewport(void) {
     const SContextParam& viewport = g_params[gfx::VIEWPORT];
     return Vector4i(viewport.ints[0], viewport.ints[1], viewport.ints[2], viewport.ints[3]);
@@ -1995,43 +1955,9 @@ gfx::AttributeMask gfx::context::activeVertexAttribArrayMask(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::context::isVertexAttribArrayActive(const fgGFXuint index) {
-    return g_attribInfo[index].isEnabled;
-}
-fgBool gfx::context::isVertexAttribArrayActive(const AttributeLocation location) {
-    return g_attribInfo[location].isEnabled;
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::toggleAttribMask(const AttributeLocation location) {
-    g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << location);
-}
-//------------------------------------------------------------------------------
-
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
  */
-
-void gfx::context::enableVertexAttribArray(const AttributeLocation index, const fgBool updateMask) {
-    if(!g_attribInfo[index].isEnabled) {
-        g_attribInfo[index].isEnabled = FG_GFX_TRUE;
-        glEnableVertexAttribArray(index);
-        if(updateMask) {
-            g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << index);
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::disableVertexAttribArray(const AttributeLocation index, const fgBool updateMask) {
-    if(g_attribInfo[index].isEnabled) {
-        g_attribInfo[index].isEnabled = FG_GFX_FALSE;
-        glDisableVertexAttribArray(index);
-        if(updateMask) {
-            g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << index);
-        }
-    }
-}
 //------------------------------------------------------------------------------
 
 void gfx::context::enableVertexAttribArrayMask(const AttributeMask mask) {
@@ -2129,38 +2055,6 @@ void gfx::context::diffVertexAttribArrayMask(const AttributeMask mask) {
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
  */
-fgGFXuint gfx::context::getVertexAttribBufferBinding(const fgGFXuint index) {
-    return g_attribInfo[index].buffer;
-}
-//------------------------------------------------------------------------------
-
-fgGFXuint gfx::context::getVertexAttribSize(const fgGFXuint index) {
-    return g_attribInfo[index].size;
-}
-//------------------------------------------------------------------------------
-
-fgGFXuint gfx::context::getVertexAttribStride(const fgGFXuint index) {
-    if(index >= 12)
-        return 0;
-    return g_attribInfo[index].stride;
-}
-//------------------------------------------------------------------------------
-
-fgGFXenum gfx::context::getVertexAttribType(const fgGFXuint index) {
-    if(index >= 12)
-        return (fgGFXenum)0;
-    return g_attribInfo[index].type;
-}
-//------------------------------------------------------------------------------
-
-fgGFXboolean gfx::context::getVertexAttribNormalized(const fgGFXuint index) {
-    // #FIXME checks
-    if(index >= 12)
-        return FG_GFX_FALSE;
-    return g_attribInfo[index].isNormalized;
-}
-//------------------------------------------------------------------------------
-
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
  */
@@ -2207,19 +2101,5 @@ void gfx::context::vertexAttribPointer(SAttributeData& attrData) {
                           attrData.stride,
                           attrData.pointer);
     GLCheckError("glVertexAttribPointer"); // #FIXME
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::drawElements(PrimitiveMode primitiveMode,
-                                const fgGFXsizei count,
-                                const fgGFXvoid* indices) {
-    glDrawElements((fgGFXenum)primitiveMode, count, GL_UNSIGNED_SHORT, indices);
-}
-//------------------------------------------------------------------------------
-
-void gfx::context::drawArrays(PrimitiveMode primitiveMode,
-                              fgGFXint first,
-                              fgGFXsizei count) {
-    glDrawArrays((fgGFXenum)primitiveMode, first, count);
 }
 //------------------------------------------------------------------------------

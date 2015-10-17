@@ -17,9 +17,9 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 const char* gfx::CShader::s_includeSources[gfx::CShader::INCLUDE_COUNT] = {
-  "struct SMaterial {\nvec4 ambient;\nvec4 diffuse;\nfloat shininess;\nvec4 specular;\n};\n",
-  "struct SLight {\nvec4 ambient;\nvec4 diffuse;\nvec4 specular;\n};\n",
-  "struct SDirectionalLight {\n/*vec3 halfPlane;*/\nvec4 ambient;\nvec4 diffuse;\nvec3 direction;\nvec4 specular;\n};\n"
+                                                                           "struct SMaterial {\nvec4 ambient;\nvec4 diffuse;\nfloat shininess;\nvec4 specular;\n};\n",
+                                                                           "struct SLight {\nvec4 ambient;\nvec4 diffuse;\nvec4 specular;\n};\n",
+                                                                           "struct SDirectionalLight {\n/*vec3 halfPlane;*/\nvec4 ambient;\nvec4 diffuse;\nvec3 direction;\nvec4 specular;\n};\n"
 };
 
 gfx::CShader::CShader(shaders::ShaderType type) :
@@ -112,13 +112,13 @@ fgBool gfx::CShader::loadSource(void) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_ENOMEM);
         return FG_FALSE;
     }
-    
+
     if(m_version == FG_GFX_ESSL_100) {
         m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
     } else {
         m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
     }
-    
+
     //m_sources[0] = _version.c_str();
     int n = 1;
     // include constant definitions (#define) into the shader source

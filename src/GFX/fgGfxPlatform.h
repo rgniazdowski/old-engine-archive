@@ -12,9 +12,7 @@
     #define FG_INC_GFX_PLATFORM
     #define FG_INC_GFX_PLATFORM_BLOCK
 
-    #ifndef FG_INC_GFX_CONTEXT
-        #include "fgGfxContext.h"
-    #endif
+    #include "fgGfxContext.h"
 
 namespace fg {
     namespace gfx {
@@ -86,9 +84,10 @@ namespace fg {
             static void* m_defaultDisplay; // it's for egl only...    
             /// Default config pointer
             static void* m_defaultConfig; // it's for egl only...
-        };
-    };
-};
+        }; // class CPlatform
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_PLATFORM_BLOCK
 #endif /* FG_INC_GFX_PLATFORM */

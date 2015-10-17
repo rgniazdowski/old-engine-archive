@@ -18,25 +18,11 @@
     #define FG_INC_GFX_VERTEX_DATA
     #define FG_INC_GFX_VERTEX_DATA_BLOCK
 
-    #ifndef FG_INC_GFX_GL
         #include "fgGfxGL.h"
-    #endif
-
-    #ifndef FG_INC_GFX_BUFFERID
         #include "fgGfxBufferID.h"
-    #endif
-
-    #ifndef FG_INC_VECTOR
         #include "fgVector.h"
-    #endif
-
-    #ifndef FG_INC_GFX_VERTEX
         #include "fgGfxVertex.h"
-    #endif
-
-    #ifndef FG_INC_GFX_ATTRIBUTE_DATA
         #include "fgGfxAttributeData.h"
-    #endif
 
 namespace fg {
     namespace gfx {

@@ -18,21 +18,10 @@
     #define FG_INC_GFX_VERTEX
     #define FG_INC_GFX_VERTEX_BLOCK
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
-
-    #ifndef FG_INC_GFX_COLOR
-        #include "fgGfxColor.h"
-    #endif
-
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif
-
-    #ifndef FG_INC_GFX_ATTRIB_BITS
-        #include "fgGfxAttribBits.h"
-    #endif
+    #include "fgBuildConfig.h"
+    #include "fgGfxColor.h"
+    #include "Math/fgMathLib.h"
+    #include "fgGfxAttribBits.h"
 
 namespace fg {
     namespace gfx {
@@ -50,30 +39,29 @@ namespace fg {
          * pos, norm, uv, tangent, bi-tangent
          */
         struct Vertex5HQv {
-           typedef Vertex5HQv type;
-           typedef Vertex5HQv self_type;
-           
-           fg::Vector3f position;
-           fg::Vector3f normal;
-           fg::Vector2f uv;
-           fg::Vector3f tangent;
-           fg::Vector3f bitangent;
+            typedef Vertex5HQv type;
+            typedef Vertex5HQv self_type;
 
-           /**
-            *
-            * @return
-            */
-           static unsigned int size(void) {
-               return 5;
-           }
-           /**
-            *
-            * @return
-            */
-           static AttributeMask attribMask(void) {
-               return ATTRIBUTE_HIGH_QUALITY_MASK;
-           }
-           /**
+            fg::Vector3f position;
+            fg::Vector3f normal;
+            fg::Vector2f uv;
+            fg::Vector3f tangent;
+            fg::Vector3f bitangent;
+            /**
+             *
+             * @return
+             */
+            static unsigned int size(void) {
+                return 5;
+            }
+            /**
+             *
+             * @return
+             */
+            static AttributeMask attribMask(void) {
+                return ATTRIBUTE_HIGH_QUALITY_MASK;
+            }
+            /**
              *
              * @return
              */
@@ -114,7 +102,7 @@ namespace fg {
                 result.position = math::mix(v1.position, v2.position, factor);
                 result.normal = math::mix(v1.normal, v2.normal, factor);
                 result.uv = math::mix(v1.uv, v2.uv, factor);
-                
+
                 result.tangent = math::mix(v1.tangent, v2.tangent, factor);
                 result.bitangent = math::mix(v1.bitangent, v2.bitangent, factor);
             }

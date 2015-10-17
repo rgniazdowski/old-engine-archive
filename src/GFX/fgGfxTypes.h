@@ -22,9 +22,7 @@
         #define FG_GFX_NONE 0
     #endif
 
-    #ifndef FG_INC_MATHLIB
         #include "Math/fgMathLib.h"
-    #endif
 
     #if 0
 namespace fg {
@@ -36,7 +34,6 @@ namespace fg {
 };
     #endif // 0 // nope...
 
-    #include "fgGfxGL.h"
     #include "fgGfxColor.h"
     #include "fgGfxAttribBits.h"
     #include "fgGfxAttributeData.h"

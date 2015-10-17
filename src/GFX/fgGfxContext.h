@@ -1913,7 +1913,7 @@ namespace fg {
                     return (void *)ints;
                 return (void *)booleans;
             }
-        };
+        }; // SContextParam
 
         class CPlatform;
 
@@ -1934,7 +1934,22 @@ namespace fg {
             ///
             typedef BufferMap::iterator BufferMapItor;
 
+            //------------------------------------------------------------------
 
+            ///
+            extern ParameterVec g_params;
+            /// Viewport area (used for fast check if viewport changed)
+            extern fgGFXuint g_viewportAreaQ;
+            /// Scissor area
+            extern fgGFXuint g_scissorAreaQ;
+            ///
+            extern Vector2i g_screenSize;
+            /// Currently used attribute mask
+            extern AttributeMask g_attribMask;
+            ///
+            extern SAttributeData g_attribInfo[FG_GFX_ATTRIBUTE_DATA_MAX];
+
+            //------------------------------------------------------------------
 
     #if defined(FG_USING_SDL2)
             // Default constructor for the SDL build
@@ -1948,7 +1963,9 @@ namespace fg {
 
             // This function will set or unset given attrib bits
             // depending on the current mask value
-            void toggleAttribMask(const AttributeLocation location);
+            inline void toggleAttribMask(const AttributeLocation location) {
+                g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << location);
+            }
 
             /**
              * 
@@ -2236,22 +2253,22 @@ namespace fg {
                            const fgGFXenum dstRGB,
                            const fgGFXenum srcAlpha,
                            const fgGFXenum dstAlpha);
-
             /**
              * Use specified shader program
              * @param program
              */
-            void useProgram(const fgGFXuint program);
+            inline void useProgram(const fgGFXuint program) {
+                if(g_params[gfx::CURRENT_PROGRAM].intVal != (fgGFXint)program) {
+                    g_params[gfx::CURRENT_PROGRAM].set((fgGFXint)program);
+                }
+            }
             /**
              * Returns the index to currently active vertex program
              * @return 
              */
-            fgGFXuint activeProgram(void);
-
-            /**
-             * Set viewport box to default dimensions
-             */
-            void viewport(void);
+            inline fgGFXuint activeProgram(void) {
+                return g_params[gfx::CURRENT_PROGRAM];
+            }            
             /**
              * Set the viewport dimensions
              * @param x
@@ -2259,22 +2276,38 @@ namespace fg {
              * @param width
              * @param height
              */
-            void viewport(const fgGFXint x,
-                          const fgGFXint y,
-                          const fgGFXint width,
-                          const fgGFXint height);
+            inline void viewport(const fgGFXint x,
+                                 const fgGFXint y,
+                                 const fgGFXint width,
+                                 const fgGFXint height) {
+                fgGFXuint areaQ = x * y + width*height;
+                if(areaQ != g_viewportAreaQ) {
+                    g_viewportAreaQ = areaQ;
+                    g_params[gfx::VIEWPORT].set(x, y, width, height);
+                }
+            }
+            /**
+             * Set viewport box to default dimensions
+             */
+            inline void viewport(void) {
+                viewport(0, 0, g_screenSize.x, g_screenSize.y);
+            }
             /**
              * Set the viewport dimensions
              * @param pos
              * @param size
              */
-            void viewport(const Vector2i& pos,
-                          const Vector2i& size);
+            inline void viewport(const Vector2i& pos,
+                                 const Vector2i& size) {
+                viewport(pos.x, pos.y, size.x, size.y);
+            }
             /**
              * Set the viewport dimensions
              * @param dimensions
              */
-            void viewport(const Vector4i& dimensions);
+            inline void viewport(const Vector4i& dimensions) {
+                viewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
+            }
             /**
              * 
              * @return 
@@ -2395,29 +2428,48 @@ namespace fg {
              * @param index
              * @return 
              */
-            fgBool isVertexAttribArrayActive(const fgGFXuint index);
+            inline fgBool isVertexAttribArrayActive(const fgGFXuint index) {
+                return g_attribInfo[index].isEnabled;
+            }
             /**
              * 
              * @param location
              * @return
              */
-            fgBool isVertexAttribArrayActive(const AttributeLocation location);
-
+            inline fgBool isVertexAttribArrayActive(const AttributeLocation location) {
+                return g_attribInfo[location].isEnabled;
+            }
             /**
              * Enable the given vertex attrib array index and also by default update the current attrib mask
              * @see https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
              * @param index
              * @param updateMask
              */
-            void enableVertexAttribArray(const AttributeLocation index,
-                                         const fgBool updateMask = FG_TRUE);
+            inline void enableVertexAttribArray(const AttributeLocation index,
+                                                const fgBool updateMask = FG_TRUE) {
+                if(!g_attribInfo[index].isEnabled) {
+                    g_attribInfo[index].isEnabled = FG_GFX_TRUE;
+                    glEnableVertexAttribArray(index);
+                    if(updateMask) {
+                        g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << index);
+                    }
+                }
+            }
             /**
              * Disable the given vertex attrib array index and also by default update the current attrib mask
              * @param index
              * @param updateMask
              */
-            void disableVertexAttribArray(const AttributeLocation index,
-                                          const fgBool updateMask = FG_TRUE);
+            inline void disableVertexAttribArray(const AttributeLocation index,
+                                                 const fgBool updateMask = FG_TRUE) {
+                if(g_attribInfo[index].isEnabled) {
+                    g_attribInfo[index].isEnabled = FG_GFX_FALSE;
+                    glDisableVertexAttribArray(index);
+                    if(updateMask) {
+                        g_attribMask ^= (AttributeMask)(ATTRIBUTE_POSITION_LOCATION << index);
+                    }
+                }
+            }
             /**
              * Enable the vertex attrib arrays based on the given attrib mask
              * Attributes not in the mask will not be deactivated
@@ -2435,38 +2487,54 @@ namespace fg {
              * @param mask
              */
             void diffVertexAttribArrayMask(const AttributeMask mask);
-
             /**
              * Returns the buffer (VBO) index currently bound to given vertex attrib index
              * @see https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
              * @param index
              * @return 
              */
-            fgGFXuint getVertexAttribBufferBinding(const fgGFXuint index);
+            inline fgGFXuint getVertexAttribBufferBinding(const fgGFXuint index) {
+                return g_attribInfo[index].buffer;
+            }
             /**
              * 
              * @param index
              * @return 
              */
-            fgGFXuint getVertexAttribSize(const fgGFXuint index);
+            inline fgGFXuint getVertexAttribSize(const fgGFXuint index) {
+                return g_attribInfo[index].size;
+            }
             /**
              * Returns the vertex attrib data stride for the given index
              * @param index
              * @return 
              */
-            fgGFXuint getVertexAttribStride(const fgGFXuint index);
+            inline fgGFXuint getVertexAttribStride(const fgGFXuint index) {
+                if(index >= 12)
+                    return 0;
+                return g_attribInfo[index].stride;
+            }
             /**
              * Returns the vertex attrib data type
              * @param index
              * @return 
              */
-            fgGFXenum getVertexAttribType(const fgGFXuint index);
+            inline fgGFXenum getVertexAttribType(const fgGFXuint index) {
+                if(index >= 12)
+                    return (fgGFXenum)0;
+                return g_attribInfo[index].type;
+            }
             /**
              * Returns whether the given attrib array is normalized
              * @param index
              * @return 
              */
-            fgGFXboolean getVertexAttribNormalized(const fgGFXuint index);
+            inline fgGFXboolean getVertexAttribNormalized(const fgGFXuint index) {
+                // #FIXME checks
+                if(index >= 12)
+                    return FG_GFX_FALSE;
+                return g_attribInfo[index].isNormalized;
+            }
 
             /**
              * Sets the various data details for given vertex attribute index
@@ -2490,16 +2558,31 @@ namespace fg {
              * @param attrData
              */
             void vertexAttribPointer(SAttributeData& attrData);
+            /**
+             *
+             * @param primitiveMode
+             * @param count
+             * @param indices
+             */
+            inline void drawElements(PrimitiveMode primitiveMode,
+                                     const fgGFXsizei count,
+                                     const fgGFXvoid* indices) {
+                glDrawElements((fgGFXenum)primitiveMode, count, GL_UNSIGNED_SHORT, indices);
+            }
+            /**
+             *
+             * @param primitiveMode
+             * @param first
+             * @param count
+             */
+            inline void drawArrays(PrimitiveMode primitiveMode,
+                                   fgGFXint first,
+                                   fgGFXsizei count) {
+                glDrawArrays((fgGFXenum)primitiveMode, first, count);
+            }
 
-            void drawElements(PrimitiveMode primitiveMode,
-                              const fgGFXsizei count,
-                              const fgGFXvoid* indices);
+        } // namespace context
 
-            void drawArrays(PrimitiveMode primitiveMode,
-                            fgGFXint first,
-                            fgGFXsizei count);
-
-        };
     } // namespace gfx
 } // namespace fg
 

@@ -21,7 +21,7 @@
     #include "GFX/Scene/fgGfxSceneNodeObject.h"
     #include "fgGameEntityType.h"
     #include "fgIntelligent.h"
-    
+
 namespace fg {
     namespace gfx {
         class CSceneNode;
@@ -37,7 +37,7 @@ namespace fg {
         /**
          *
          */
-        class CEntity : 
+        class CEntity :
         public gfx::CSceneNodeObject,
         public fg::game::traits::CIntelligent {
         public:
@@ -56,7 +56,8 @@ namespace fg {
              * @param pModel
              * @param pParent
              */
-            CEntity(gfx::CModelResource* pModel = NULL, gfx::CSceneNode* pParent = NULL);
+            CEntity(gfx::CModelResource* pModel = NULL,
+                    gfx::CSceneNode* pParent = NULL);
             /**
              *
              * @param orig
@@ -79,7 +80,7 @@ namespace fg {
         private:
 
         }; // class CEntity
-        
+
     } // namespace game
 } // namespace fg
 
