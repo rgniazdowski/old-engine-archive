@@ -18,65 +18,66 @@
 #include "fgGfxBone.h"
 #include "fgVector.h"
 #include "Util/fgStrings.h"
+#include "Math/fgDualQuaternion.h"
 
 namespace fg {
     namespace gfx {
         namespace anim {
             const BoneType g_BoneTypes[] = {
-                                            BONE_INVALID,
+                                            BoneType::BONE_INVALID,
 
-                                            BONE_HEAD,
-                                            BONE_NECK,
+                                            BoneType::BONE_HEAD,
+                                            BoneType::BONE_NECK,
 
-                                            BONE_ARM_LEFT,
-                                            BONE_ARM_RIGHT,
+                                            BoneType::BONE_ARM_LEFT,
+                                            BoneType::BONE_ARM_RIGHT,
 
-                                            BONE_FOREARM_LEFT,
-                                            BONE_FOREARM_RIGHT,
+                                            BoneType::BONE_FOREARM_LEFT,
+                                            BoneType::BONE_FOREARM_RIGHT,
 
-                                            BONE_HAND_LEFT,
-                                            BONE_HAND_RIGHT,
+                                            BoneType::BONE_HAND_LEFT,
+                                            BoneType::BONE_HAND_RIGHT,
 
-                                            BONE_HAND_LEFT_THUMB,
-                                            BONE_HAND_LEFT_FINGER2,
-                                            BONE_HAND_LEFT_FINGER3,
-                                            BONE_HAND_LEFT_FINGER4,
-                                            BONE_HAND_LEFT_FINGER5,
+                                            BoneType::BONE_HAND_LEFT_THUMB,
+                                            BoneType::BONE_HAND_LEFT_FINGER2,
+                                            BoneType::BONE_HAND_LEFT_FINGER3,
+                                            BoneType::BONE_HAND_LEFT_FINGER4,
+                                            BoneType::BONE_HAND_LEFT_FINGER5,
 
-                                            BONE_HAND_RIGHT_THUMB,
-                                            BONE_HAND_RIGHT_FINGER2,
-                                            BONE_HAND_RIGHT_FINGER3,
-                                            BONE_HAND_RIGHT_FINGER4,
-                                            BONE_HAND_RIGHT_FINGER5,
+                                            BoneType::BONE_HAND_RIGHT_THUMB,
+                                            BoneType::BONE_HAND_RIGHT_FINGER2,
+                                            BoneType::BONE_HAND_RIGHT_FINGER3,
+                                            BoneType::BONE_HAND_RIGHT_FINGER4,
+                                            BoneType::BONE_HAND_RIGHT_FINGER5,
 
-                                            BONE_SPINE,
-                                            BONE_PELVIS,
-                                            BONE_THIGH_LEFT,
-                                            BONE_THIGH_RIGHT,
-                                            BONE_LEG_LEFT,
-                                            BONE_LEG_RIGHT,
-                                            BONE_FOOT_LEFT,
-                                            BONE_FOOT_RIGHT,
+                                            BoneType::BONE_SPINE,
+                                            BoneType::BONE_PELVIS,
+                                            BoneType::BONE_THIGH_LEFT,
+                                            BoneType::BONE_THIGH_RIGHT,
+                                            BoneType::BONE_LEG_LEFT,
+                                            BoneType::BONE_LEG_RIGHT,
+                                            BoneType::BONE_FOOT_LEFT,
+                                            BoneType::BONE_FOOT_RIGHT,
 
-                                            BONE_FOOT_LEFT_TOE_BIG,
-                                            BONE_FOOT_LEFT_TOE2,
-                                            BONE_FOOT_LEFT_TOE3,
-                                            BONE_FOOT_LEFT_TOE4,
-                                            BONE_FOOT_LEFT_TOE5,
+                                            BoneType::BONE_FOOT_LEFT_TOE_BIG,
+                                            BoneType::BONE_FOOT_LEFT_TOE2,
+                                            BoneType::BONE_FOOT_LEFT_TOE3,
+                                            BoneType::BONE_FOOT_LEFT_TOE4,
+                                            BoneType::BONE_FOOT_LEFT_TOE5,
 
-                                            BONE_FOOT_RIGHT_TOE_BIG,
-                                            BONE_FOOT_RIGHT_TOE2,
-                                            BONE_FOOT_RIGHT_TOE3,
-                                            BONE_FOOT_RIGHT_TOE4,
-                                            BONE_FOOT_RIGHT_TOE5,
+                                            BoneType::BONE_FOOT_RIGHT_TOE_BIG,
+                                            BoneType::BONE_FOOT_RIGHT_TOE2,
+                                            BoneType::BONE_FOOT_RIGHT_TOE3,
+                                            BoneType::BONE_FOOT_RIGHT_TOE4,
+                                            BoneType::BONE_FOOT_RIGHT_TOE5,
 
-                                            BONE_FACE_EXTRA,
-                                            BONE_BACK_EXTRA,
-                                            BONE_FRONT_EXTRA,
-                                            BONE_LEFT_EXTRA,
-                                            BONE_RIGHT_EXTRA,
-                                            BONE_UP_EXTRA,
-                                            BONE_DOWN_EXTRA,
+                                            BoneType::BONE_FACE_EXTRA,
+                                            BoneType::BONE_BACK_EXTRA,
+                                            BoneType::BONE_FRONT_EXTRA,
+                                            BoneType::BONE_LEFT_EXTRA,
+                                            BoneType::BONE_RIGHT_EXTRA,
+                                            BoneType::BONE_UP_EXTRA,
+                                            BoneType::BONE_DOWN_EXTRA,
             };
             const char * const g_BoneTypesText[] = {
                                                     "INVALID",
@@ -143,16 +144,16 @@ using namespace fg;
 
 gfx::anim::BoneType gfx::anim::getBoneTypeFromText(const std::string& text) {
     if(text.empty())
-        return BONE_INVALID;
+        return BoneType::BONE_INVALID;
     return getBoneTypeFromText(text.c_str());
 }
 //------------------------------------------------------------------------------
 
 gfx::anim::BoneType gfx::anim::getBoneTypeFromText(const char* text) {
     if(!text)
-        return BONE_INVALID;
+        return BoneType::BONE_INVALID;
     const unsigned int n = sizeof (g_BoneTypes) / sizeof (BoneType);
-    BoneType result = BONE_INVALID;
+    BoneType result = BoneType::BONE_INVALID;
     for(unsigned int i = 0; i < n; i++) {
         if(strings::isEqual(text, g_BoneTypesText[i], FG_FALSE)) {
             result = g_BoneTypes[i];
@@ -164,7 +165,7 @@ gfx::anim::BoneType gfx::anim::getBoneTypeFromText(const char* text) {
 //------------------------------------------------------------------------------
 
 const char* gfx::anim::getTextFromBoneType(BoneType boneType) {
-    if(boneType == BONE_INVALID)
+    if(boneType == BoneType::BONE_INVALID)
         return NULL;
     const unsigned int n = sizeof (g_BoneTypes) / sizeof (BoneType);
     const char* result = NULL;
@@ -179,11 +180,8 @@ const char* gfx::anim::getTextFromBoneType(BoneType boneType) {
 //------------------------------------------------------------------------------
 
 gfx::anim::SBone::SBone() :
-mType(BONE_INVALID),
-name(),
+base_type(),
 pParent(NULL),
-parentIdx(-1),
-index(0),
 bindPoseMatrix(),
 offset(),
 weights(),
@@ -193,11 +191,8 @@ children() {
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::SBone::SBone(const SBone& orig) {
-    name.append(orig.name);
+gfx::anim::SBone::SBone(const self_type& orig) : base_type(orig) {
     pParent = orig.pParent;
-    parentIdx = orig.parentIdx;
-    index = orig.index;
     bindPoseMatrix = orig.bindPoseMatrix;
     offset = orig.offset;
     weights.append(orig.weights);
@@ -343,5 +338,96 @@ fgBool gfx::anim::SBone::removeChild(const char* name) {
         return FG_FALSE;
     return removeChild(pBone);
 }
+//------------------------------------------------------------------------------
 
+void gfx::anim::SBone::getFinalBindPose(Matrix4f& outMatrix) const {
+    outMatrix = Matrix4f(1.0f);
+    //outMatrix = this->offset;
+    const SBone* pTmp = this;
+    // append all node transformations down the parent chain
+    // until we're back at mesh coordinates again
+    while(pTmp) {
+        outMatrix = pTmp->bindPoseMatrix * outMatrix;
+        pTmp = pTmp->pParent;
+    }
+}
+//------------------------------------------------------------------------------
+
+Vector3f gfx::anim::SBone::getOffsetScale(void) const {
+    Vector3f result;
+    getOffsetScale(result);
+    return result;
+}
+//------------------------------------------------------------------------------
+
+void gfx::anim::SBone::getOffsetScale(Vector3f& outScale) const {
+    outScale.x = math::length(this->offset[0]);
+    outScale.y = math::length(this->offset[1]);
+    outScale.z = math::length(this->offset[2]);
+}
+//------------------------------------------------------------------------------
+
+void gfx::anim::SBone::getFinalBindPose(DualQuaternionf& outDQuat) const {
+    Matrix4f matrix;
+    getFinalBindPose(matrix);
+    outDQuat.initializeFrom(matrix);
+}
+//------------------------------------------------------------------------------
+
+void gfx::anim::SBone::getDirectionFromParent(Vector3f& direction) const {
+    if(isFirstChild()) {
+        direction = Vec3f(0.0f, pParent->length, 0.0f);
+    } else if(pParent) {
+        //direction = (this->startPoint - pParent->startPoint);
+        //direction = (pParent->startPoint - this->endPoint);
+        //direction = this->endPoint - pParent->startPoint;
+        //direction.y -= this->length;
+        direction = this->startPoint - pParent->endPoint;
+        direction.y += pParent->length;
+    } else {
+        direction = Vec3f();
+    }
+}
+//------------------------------------------------------------------------------
+
+Vector3f gfx::anim::SBone::getDirectionFromParent(void) const {
+    Vector3f direction;
+    getDirectionFromParent(direction);
+    return direction;
+}
+//------------------------------------------------------------------------------
+
+void gfx::anim::SBone::refreshLength(void) {
+    if(this->children.empty())
+        return;
+    // first child needed
+    Vec4f position4f;
+    Matrix4f finalBindPoseMat, finalRestPoseMat;
+    Vec3f matScale;
+    getOffsetScale(matScale);
+    // better boneBox goes here
+    this->children[0]->getFinalBindPose(finalBindPoseMat);
+    position4f = finalBindPoseMat * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+    this->endPoint = Vec3f(position4f); // * matScale;
+
+    this->getFinalBindPose(finalBindPoseMat);
+    position4f = finalBindPoseMat * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+    this->startPoint = Vec3f(position4f); // * matScale;
+    // have start and end point
+    // get length?    
+    this->length = math::abs(math::length(this->startPoint - this->endPoint));
+
+    this->getFinalRestPose(finalRestPoseMat);
+    position4f = finalRestPoseMat * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+    this->startPoint = Vec3f(position4f);
+    position4f = finalRestPoseMat * Vec4f(0.0f, this->length * matScale.y, 0.0f, 1.0f);
+    this->endPoint = Vec3f(position4f);
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SBone::hasLength(void) const {
+    if(this->length < FG_EPSILON)
+        return FG_FALSE;
+    return FG_TRUE;
+}
 //------------------------------------------------------------------------------

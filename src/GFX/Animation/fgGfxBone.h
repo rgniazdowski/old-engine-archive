@@ -19,7 +19,10 @@
     #define FG_INC_GFX_BONE_BLOCK
 
     #include "Math/fgMathLib.h"
+    #include "Math/fgDualQuaternion.h"
     #include "fgVector.h"
+    #include "Physics/fgRagdollBoneType.h"
+    #include "Physics/fgBoneSmallInfo.h"
 
 namespace fg {
     namespace gfx {
@@ -70,73 +73,9 @@ namespace fg {
                 }
             }; // struct SVertexWeight
 
-            /**
-             *
-             */
-            enum BoneType {
-                BONE_INVALID = 0,
-                
-                BONE_HEAD,
-                BONE_NECK,
-
-                BONE_ARM_LEFT,
-                BONE_ARM_RIGHT,
-
-                BONE_FOREARM_LEFT,
-                BONE_FOREARM_RIGHT,
-
-                BONE_HAND_LEFT,
-                BONE_HAND_RIGHT,
-
-                BONE_HAND_LEFT_THUMB,
-                BONE_HAND_LEFT_FINGER1 = BONE_HAND_LEFT_THUMB,
-                BONE_HAND_LEFT_FINGER2,
-                BONE_HAND_LEFT_FINGER3,
-                BONE_HAND_LEFT_FINGER4,
-                BONE_HAND_LEFT_FINGER5,
-
-                BONE_HAND_RIGHT_THUMB,
-                BONE_HAND_RIGHT_FINGER1 = BONE_HAND_RIGHT_THUMB,
-                BONE_HAND_RIGHT_FINGER2,
-                BONE_HAND_RIGHT_FINGER3,
-                BONE_HAND_RIGHT_FINGER4,
-                BONE_HAND_RIGHT_FINGER5,
-
-                BONE_SPINE,
-                BONE_PELVIS,
-                BONE_THIGH_LEFT,
-                BONE_THIGH_RIGHT,
-                BONE_LEG_LEFT,
-                BONE_LEG_RIGHT,
-                BONE_FOOT_LEFT,
-                BONE_FOOT_RIGHT,
-
-                BONE_FOOT_LEFT_TOE_BIG,
-                BONE_FOOT_LEFT_TOE_HALLUX = BONE_FOOT_LEFT_TOE_BIG,
-                BONE_FOOT_LEFT_TOE1 = BONE_FOOT_LEFT_TOE_BIG,
-                BONE_FOOT_LEFT_TOE2,
-                BONE_FOOT_LEFT_TOE3,
-                BONE_FOOT_LEFT_TOE4,
-                BONE_FOOT_LEFT_TOE5,
-
-                BONE_FOOT_RIGHT_TOE_BIG,
-                BONE_FOOT_RIGHT_TOE_HALLUX = BONE_FOOT_RIGHT_TOE_BIG,
-                BONE_FOOT_RIGHT_TOE1 = BONE_FOOT_RIGHT_TOE_BIG,
-                BONE_FOOT_RIGHT_TOE2,
-                BONE_FOOT_RIGHT_TOE3,
-                BONE_FOOT_RIGHT_TOE4,
-                BONE_FOOT_RIGHT_TOE5,
-
-                BONE_FACE_EXTRA,
-                BONE_BACK_EXTRA,
-                BONE_FRONT_EXTRA,
-                BONE_LEFT_EXTRA,
-                BONE_RIGHT_EXTRA,
-                BONE_UP_EXTRA,
-                BONE_DOWN_EXTRA,
-
-                NUM_BONE_TYPES
-            }; // enum BoneType
+            // mapping physics ragdoll bone type to standard animation bone type
+            // this can be used even with physics turned off
+            typedef physics::RagdollBoneType BoneType;
 
             /**
              *
@@ -160,7 +99,8 @@ namespace fg {
             /**
              *
              */
-            struct SBone {
+            struct SBone : public physics::SBoneSmallInfo {
+                typedef physics::SBoneSmallInfo base_type;
                 typedef SBone self_type;
                 typedef SBone type;
                 typedef CVector<SVertexWeight> WeightsVec;
@@ -178,12 +118,48 @@ namespace fg {
                  *
                  * @param orig
                  */
-                SBone(const SBone& orig);
+                SBone(const self_type& orig);
                 /**
                  *
                  */
                 virtual ~SBone();
 
+                //--------------------------------------------------------------
+                /**
+                 * 
+                 * @return
+                 */
+                base_type& getBoneSmallInfo(void) {
+                    return (*this);
+                }
+                /**
+                 *
+                 * @return
+                 */
+                base_type const& getBoneSmallInfo(void) const {
+                    return (*this);
+                }
+                /**
+                 *
+                 * @param outBoneInfo
+                 */
+                void getBoneSmallInfo(base_type& outBoneInfo) const {
+                    outBoneInfo = *((base_type*)this);
+                }
+                /**
+                 *
+                 * @param inBoneInfo
+                 */
+                void setBoneSmallInfo(const base_type& inBoneInfo) {
+                    this->boneType = inBoneInfo.boneType;
+                    this->name.clear();
+                    this->name.append(inBoneInfo.name);
+                    this->parentIdx = inBoneInfo.parentIdx;
+                    this->index = inBoneInfo.index;
+                    this->length = inBoneInfo.length;
+                    this->startPoint = inBoneInfo.startPoint;
+                    this->endPoint = inBoneInfo.endPoint;
+                }
                 //--------------------------------------------------------------
 
                 /**
@@ -247,24 +223,125 @@ namespace fg {
                  */
                 fgBool removeChild(const char* name);
 
+                /**
+                 *
+                 * @param outMatrix
+                 */
+                void getFinalBindPose(Matrix4f& outMatrix) const;
+                /**
+                 *
+                 * @param outDQuat
+                 */
+                void getFinalBindPose(DualQuaternionf& outDQuat) const;
+
+                /**
+                 *
+                 * @param outMatrix
+                 */
+                inline void getFinalRestPose(Matrix4f& outMatrix) const {
+                    outMatrix = math::inverse(this->offset);
+                }
+                /**
+                 *
+                 * @param outDQuat
+                 */
+                inline void getFinalRestPose(DualQuaternionf& outDQuat) const {
+                    // what about scaling? dual quaternion is just for rigid transformations
+                    outDQuat.initializeFrom(math::inverse(this->offset));
+                }
+                /**
+                 * 
+                 * @param outMatrix
+                 * @param outScale
+                 */
+                inline void getFinalRestPose(Matrix4f& outMatrix, Vector3f& outScale) const {
+                    outMatrix = math::inverse(this->offset);
+                    this->getOffsetScale(outScale);
+                }
+                /**
+                 *
+                 * @param outDQuat
+                 * @param outScale
+                 */
+                inline void getFinalRestPose(DualQuaternionf& outDQuat, Vector3f& outScale) const {
+                    this->getFinalRestPose(outDQuat);
+                    this->getOffsetScale(outScale);
+                }
+                /**
+                 *
+                 * @return
+                 */
+                Vector3f getOffsetScale(void) const;
+                /**
+                 * 
+                 * @param outScale
+                 */
+                void getOffsetScale(Vector3f& outScale) const;
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isLeaf(void) const {
+                    return (fgBool)children.empty();
+                }
+                /**
+                 *
+                 * @return
+                 */
+                inline fgBool isFirstChild(void) const {
+                    if(!pParent)
+                        return FG_FALSE;
+                    if(!pParent->hasChildren())
+                        return FG_FALSE;
+                    if(pParent->children[0] == this)
+                        return FG_TRUE;
+                    return FG_FALSE;
+                }
+                /**
+                 *
+                 * @param direction
+                 */
+                void getDirectionFromParent(Vector3f& direction) const;
+                /**
+                 * 
+                 * @return
+                 */
+                Vector3f getDirectionFromParent(void) const;
+
+                /**
+                 *
+                 */
+                void refreshLength(void);
+                /**
+                 * 
+                 * @return
+                 */
+                fgBool hasLength(void) const;
+                /**
+                 * 
+                 * @return 
+                 */
+                unsigned int count(void) const {
+                    return children.size();
+                }
+                /**
+                 * 
+                 * @return 
+                 */
+                fgBool hasChildren(void) const {
+                    return (fgBool)!children.empty();
+                }
+
             public:
-                ///
-                BoneType mType;
-                ///
-                std::string name;
-                ///
+                /// Pointer to parent bone
                 self_type* pParent;
-                ///
-                int parentIdx;
-                ///
-                int index;
-                ///
+                /// Initial node transformation
                 Matrix4f bindPoseMatrix;
-                ///
+                /// Offset matrix, which converts from the local mesh space, back to bone-space.
                 Matrix4f offset;
-                ///
+                /// Weights vector (also for more than one mesh)
                 WeightsVec weights;
-                ///
+                /// List of children bones
                 BonesVec children;
             }; // struct SBone
 

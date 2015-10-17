@@ -189,6 +189,7 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
             for(unsigned int _i = 0; _i < _n; _i++) {
                 std::string realBoneName = strings::trim(splits2[_i], " \t\"\'\\{}[]");
                 anim::SBone* pBone = this->pArmature->get(realBoneName);
+                pBone->boneType = boneType;
                 if(pBone) {
                     if(!this->skinningInfo.boneTypesMap[boneType].contains(pBone))
                         this->skinningInfo.boneTypesMap[boneType].push_back(pBone);
@@ -253,7 +254,7 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
             for(unsigned int i = 0; i < splits2.size(); i++) {
                 std::string stdBoneName = strings::trim(splits2[i], " \t\n\r[]{}();,.");
                 anim::BoneType boneType = anim::getBoneTypeFromText(stdBoneName.c_str());
-                if(boneType != anim::BONE_INVALID) {
+                if(boneType != anim::BoneType::BONE_INVALID) {
                     boneTypes.push_back(boneType);
                 } else if(strings::isEqual(stdBoneName, "ALL", FG_FALSE)) {
                     boneTypes.clear();
