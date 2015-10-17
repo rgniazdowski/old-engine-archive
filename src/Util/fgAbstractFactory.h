@@ -94,7 +94,11 @@ namespace fg {
              * @return
              */
             virtual void* recreate(void* pSource) {
-                return (void*)new TYPE(*(static_cast<TYPE*>(pSource)));
+                if(!pSource) {
+                    return create();
+                } else {
+                    return (void*)new TYPE(*(static_cast<TYPE*>(pSource)));
+                }
             }
         }; // class CFactoryObject
 
