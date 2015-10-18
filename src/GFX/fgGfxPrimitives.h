@@ -126,6 +126,9 @@ namespace fg {
                           const Vec3f& end,
                           const Color4f& color = Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 
+            void drawLines(const CVector<Vector3f>& points,
+                           const CVector<Color4f>& colors);
+
             void drawSquare2D(void);
 
             void drawRect2D(void);

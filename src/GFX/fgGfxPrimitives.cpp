@@ -474,7 +474,7 @@ void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase* pMesh,
             float const z = math::sin(2 * M_PI * s * S) * math::sin(M_PI * r * R);
 
             pMesh->append(Vector3f(x * radius, y * radius, z * radius),
-                         Vector2f(s*S, r * R));
+                          Vector2f(s*S, r * R));
             //texcoords.push_back(vec2(s*S, r * R));
             //vertices.push_back();
             //push_indices(indices, sectors, r, s);
@@ -604,8 +604,8 @@ void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase* pMesh,
     pMesh->reserve(n);
     for(int i = 0; i < n; i++) {
         pMesh->append(c_stripCube1x1[i].position*scale,
-                     c_stripCube1x1[i].normal,
-                     c_stripCube1x1[i].uv);
+                      c_stripCube1x1[i].normal,
+                      c_stripCube1x1[i].uv);
     }
     n = sizeof (c_stripCube1x1Idx) / sizeof (c_stripCube1x1Idx[0]);
     for(int i = 0; i < n; i++) {
@@ -632,9 +632,9 @@ void gfx::primitives::createQuadMesh(fg::gfx::SMeshBase* pMesh,
     pMesh->reserve(n);
     for(int i = 0; i < n; i++) {
         pMesh->append(c_stripSquare1x1[i].position*scale,
-                     c_stripSquare1x1[i].normal,
-                     c_stripSquare1x1[i].uv);
-    }    
+                      c_stripSquare1x1[i].normal,
+                      c_stripSquare1x1[i].uv);
+    }
     pMesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
     pMesh->meshType = MESH_QUAD;
 }
@@ -707,7 +707,7 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
     };
 #undef _id_vec
     uintptr_t offset = (uintptr_t)((unsigned int*)&v[0]);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -715,7 +715,7 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
                                  reinterpret_cast<fgGFXvoid*>(offset));
 
     offset = (uintptr_t)((unsigned int*)&aabbColor[0]);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_COLOR_LOCATION,
                                  4,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -740,7 +740,7 @@ void gfx::primitives::drawLine(const Vec3f& start, const Vec3f& end, const Color
     };
 #undef _id_vec
     uintptr_t offset = (uintptr_t)((unsigned int*)&v[0]);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
                                  3,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
@@ -748,13 +748,36 @@ void gfx::primitives::drawLine(const Vec3f& start, const Vec3f& end, const Color
                                  reinterpret_cast<fgGFXvoid*>(offset));
 
     offset = (uintptr_t)((unsigned int*)&aabbColor[0]);
-    context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+    context::vertexAttribPointer(ATTRIBUTE_COLOR_LOCATION,
                                  4,
                                  FG_GFX_FLOAT,
                                  FG_GFX_FALSE,
                                  sizeof (Vector4f),
                                  reinterpret_cast<fgGFXvoid*>(offset));
     context::drawArrays(PrimitiveMode::LINE_STRIP, 0, sizeof (v) / sizeof (v[0]));
+}
+//------------------------------------------------------------------------------
+
+void gfx::primitives::drawLines(const CVector<Vector3f>& points,
+                                const CVector<Color4f>& colors) {
+    context::diffVertexAttribArrayMask(ATTRIBUTE_POSITION_BIT | ATTRIBUTE_COLOR_BIT);
+
+    uintptr_t offset = (uintptr_t)((unsigned int *)&points.front());
+    context::vertexAttribPointer(ATTRIBUTE_POSITION_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector3f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
+
+    offset = (uintptr_t)((unsigned int *)&colors.front());
+    context::vertexAttribPointer(ATTRIBUTE_COLOR_LOCATION,
+                                 4,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector4f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
+    context::drawArrays(PrimitiveMode::LINES, 0, points.size());
 }
 //------------------------------------------------------------------------------
 
