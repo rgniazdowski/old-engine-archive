@@ -18,6 +18,7 @@
 #if defined(FG_USING_BULLET)
 #include "btBulletDynamicsCommon.h"
 #include "fgVector.h"
+
 using namespace fg;
 //------------------------------------------------------------------------------
 

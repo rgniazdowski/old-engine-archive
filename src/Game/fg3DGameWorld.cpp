@@ -20,6 +20,7 @@
 #include "Util/fgStrings.h"
 #if defined(FG_USING_BULLET)
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
+#include "fgDebugConfig.h"
 #endif
 
 using namespace fg;
@@ -58,6 +59,18 @@ fgBool game::CGameWorld3D::destroy(void) {
     status = (fgBool)(base_type::destroy() && status);
 
     return status;
+}
+//------------------------------------------------------------------------------
+
+void game::CGameWorld3D::render(void) {
+    scene_type::render();
+
+    // now the default debug shader and MVP are reset
+    // just call drawDebugWorld on physics world
+#if defined(FG_DEBUG)
+    if(base_type::getDynamicsWorld())
+        base_type::getDynamicsWorld()->debugDrawWorld();
+#endif /* FG_DEBUG */
 }
 //------------------------------------------------------------------------------
 

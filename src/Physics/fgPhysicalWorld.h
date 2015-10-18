@@ -144,6 +144,7 @@ namespace fg {
     } // namespace physics
 } // namespace fg
 
-    #endif /* FG_USING_PHYSICS */
+    #endif /* FG_USING_BULLET */
+
     #undef FG_INC_PHYSICS_PHYSICAL_WORLD_BLOCK
-#endif	/* FGPHYSICALWORLD_H */
+#endif	/* FG_INC_PHYSICS_PHYSICAL_WORLD */

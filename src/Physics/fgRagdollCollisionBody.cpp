@@ -661,7 +661,7 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
 
             pCone->setEnabled(false);
         }
-
+        pTypedConstraint->setDbgDrawSize(10.0f);
         //printf("Adding constraint for: [%s->%s][%s->%s] flipped:%d\n--------------------\n",
         //gfx::anim::getTextFromBoneType(jointID.first),
         //gfx::anim::getTextFromBoneType(jointID.second),

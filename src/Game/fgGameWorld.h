@@ -22,6 +22,8 @@
     #include "Physics/fgPhysicalWorld.h"
     
 namespace fg {
+    struct SPhysicsDebugDrawer;
+    
     namespace event {
         class CArgumentList;
         class CFunctionCallback;
@@ -64,16 +66,33 @@ namespace fg {
 
         public:
 
+            /**
+             *
+             * @return
+             */
             virtual fgBool initialize(void);
+            /**
+             *
+             * @return
+             */
             virtual fgBool destroy(void);
+            /**
+             * 
+             * @param delta
+             */
             virtual void update(float delta = 0.0f);
 
-        protected:            
+        protected:
             gfx::CSceneManager* getSceneManager(void) const;
 
             void registerCallbacks(void);
             void unregisterCallbacks(void);
 
+            /**
+             *
+             * @param argv
+             * @return
+             */
             fgBool sceneNodeInsertedHandler(event::CArgumentList* argv);
 
         private:
@@ -81,6 +100,8 @@ namespace fg {
             gfx::CSceneManager* m_pSceneMgr;
             ///
             fg::event::CFunctionCallback* m_sceneNodeInsertedCallback;
+            /// Custom physics debug drawer
+            SPhysicsDebugDrawer* m_debugDrawer;
         }; // class CGameWorld
 
     } // namespace game
