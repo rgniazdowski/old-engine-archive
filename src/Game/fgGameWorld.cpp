@@ -72,6 +72,45 @@ namespace fg {
             debugColors = colors;
         }
 
+        virtual void drawTransform(const btTransform& transform, btScalar orthoLen) {
+            btVector3 start = transform.getOrigin();
+
+            if(orthoLen < 12.5f)
+                orthoLen = 12.5f;
+            // orange: 1.0f, 0.65f
+            // orange red: 1.0f 0.25f
+            const btVector3 red(1.0f, 0.25f, 0);
+            const btVector3 green(0, 0.8f, 0);
+            const btVector3 blue(0, 0, 0.8f);
+            // RED - X
+            drawLine(start, start + transform.getBasis() * btVector3(orthoLen, 0, 0), red);
+            // RED ARROW
+            drawLine(start + transform.getBasis() * btVector3(orthoLen, 0, 0),
+                     start + transform.getBasis() * btVector3(orthoLen * 0.85f, orthoLen * 0.15f, 0),
+                     red);
+            drawLine(start + transform.getBasis() * btVector3(orthoLen, 0, 0),
+                     start + transform.getBasis() * btVector3(orthoLen * 0.85f, -orthoLen * 0.15f, 0),
+                     red);
+            // GREEN - Y
+            drawLine(start, start + transform.getBasis() * btVector3(0, orthoLen, 0), green);
+            // GREEN ARROW
+            drawLine(start + transform.getBasis() * btVector3(0, orthoLen, 0),
+                     start + transform.getBasis() * btVector3(orthoLen * 0.15f, orthoLen * 0.85f, 0),
+                     green);
+            drawLine(start + transform.getBasis() * btVector3(0, orthoLen, 0),
+                     start + transform.getBasis() * btVector3(-orthoLen * 0.15f, orthoLen * 0.85f, 0),
+                     green);
+            // BLUE - Z
+            drawLine(start, start + transform.getBasis() * btVector3(0, 0, orthoLen), blue);
+            // BLUE ARROW
+            drawLine(start + transform.getBasis() * btVector3(0, 0, orthoLen),
+                     start + transform.getBasis() * btVector3(orthoLen * 0.15f, 0, orthoLen * 0.85f),
+                     blue);
+            drawLine(start + transform.getBasis() * btVector3(0, 0, orthoLen),
+                     start + transform.getBasis() * btVector3(-orthoLen * 0.15f, 0, orthoLen * 0.85f),
+                     blue);
+        }
+
         virtual void drawLine(const btVector3& from,
                               const btVector3& to,
                               const btVector3& color) {

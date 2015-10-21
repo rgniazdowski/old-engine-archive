@@ -781,6 +781,100 @@ void gfx::primitives::drawLines(const CVector<Vector3f>& points,
 }
 //------------------------------------------------------------------------------
 
+void gfx::primitives::drawTransform(const Matrix4f& inMatrix) {
+    const float len = 9.5f;
+    Vec3f matScale;
+    matScale.x = math::length(inMatrix[0]);
+    matScale.y = math::length(inMatrix[1]);
+    matScale.z = math::length(inMatrix[2]);
+    const Quatf basis = math::toQuat(math::scale(inMatrix, 1.0f / matScale));
+    Vec3f start = Vec3f(inMatrix * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+    const Color4f red(1.0f, 0.0f, 0.0f, 1.0f), green(0.0f, 1.0f, 0.0f, 1.0f), blue(0.0f, 0.0f, 1.0f, 1.0f);
+    CVector<Vector3f> points;
+    CVector<Color4f> colors;
+    points.reserve(18 + 4 + 4 + 6); // 9 * 2
+    colors.reserve(18 + 4 + 4 + 6);
+    const float sr = 0.15f, br = 0.85f;
+    //--------------------------------------------------------------------------
+    // RED LINE - X
+    points.push_back(start);
+    points.push_back(start + basis * Vec3f(len, 0, 0));
+    colors.push_back(red);
+    colors.push_back(red);
+    // RED ARROW
+    points.push_back(start + basis * Vec3f(len, 0, 0));
+    points.push_back(start + basis * Vec3f(len * br, len * sr, 0));
+    colors.push_back(red);
+    colors.push_back(red);
+    points.push_back(start + basis * Vec3f(len, 0, 0));
+    points.push_back(start + basis * Vec3f(len * br, -len * sr, 0));
+    colors.push_back(red);
+    colors.push_back(red);
+    // RED SYMBOL - X
+    points.push_back(start + basis * Vec3f(len + len*sr, len*sr, 0));
+    points.push_back(start + basis * Vec3f(len + len * sr * 3.0f, -len*sr, 0));
+    colors.push_back(red);
+    colors.push_back(red);
+    points.push_back(start + basis * Vec3f(len + len*sr, -len*sr, 0));
+    points.push_back(start + basis * Vec3f(len + len * sr * 3.0f, len*sr, 0));
+    colors.push_back(red);
+    colors.push_back(red);
+    //--------------------------------------------------------------------------
+    // GREEN LINE - Y
+    points.push_back(start);
+    points.push_back(start + basis * Vec3f(0, len, 0));
+    colors.push_back(green);
+    colors.push_back(green);
+    // GREEN ARROW
+    points.push_back(start + basis * Vec3f(0, len, 0));
+    points.push_back(start + basis * Vec3f(len * sr, len * br, 0));
+    colors.push_back(green);
+    colors.push_back(green);
+    points.push_back(start + basis * Vec3f(0, len, 0));
+    points.push_back(start + basis * Vec3f(-len * sr, len * br, 0));
+    colors.push_back(green);
+    colors.push_back(green);
+    // GREEN SYMBOL - Y
+    points.push_back(start + basis * Vec3f(-len*sr, len + len*sr, 0));
+    points.push_back(start + basis * Vec3f(len*sr, len + len * sr * 3.0f, 0));
+    colors.push_back(green);
+    colors.push_back(green);
+    points.push_back(start + basis * Vec3f(0, len + len * sr * 2.0f, 0));
+    points.push_back(start + basis * Vec3f(-len*sr, len + len * sr * 3.0f, 0));
+    colors.push_back(green);
+    colors.push_back(green);
+    //--------------------------------------------------------------------------
+    // BLUE LINE - Z
+    points.push_back(start);
+    points.push_back(start + basis * Vec3f(0, 0, len));
+    colors.push_back(blue);
+    colors.push_back(blue);
+    // BLUE ARROW
+    points.push_back(start + basis * Vec3f(0, 0, len));
+    points.push_back(start + basis * Vec3f(len * sr, 0, len * br));
+    colors.push_back(blue);
+    colors.push_back(blue);
+    points.push_back(start + basis * Vec3f(0, 0, len));
+    points.push_back(start + basis * Vec3f(-len * sr, 0, len * br));
+    colors.push_back(blue);
+    colors.push_back(blue);
+    // BLUE SYMBOL - Z
+    points.push_back(start + basis * Vec3f(-len * sr, 0, len + len * sr * 3.0f)); // Upper line
+    points.push_back(start + basis * Vec3f(len * sr, 0, len + len * sr * 3.0f));
+    colors.push_back(blue);
+    colors.push_back(blue);
+    points.push_back(start + basis * Vec3f(-len * sr, 0, len + len * sr)); // Middle line (across)
+    points.push_back(start + basis * Vec3f(len * sr, 0, len + len * sr * 3.0f));
+    colors.push_back(blue);
+    colors.push_back(blue);
+    points.push_back(start + basis * Vec3f(-len * sr, 0, len + len * sr)); // Lower line
+    points.push_back(start + basis * Vec3f(len * sr, 0, len + len * sr));
+    colors.push_back(blue);
+    colors.push_back(blue);
+    drawLines(points, colors);
+}
+//------------------------------------------------------------------------------
+
 void gfx::primitives::drawArray(const CVector<Vector3f>& inputData,
                                 const PrimitiveMode mode) {
     if(inputData.empty())

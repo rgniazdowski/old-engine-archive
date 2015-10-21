@@ -129,6 +129,8 @@ namespace fg {
             void drawLines(const CVector<Vector3f>& points,
                            const CVector<Color4f>& colors);
 
+            void drawTransform(const Matrix4f& inMatrix);
+
             void drawSquare2D(void);
 
             void drawRect2D(void);
