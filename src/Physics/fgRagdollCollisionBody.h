@@ -98,7 +98,6 @@ namespace fg {
                 return (fgBool)(this->first != BONE_INVALID && this->second != BONE_INVALID);
             }
         }; // struct SJointID
-        
         inline _GLIBCXX_CONSTEXPR bool
         operator ==(const SJointID& __x, const SJointID& __y) {
             return ((__x.first == __y.first && __x.second == __y.second) ||
@@ -326,17 +325,50 @@ namespace fg {
                 return m_bones;
             }
 
+            CCollisionBody* getBoneBody(unsigned int armatureBoneIndex, int* outIndex = NULL);
+            CCollisionBody* getBoneBody(const char *name, int* outIndex = NULL);
+            CCollisionBody* getBoneBody(RagdollBoneType boneType);
+
+            CCollisionBody* getParentBoneBody(CCollisionBody* pBoneBody);
+            CCollisionBody* getParentBoneBody(unsigned int armatureBoneIndex);
+            CCollisionBody* getParentBoneBody(const char* name, int* outIndex = NULL);
+
         public:
+            /**
+             * 
+             * @param bonesInfo         Vector containing list of bones to use for this ragdoll.
+             *                          Uses special structure (SBoneSmallInfo) which contains
+             *                          index, index of parent, start/end point, type, name, length...
+             * @param armatureSize      Total armature size (not size of bonesInfo vector).
+             *                          Used for mapping external bone indexes to bone rigid bodies.
+             * @param initInRestPose    Whether or not should initialize bones and constraints
+             *                          in rest pose. If set to FALSE (default) the ragdoll
+             *                          will be initialized in generic T pose. This may not work
+             *                          as expected for alien-like creatures that have more than
+             *                          two legs or arms.
+             * @return                  FG_TRUE if ragdoll was successfully initialized and is ready to use.
+             *                          FG_FALSE otherwise.
+             */
             fgBool initializeFrom(const BonesInfoVec& bonesInfo,
-                                  unsigned int armatureSize);
+                                  unsigned int armatureSize,
+                                  fgBool initInRestPose = FG_FALSE);
 
             void startRagdolling(void);
             void stopRagdolling(void);
             fgBool isRagdolling(void) const;
 
-            math::SUniversalTransform* getUniversalTransform(unsigned int globalBoneIndex);
-            void getUniversalTransform(unsigned int globalBoneIndex, Matrix4f& outMatrix);
-            void setUniversalTransform(unsigned int globalBoneIndex, const Matrix4f& inMatrix);
+            void alignBone(unsigned int armatureBoneIndex,
+                           const Vector3f& direction);
+            void rotateBone(unsigned int armatureBoneIndex,
+                            const Quaternionf& rotation);
+            void rotateBone(unsigned int armatureBoneIndex,
+                            const Vector3f& direction);
+
+            math::SUniversalTransform* getUniversalTransform(unsigned int armatureBoneIndex);
+            void getUniversalTransform(unsigned int armatureBoneIndex,
+                                       Matrix4f& outMatrix);
+            void setUniversalTransform(unsigned int armatureBoneIndex,
+                                       const Matrix4f& inMatrix);
             void setModelMatrix(const Matrix4f& inMatrix) {
                 m_modelMat = inMatrix;
             }
@@ -368,6 +400,18 @@ namespace fg {
         protected:
             fgBool helper_initializeJoint(const RagdollBoneType boneA,
                                           const RagdollBoneType boneB = BONE_INVALID);
+
+            fgBool helper_initializeBone(unsigned int bodyBoneIndex,
+                                         const Vec3f& position,
+                                         const Quatf& rotation);
+            inline fgBool helper_initializeBone(unsigned int bodyBoneIndex,
+                                                const Vec3f& position,
+                                                const Vec3f& direction) {
+                return helper_initializeBone(bodyBoneIndex,
+                                             position,
+                                             math::rotation(Vec3f(0.0f, 1.0f, 0.0f),
+                                                            math::normalize(direction)));
+            }
 
         protected:
             virtual void setupBody(void) {

@@ -154,9 +154,6 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
            ) {
             //continue; // just arms
         }
-        //printf("-> Creating capsule shape for: %s [%s]\n",
-        //info.name.c_str(),
-        //gfx::anim::getTextFromBoneType(info.boneType));
         // should create collision bodies here?
         CCollisionBody* pBoneBody = new CCollisionBody(BODY_CAPSULE);
         // complete height is radius * 2 + height
@@ -189,14 +186,6 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
         // however also useful would be start and end point...
         pBoneBody->setHeight(height);
         pBoneBody->setRadius(radius);
-        pBoneBody->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-        pBoneBody->setDamping(0.05, 0.85);
-        pBoneBody->setDeactivationTime(3.0);
-        pBoneBody->setSleepingThresholds(5.6, 5.5);
-        pBoneBody->setContactProcessingThreshold(0.25f);
-        pBoneBody->setCcdMotionThreshold(0.05f);
-        pBoneBody->setCcdSweptSphereRadius(0.06f);
-        pBoneBody->setGravity(btVector3(0.0f, -9.8f, 0.0f));
         m_bones.push_back(pBoneBody);
         // map bone index to bone rigid body index in the array
         m_boneMapping[info.index] = m_bones.size() - 1;
@@ -225,23 +214,13 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
             const SBoneSmallInfo& info = m_bonesInfo[boneInfoIdx];
             const int boneIndex = info.index;
             const int bodyBoneIdx = m_boneMapping[boneIndex];
-            CCollisionBody* pBoneBody = m_bones[bodyBoneIdx];
+            //CCollisionBody* pBoneBody = m_bones[bodyBoneIdx];
 
             // direction towards endPoint
-            Vector3f direction = info.endPoint - info.startPoint;
+            const Vector3f direction = info.endPoint - info.startPoint;
             Vector3f offCenter = direction / 2.0f;
-            //Vector3f center = info.startPoint + offCenter;
-            Quaternionf rotation = math::rotation(Vec3f(0.0f, 1.0f, 0.0f),
-                                                  math::normalize(direction));
-
-            pBoneBody->setRotation(rotation);
-            pBoneBody->setPosition(info.startPoint + offCenter); // start point ? or center?
-            //pBoneBody->setPosition(info.startPoint); // start point ? or center?
-            pBoneBody->getWorldTransform(m_initialTransforms[bodyBoneIdx]);
-            pBoneBody->getWorldTransform().getBasis().getEulerZYX(m_initialRotations[bodyBoneIdx].x,
-                                                                  m_initialRotations[bodyBoneIdx].y,
-                                                                  m_initialRotations[bodyBoneIdx].z);
-
+            // Rotation based on inversed offset matrix
+            helper_initializeBone(bodyBoneIdx, info.startPoint + offCenter, info.rotation);
         } // for each bone index
 
         // now all bones are initialized with starting position and rotation
@@ -339,7 +318,7 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
                 return FG_FALSE;
             if(infoB->boneType == boneA); // ?
 
-            status = helper_initializeJoint(boneA, infoB->boneType);
+            status = helper_initializeJoint(infoB->boneType, boneA);
             finalStatus = (finalStatus && status);
         }
         return finalStatus;
@@ -394,9 +373,9 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
             if(m_joints.count(jointID) > 0) {
                 m_joints.jointsMap.find(jointID).key().check(jointID.first, jointID.second, &isFlipped);
                 if(isFlipped)
-                    secondIdx++;
-                else
                     firstIdx++;
+                else
+                    secondIdx++;
             }
             isFlipped = FG_FALSE;
         }
@@ -420,123 +399,94 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
         if(jointID.check(BONE_PELVIS, BONE_SPINE, &isFlipped)) {
             useHinge = FG_TRUE;
             limit.x = -math::quarter_pi<float>();
-            limit.y = math::half_pi<float>();
+            limit.y = math::quarter_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_SPINE, BONE_NECK, &isFlipped)) {
             useHinge = FG_TRUE;
             limit.x = -math::quarter_pi<float>();
-            limit.y = math::half_pi<float>();
+            limit.y = math::quarter_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, 0, -math::half_pi<float>());
-            //localB.getBasis().setEulerZYX(0, 0, -math::half_pi<float>());
         } else if(jointID.check(BONE_NECK, BONE_HEAD, &isFlipped) ||
                   jointID.check(BONE_SPINE, BONE_HEAD, &isFlipped)) {
             useHinge = FG_FALSE; // will use cone-twist
-            limit.x = math::radians(90.0f);
-            limit.y = math::radians(90.0f); // up-down
-            limit.z = math::radians(90.0f);
+            limit.x = math::radians(55.0f);
+            limit.y = math::radians(55.0f); // up-down
+            limit.z = math::radians(45.0f);
 
-            localA.getBasis().setEulerZYX(0.0f, 0.0f, math::radians(90.0f));
-            localB.getBasis().setEulerZYX(0.0f, 0.0f, math::radians(90.0f));
         } else if(jointID.check(BONE_PELVIS, BONE_THIGH_LEFT, &isFlipped)) {
             // LEFT HIP
             useHinge = FG_FALSE; // will use cone-twist
-            limit.x = math::radians(120.0f);
-            limit.y = math::radians(120.0f);
-            limit.z = math::radians(150.0f);
-            localA.getBasis().setEulerZYX(0, 0, -math::radians(60.0f));
-            localB.getBasis().setEulerZYX(0, 0, math::radians(90.0f));
+            limit.x = math::radians(55.0f);
+            limit.y = math::radians(55.0f);
+            limit.z = math::radians(0.0f);
         } else if(jointID.check(BONE_THIGH_LEFT, BONE_LEG_LEFT, &isFlipped)) {
             // LEFT KNEE
             useHinge = FG_TRUE;
             limit.x = -math::half_pi<float>();
-            limit.y = 0.0f;
+            limit.y = math::half_pi<float>()*0;
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_LEG_LEFT, BONE_FOOT_LEFT, &isFlipped)) {
             // LEFT ANKLE
             useHinge = FG_TRUE;
-            limit.x = 0.0f;
+            limit.x = -math::half_pi<float>()*0;
             limit.y = math::half_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_PELVIS, BONE_THIGH_RIGHT, &isFlipped)) {
             // RIGHT HIP
             useHinge = FG_FALSE; // will use cone-twist
-            limit.x = math::radians(120.0f);
-            limit.y = math::radians(120.0f);
-            limit.z = math::radians(150.0f);
-            localA.getBasis().setEulerZYX(0, 0, -math::radians(120.0f));
-            localB.getBasis().setEulerZYX(0, 0, math::radians(90.0f));
+            limit.x = math::radians(55.0f);
+            limit.y = math::radians(55.0f);
+            limit.z = math::radians(0.0f);
         } else if(jointID.check(BONE_THIGH_RIGHT, BONE_LEG_RIGHT, &isFlipped)) {
             // RIGHT KNEE
             useHinge = FG_TRUE;
             limit.x = -math::half_pi<float>();
-            limit.y = 0.0f;
+            limit.y = math::half_pi<float>()*0;
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_LEG_RIGHT, BONE_FOOT_RIGHT, &isFlipped)) {
             // RIGHT ANKLE
             useHinge = FG_TRUE;
-            limit.x = 0.0f;
+            limit.x = -math::half_pi<float>()*0;
             limit.y = math::half_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_SPINE, BONE_ARM_LEFT, &isFlipped)) {
             // LEFT SHOULDER
             useHinge = FG_FALSE; // will use cone-twist
-            limit.x = math::radians(90.0f); // left/right
-            limit.y = math::radians(90.0f); // up/down
-            limit.z = math::radians(120.0f); // twist
-            localA.getBasis().setEulerZYX(0, 0, 0);
-            localB.getBasis().setEulerZYX(0, 0, math::half_pi<float>());
+            limit.x = math::radians(50.0f); // left/right
+            limit.y = math::radians(50.0f); // up/down
+            limit.z = math::radians(0.0f); // twist            
         } else if(jointID.check(BONE_ARM_LEFT, BONE_FOREARM_LEFT, &isFlipped)) {
             // LEFT ELBOW
             useHinge = FG_TRUE; // true
             //limit.x = math::quarter_pi<float>();
-            limit.x = -math::half_pi<float>();
-            limit.y = 0.0f;
+            limit.x = -math::half_pi<float>()*0;
+            limit.y = math::half_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_FOREARM_LEFT, BONE_HAND_LEFT, &isFlipped)) {
             // LEFT WRIST
             useHinge = FG_TRUE; // will use cone-twist
-            limit.x = -math::half_pi<float>();
-            limit.y = 0.0f;
+            limit.x = math::radians(-90.0f);
+            limit.y = math::radians(45.0f);
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, 0.0f, 0);
-            //localB.getBasis().setEulerZYX(0, 0.0f, 0);
+
         } else if(jointID.check(BONE_SPINE, BONE_ARM_RIGHT, &isFlipped)) {
             // RIGHT SHOULDER
-            useHinge = FG_TRUE; // will use cone-twist
-            limit.x = math::radians(90.0f); // left/right
-            limit.y = math::radians(90.0f); // up/down
-            limit.z = math::radians(120.0f); // twist
-            localA.getBasis().setEulerZYX(0, 0, math::pi<float>());
-            localB.getBasis().setEulerZYX(0, 0, math::half_pi<float>());
+            useHinge = FG_FALSE; // will use cone-twist
+            limit.x = math::radians(50.0f); // left/right
+            limit.y = math::radians(50.0f); // up/down
+            limit.z = math::radians(0.0f); // twist            
         } else if(jointID.check(BONE_ARM_RIGHT, BONE_FOREARM_RIGHT, &isFlipped)) {
             // RIGHT ELBOW
             useHinge = FG_TRUE;
-            limit.x = -math::half_pi<float>();
-            limit.y = 0.0f;
+            limit.x = -math::half_pi<float>()*0;
+            limit.y = math::half_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         } else if(jointID.check(BONE_FOREARM_RIGHT, BONE_HAND_RIGHT, &isFlipped)) {
             // RIGHT WRIST
-            useHinge = FG_FALSE; // will use cone-twist
-            limit.x = math::quarter_pi<float>();
-            limit.y = math::quarter_pi<float>();
+            useHinge = FG_TRUE; // will use cone-twist
+            limit.x = math::radians(-90.0f);
+            limit.y = math::radians(45.0f);
             limit.z = 0.0f;
-            localA.getBasis().setEulerZYX(0, 0, 0);
-            localB.getBasis().setEulerZYX(0, math::half_pi<float>(), 0);
         } else {// if(isEqual || 1) {
             // this is more universal, if connecting two bones with the same type
             // just use hinge constraint...
@@ -551,8 +501,6 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
             limit.x = -math::quarter_pi<float>();
             limit.y = math::quarter_pi<float>();
             limit.z = 0.0f;
-            //localA.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
-            //localB.getBasis().setEulerZYX(0, -math::half_pi<float>(), 0);
         }
         // need to know what to use and how, also need to perform flipping
         if(isFlipped) {
@@ -562,10 +510,8 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
             std::swap<Matrix4f*>(pMatrixA, pMatrixB);
             std::swap<Vector3f*>(pRotationA, pRotationB);
         } // now know what comes before and what after
-        //Vec3f dirA = (infoA->endPoint - infoA->startPoint) / 2.0f;
-        //Vec3f dirB = (infoB->endPoint - infoB->startPoint) / 2.0f;
-        //float spaceBetween = math::length(infoB->startPoint - infoA->startPoint) / 2.0f;
         Vec3f originA = Vec3f(0.0f, 0.0f, 0.0f), originB = Vec3f(0.0f, 0.0f, 0.0f);
+#if 0
         {
             const Vec3f As_Bs_diff = (infoA->startPoint - infoB->startPoint);
             const Vec3f Ae_Be_diff = (infoA->endPoint - infoB->endPoint);
@@ -612,63 +558,51 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
             } else {
                 // bones passed to this function are flipped?
             }
-            //spaceBetween = closestDistance;
         }
-        printf("%s: rotationA: %.2f %.2f %.2f\n",
-               infoA->name.c_str(),
-               math::degrees(pRotationA->x),
-               math::degrees(pRotationA->y),
-               math::degrees(pRotationA->z));
-        printf("%s: rotationB: %.2f %.2f %.2f\n ----------------\n",
-               infoB->name.c_str(),
-               math::degrees(pRotationB->x),
-               math::degrees(pRotationB->y),
-               math::degrees(pRotationB->z));
+#endif
         if(useHinge) {
-            localA.setOrigin(btVector3(originA.x, originA.y, originA.z));
-            localB.setOrigin(btVector3(originB.x, originB.y, originB.z));
+            {
+                btTransform globalFrame;
+                globalFrame.setOrigin(btVector3(infoB->startPoint.x,
+                                                infoB->startPoint.y,
+                                                infoB->startPoint.z));
+                globalFrame.getBasis().setEulerZYX(0.0f, -math::half_pi<float>(), 0.0f);
+                localA = pBoneBodyA->getWorldTransform().inverse() * globalFrame;
+                localB = pBoneBodyB->getWorldTransform().inverse() * globalFrame;
 
-            localA.getBasis().setEulerZYX(0.0f, -math::half_pi<float>() + pRotationB->y, 0.0f);
-            localB.getBasis().setEulerZYX(0.0f, -math::half_pi<float>() + pRotationA->y, 0.0f);
-            /*pHinge = new btHingeConstraint(*pBoneBodyA->getRigidBody(),
-             *pBoneBodyB->getRigidBody(),
-                                           btVector3(originA.x, originA.y, originA.z),
-                                           btVector3(originB.x, originB.y, originB.z),
-                                           //btVector3(0.0f, 1.0f * math::sign(originA.y), 0.0f),
-                                           //btVector3(0.0f, 1.0f * math::sign(originB.y), 0.0f)
-                                           btVector3(-1.0f, 0.0f, 0.0f), // always X axis
-                                           btVector3(-1.0f, 0.0f, 0.0f) // always X axis
-                                           );*/
-
-            pHinge = new btHingeConstraint(*pBoneBodyA->getRigidBody(),
-                                           *pBoneBodyB->getRigidBody(),
-                                           localA, localB);
-
+                pHinge = new btHingeConstraint(*pBoneBodyA->getRigidBody(),
+                                               *pBoneBodyB->getRigidBody(),
+                                               localA, localB, true);
+            }
             pTypedConstraint = pHinge;
             pCone = NULL;
             pHinge->setLimit(limit.x, limit.y);
             pHinge->setEnabled(false);
         } else {
-            localA.setOrigin(btVector3(originA.x, originA.y, originA.z));
-            localB.setOrigin(btVector3(originB.x, originB.y, originB.z));
+            {
+                btTransform globalFrame;
+                globalFrame.setOrigin(btVector3(infoB->startPoint.x,
+                                                infoB->startPoint.y,
+                                                infoB->startPoint.z));
+                // need to rotate properly - twist axis needs to be along the bone
+                globalFrame.getBasis().setEulerZYX(pRotationB->x, pRotationB->y, pRotationB->z);
+                btMatrix3x3 rot;
+                rot.setEulerZYX(0.0f, math::radians(0.0f), math::radians(90.0f));
+                globalFrame.getBasis() *= rot;
+                localA = pBoneBodyA->getWorldTransform().inverse() * globalFrame;
+                localB = pBoneBodyB->getWorldTransform().inverse() * globalFrame;
+            }
             pCone = new btConeTwistConstraint(*pBoneBodyA->getRigidBody(),
                                               *pBoneBodyB->getRigidBody(),
                                               localA, localB);
-
             pTypedConstraint = pCone;
             pHinge = NULL;
             pCone->setLimit(limit.x, limit.y, limit.z, 0.9f, 0.3f, 0.9f);
-
             pCone->setEnabled(false);
         }
         pTypedConstraint->setDbgDrawSize(10.0f);
-        //printf("Adding constraint for: [%s->%s][%s->%s] flipped:%d\n--------------------\n",
-        //gfx::anim::getTextFromBoneType(jointID.first),
-        //gfx::anim::getTextFromBoneType(jointID.second),
-        //infoA->name.c_str(),
-        //infoB->name.c_str(),
-        //isFlipped);
         m_joints.addConstraint(jointID, pTypedConstraint);
+        status = FG_TRUE;
         //-------------------------------------------
         if(!isEqual) {
             // need to check here if there are any multiple bones...
@@ -681,6 +615,31 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
         firstIdx++;
     }
     return status;
+}
+//------------------------------------------------------------------------------
+
+fgBool physics::CRagdollCollisionBody::helper_initializeBone(unsigned int bodyBoneIdx,
+                                                             const Vec3f& position,
+                                                             const Quatf& rotation) {
+
+    if(bodyBoneIdx >= m_bones.size())
+        return FG_FALSE;
+    CCollisionBody* pBoneBody = m_bones[bodyBoneIdx];
+    pBoneBody->setRotation(rotation);
+    pBoneBody->setPosition(position);
+    pBoneBody->getWorldTransform(m_initialTransforms[bodyBoneIdx]);
+    pBoneBody->getWorldTransform().getBasis().getEulerZYX(m_initialRotations[bodyBoneIdx].z,
+                                                          m_initialRotations[bodyBoneIdx].y,
+                                                          m_initialRotations[bodyBoneIdx].x);
+    pBoneBody->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+    pBoneBody->setDamping(0.05, 0.85);
+    pBoneBody->setDeactivationTime(3.0);
+    pBoneBody->setSleepingThresholds(5.6, 5.5);
+    pBoneBody->setContactProcessingThreshold(0.25f);
+    pBoneBody->setCcdMotionThreshold(0.05f);
+    pBoneBody->setCcdSweptSphereRadius(0.06f);
+    pBoneBody->setGravity(btVector3(0.0f, -9.8f, 0.0f));
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
@@ -723,43 +682,195 @@ void physics::CRagdollCollisionBody::stopRagdolling(void) {
 //------------------------------------------------------------------------------
 
 fgBool physics::CRagdollCollisionBody::isRagdolling(void) const {
-
     return m_isRagdolling;
 }
 //------------------------------------------------------------------------------
 
-math::SUniversalTransform* physics::CRagdollCollisionBody::getUniversalTransform(unsigned int globalBoneIndex) {
-    if(globalBoneIndex >= m_transforms.size()) {
-
+physics::CCollisionBody* physics::CRagdollCollisionBody::getBoneBody(unsigned int armatureBoneIndex,
+                                                                     int* outIndex) {
+    if(m_boneMapping.size() <= armatureBoneIndex) {
         return NULL;
     }
-    return m_transforms[globalBoneIndex];
+    const int index = m_boneMapping[armatureBoneIndex];
+    if(index >= 0 && index < m_bones.size()) {
+        if(outIndex)
+            *outIndex = index;
+        return m_bones.at(index);
+    }
+    if(outIndex)
+        *outIndex = -1;
+    return NULL;
 }
 //------------------------------------------------------------------------------
 
-void physics::CRagdollCollisionBody::getUniversalTransform(unsigned int globalBoneIndex,
+physics::CCollisionBody* physics::CRagdollCollisionBody::getBoneBody(const char *name,
+                                                                     int* outIndex) {
+    if(!name)
+        return NULL;
+    if(!name[0])
+        return NULL;
+    if(m_bones.empty() || m_bonesInfo.empty())
+        return NULL;
+    const unsigned int n = m_bonesInfo.size();
+    unsigned int found = n;
+    for(unsigned int i = 0; i < n; i++) {
+        if(m_bonesInfo[i].name.compare(name) == 0) {
+            found = i;
+            break;
+        }
+    }
+    if(found < m_bones.size()) {
+        if(outIndex)
+            *outIndex = (int)found;
+        return m_bones[found];
+    }
+    if(outIndex)
+        *outIndex = -1;
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionBody* physics::CRagdollCollisionBody::getBoneBody(RagdollBoneType boneType) {
+    if(boneType == BONE_INVALID)
+        return NULL;
+    BonesTypeMap::iterator itor = m_typeMapping.find(boneType);
+    if(itor == m_typeMapping.end())
+        return NULL;
+    if(itor->second.empty())
+        return NULL;
+    unsigned int boneBodyIdx = itor->second.at(0);
+    if(m_bones.size() <= boneBodyIdx)
+        return NULL;
+    return m_bones[boneBodyIdx];
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionBody* physics::CRagdollCollisionBody::getParentBoneBody(CCollisionBody* pBoneBody) {
+    const unsigned int n = m_bones.size();
+    if(!n)
+        return NULL;
+    int bodyIndex = m_bones.find(pBoneBody);
+    if(bodyIndex < 0)
+        return NULL;
+    int parentBoneIndex = m_bonesInfo[bodyIndex].parentIdx;
+    if(parentBoneIndex < 0) {
+        return NULL;
+    }
+    int parentBodyIndex = m_boneMapping[parentBoneIndex];
+    if(parentBodyIndex < 0 || parentBodyIndex >= m_bones.size()) {
+        return NULL;
+    }
+    return m_bones[parentBodyIndex];
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionBody* physics::CRagdollCollisionBody::getParentBoneBody(unsigned int armatureBoneIndex) {
+    if(armatureBoneIndex >= m_boneMapping.size())
+        return NULL;
+    int bodyIndex = m_boneMapping[armatureBoneIndex];
+    if(bodyIndex < 0) {
+        return NULL;
+    }
+    int parentBoneIndex = m_bonesInfo[bodyIndex].parentIdx;
+    if(parentBoneIndex < 0) {
+        return NULL;
+    }
+    int parentBodyIndex = m_boneMapping[parentBoneIndex];
+    if(parentBodyIndex < 0 || parentBodyIndex >= m_bones.size()) {
+        return NULL;
+    }
+    return m_bones[parentBodyIndex];
+}
+//------------------------------------------------------------------------------
+
+physics::CCollisionBody* physics::CRagdollCollisionBody::getParentBoneBody(const char* name,
+                                                                           int* outIndex) {
+    int bodyIndex = -1;
+    CCollisionBody* pBody = getBoneBody(name, &bodyIndex);
+    if(outIndex)
+        *outIndex = -1;
+    if(!pBody)
+        return NULL;
+    int parentBoneIndex = m_bonesInfo[bodyIndex].parentIdx;
+    if(parentBoneIndex < 0) {
+        return NULL;
+    }
+    int parentBodyIndex = m_boneMapping[parentBoneIndex];
+    if(parentBodyIndex < 0 || parentBodyIndex >= m_bones.size()) {
+        return NULL;
+    }
+    if(outIndex)
+        *outIndex = parentBodyIndex;
+    return m_bones[parentBodyIndex];
+}
+//------------------------------------------------------------------------------
+
+void physics::CRagdollCollisionBody::alignBone(unsigned int armatureBoneIndex,
+                                               const Vector3f& direction) {
+    CCollisionBody* pBoneBody = getBoneBody(armatureBoneIndex);
+    if(!pBoneBody)
+        return;
+    const float yaw = atan2(direction.x, direction.z);
+    const float padj = sqrt(pow(direction.x, 2) + pow(direction.z, 2));
+    const float pitch = atan2(padj, direction.y);
+    Vec3f eulerRots = Vec3f(pitch, yaw, 0.0f);
+    //if(eulerRots.y + math::pi<float>() <= FG_EPSILON)
+    //eulerRots.y = math::pi<float>();
+    printf("Align: %.2f %.2f 0.00\n", eulerRots.x, eulerRots.y);
+    pBoneBody->getWorldTransform().getBasis().setEulerZYX(eulerRots.x, eulerRots.y, eulerRots.z);
+}
+//------------------------------------------------------------------------------
+
+void physics::CRagdollCollisionBody::rotateBone(unsigned int armatureBoneIndex,
+                                                const Quaternionf& rotation) {
+    CCollisionBody* pBoneBody = getBoneBody(armatureBoneIndex);
+    if(!pBoneBody)
+        return;
+    pBoneBody->setRotation(rotation);
+}
+//------------------------------------------------------------------------------
+
+void physics::CRagdollCollisionBody::rotateBone(unsigned int armatureBoneIndex,
+                                                const Vector3f& direction) {
+    CCollisionBody* pBoneBody = getBoneBody(armatureBoneIndex);
+    if(!pBoneBody)
+        return;
+    const Quaternionf rotation = math::rotation(Vec3f(0.0f, 1.0f, 0.0f),
+                                                math::normalize(direction));
+    pBoneBody->setRotation(rotation);
+}
+//------------------------------------------------------------------------------
+
+math::SUniversalTransform* physics::CRagdollCollisionBody::getUniversalTransform(unsigned int armatureBoneIndex) {
+    if(armatureBoneIndex >= m_transforms.size()) {
+        return NULL;
+    }
+    return m_transforms[armatureBoneIndex];
+}
+//------------------------------------------------------------------------------
+
+void physics::CRagdollCollisionBody::getUniversalTransform(unsigned int armatureBoneIndex,
                                                            Matrix4f& outMatrix) {
-    if(globalBoneIndex >= m_transforms.size()) {
+    if(armatureBoneIndex >= m_transforms.size()) {
         return;
     }
-
-    if(!m_transforms[globalBoneIndex])
+    if(!m_transforms[armatureBoneIndex])
         return;
-    m_transforms[globalBoneIndex]->getTransform(outMatrix);
+    m_transforms[armatureBoneIndex]->getTransform(outMatrix);
 }
 //------------------------------------------------------------------------------
 
-void physics::CRagdollCollisionBody::setUniversalTransform(unsigned int globalBoneIndex,
+void physics::CRagdollCollisionBody::setUniversalTransform(unsigned int armatureBoneIndex,
                                                            const Matrix4f& inMatrix) {
     // if such transformation does not exist?
-    if(globalBoneIndex >= m_transforms.size()) {
+    if(armatureBoneIndex >= m_transforms.size()) {
         return;
     }
-    if(m_transforms[globalBoneIndex] == NULL) {
+    if(m_transforms[armatureBoneIndex] == NULL) {
 
         return;
     }
-    m_transforms[globalBoneIndex]->setTransform(inMatrix);
+    m_transforms[armatureBoneIndex]->setTransform(inMatrix);
 }
 //------------------------------------------------------------------------------
 

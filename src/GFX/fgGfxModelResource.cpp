@@ -330,8 +330,8 @@ void gfx::CModelResource::SModelSkinning::translatePositionKeys(const std::strin
                     refChannel.positionKeys[idxKey].value += translation;
                     // so now the model should display properly
                 }
-                break;
-            }
+                break; 
+            }            
         } // for every channel
     } // for every animation
 }

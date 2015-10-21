@@ -422,6 +422,11 @@ void gfx::anim::SBone::refreshLength(void) {
     this->startPoint = Vec3f(position4f);
     position4f = finalRestPoseMat * Vec4f(0.0f, this->length * matScale.y, 0.0f, 1.0f);
     this->endPoint = Vec3f(position4f);
+    finalRestPoseMat = math::scale(finalRestPoseMat, matScale);
+    rotDir = math::toQuat(finalRestPoseMat); // rotation in inverse offset
+    angles = math::eulerAngles(rotDir);
+    this->rotation = rotDir; // #IMPORTANT! - using inverse bone offset rotation (matrix scaled to 1.0f)
+    this->angles = angles; // #IMPORTANT!
 }
 //------------------------------------------------------------------------------
 

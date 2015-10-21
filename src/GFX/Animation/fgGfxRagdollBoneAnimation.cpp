@@ -98,16 +98,18 @@ void gfx::anim::CRagdollBoneAnimation::calculate(SAnimationInfo& animInfo,
         pTransform = getTransform(pBone->index);
         pParentTransform = getTransform(pBone->parentIdx);
         if(!pTransform)
-            continue; // ignore this bone - there is no information        
+            continue; // ignore this bone - there is no information
         if(boneIdx == 0 || !pParentTransform) {
             // ignore pelvis
             m_intermediate[pBone->index] = Matrix4f();
             continue;
         }
+        //SBone* pParentBone = pBone->pParent;
         pTransform->getTransform(boneBodyMatrix);
         pParentTransform->getTransform(parentBoneBodyMatrix);
         const Quatf parentBoneQuat = math::toQuat(parentBoneBodyMatrix);
         const Quatf boneQuat = math::toQuat(boneBodyMatrix);
+
         // Now this is a valid relative rotation (relative to parent!)
         // However if this bone is not first child... what then?
         const Quatf newRotQuat = math::inverse(parentBoneQuat) * boneQuat;

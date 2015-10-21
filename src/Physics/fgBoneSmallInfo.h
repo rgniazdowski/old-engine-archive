@@ -38,7 +38,9 @@ namespace fg {
             index(0),
             length(0.0f),
             startPoint(),
-            endPoint() { }
+            endPoint(),
+            rotation(),
+            angles() { }
             /**
              * 
              * @param orig
@@ -51,6 +53,8 @@ namespace fg {
                 this->length = orig.length;
                 this->startPoint = orig.startPoint;
                 this->endPoint = orig.endPoint;
+                this->rotation = orig.rotation;
+                this->angles = orig.angles;
             }
             /**
              * 
@@ -71,6 +75,10 @@ namespace fg {
             Vec3f startPoint;
             /// End point of this bone (in rest pose)
             Vec3f endPoint;
+            ///
+            Quatf rotation;
+            ///
+            Vec3f angles;
             
             /**
              * 

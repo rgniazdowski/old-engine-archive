@@ -146,18 +146,19 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationInfo& animInfo,
         // nothing to do!
         return;
     }
-    animInfo.advanceTime(delta);
-    // time scale? elapsed is in seconds...
-    const float currentTime = math::mod(animInfo.curFrame.elapsed * 1000.0f, getDurationInMs());
-    animInfo.curFrame.index = (currentTime / getDurationInMs()) * getDurationInTicks();
-
-    //CArmature::BonesVec const& bones = m_pArmature->getBones();
     const unsigned int nBones = bones.size();
     if(!nBones) {
         animInfo.curFrame.clear();
         return;
     }
     animInfo.curFrame.resize(nBones);
+    if(animInfo.isPaused() || animInfo.isStopped())
+        return; // ignore
+    animInfo.advanceTime(delta);
+    // time scale? elapsed is in seconds...
+    const float currentTime = math::mod(animInfo.curFrame.elapsed * 1000.0f, getDurationInMs());
+    animInfo.curFrame.index = (currentTime / getDurationInMs()) * getDurationInTicks();
+
     // frameInfo.transformations contains final bone matrices;
     // this vector will hold node transformation matrices #LOCK
     if(m_intermediate.capacity() < nBones)
@@ -183,22 +184,17 @@ void gfx::anim::CBoneAnimation::calculate(SAnimationInfo& animInfo,
     }
     for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
         SBone* pBone = bones[boneIdx];
+        Matrix4f& outMatrix = animInfo.curFrame.transformations[boneIdx];
         // start with the mesh-to-bone matrix
-        animInfo.curFrame.transformations[boneIdx] = pBone->offset;
+        outMatrix = pBone->offset; // Matrix4f(1.0f); //pBone->offset;
         const SBone* pTmp = pBone;
         // append all node transformations down the parent chain
         // until we're back at mesh coordinates again
         while(pTmp) {
-            animInfo.curFrame.transformations[boneIdx] =
-                    m_intermediate[pTmp->index] *
-                    animInfo.curFrame.transformations[boneIdx];
+            outMatrix = m_intermediate[pTmp->index] * outMatrix;
             pTmp = pTmp->pParent;
         }
-        //frameInfo.transformations[i] = Matrix4f();
-        // now frameInfo contains proper matrix transformations
-        // these matrices are not optimal (4x4 is too big)
-        // convert mat4 to dual quaternion
-        animInfo.curFrame.dualQuaternions[boneIdx].initializeFrom(animInfo.curFrame.transformations[boneIdx]);
+        animInfo.curFrame.dualQuaternions[boneIdx].initializeFrom(outMatrix);
     }
 }
 //------------------------------------------------------------------------------
