@@ -1452,6 +1452,18 @@ gfx::anim::CAnimation* gfx::CModelResource::getAnimation(const char* name) {
 }
 //------------------------------------------------------------------------------
 
+gfx::anim::CAnimation* gfx::CModelResource::getMatchingAnimation(const std::string& name) {
+    if(name.empty())
+        return NULL;
+    return m_skinning.getAnimation(name.c_str(), strings::MATCH_CASE_INSENSITIVE | strings::MATCH_SUBSTR);
+ }
+//------------------------------------------------------------------------------
+
+gfx::anim::CAnimation* gfx::CModelResource::getMatchingAnimation(const char* name) {
+    return m_skinning.getAnimation(name, strings::MATCH_CASE_INSENSITIVE | strings::MATCH_SUBSTR);
+ }
+//------------------------------------------------------------------------------
+
 void gfx::CModelResource::refreshSkinningInfo(void) {
     const unsigned int n = m_shapes.size();
     for(unsigned int i = 0; i < n; i++) {

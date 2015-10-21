@@ -816,6 +816,13 @@ namespace fg {
              * @return
              */
             anim::CAnimation* getAnimation(const char* name);
+            anim::CAnimation* getMatchingAnimation(const std::string& name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            anim::CAnimation* getMatchingAnimation(const char* name);
             /**
              * 
              * @return
