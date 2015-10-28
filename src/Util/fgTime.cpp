@@ -38,8 +38,15 @@ namespace fg {
         static float s_current[NUM_TICK_CATEGORIES] = {-1.0f, -1.0f, -1.0f};
         ///
         static float s_lastTick[NUM_TICK_CATEGORIES] = {-1.0f, -1.0f, -1.0f};
-    };
-};
+
+        const char * const g_TickCategoriesText[] = {
+                                                     "UPDATE",
+                                                     "PRERENDER",
+                                                     "RENDER",
+                                                     "UNKNOWN"
+        };
+    } // namespace timesys
+} // namespace fg
 
 #if defined(FG_USING_SDL2)
 #include <SDL2/SDL_timer.h>
