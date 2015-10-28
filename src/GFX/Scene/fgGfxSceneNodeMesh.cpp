@@ -167,67 +167,48 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNodeMesh::updateAABB(void) {
-#if 0
-    physics::CCollisionBody *body = getCollisionBody();
-    if(body) {
-        if(m_pMesh && !isAutoScale()) {
-            if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
-                body->setRadius(math::length(m_scale * m_pMesh->aabb.getExtent()));
-            } else {
-                body->setHalfSize(m_scale * (m_pMesh->aabb.getExtent()));
-            }
-            body->setInertiaTensor();
-            body->calculateDerivedData();
-        }
-        // Well the collision body is present, so the base function can be called
-        // it will do the required transformations (based on the physics)
-        base_type::updateAABB();
+    if(!m_pMesh) {
+        return;
     }
-#endif
-    if(m_pMesh) {
-        if(!m_pMesh->isSkinnedMesh()) {
-            m_aabb.min = m_pMesh->aabb.min;
-            m_aabb.max = m_pMesh->aabb.max;
-            m_aabb.transform(m_finalModelMat, m_scale);
-        } else {
-            m_aabb.invalidate();
-            animated_type::AnimationsVec& animations = getAnimations();
-            if(animations.empty())
-                return;
-            // This still need fixing, need to interpolate animations
-            // automatically, and use result here
-            // (without traversing animations ...)
-            SSkinnedMesh *pSkinnedMesh = this->getSkinnedMesh();
-            const unsigned int nAnimations = animations.size();
-            for(unsigned int animId = 0; animId < nAnimations; animId++) {
-                anim::SAnimationInfo &info = animations[animId];
-                if(!info.pAnimation)
-                    continue;
-                if(info.pAnimation->getType() != anim::Type::BONE)
-                    continue;
-                unsigned int nBones = pSkinnedMesh->boneEdges.size();
+    if(!m_pMesh->isSkinnedMesh()) {
+        m_aabb.min = m_pMesh->aabb.min;
+        m_aabb.max = m_pMesh->aabb.max;
+        m_aabb.transform(m_finalModelMat, m_scale);
+    } else {
+        m_aabb.invalidate();
+        animated_type::AnimationsVec& animations = getAnimations();
+        if(animations.empty())
+            return;
+        // This still need fixing, need to interpolate animations
+        // automatically, and use result here
+        // (without traversing animations ...)
+        SSkinnedMesh *pSkinnedMesh = this->getSkinnedMesh();
+        const unsigned int nAnimations = animations.size();
+        for(unsigned int animId = 0; animId < nAnimations; animId++) {
+            anim::SAnimationInfo &info = animations[animId];
+            if(!info.pAnimation)
+                continue;
+            if(info.pAnimation->getType() != anim::Type::BONE &&
+               info.pAnimation->getType() != anim::Type::BONE_RAGDOLL)
+                continue;
+            unsigned int nBones = pSkinnedMesh->boneEdges.size();
 
-                for(unsigned int boneId = 0; boneId < nBones; boneId++) {
-                    Vec3f min, max;
-                    pSkinnedMesh->boneEdges[boneId].transform(pSkinnedMesh,
-                                                              info.curFrame.dualQuaternions,
-                                                              min, max);
-                    m_aabb.merge(min);
-                    m_aabb.merge(max);
-                }
-                if(info.pAnimation->getType() == anim::Type::BONE);
-                //break; // #FIXME - this seriously need to be better
-                // also would really need some method in base class
-                // that updates the aabb based on the children size
-                // but too soon for that !TODO
+            for(unsigned int boneId = 0; boneId < nBones; boneId++) {
+                Vec3f min, max;
+                pSkinnedMesh->boneEdges[boneId].transform(pSkinnedMesh,
+                                                          info.curFrame.dualQuaternions,
+                                                          min, max);
+                m_aabb.merge(min);
+                m_aabb.merge(max);
             }
-            m_aabb.transform(m_finalModelMat, m_scale);
+            if(info.pAnimation->getType() == anim::Type::BONE);
+            //break; // #FIXME - this seriously need to be better
+            // also would really need some method in base class
+            // that updates the aabb based on the children size
+            // but too soon for that !TODO
         }
-        //if(body && !isAutoScale()) {
-        //    m_aabb.radius = body->getRadius();
-        //} else {
-        m_aabb.radius = math::length(m_aabb.getExtent());
-        //}
+        m_aabb.transform(m_finalModelMat, m_scale);
     }
+    m_aabb.radius = math::length(m_aabb.getExtent());
 }
 //------------------------------------------------------------------------------
