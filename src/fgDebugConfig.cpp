@@ -36,6 +36,7 @@ namespace fg {
         0,
     #endif
         false, //physicsBBoxShow    // Whether to show bounding boxes debug info for physics simulation
+        false, //physicsWireframeShow; // Whether to show wireframe of collision bodies for physics simulation
         false, //guiBBoxShow;       // Whether to show bounding boxes debug info (GUI)
         false, //gfxBBoxShow;       // Whether to show bounding boxes in GFX?
         false, //gfxSphereShow;     // Whether to show bounding spheres in GFX?

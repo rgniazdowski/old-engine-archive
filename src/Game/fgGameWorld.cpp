@@ -17,6 +17,7 @@
 #include "fgGameWorld.h"
 #include "GFX/Scene/fgGfxSceneManager.h"
 #include "Physics/fgPhysical.h"
+#include "fgDebugConfig.h"
 
 #if defined(FG_USING_BULLET)
 #include "GFX/fgGfxColor.h"
@@ -51,12 +52,23 @@ namespace fg {
         debugColors(),
         positions(),
         colors(),
-        debugMode(DBG_NoHelpText |
-                  DBG_DrawConstraintLimits |
-                  DBG_DrawConstraints),
+        debugMode(DBG_NoHelpText
+                  | DBG_DrawConstraintLimits
+                  | DBG_DrawConstraints
+                  //| DBG_DrawNormals
+                  | DBG_DrawFrames
+                  ),
         currentColor(-1, -1, -1) {
             positions.reserve(64);
             colors.reserve(64);
+#if defined(FG_DEBUG)
+            if(g_DebugConfig.physicsBBoxShow) {
+                this->debugMode |= DBG_DrawAabb;
+            }
+            if(g_DebugConfig.physicsWireframeShow) {
+                this->debugMode |= DBG_DrawWireframe;
+            }
+#endif /* FG_DEBUG */
         }
 
         virtual ~SPhysicsDebugDrawer() {

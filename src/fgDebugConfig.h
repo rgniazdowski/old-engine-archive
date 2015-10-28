@@ -29,6 +29,7 @@ namespace fg {
         const bool isVerbose; // Is there some verbosity active?
         int verboseLevel; // The exact verbosity level
         bool physicsBBoxShow; // Whether to show bounding boxes debug info for physics simulation
+        bool physicsWireframeShow; // Whether to show wireframe of collision bodies for physics simulation
         bool guiBBoxShow; // Whether to show bounding boxes debug info (GUI)
         bool gfxBBoxShow; // Whether to show bounding boxes in GFX?
         bool gfxSphereShow; // Whether to show bounding spheres in GFX?

@@ -19,7 +19,7 @@
 
 #include "Resource/fgResourceManager.h"
 #include "Util/fgStrings.h"
-
+#include "fgColors.h"
 #include "fgDebugConfig.h"
 
 #if defined(FG_DEBUG)
@@ -1031,6 +1031,9 @@ void gfx::CSceneManager::render(void) {
         //----------------------------------------------------------------------
         pShaderMgr->useProgram("DefaultShader");
         pProgram = pShaderMgr->getCurrentProgram();
+        //-----------------------------------
+
+        //-----------------------------------
         for(; nodesItor != nodesEnd; nodesItor++) {
             CSceneNode* pSceneNode = *nodesItor;
             if(!pSceneNode)
@@ -1075,17 +1078,6 @@ void gfx::CSceneManager::render(void) {
                 primitives::drawVertexData(sphereMesh,
                                            ATTRIBUTE_POSITION_BIT | ATTRIBUTE_UVS_BIT,
                                            PrimitiveMode::LINES);
-            }
-#endif
-            //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
-#if 0
-            if(FG_DEBUG_CFG_OPTION(physicsBBoxShow)) {
-                physics::CCollisionBody* body = pSceneNode->getCollisionBody();
-                if(body) {
-                    if(body->getBodyType() == physics::BODY_BOX) {
-                    } else if(body->getBodyType() == physics::BODY_SPHERE) {
-                    }
-                }
             }
 #endif
         } // for(node queue iteration)

@@ -581,6 +581,7 @@ fgBool CEngineMain::loadConfiguration(void) {
         OPT_HELP,
         OPT_VERBOSE_LEVEL,
         OPT_PHYSICS_BBOX,
+        OPT_PHYSICS_WIREFRAME,
         OPT_GUI_BBOX,
         OPT_GFX_BBOX,
         OPT_GFX_SPHERE,
@@ -617,6 +618,8 @@ fgBool CEngineMain::loadConfiguration(void) {
         {OPT_VERBOSE_LEVEL, "--verbose", SO_OPT},
         {OPT_PHYSICS_BBOX, "--physics-bbox", SO_OPT},
         {OPT_PHYSICS_BBOX, "--physics-bbox-show", SO_NONE},
+        {OPT_PHYSICS_WIREFRAME, "--physics-wireframe", SO_OPT},
+        {OPT_PHYSICS_WIREFRAME, "--physics-wireframe-show", SO_NONE},
         {OPT_GUI_BBOX, "--gui-bbox", SO_OPT},
         {OPT_GUI_BBOX, "--gui-bbox-show", SO_NONE},
         {OPT_GFX_BBOX, "--gfx-bbox", SO_OPT},
@@ -659,6 +662,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                 printf("Available options (only in DEBUG build):\n");
                 printf("--verbose                 Select verbosity level for all messages\n"
                        "--physics-bbox-show       Display physical bounding boxes\n"
+                       "--physics-wireframe-show  Display wireframe of physical collision bodies\n"
                        "--gui-bbox-show           Display bounding boxes for GUI elements\n"
                        "--gfx-bbox-show           Display bounding boxes for 3D scene objects\n"
                        "--gfx-sphere-show         Display bounding spheres for 3D scene objects\n"
@@ -700,6 +704,15 @@ fgBool CEngineMain::loadConfiguration(void) {
                     g_DebugConfig.physicsBBoxShow = (bool)boolValue;
                 } else {
                     g_DebugConfig.physicsBBoxShow = true;
+                }
+                break;
+
+            case OPT_PHYSICS_WIREFRAME:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.physicsWireframeShow = (bool)boolValue;
+                } else {
+                    g_DebugConfig.physicsWireframeShow = true;
                 }
                 break;
 
