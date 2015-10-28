@@ -20,6 +20,7 @@
 #include "GFX/Animation/fgGfxArmature.h"
 #include "GFX/Animation/fgGfxRagdollBoneAnimation.h"
 #include "Physics/fgPhysics.h"
+#include "GFX/Scene/fgGfxSceneNodeMesh.h"
 #include <stack>
 
 using namespace fg;
@@ -143,16 +144,58 @@ void game::CEntityActor::setModel(gfx::CModelResource* pModel) {
 }
 //------------------------------------------------------------------------------
 
+fgBool game::CEntityActor::copyAnimationToRagdoll(gfx::anim::SAnimationInfo* pInfo,
+                                                  const gfx::SSkinnedMesh::BonesVec& bones) {
+    if(!pInfo)
+        return FG_FALSE;
+    if(!pInfo->pAnimation)
+        return FG_FALSE;
+    if(bones.empty())
+        return FG_FALSE;
+    physics::CRagdollCollisionBody* pBody = getRagdollCollisionBody();
+    if(!pBody)
+        return FG_FALSE;
+    // get transformations of each bone from currently active animation (if any)
+    // active animations are stored for each mesh (because given mesh can be affected
+    // by different set of bones).
+    // #FIXME - This will need quite fixing - for now just select first child mesh
+
+    // Need armature bone indexes
+    const unsigned int nBones = bones.size();
+    for(unsigned int i = 0; i < nBones; i++) {
+        gfx::anim::SBone* pBone = bones[i];
+        if(!pBone)
+            continue;
+        // should invert by bone offset?
+        pBody->setInitialTransform(pBone->index,
+                                   math::scale(pInfo->curFrame.transformations[i] * math::inverse(pBone->offset), pBone->getOffsetScale()));
+    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
 void game::CEntityActor::startRagdolling(void) {
     if(isRagdolling()) //&& this->getAnimation((unsigned int)0)->getType() == gfx::anim::Type::BONE_RAGDOLL)
         return; // ignore;
     fgBool status = FG_FALSE;
+    ChildrenVec& children = this->getChildren();
+    const unsigned int n = children.size();
     if(isRagdoll()) {
         //if(this->setAnimation(m_ragdollAnimation, 0)) {
         //    this->getAnimationInfoBySlot(0)->play(); // activate
         //}
         physics::CRagdollCollisionBody* pBody = getRagdollCollisionBody();
         pBody->setModelMatrix(this->getFinalModelMatrix());
+        //pBody->
+
+        for(unsigned int i = 0; i < n; i++) {
+            CSceneNode* pChild = children[i];
+            if(!pChild->checkNodeType(gfx::SCENE_NODE_MESH))
+                continue;
+            copyAnimationToRagdoll(pChild->getAnimationInfoBySlot(0),
+                                   static_cast<gfx::CSceneNodeMesh*>(pChild)->getSkinnedMesh()->bones);
+            break; // ooops! #FIXME need to get merged animation and list of bones
+        }
         pBody->startRagdolling();
 #if 0
         btVector3 deathV;
@@ -174,8 +217,8 @@ void game::CEntityActor::startRagdolling(void) {
     }
     if(!status)
         return;
-    ChildrenVec& children = this->getChildren();
-    const unsigned int n = children.size();
+
+
     for(unsigned int i = 0; i < n; i++) {
         CSceneNode* pChild = children[i];
         if(!pChild->checkNodeType(gfx::SCENE_NODE_MESH))

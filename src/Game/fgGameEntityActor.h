@@ -103,6 +103,9 @@ namespace fg {
         protected:
             virtual fgBool setupCollisionBody(physics::BodyType bodyType);
 
+            fgBool copyAnimationToRagdoll(gfx::anim::SAnimationInfo* pInfo,
+                                          const gfx::SSkinnedMesh::BonesVec& bones);
+
         private:
             ///
             gfx::anim::CRagdollBoneAnimation* m_ragdollAnimation;

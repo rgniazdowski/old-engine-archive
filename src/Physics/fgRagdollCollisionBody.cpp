@@ -18,10 +18,9 @@
 #include "fgCollisionBody.h"
 
 #if defined(FG_USING_BULLET)
-#include "BulletDynamics/ConstraintSolver/btTypedConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btConeTwistConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btHingeConstraint.h"
-#include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
+//#include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
 #include "BulletDynamics/Dynamics/btDynamicsWorld.h"
 #endif /* FG_USING_BULLET */
 
@@ -643,6 +642,40 @@ fgBool physics::CRagdollCollisionBody::helper_initializeBone(unsigned int bodyBo
 }
 //------------------------------------------------------------------------------
 
+void physics::CRagdollCollisionBody::setInitialTransform(unsigned int armatureBoneIndex,
+                                                         const Matrix4f& inBoneMatrix) {
+    if(armatureBoneIndex >= m_boneMapping.size())
+        return;
+    const int bodyIndex = m_boneMapping[armatureBoneIndex];
+    if(bodyIndex < 0) {
+        return;
+    }
+    CCollisionBody* pBoneBody = m_bones[bodyIndex];
+    if(!pBoneBody)
+        return;
+    Vec3f startPoint, endPoint;
+    Vec4f position4f;
+    position4f = inBoneMatrix * Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+    startPoint = Vec3f(position4f);
+    position4f = inBoneMatrix * Vec4f(0.0f, m_bonesInfo[bodyIndex].length, 0.0f, 1.0f);
+    endPoint = Vec3f(position4f);
+    // direction towards endPoint
+    const Vector3f direction = endPoint - startPoint;
+    const Vector3f offCenter = direction / 2.0f;
+    //const Vec3f& position = Vec3f(inBoneMatrix[3]);
+    const Quatf& rotation = math::toQuat(inBoneMatrix);
+    pBoneBody->setRotation(rotation);
+    pBoneBody->setPosition(startPoint + offCenter);
+    pBoneBody->getWorldTransform(m_initialTransforms[bodyIndex]);
+    pBoneBody->getWorldTransform().getBasis().getEulerZYX(m_initialRotations[bodyIndex].z,
+                                                          m_initialRotations[bodyIndex].y,
+                                                          m_initialRotations[bodyIndex].x);
+}
+//------------------------------------------------------------------------------
+
+void physics::CRagdollCollisionBody::setDefaultInitialTransforms(void) { }
+//------------------------------------------------------------------------------
+
 void physics::CRagdollCollisionBody::startRagdolling(void) {
     if(m_isRagdolling || !m_pOwner) { // can't start ragdolling
         return; // ignore
@@ -814,9 +847,6 @@ void physics::CRagdollCollisionBody::alignBone(unsigned int armatureBoneIndex,
     const float padj = sqrt(pow(direction.x, 2) + pow(direction.z, 2));
     const float pitch = atan2(padj, direction.y);
     Vec3f eulerRots = Vec3f(pitch, yaw, 0.0f);
-    //if(eulerRots.y + math::pi<float>() <= FG_EPSILON)
-    //eulerRots.y = math::pi<float>();
-    printf("Align: %.2f %.2f 0.00\n", eulerRots.x, eulerRots.y);
     pBoneBody->getWorldTransform().getBasis().setEulerZYX(eulerRots.x, eulerRots.y, eulerRots.z);
 }
 //------------------------------------------------------------------------------

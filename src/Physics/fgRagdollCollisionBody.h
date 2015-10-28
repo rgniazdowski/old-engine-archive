@@ -364,6 +364,7 @@ namespace fg {
             void rotateBone(unsigned int armatureBoneIndex,
                             const Vector3f& direction);
 
+        public:
             math::SUniversalTransform* getUniversalTransform(unsigned int armatureBoneIndex);
             void getUniversalTransform(unsigned int armatureBoneIndex,
                                        Matrix4f& outMatrix);
@@ -396,6 +397,20 @@ namespace fg {
             MatricesVec const& getInitialTransforms(void) const {
                 return m_initialTransforms;
             }
+
+            /**
+             * Sets initial transform of bone rigid body based on local bone transformation.
+             * @param armatureBoneIndex Index of the bone
+             * @param inBoneMatrix      Local bone transformation matrix
+             */
+            void setInitialTransform(unsigned int armatureBoneIndex,
+                                     const Matrix4f& inBoneMatrix);
+
+            /**
+             * This function will set the initial transformations to default.
+             * In most cases this will mean rest pose of the model.
+             */
+            void setDefaultInitialTransforms(void);
 
         protected:
             fgBool helper_initializeJoint(const RagdollBoneType boneA,
@@ -447,7 +462,7 @@ namespace fg {
             BonesTypeMap m_typeMapping;
             /// Initial transformation matrices for each bone in this ragdoll body.
             MatricesVec m_initialTransforms;
-            /// Initial rotations for each bone (rest pose)
+            /// Initial rotations for each bone (rest pose in default)
             CVector<Vector3f> m_initialRotations;
             /// Model matrix - from which to start ragdolling
             Matrix4f m_modelMat;
