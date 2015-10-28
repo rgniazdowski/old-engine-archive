@@ -104,6 +104,53 @@ gfx::anim::StandardActionType gfx::anim::getActionTypeFromText(const char* text)
 
 }
 //------------------------------------------------------------------------------
+#if 0
+int gfx::anim::getBonesForStandardAction(StandardActionType action,
+                                         CVector<BoneType>& boneTypes) {
+    if(action == ACTION_NONE)
+        return 0;
+    boneTypes.clear();
+
+    if(action == ACTION_IDLE) {
+    } else if(action == ACTION_ATTACK) {
+        boneTypes.push_back(BoneType::BONE_ARM_LEFT);
+        boneTypes.push_back(BoneType::BONE_ARM_RIGHT);
+        boneTypes.push_back(BoneType::BONE_FOREARM_LEFT);
+        boneTypes.push_back(BoneType::BONE_FOREARM_RIGHT);
+        boneTypes.push_back(BoneType::BONE_HAND_LEFT);
+        boneTypes.push_back(BoneType::BONE_HAND_RIGHT);
+        boneTypes.push_back(BoneType::BONE_PELVIS);
+        boneTypes.push_back(BoneType::BONE_SPINE);
+        boneTypes.push_back(BoneType::BONE_NECK);
+        boneTypes.push_back(BoneType::BONE_HEAD);
+    } else if(action == ACTION_MELEE) {
+    } else if(action == ACTION_FIRE) {
+    } else if(action == ACTION_RELOAD) {
+    } else if(action == ACTION_RUN || action == ACTION_WALK) {
+        boneTypes.push_back(BoneType::BONE_THIGH_LEFT);
+        boneTypes.push_back(BoneType::BONE_THIGH_RIGHT);
+        boneTypes.push_back(BoneType::BONE_LEG_LEFT);
+        boneTypes.push_back(BoneType::BONE_LEG_RIGHT);
+        boneTypes.push_back(BoneType::BONE_FOOT_LEFT);
+        boneTypes.push_back(BoneType::BONE_FOOT_RIGHT);
+        boneTypes.push_back(BoneType::BONE_PELVIS);
+    } else if(action == ACTION_CROUCH) {
+
+    } else if(action == ACTION_STRAFE_RIGHT || action == ACTION_STRAFE_LEFT) {
+
+    } else if(action == ACTION_LEAN_RIGHT || action == ACTION_LEAN_LEFT) {
+
+    } else if(action == ACTION_GRAB) {
+    } else if(action == ACTION_JUMP) {
+    } else if(action == ACTION_KICK) {
+    } else if(action == ACTION_USE) {
+
+    } else if(action == ACTION_DEATH) {
+    }
+    return boneTypes.size();
+}
+//------------------------------------------------------------------------------
+#endif
 gfx::anim::CBoneAnimation::CBoneAnimation(CArmature* pArmature) :
 base_type(),
 m_pArmature(pArmature) {

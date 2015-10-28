@@ -136,8 +136,17 @@ void gfx::CSceneNodeMesh::animate(float delta) {
     for(unsigned int animId = 0; animId < nAnimations; animId++) {
         anim::SAnimationInfo &animationInfo = animations[animId];
         // calculate will check if animation is compatible
+        // #FIXME - this will recalculate animation step if the model has
+        // two or more shapes with the same animation - need to check it
+        // somehow
         pSkinnedMesh->calculate(animationInfo, delta);
     }
+    /*
+     anim::SBlendingInfo* pBlendInfo = pSkinnedMesh->getSkinningInfo()->getBlendingInfo();
+     anim::SAnimationInfo blendResult;
+     anim::blendAnimations(animations, anim::Type::BONE, pBlendInfo, &blendResult);
+
+     */
     // Base function version will merge all compatible animations into one.
     // Merged animations can be retrieved by their type.
     // Bone animations can be applied only to skinned mesh.
@@ -157,9 +166,26 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
     CShaderProgram* pProgram = m_drawCall->getShaderProgram();
     if(pProgram && nAnimations) {
         pProgram->use();
+        if(animations.size() == 1) {
             // the index of animation should not be zero...
             pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
                                  animations[0].curFrame.dualQuaternions);
+        } else if(animations.size() == 2) {
+            SSkinnedMesh *pSkinnedMesh = getSkinnedMesh();
+            if(!pSkinnedMesh)
+                return;
+            animated_type::AnimationsVec& animations = getAnimations();
+            if(animations.empty())
+                return;
+            const anim::SBlendingInfo& pBlendInfo = pSkinnedMesh->skinningInfo.blendingInfo;
+            anim::SAnimationInfo blendResult;
+            int blendCount = anim::blendAnimations(animations,
+                                                   anim::Type::BONE,
+                                                   pBlendInfo,
+                                                   &blendResult);
+            if(blendCount)
+                pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
+                                     blendResult.curFrame.dualQuaternions);
         }
     }
     m_drawCall->draw(math::scale(m_finalModelMat, getScale()) * modelMat);

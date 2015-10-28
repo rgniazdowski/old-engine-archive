@@ -19,6 +19,7 @@
     #define FG_INC_GFX_BONE_ANIMATION_BLOCK
 
     #include "fgGfxAnimation.h"
+    #include "fgGfxBone.h"
 
 namespace fg {
     namespace gfx {
@@ -61,6 +62,12 @@ namespace fg {
 
             StandardActionType getActionTypeFromText(const std::string& text);
             StandardActionType getActionTypeFromText(const char* name);
+    #if 0
+
+            int getBonesForStandardAction(StandardActionType action,
+                                          CVector<BoneType>& boneTypes);
+    #endif
+            /**
              * 
              */
             class CBoneAnimation : public CAnimation {
