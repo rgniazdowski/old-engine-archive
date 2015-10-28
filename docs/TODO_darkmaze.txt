@@ -1,13 +1,9 @@
-
-----
 Co musi dzialac w silniku (minimum) zeby w ogole zrobic jakas gre,
 a dokladniej jakas prostsza ale w 3D (+Android+iOS+Linux...) ?
-
 Gra typu DarkMaze - mroczny labirynt - fps:
 
 [ ] podstawowa warstwa logiki - sterowanie glownym graczem
 	[ ] kamera fps + ruch
-
 [ ] wirtualne joysticki na ekranie (touch screen)
 
 [ ] szybkie renderowanie drzew bsp (sciany, korytarze, podlogi)
@@ -17,46 +13,44 @@ Gra typu DarkMaze - mroczny labirynt - fps:
 	[ ] mapy oswietlenia
 	[ ] punktowe swiatlo
 	[ ] renderowanie nieba jako sfery/polsfery
-
-	[ ] kolizje ze scianami / per polygon
-
+	[ ] kolizje ze scianami / per polygon (bullet?/AABB?)
 	[ ] szybki frustum culling
 
 [ ] skonczone wreszcze GUI / warstwa 2D
-
 [ ] w pelni dzialajacy scene manager + wsparcie dla scene node'ow BSP
-
 [ ] obsluga efektow dzwiekowych
 
-
 [ ] w przypadku dark maze - generowanie labiryntu i drzewa bsp
-
 [ ] string obfuscation
 
-
 [ ] kompilacja na Androida (SDL2)
-
 [ ] kompilacja na iOS (SDL2) na MacOSX
-
 
 [ ] poprawa masy bledow i niedociagniec, w tym:
 	[ ] texture refresh + texture reupload - reuploadowac tylko potrzebne tex
 	[ ] shader refresh - rekompilowac tylko potrzebne shadery
 		[ ] glownie w przypadku suspend event
 
-[ ] dzialajaca konfiguracja
+[ ] poprawic script subsystem - obsluga bledow, sprawdzanie zwracanych wartosci
+	udawane rzutowanie (zmiana metatable?), sprawdzanie typu;
 
+[ ] dzialajaca konfiguracja
 [ ] Android - kopiowanie z APK na karte pamieci, przenoszenie plikow zip [pk3]
 	[ ] wyszukiwanie plikow wewnatrz APK jest totalnie wolne - zamula aplikacje
 
-
+[ ] ladowanie animowanych obiektow (skinned mesh, rigged, armature)
+	[ ] uzycie zewnetrznej biblioteki jako helpera (assimp)
+[ ] wyswietlanie animowanych obiektow
+[ ] animation blending (specjalny tryb laczenia kilku animacji w jedno)
+[ ] prawdziwy ruch animowanych postaci (animacja chodzenia + odpowiedni zwrot)
+[ ] ragdoll physics - bullet -> generowanie collision bodies na podstawie 
+	zaladowanych kosci; constraints + animowanie postaci
+[ ] animowana postac jest wrazliwa na podloze (np. schody, skosy, wzniesienia)
 
 ------------------------------------------------------------------------------
-
 [ ] strona internetowa dla gry
 [ ] strona internetowa dla silnika
-[ ] strona - osobisty blog / artykuly
-
+[ ] strona - artykuly [dev blog]
 [ ] pelne opisy aplikacji
 	[ ] zrzuty ekranu
 	[ ] filmiki

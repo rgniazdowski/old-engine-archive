@@ -1,0 +1,26 @@
+TODO sierpien | Chain Reaction
+[ ] - dodac kod generujacy mesh/obj - graniastoslup osmiokatny (octagon)
+[ ] - poprawic bindingi tekstury i normalne dla podstawowych obiektow
+[ ] - Sprawdzic/naprawic efekty przezroczystosci / cieniowania
+[ ] - Dodac kod do wyszukiwania leveli | pokazywanie w slide/show menu
+[ ] - Dodac kod do generowania thumbnails dla danych poziomow
+		- render to texture [ uzywane tylko w DEBUG/internal ] 
+		- aktywowane z poziomu pluginu
+[ ] - Dodac kod do generowania poziomow (specjalny executable dla CR)
+[ ] - Poprawne wyszukiwanie rozwiazania (dla wszystkich ruchow z poziomu root)
+	- [ ] - lepsze wsparcie dla wielowatkowosci
+[ ] - Poprawic mechanizmy gui | dodatkowe efekty przejscia
+[ ] - Zmienic obraz w tle
+[ ] - Dodac efekt particle tla (glowing)
+[ ] - Dodac efekt zoomu - stopniowy/plynny
+[ ] - Lepsza obsluga touch/swipe dla poruszania wybranym blokiem
+[ ] - Efekty HUD - zaznaczanie obiektu - zoom
+[ ] - Dodac podstawowe efekty particles (narazie testowe)
+[ ] - Kod do przeprowadzania symulacji (na podstawie rozwiazania, prezentacja)
+[ ] - zbudowac / przetestowac na androidzie (wersja z kilkoma poziomami)
+[ ] - zaprojektowac calkowicie menu (struktura)
+[ ] - Wykrywac brak eventow - wstrzymywanie klatki render (freeze)
+[ ] - opcje do deaktywacji wywolywania glClear()
+[ ] - opcja request dla CDirent (wyszukiwanie plikow)
+[ ] - przenoszenie danych (nie wszystkich) na SD Card pod Androidem
+[ ] - przygotowac/zaprojektowac (chociaz czesciowo) pod strone dla projektu CR
