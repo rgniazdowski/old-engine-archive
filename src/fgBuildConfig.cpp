@@ -185,6 +185,11 @@ namespace fg {
     #else
         false,
     #endif
+    #ifdef FG_USING_CYCLONE
+        true,
+    #else
+        false,
+    #endif
     #ifdef FG_USING_ASSIMP
         true,
     #else

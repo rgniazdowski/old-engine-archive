@@ -3,9 +3,9 @@
  * All rights reserved.
  *
  * This file is part of FlexiGame: Flexible Game Engine
- * ______  _              _  _____                         
- * |  ___|| |            (_)|  __ \                        
- * | |_   | |  ___ __  __ _ | |  \/  __ _  _ __ ___    ___ 
+ * ______  _              _  _____
+ * |  ___|| |            (_)|  __ \
+ * | |_   | |  ___ __  __ _ | |  \/  __ _  _ __ ___    ___
  * |  _|  | | / _ \\ \/ /| || | __  / _` || '_ ` _ \  / _ \
  * | |    | ||  __/ >  < | || |_\ \| (_| || | | | | ||  __/
  * \_|    |_| \___|/_/\_\|_| \____/ \__,_||_| |_| |_| \___|
@@ -56,7 +56,7 @@
         #undef FG_USING_OPENGL_GLUT                     //  Is the GLUT library used?
         #undef FG_USING_OPENGL_GLEW                     //  Is the GLEW library used?
         #undef FG_USING_GL_BINDING                      //  Is the glbinding module used?
-        #undef FG_USING_GLM                             //  Is the OpenGL Mathemathics library (GLM) used? 
+        #undef FG_USING_GLM                             //  Is the OpenGL Mathemathics library (GLM) used?
         #undef FG_USING_SDL                             //  Is the SDL1.x used?
         #undef FG_USING_SDL2                            //  Is the latest SDL2 used in this build?
         #undef FG_USING_SDL_MIXER                       //  Is the latest SDL/SDL2 mixer library used in this build?
@@ -73,6 +73,7 @@
         #undef FG_USING_LUA_PLUS                        //  Is the enhanced Lua C API used?
         #undef FG_USING_LUA                             //  Is the original Lua C API used?
         #undef FG_USING_BULLET                          //  Is the Bullet (physics engine) library used in this build?
+        #undef FG_USING_CYCLONE                         //  Is the Cyclone (physics engine) builtin code used in this build?
         #undef FG_USING_ASSIMP                          //  Is the Open Asset Import Library used in this build?
         #undef FG_USING_PLATFORM_WINDOWS                //  Is the target platform Windows in this build?
         #undef FG_USING_PLATFORM_LINUX                  //  Is the target platform Linux?
@@ -118,7 +119,7 @@
         #undef FG_USING_PLATFORM_LINUX
         #undef linux
         #undef __LINUX__
-        #undef LINUX        
+        #undef LINUX
     #endif
 
     #if defined(__CYGWIN__)
@@ -131,6 +132,11 @@
 
     #if (defined(__APPLE__) && defined(__MACH__)) || defined(Macintosh) || defined (macintosh)
         #define FG_USING_PLATFORM_MACOSX
+    #endif
+
+    #if defined(__APPLE__) && defined(__IPHONEOS__)
+        #undef FG_USING_PLATFORM_MACOSX
+        #define FG_USING_PLATFORM_IOS
     #endif
 
     #if !defined(FG_USING_MARMALADE) && ( defined __WINDOWS__ || defined __WIN32__ || defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined WIN32 || defined win32)
@@ -167,6 +173,48 @@
         #undef _DEBUG
         #undef DEBUG
     #endif
+
+/********************************** DEFAULTS **********************************/
+
+    #if defined(FG_DEFAULTS)
+        #undef FG_USING_LUA_PLUS
+        #define FG_USING_LUA_PLUS
+
+        #undef FG_USING_GLM
+        #define FG_USING_GLM
+
+        #undef FG_USING_SDL2
+        #define FG_USING_SDL2
+
+        #undef FG_USING_THREADS
+        #define FG_USING_THREADS
+
+        #undef FG_USING_TINYXML
+        #define FG_USING_TINYXML
+
+        #undef TIXML_USE_STL
+        #define TIXML_USE_STL
+
+        #if !defined(FG_NO_PHYSICS) && !defined(FG_USING_CYCLONE)
+            #undef FG_USING_BULLET
+            #define FG_USING_BULLET
+        #endif
+
+        #if !defined(FG_USING_TINY_OBJ)
+            #undef FG_USING_ASSIMP
+            #define FG_USING_ASSIMP
+        #endif /* FG_USING_TINY_OBJ */
+
+        #if defined(FG_USING_PLATFORM_WINDOWS) || defined(FG_USING_PLATFORM_LINUX) || defined(FG_USING_PLATFORM_MACOSX)
+            #define FG_USING_GLEW
+            #define FG_USING_OPENGL
+            #define FG_USING_OPENGL_GLEW
+        #endif /* PC PLATFORMS */
+
+        #if defined(FG_USING_PLATFORM_ANDROID) || defined(FG_USING_PLATFORM_IOS)
+            #define FG_USING_OPENGL_ES
+        #endif /* MOBILE PLATFORMS */
+    #endif /* FG_DEFAULTS */
 
 /*************************** SUBSYSTEM / INPUT / AUDIO SUPPORT ***************************/
 
@@ -339,8 +387,8 @@
 
 // No profiling in Bullet physics engine
     #if defined(FG_USING_BULLET)
-        // if btScalar was 'double' instead of 'float' there would be a problem
-        // with data copying from btTransform to fg::Matrix4f
+// if btScalar was 'double' instead of 'float' there would be a problem
+// with data copying from btTransform to fg::Matrix4f
         #undef BT_USE_DOUBLE_PRECISION // just floats for now...
         #undef BT_NO_PROFILE
         #define BT_NO_PROFILE 1
@@ -429,6 +477,7 @@ namespace fg {
         bool usingLUAPlus; //       Is the enhanced Lua C API used?
         bool usingLUA; //           Is the original Lua C API used?
         bool usingBullet; //        Is the Bullet (physics engine) library used in this build?
+        bool usingCyclone; //       Is the Cyclone (physics engine) builtin code used in this build?
         bool usingAssimp; //        Is the Open Asset Import Library used in this build?
         bool isPlatformWindows; //  Is the target platform Windows in this build?
         bool isPlatformLinux; //    Is the target platform Linux?
@@ -508,7 +557,7 @@ namespace fg {
 // Copying text
     #define FG_COPYING			FG_PACKAGE_NAME" source code and any related files can not be copied, modified and/or distributed without the express or written permission from the author."
 // License type
-    #define FG_LICENSE			"Proprietary license" 
+    #define FG_LICENSE			"Proprietary license"
 // Home page address
     #define FG_HOMEPAGE			"http://flexigame.com"
 

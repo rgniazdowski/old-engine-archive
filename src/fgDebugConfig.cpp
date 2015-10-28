@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
  * All rights reserved.
- * 
+ *
  * This file is part of FlexiGame: Flexible Game Engine
- * 
- * FlexiGame source code and any related files can not be copied, modified 
+ *
+ * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/* 
+/*
  * File:   fgDebugConfig.cpp
  * Author: vigilant
- * 
+ *
  * Created on November 11, 2014, 11:06 AM
  */
 
@@ -21,10 +21,11 @@
 namespace fg {
 
     struct SDebugConfig g_DebugConfig = {
-    #ifndef FG_DEBUG
-        false
-    #else
+    #ifdef FG_DEBUG
         true,
+    #else
+        false,
+    #endif
     #ifdef FG_VERBOSE
         true,
     #else
@@ -53,7 +54,6 @@ namespace fg {
         false, //isDebugProfiling;  // Is debug profiling enabled?
         false, //consoleShow;       // Is special console being displayed?
         0 //empty;
-    #endif /* FG_DEBUG */
     };
 
 } // namespace fg

@@ -418,6 +418,7 @@
         <itemPath>../../../src/Physics/fgBulletUniversalTransform.h</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
         <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
+        <itemPath>../../../src/Physics/fgMaskTypes.h</itemPath>
         <itemPath>../../../src/Physics/fgPhysical.cpp</itemPath>
         <itemPath>../../../src/Physics/fgPhysical.h</itemPath>
         <itemPath>../../../src/Physics/fgPhysicalWorld.cpp</itemPath>
@@ -619,17 +620,8 @@
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </cTool>
@@ -656,18 +648,8 @@
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_BULLET</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
@@ -2310,6 +2292,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgMaskTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
             tool="1"
@@ -2738,17 +2722,8 @@
             <pElem>../../../modules/assimp/include</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </cTool>
         <ccTool>
@@ -2774,18 +2749,8 @@
           </incDir>
           <commandLine>-O2</commandLine>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_BULLET</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
@@ -4421,6 +4386,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgMaskTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
@@ -6493,6 +6460,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgMaskTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
             tool="1"
@@ -8550,6 +8519,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgMaskTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
             tool="1"
@@ -8978,17 +8949,9 @@
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_STATIC_LIBRARY</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </cTool>
@@ -9013,17 +8976,9 @@
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_STATIC_LIBRARY</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
@@ -10626,6 +10581,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgMaskTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
             tool="1"
@@ -11054,17 +11011,9 @@
             <pElem>../../../modules/assimp/include</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_STATIC_LIBRARY</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </cTool>
         <ccTool>
@@ -11088,17 +11037,9 @@
             <pElem>../../../modules/assimp/include</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_STATIC_LIBRARY</Elem>
-            <Elem>FG_USING_ASSIMP</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
@@ -12693,6 +12634,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgMaskTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgPhysical.cpp"
             ex="false"
