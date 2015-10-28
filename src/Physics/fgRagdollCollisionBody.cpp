@@ -111,7 +111,8 @@ void physics::CRagdollCollisionBody::setupBody(BodyType bodyType) {
 //------------------------------------------------------------------------------
 
 fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesInfo,
-                                                      unsigned int armatureSize) {
+                                                      unsigned int armatureSize,
+                                                      fgBool initInRestPose) {
 
     if(!armatureSize)
         return FG_FALSE;
@@ -135,24 +136,6 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
         const SBoneSmallInfo& info = bonesInfo[i];
         if(info.boneType == BONE_INVALID)
             continue;
-        if(info.boneType != BONE_PELVIS
-           && info.boneType != BONE_SPINE
-           && info.boneType != BONE_NECK
-           && info.boneType != BONE_HEAD
-           && info.boneType != BONE_ARM_LEFT
-           //&& info.boneType != BONE_FOREARM_LEFT
-           && info.boneType != BONE_ARM_RIGHT
-           //&& info.boneType != BONE_FOREARM_RIGHT
-
-           //&& info.boneType != BONE_HAND_LEFT
-           //&& info.boneType != BONE_HAND_RIGHT
-           && info.boneType != BONE_THIGH_LEFT
-           && info.boneType != BONE_THIGH_RIGHT
-           && info.boneType != BONE_LEG_LEFT
-           && info.boneType != BONE_LEG_RIGHT
-           ) {
-            //continue; // just arms
-        }
         // should create collision bodies here?
         CCollisionBody* pBoneBody = new CCollisionBody(BODY_CAPSULE);
         // complete height is radius * 2 + height
@@ -199,7 +182,6 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
     } // for each bone small info
     m_initialTransforms.resize(m_bones.size());
     m_initialRotations.resize(m_bones.size());
-
     this->setMass(m_mass);
     // now need to pre-transform rigid bodies into some pose
     // need to access them via bone type (that's what local infoMap is for)
