@@ -22,7 +22,7 @@
 
 #include "fgCollisionFine.h"
 #include "fgPrecision.h"
-#if !defined(FG_USING_BULLET)
+#if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 #include <memory.h>
 #include <assert.h>
 #include <cstdlib>

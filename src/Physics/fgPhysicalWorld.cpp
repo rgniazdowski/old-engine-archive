@@ -17,6 +17,8 @@
 #include "fgPhysicalWorld.h"
 #if defined(FG_USING_BULLET)
 #include "btBulletDynamicsCommon.h"
+#endif /* FG_USING_BULLET */
+
 #include "fgVector.h"
 
 using namespace fg;
@@ -24,11 +26,17 @@ using namespace fg;
 
 physics::CPhysicalWorld::CPhysicalWorld() :
 m_collisionBodies(),
+#if defined(FG_USING_BULLET)
 m_collisionConfig(NULL),
 m_dynamicsWorld(NULL),
 m_broadphase(NULL),
 m_dispatcher(NULL),
 m_solver(NULL),
+#elif defined(FG_USING_CYCLONE)
+        // cyclone internal
+#else
+        // not bullet nor cyclone - dummy
+#endif
 m_init(FG_FALSE) { }
 //------------------------------------------------------------------------------
 
@@ -41,6 +49,7 @@ physics::CPhysicalWorld::~CPhysicalWorld() {
 //------------------------------------------------------------------------------
 
 fgBool physics::CPhysicalWorld::initialize(void) {
+#if defined(FG_USING_BULLET)
     if(m_init)
         return FG_FALSE;
     ///collision configuration contains default setup for memory, collision setup
@@ -65,12 +74,19 @@ fgBool physics::CPhysicalWorld::initialize(void) {
 
     m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
+#elif defined(FG_USING_CYCLONE)
+    // cyclone internal
+#else
+    // not bullet nor cyclone
+#endif
+
     m_init = FG_TRUE;
     return m_init;
 }
 //------------------------------------------------------------------------------
 
 fgBool physics::CPhysicalWorld::destroy(void) {
+#if defined(FG_USING_BULLET)
     if(!m_init)
         return FG_FALSE;
     int i = 0;
@@ -104,25 +120,42 @@ fgBool physics::CPhysicalWorld::destroy(void) {
     if(m_collisionConfig)
         delete m_collisionConfig;
     m_collisionConfig = NULL;
+
+#elif defined(FG_USING_CYCLONE)
+    // cyclone internal
+#else
+    // not bullet nor cyclone
+#endif
     m_init = FG_FALSE;
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 void physics::CPhysicalWorld::update(float delta) {
+#if defined(FG_USING_BULLET)
     if(!m_init)
         return;
     if(m_dynamicsWorld)
         m_dynamicsWorld->stepSimulation(delta);
+#elif defined(FG_USING_CYCLONE)
+#else
+#endif
 }
 //------------------------------------------------------------------------------
 
 void physics::CPhysicalWorld::setupOwnerFor(CAbstractCollisionBody* pBody) {
+#if defined(FG_USING_BULLET)
     pBody->setOwner(m_dynamicsWorld);
+#elif defined(FG_USING_CYCLONE)
+    pBody->setOwner(NULL);
+#else
+    pBody->setOwner(NULL);
+#endif
 }
 //------------------------------------------------------------------------------
 
 int physics::CPhysicalWorld::add(CCollisionBody* pBody) {
+#if defined(FG_USING_BULLET)
     if(!pBody)
         return -1;
     int index = m_collisionBodies.find(pBody);
@@ -151,10 +184,16 @@ int physics::CPhysicalWorld::add(CCollisionBody* pBody) {
         pBody->setOwner(m_dynamicsWorld);
     }
     return index;
+#elif defined(FG_USING_CYCLONE)
+    return -1;
+#else
+    return -1;
+#endif
 }
 //------------------------------------------------------------------------------
 
 fgBool physics::CPhysicalWorld::remove(CCollisionBody* pBody) {
+#if defined(FG_USING_BULLET)
     if(!pBody)
         return FG_FALSE;
     int index = m_collisionBodies.find(pBody);
@@ -168,10 +207,16 @@ fgBool physics::CPhysicalWorld::remove(CCollisionBody* pBody) {
         }
     }
     return (fgBool)(index >= 0);
+#elif defined(FG_USING_CYCLONE)
+    return FG_FALSE;
+#else
+    return FG_FALSE;
+#endif
 }
 //------------------------------------------------------------------------------
 
 fgBool physics::CPhysicalWorld::removeAllCollisionBodies(void) {
+#if defined(FG_USING_BULLET)
     if(!m_dynamicsWorld)
         return FG_FALSE;
     const unsigned int n = m_collisionBodies.size();
@@ -186,6 +231,10 @@ fgBool physics::CPhysicalWorld::removeAllCollisionBodies(void) {
     }
     m_collisionBodies.clear();
     return FG_TRUE;
+#elif defined(FG_USING_CYCLONE)
+    return FG_TRUE;
+#else
+    return FG_TRUE;
+#endif
 }
 //------------------------------------------------------------------------------
-#endif /* FG_USING_BULLET */

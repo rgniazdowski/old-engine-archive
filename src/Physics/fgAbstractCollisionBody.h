@@ -23,16 +23,8 @@
     #include "fgBool.h"
     #include "Math/fgMathLib.h"
 
-    #if defined(FG_USING_BULLET)
-
-class btDynamicsWorld;
-
 namespace fg {
     namespace physics {
-        class CPhysicalWorld;
-        namespace traits {
-            class CPhysical;
-        } // namespace traits
 
         /**
          *
@@ -55,8 +47,25 @@ namespace fg {
             BODY_RAGDOLL = 6,
         }; // enum BodyType
 
+    } // namespace physics
+} // namespace fg
+
+    #if defined(FG_USING_BULLET)
+
+class btDynamicsWorld;
+
+    #endif /* FG_USING_BULLET */
+
+namespace fg {
+    namespace physics {
+        class CPhysicalWorld;
+        namespace traits {
+            class CPhysical;
+        } // namespace traits        
+
         class CRagdollCollisionBody;
         class CCollisionBody;
+
         /**
          *
          */
@@ -155,19 +164,42 @@ namespace fg {
 
         protected:
             virtual void setupBody(BodyType bodyType) = 0;
-
+    #if defined(FG_USING_BULLET)
+            /**
+             *
+             * @return
+             */
             btDynamicsWorld* getOwner(void) const {
                 return m_pOwner;
             }
+            /**
+             *
+             * @param pOwner
+             */
             void setOwner(btDynamicsWorld* pOwner) {
                 m_pOwner = pOwner;
             }
+    #elif defined(FG_USING_CYCLONE)
+    #else
+            void* getOwner(void) const {
+                return m_pOwner;
+            }
+            void setOwner(void* pOwner) {
+                m_pOwner = pOwner;
+            }
+    #endif
 
         protected:
             ///
             BodyType m_bodyType;
+    #if defined(FG_USING_BULLET)
             ///
             btDynamicsWorld* m_pOwner;
+    #elif defined(FG_USING_CYCLONE)
+            void* m_pOwner;
+    #else
+            void* m_pOwner;
+    #endif
 
         private:
 
@@ -175,8 +207,6 @@ namespace fg {
 
     } // namespace physics
 } // namespace fg
-
-    #endif /* FG_USING_BULLET */
 
     #undef FG_INC_ABSTRACT_COLLISION_BODY_BLOCK
 #endif	/* FG_INC_ABSTRACT_COLLISION_BODY */

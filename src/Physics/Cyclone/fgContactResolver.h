@@ -24,7 +24,7 @@
     #define FG_INC_PHYSICS_CONTACT_RESOLVER_BLOCK
 
     #include "fgContact.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include "fgBool.h"
 
 namespace fg {

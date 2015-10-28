@@ -30,20 +30,20 @@
     #define FG_INC_PHYSICS_WORLD_BLOCK
 
     #include "fgBuildConfig.h"
-        #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 
-    #include "Physics/Cyclone/fgRigidBody.h"
-    #include "Physics/Cyclone/fgContact.h"
-    #include "Physics/Cyclone/fgContactGenerator.h"
-    #include "Physics/Cyclone/fgContactResolver.h"
-    #include "Physics/Cyclone/fgCollisionFine.h"
+        #include "Physics/Cyclone/fgRigidBody.h"
+        #include "Physics/Cyclone/fgContact.h"
+        #include "Physics/Cyclone/fgContactGenerator.h"
+        #include "Physics/Cyclone/fgContactResolver.h"
+        #include "Physics/Cyclone/fgCollisionFine.h"
 
 namespace fg {
     namespace physics {
 
         const unsigned int DEFAULT_MAX_CONTACTS = 256;
         const unsigned int DEFAULT_MAX_ITERATIONS = 512;
-        
+
         /**
          * The world represents an independent simulation of physics.  It
          * keeps track of a set of rigid bodies, and provides the means to
@@ -71,7 +71,7 @@ namespace fg {
              * 
              */
             virtual ~CWorld();
-    #if 0
+        #if 0
             /**
              * Calls each of the registered contact generators to report
              * their contacts. Returns the number of generated contacts.
@@ -90,8 +90,8 @@ namespace fg {
              * and torques for this frame added.
              */
             void startFrame(void);
-    #endif
-        public:            
+        #endif
+        public:
             /**
              * 
              */
@@ -100,7 +100,7 @@ namespace fg {
              * 
              */
             void finishFrame(void);
-            
+
         public:
             /**
              * 
@@ -114,7 +114,6 @@ namespace fg {
             unsigned int getMaxContacts(void) const {
                 return m_maxContacts;
             }
-            
             /**
              * 
              * @param maxIterations
@@ -129,7 +128,7 @@ namespace fg {
             unsigned int getMaxIterations(void) const {
                 return m_maxIterations;
             }
-            
+
             /**
              * 
              * @param offset
@@ -142,7 +141,6 @@ namespace fg {
             inline void setGroundPlane(fgBool toggle = FG_TRUE) {
                 m_useGroundPlane = toggle;
             }
-            
             /**
              * 
              * @return 
@@ -150,7 +148,6 @@ namespace fg {
             fgBool isGroundPlane(void) const {
                 return m_useGroundPlane;
             }
-            
             /**
              * 
              * @return 
@@ -165,7 +162,6 @@ namespace fg {
             inline CCollisionPlane const& getGroundPlane(void) const {
                 return m_groundPlane;
             }
-            
             /**
              * 
              * @return 
@@ -180,7 +176,6 @@ namespace fg {
             inline CContactResolver const& getContactResolver(void) const {
                 return m_resolver;
             }
-            
             /**
              * 
              * @return 
@@ -195,7 +190,6 @@ namespace fg {
             inline SCollisionData const& getCollisionData(void) const {
                 return m_collisionData;
             }
-            
             /**
              * 
              * @return 
@@ -203,7 +197,6 @@ namespace fg {
             inline CContact* getContacts(void) const {
                 return m_contacts;
             }
-            
             /**
              * 
              * @return 
@@ -211,14 +204,14 @@ namespace fg {
             inline fgBool hasMoreContacts(void) const {
                 return m_collisionData.hasMoreContacts();
             }
-            
+
         private:
             /**
              * True if the world should calculate the number of iterations
              * to give the contact resolver at each frame.
              */
             fgBool m_isCalculateIterations;
-    #if 0
+        #if 0
 
             /**
              * Holds a single rigid body in a linked list of bodies.
@@ -232,12 +225,12 @@ namespace fg {
              * Holds the head of the list of registered bodies.
              */
             SBodyRegistration *m_firstBody;
-    #endif
+        #endif
             /**
              * Holds the resolver for sets of contacts.
              */
             CContactResolver m_resolver;
-    #if 0
+        #if 0
 
             /**
              * Holds one contact generators in a linked list.
@@ -251,7 +244,7 @@ namespace fg {
              * Holds the head of the list of contact generators.
              */
             SContactGenRegistration *m_firstContactGen;
-    #endif
+        #endif
             /**
              *
              */
@@ -260,7 +253,7 @@ namespace fg {
              *
              */
             CCollisionPlane m_groundPlane;
-            
+
             /**
              *
              */
@@ -277,7 +270,7 @@ namespace fg {
              * of the contacts array).
              */
             unsigned int m_maxContacts;
-            
+
             /**
              *
              */
@@ -286,6 +279,6 @@ namespace fg {
 
     } // namespace physics
 } // namespace fg
-#endif /* FG_USING_BULLET */
+    #endif /* FG_USING_BULLET */
     #undef FG_INC_PHYSICS_WORLD_BLOCK
 #endif /* FG_INC_PHYSICS_WORLD */

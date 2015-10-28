@@ -35,7 +35,7 @@
     #define FG_INC_PARTICLE_CONTACT_BLOCK
 
     #include "fgParticle.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 
 namespace fg {
     namespace physics {

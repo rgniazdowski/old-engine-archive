@@ -29,7 +29,7 @@
     #define FG_INC_PHYSICS_FORCE_GENERATOR_BLOCK
 
     #include "fgBuildConfig.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include "fgRigidBody.h"
         #include "fgParticleForceGenerator.h"
         #include "fgVector.h"

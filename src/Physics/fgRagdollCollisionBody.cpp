@@ -20,9 +20,8 @@
 #if defined(FG_USING_BULLET)
 #include "BulletDynamics/ConstraintSolver/btConeTwistConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btHingeConstraint.h"
-//#include "BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
 #include "BulletDynamics/Dynamics/btDynamicsWorld.h"
-#endif /* FG_USING_BULLET */
+
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -1042,3 +1041,5 @@ fgBool physics::CRagdollCollisionBody::destroyData(void) {
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
+
+#endif /* FG_USING_BULLET */

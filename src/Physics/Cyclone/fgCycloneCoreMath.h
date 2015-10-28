@@ -106,7 +106,7 @@
     #define FG_INC_CYCLONE_CORE_MATH_BLOCK
 
     #include "fgBuildConfig.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
     #if defined(FG_DEBUG)
         #include "fgDebugConfig.h"
     #endif

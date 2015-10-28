@@ -36,7 +36,7 @@
     #define FG_INC_PHYSICS_COLLISION_FINE_BLOCK
 
     #include "fgBuildConfig.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include "fgContact.h"
         #include "fgContactResolver.h"
         #include "fgContactGenerator.h"

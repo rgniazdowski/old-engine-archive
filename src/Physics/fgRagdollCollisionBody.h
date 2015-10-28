@@ -18,14 +18,18 @@
     #define FG_INC_RAGDOLL_COLLISION_BODY
     #define FG_INC_RAGDOLL_COLLISION_BODY_BLOCK
 
-    #include "Math/fgUniversalTransform.h"
-    #include "fgBulletUniversalTransform.h"
-    #include "Util/fgBTreeMap.h"
+    #include "fgBuildConfig.h"
 
-    #include "fgAbstractCollisionBody.h"
-    #include "fgRagdollBoneType.h"
-    #include "fgBoneSmallInfo.h"
-    #include "fgCollisionBody.h"
+    #if defined(FG_USING_BULLET)
+
+        #include "Math/fgUniversalTransform.h"
+        #include "fgBulletUniversalTransform.h"
+        #include "Util/fgBTreeMap.h"
+
+        #include "fgAbstractCollisionBody.h"
+        #include "fgRagdollBoneType.h"
+        #include "fgBoneSmallInfo.h"
+        #include "fgCollisionBody.h"
 
 namespace fg {
     namespace physics {
@@ -249,7 +253,7 @@ namespace fg {
              *
              * @param orig
              */
-            CRagdollCollisionBody(const CRagdollCollisionBody& orig);
+            CRagdollCollisionBody(const self_type& orig);
             /**
              *
              */
@@ -478,6 +482,142 @@ namespace fg {
 
     } // namespace physics
 } // namespace fg
+
+    #endif /* FG_USING_BULLET */
+
+    #if !defined(FG_USING_BULLET) && !defined(FG_USING_CYCLONE)
+namespace fg {
+    namespace physics {
+
+        class CRagdollCollisionBody : public CAbstractCollisionBody {
+        public:
+            typedef CAbstractCollisionBody base_type;
+            typedef CRagdollCollisionBody self_type;
+            typedef CRagdollCollisionBody type;
+
+        public:
+            CRagdollCollisionBody() : base_type(BODY_INVALID) { }
+            CRagdollCollisionBody(const self_type& orig) { }
+            virtual ~CRagdollCollisionBody() { }
+
+        public:
+            static self_type* upcast(base_type* pBase) {
+                return NULL;
+            }
+            static self_type const* upcast(base_type const* pBase) {
+                return NULL;
+            }
+
+        public:
+            virtual CCollisionBox* getCollisionBox(void) const {
+                return NULL;
+            }
+            virtual CCollisionSphere* getCollisionSphere(void) const {
+                return NULL;
+            }
+            virtual CCollisionCapsule* getCollisionCapsule(void) const {
+                return NULL;
+            }
+            virtual CCollisionTriangleMesh* getCollisionTriangleMesh(void) const {
+                return NULL;
+            }
+            virtual CRigidBody* getRigidBody(void) {
+                return NULL;
+            }
+            virtual CRigidBody const* getRigidBody(void) const {
+                return NULL;
+            }
+            virtual fgBool hasCollisionShape(void) const {
+                return FG_FALSE;
+            }
+            virtual fgBool hasRigidBody(void) const {
+                return FG_FALSE;
+            }
+            virtual fgBool hasRigidBodies(void) const {
+                return FG_FALSE;
+            }
+            virtual fgBool isBodyTypeCompatible(const BodyType bodyType) const {
+                return (fgBool)(bodyType == BODY_RAGDOLL);
+            }
+
+        public:
+            using base_type::setHalfSize;
+            virtual void setHalfSize(const Vector3f& halfExtent) { }
+            virtual void setRadius(const float radius) { }
+            virtual void setHeight(const float height) { }
+            virtual void setMass(float mass) { }
+
+            using base_type::setLocalScaling;
+            virtual void setLocalScaling(const Vector3f& scale) { }
+
+        public:
+            CCollisionBody* getBoneBody(unsigned int armatureBoneIndex,
+                                        int* outIndex = NULL) {
+                return NULL;
+            }
+            CCollisionBody* getBoneBody(const char *name, int* outIndex = NULL) {
+                return NULL;
+            }
+            CCollisionBody* getBoneBody(RagdollBoneType boneType) {
+                return NULL;
+            }
+            CCollisionBody* getParentBoneBody(CCollisionBody* pBoneBody) {
+                return NULL;
+            }
+            CCollisionBody* getParentBoneBody(unsigned int armatureBoneIndex) {
+                return NULL;
+            }
+            CCollisionBody* getParentBoneBody(const char* name, int* outIndex = NULL) {
+                return NULL;
+            }
+
+        public:
+            fgBool initializeFrom(const BonesInfoVec& bonesInfo,
+                                  unsigned int armatureSize,
+                                  fgBool initInRestPose = FG_FALSE) {
+                return FG_FALSE;
+            }
+            void startRagdolling(void) { }
+            void stopRagdolling(void) { }
+            fgBool isRagdolling(void) const {
+                return FG_FALSE;
+            }
+            void alignBone(unsigned int armatureBoneIndex,
+                           const Vector3f& direction) { }
+            void rotateBone(unsigned int armatureBoneIndex,
+                            const Quaternionf& rotation) { }
+            void rotateBone(unsigned int armatureBoneIndex,
+                            const Vector3f& direction) { }
+
+        public:
+            math::SUniversalTransform* getUniversalTransform(unsigned int armatureBoneIndex) {
+                return NULL;
+            }
+            void getUniversalTransform(unsigned int armatureBoneIndex,
+                                       Matrix4f& outMatrix) {
+ }
+            void setUniversalTransform(unsigned int armatureBoneIndex,
+                                       const Matrix4f& inMatrix) {
+ }
+            void setModelMatrix(const Matrix4f& inMatrix) {
+ }
+            void setInitialTransform(unsigned int armatureBoneIndex,
+                                     const Matrix4f& inBoneMatrix) {
+ }
+            void setDefaultInitialTransforms(void) { }
+
+        protected:
+            virtual void setupBody(void) {
+                setupBody(BODY_RAGDOLL);
+            }
+            virtual void setupBody(BodyType bodyType) {
+                m_bodyType = BODY_INVALID;
+            }
+
+        }; // class CRagdollCollisionBody
+    } // namespace physics
+} // namespace fg
+    #endif /* not using Bullet && not using Cyclone */
 
     #undef FG_INC_RAGDOLL_COLLISION_BODY_BLOCK
 #endif	/* FG_INC_COLLISION_RAGDOLL_BODY */

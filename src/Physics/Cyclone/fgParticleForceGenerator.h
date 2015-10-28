@@ -29,7 +29,7 @@
     #define FG_INC_PHYSICS_PARTICLE_FORCE_GENERATOR_BLOCK
 
     #include "fgParticle.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include <vector>
 
 namespace fg {

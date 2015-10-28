@@ -20,11 +20,13 @@
 
     #include "fgBuildConfig.h"
     #if defined(FG_USING_BULLET)
-        #include "fgBool.h"
-        #include "fgVector.h"
         #include "fgBulletMaskTypes.h"
         #include "LinearMath/btAlignedObjectArray.h"
-        #include "Physics/fgCollisionBody.h"
+    #endif /* FG_USING_BULLET */
+
+    #include "fgBool.h"
+    #include "fgVector.h"
+    #include "Physics/fgCollisionBody.h"
 
 namespace fg {
     namespace physics {
@@ -55,9 +57,17 @@ namespace fg {
             virtual ~CPhysicalWorld();
 
         protected:
+    #if defined(FG_USING_BULLET)
             btDiscreteDynamicsWorld* getDynamicsWorld(void) const {
                 return m_dynamicsWorld;
             }
+    #elif defined(FG_USING_CYCLONE)
+
+    #else
+            void* getDynamicsWorld(void) const {
+                return NULL;
+            }
+    #endif /* FG_USING_BULLET || FG_USING_CYCLONE */
 
 
         public:
@@ -127,6 +137,7 @@ namespace fg {
         private:
             ///
             CollisionBodiesVec m_collisionBodies;
+    #if defined(FG_USING_BULLET)
             ///
             btDefaultCollisionConfiguration* m_collisionConfig;
             ///
@@ -137,6 +148,9 @@ namespace fg {
             btCollisionDispatcher* m_dispatcher;
             ///
             btConstraintSolver* m_solver;
+    #elif defined(FG_USING_CYCLONE)
+    #else
+    #endif
             ///
             fgBool m_init;
         }; // class CPhysicalWorld
@@ -144,7 +158,6 @@ namespace fg {
     } // namespace physics
 } // namespace fg
 
-    #endif /* FG_USING_BULLET */
 
     #undef FG_INC_PHYSICS_PHYSICAL_WORLD_BLOCK
 #endif	/* FG_INC_PHYSICS_PHYSICAL_WORLD */

@@ -20,7 +20,7 @@
  */
 
 #include "fgBuildConfig.h"
-#if !defined(FG_USING_BULLET)
+#if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 
 #include "Physics/Cyclone/fgRandom.h"
 #include "Math/fgMathLib.h"

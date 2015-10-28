@@ -24,7 +24,7 @@
  */
 
 #include "fgCollisionBody.h"
-#if !defined(FG_USING_BULLET)
+#if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 
 using namespace fg;
 //------------------------------------------------------------------------------

@@ -27,7 +27,7 @@
     #define FG_INC_COLLISION_BODY
     #define FG_INC_COLLISION_BODY_BLOCK
     #include "fgBuildConfig.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include "fgRigidBody.h"
         #include "fgCollisionFine.h"
         #include "fgBool.h"

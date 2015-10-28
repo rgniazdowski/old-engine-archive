@@ -89,6 +89,7 @@ fgBool physics::traits::CPhysical::hasCollisionBody(void) const {
 //------------------------------------------------------------------------------
 
 fgBool physics::traits::CPhysical::setupCollisionBody(BodyType bodyType) {
+#if defined(FG_USING_BULLET) || defined(FG_USING_CYCLONE)
     if(bodyType == BODY_INVALID)
         return FG_FALSE;
 
@@ -108,5 +109,8 @@ fgBool physics::traits::CPhysical::setupCollisionBody(BodyType bodyType) {
         // it needs to be removed first and then reinserted smoothly
     }
     return (fgBool)(m_collisionBody != NULL);
+#else
+    return FG_FALSE;
+#endif
 }
 //------------------------------------------------------------------------------

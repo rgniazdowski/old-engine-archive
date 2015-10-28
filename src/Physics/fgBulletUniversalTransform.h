@@ -89,6 +89,5 @@ namespace fg {
 
     #endif /* FG_USING_BULLET */
 
-
     #undef FG_INC_BULLET_UNIVERSAL_TRANSFORM_BLOCK
 #endif	/* FG_INC_BULLET_UNIVERSAL_TRANSFORM */

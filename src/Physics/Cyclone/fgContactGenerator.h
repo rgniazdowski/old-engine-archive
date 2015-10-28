@@ -29,7 +29,7 @@
     #define FG_INC_CONTACT_GENERATOR
     #define FG_INC_CONTACT_GENERATOR_BLOCK
 
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 namespace fg {
     namespace physics {
 

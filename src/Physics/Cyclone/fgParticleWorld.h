@@ -30,7 +30,7 @@
     #define FG_INC_PARTICLE_WORLD_BLOCK
 
     #include "fgBuildConfig.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include "Physics/Cyclone/fgParticleForceGenerator.h"
         #include "Physics/Cyclone/fgParticleLink.h"
         #include "fgVector.h"

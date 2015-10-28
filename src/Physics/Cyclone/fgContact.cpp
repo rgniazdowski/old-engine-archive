@@ -20,7 +20,7 @@
  */
 
 #include "Physics/Cyclone/fgContact.h"
-#if !defined(FG_USING_BULLET)
+#if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 #include "Physics/Cyclone/fgPrecision.h"
 #include "Physics/Cyclone/fgCycloneCoreMath.h"
 #include "fgLog.h"

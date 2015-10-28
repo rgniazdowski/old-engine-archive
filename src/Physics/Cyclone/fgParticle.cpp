@@ -20,7 +20,7 @@
  */
 
 #include "fgBuildConfig.h"
-#if !defined(FG_USING_BULLET)
+#if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
 #include <assert.h>
 #include "fgParticle.h"
 

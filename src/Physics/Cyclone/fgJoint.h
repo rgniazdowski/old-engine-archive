@@ -30,7 +30,7 @@
     #define FG_INC_PHYSICS_JOINT_BLOCK
 
     #include "fgContact.h"
-    #if !defined(FG_USING_BULLET)
+    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
         #include "fgContactGenerator.h"
 
 namespace fg {
