@@ -9,21 +9,21 @@ begin BoneMapping
     map NECK { "Bone.003" }
     map SPINE { "Bone.002", "Bone.001" }
     map PELVIS { "Bone" }
-    map THIGH_LEFT { "Bone.009" }
-    map THIGH_RIGHT { "Bone.005" }
-    map LEG_LEFT { "Bone.010", "Bone.011" }
-    map LEG_RIGHT { "Bone.006", "Bone.007" }
-    map FOOT_LEFT { "Bone.012" }
-    map FOOT_RIGHT { "Bone.008" }
+    map THIGH_LEFT { "Bone.005" }
+    map THIGH_RIGHT { "Bone.009" }
+    map LEG_LEFT { "Bone.006", "Bone.007" }
+    map LEG_RIGHT { "Bone.010", "Bone.011" }
+    map FOOT_LEFT { "Bone.008" }
+    map FOOT_RIGHT { "Bone.012" }
 
-    map ARM_LEFT { "Bone.016" }
-    map ARM_RIGHT { "Bone.013" }
+    map ARM_LEFT { "Bone.013" }
+    map ARM_RIGHT { "Bone.016" }
 
-    map FOREARM_LEFT { "Bone.017" }
-    map FOREARM_RIGHT { "Bone.014" }
+    map FOREARM_LEFT { "Bone.014" }
+    map FOREARM_RIGHT { "Bone.017" }
 
-    map HAND_LEFT { "Bone.018" }
-    map HAND_RIGHT { "Bone.015" }
+    map HAND_LEFT { "Bone.015" }
+    map HAND_RIGHT { "Bone.018" }
 
     map BACK_EXTRA { "Bone.019", "Bone.020" }
 end

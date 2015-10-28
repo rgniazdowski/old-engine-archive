@@ -9,21 +9,24 @@ begin BoneMapping
     map NECK { "Bone.004" }
     map SPINE { "Bone.002", "Bone.003" }
     map PELVIS { "Bone.001" }
-    map THIGH_LEFT { "Bone.008" }
-    map THIGH_RIGHT { "Bone" }
-    map LEG_LEFT { "Bone.009" }
-    map LEG_RIGHT { "Bone.006" }
-    map FOOT_LEFT { "Bone.010" }
-    map FOOT_RIGHT { "Bone.007" }
 
-    map ARM_LEFT { "Bone.014" }
-    map ARM_RIGHT { "Bone.011" }
+    map THIGH_LEFT { "Bone" }
+    map THIGH_RIGHT { "Bone.008" }
 
-    map FOREARM_LEFT { "Bone.015" }
-    map FOREARM_RIGHT { "Bone.012" }
+    map LEG_LEFT { "Bone.006" }
+    map LEG_RIGHT { "Bone.009" }
 
-    map HAND_LEFT { "Bone.016" }
-    map HAND_RIGHT { "Bone.013" }
+    map FOOT_LEFT { "Bone.007" }
+    map FOOT_RIGHT { "Bone.010" }
+
+    map ARM_LEFT { "Bone.011" }
+    map ARM_RIGHT { "Bone.014" }
+
+    map FOREARM_LEFT { "Bone.012" }
+    map FOREARM_RIGHT { "Bone.015" }
+
+    map HAND_LEFT { "Bone.013" }
+    map HAND_RIGHT { "Bone.016" }
 end
 
 begin AnimationBlending
