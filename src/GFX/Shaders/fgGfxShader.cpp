@@ -12,6 +12,7 @@
 #include "GFX/fgGfxErrorCodes.h"
 #include "Util/fgMemory.h"
 #include "fgMessageSubsystem.h"
+#include "fgDebugConfig.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -141,8 +142,12 @@ fgBool gfx::CShader::loadSource(void) {
     }
     m_sources[n] = m_fileSource;
 #if defined(FG_DEBUG)
-    for(int i = 0; i < (int)m_numSources; i++) {
-        FG_LOG_DEBUG("[%d] '%s'", i, m_sources[i]);
+    if(g_DebugConfig.gfxDumpShaders) {
+        FG_LOG_DEBUG("GFX: Shader '%s' source code:\n", this->getNameStr());
+        for(int i = 0; i < (int)m_numSources; i++) {
+            // Dump sources
+            FG_LOG_DEBUG("[%d] '%s'", i, m_sources[i]);
+        }
     }
 #endif
     m_isSourceLoaded = FG_TRUE;

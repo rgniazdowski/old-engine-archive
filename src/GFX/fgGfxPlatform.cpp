@@ -10,6 +10,7 @@
 
 #include "fgGfxPlatform.h"
 #include "Util/fgMemory.h"
+#include "fgDebugConfig.h"
 
 /// Is platform initialized?
 fgBool fg::gfx::CPlatform::m_init = FG_FALSE;
@@ -133,27 +134,42 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     for(int displayIdx = 0; displayIdx < displayCount; displayIdx++) {
         int modeCount;
         if(SDL_GetDesktopDisplayMode(0, &desktopMode[displayIdx]) != 0) {
-            FG_LOG_ERROR("GFX: Couldn't get desktop display mode for display %d: '%s'", displayIdx, SDL_GetError());
+            FG_LOG_ERROR("GFX: Couldn't get desktop display mode for display %d: '%s'",
+                         displayIdx, SDL_GetError());
         } else {
             const char *displayName = SDL_GetDisplayName(displayIdx);
             if(!displayName)
                 displayName = "unknown";
             FG_LOG_DEBUG("GFX: Display %d name: '%s'", displayIdx, displayName);
-            FG_LOG_DEBUG("GFX: Display %d current mode: %dx%d@%dHz\t%d BPP", displayIdx, desktopMode[displayIdx].w, desktopMode[displayIdx].h, desktopMode[displayIdx].refresh_rate, SDL_BITSPERPIXEL(desktopMode[displayIdx].format));
+            FG_LOG_DEBUG("GFX: Display %d current mode: %dx%d@%dHz\t%d BPP",
+                         displayIdx,
+                         desktopMode[displayIdx].w, desktopMode[displayIdx].h,
+                         desktopMode[displayIdx].refresh_rate,
+                         SDL_BITSPERPIXEL(desktopMode[displayIdx].format));
         }
         if((modeCount = SDL_GetNumDisplayModes(displayIdx)) < 0) {
-            FG_LOG_ERROR("GFX: Couldn't retrieve number of display mode for display %d: '%s'", displayIdx, SDL_GetError());
+            FG_LOG_ERROR("GFX: Couldn't retrieve number of display mode for display %d: '%s'",
+                         displayIdx, SDL_GetError());
             continue;
         } else {
-            for(int modeIdx = 0; modeIdx < modeCount; modeIdx++) {
-                SDL_DisplayMode displayMode;
-                memset(&displayMode, 0, sizeof (SDL_DisplayMode));
-                if(SDL_GetDisplayMode(displayIdx, modeIdx, &displayMode) != 0) {
-                    FG_LOG_ERROR("GFX: Couldn't get display mode for display %d: '%s'", displayIdx, SDL_GetError());
-                    continue;
+#if defined(FG_DEBUG)
+            if(g_DebugConfig.gfxDumpDisplay) {
+                for(int modeIdx = 0; modeIdx < modeCount; modeIdx++) {
+                    SDL_DisplayMode displayMode;
+                    memset(&displayMode, 0, sizeof (SDL_DisplayMode));
+                    if(SDL_GetDisplayMode(displayIdx, modeIdx, &displayMode) != 0) {
+                        FG_LOG_ERROR("GFX: Couldn't get display mode for display %d: '%s'",
+                                     displayIdx, SDL_GetError());
+                        continue;
+                    }
+                    FG_LOG_DEBUG("GFX: Display %d, mode %.02d: %dx%d@%dHz\t%d BPP",
+                                 displayIdx, modeIdx,
+                                 displayMode.w, displayMode.h,
+                                 displayMode.refresh_rate,
+                                 SDL_BITSPERPIXEL(displayMode.format));
                 }
-                FG_LOG_DEBUG("GFX: Display %d, mode %.02d: %dx%d@%dHz\t%d BPP", displayIdx, modeIdx, displayMode.w, displayMode.h, displayMode.refresh_rate, SDL_BITSPERPIXEL(displayMode.format));
             }
+#endif /* FG_DEBUG */
         }
     }
     // #FIXME
@@ -229,7 +245,7 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
         //}
         //void SDL_QuitSubSystem(Uint32 flags)
 #else
-		context::destroy();
+        context::destroy();
 #endif
     }
     return status;

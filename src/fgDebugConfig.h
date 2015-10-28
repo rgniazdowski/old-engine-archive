@@ -25,8 +25,8 @@
 namespace fg {
 
     struct SDebugConfig {
-        bool isDebug; // Is debug build active?
-        bool isVerbose; // Is there some verbosity active?
+        const bool isDebug; // Is debug build active?
+        const bool isVerbose; // Is there some verbosity active?
         int verboseLevel; // The exact verbosity level
         bool physicsBBoxShow; // Whether to show bounding boxes debug info for physics simulation
         bool guiBBoxShow; // Whether to show bounding boxes debug info (GUI)
@@ -37,13 +37,14 @@ namespace fg {
         bool gfxLightShow; // Whether to show light sources?
         bool gfxDumpConfig; // If true, this will dump available configs in EGL
         bool gfxDumpDisplay; // If true, this will dump available display resolutions
+        bool gfxDumpShaders; // If true, this will dump every compiled shader (source)
         bool gameFreeLook; // If true, the free look camera and flying is active (like noclip)
         bool labelsShow; // Whether to show labels (any kind)
         bool dumpConfig; // Dump configs on load?
         bool forceFullscreen; // Is fullscreen forced?
         bool isDebugProfiling; // Is debug profiling enabled?
         bool consoleShow; // Is special console being displayed?
-        int empty;
+        const int empty;
     };
 
     extern struct SDebugConfig g_DebugConfig;

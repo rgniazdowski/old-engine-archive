@@ -44,6 +44,7 @@ namespace fg {
         false, //gfxLightShow;      // Whether to show light sources?
         false, //gfxDumpConfig;     // If true, this will dump available configs in EGL
         false, //gfxDumpDisplay;    // If true, this will dump available display resolutions
+        false, //gfxDumpShaders;    // If true, this will dump every compiled shader (source)
         false, //gameFreeLook;      // If true, the free look camera and flying is active (like noclip)
         false, //labelsShow;        // Whether to show labels (any kind)
         false, //dumpConfig;        // Dump configs on load?

@@ -589,6 +589,7 @@ fgBool CEngineMain::loadConfiguration(void) {
         OPT_GFX_LIGHT,
         OPT_GFX_DUMP_CONFIG,
         OPT_GFX_DUMP_DISPLAY,
+        OPT_GFX_DUMP_SHADERS,
         OPT_GAME_FREE_LOOK,
         OPT_LABELS,
         OPT_DUMP_CONFIG,
@@ -628,6 +629,7 @@ fgBool CEngineMain::loadConfiguration(void) {
         {OPT_GFX_LIGHT, "--gfx-light-show", SO_OPT},
         {OPT_GFX_DUMP_CONFIG, "--gfx-dump-config", SO_OPT},
         {OPT_GFX_DUMP_DISPLAY, "--gfx-dump-display", SO_OPT},
+        {OPT_GFX_DUMP_SHADERS, "--gfx-dump-shaders", SO_OPT},
         {OPT_GAME_FREE_LOOK, "--game-free-look", SO_OPT},
         {OPT_LABELS, "--show-labels", SO_OPT},
         {OPT_DUMP_CONFIG, "--dump-config", SO_OPT},
@@ -665,6 +667,7 @@ fgBool CEngineMain::loadConfiguration(void) {
                        "--gfx-light-show          Show light sources\n"
                        "--gfx-dump-config         Whether or not to dump graphics configuration\n"
                        "--gfx-dump-display        Whether or not to dump all available screen resolutions\n"
+                       "--gfx-dump-shaders        Whether or not to dump every compiled shader\n"
                        "--game-free-look          Whether or not to activate free look camera (no-clip like)\n"
                        "--show-labels             Whether or not to show labels for 3D scene objects\n"
                        "--dump-config             Dump .ini configuration files\n"
@@ -769,6 +772,15 @@ fgBool CEngineMain::loadConfiguration(void) {
                     g_DebugConfig.gfxDumpDisplay = (bool)boolValue;
                 } else {
                     g_DebugConfig.gfxDumpDisplay = true;
+                }
+                break;
+
+            case OPT_GFX_DUMP_SHADERS:
+                if(hasArgument) {
+                    fgBool boolValue = FG_BOOL_FROM_TEXT(pArgStr);
+                    g_DebugConfig.gfxDumpShaders = (bool)boolValue;
+                } else {
+                    g_DebugConfig.gfxDumpShaders = true;
                 }
                 break;
 
