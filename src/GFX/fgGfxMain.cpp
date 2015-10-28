@@ -661,36 +661,25 @@ void gfx::CGfxMain::preRender(void) {
     if(m_particleSystem) {
         m_particleSystem->calculate();
     }
+    //m_p3DScene->update(timesys::elapsed(timesys::TICK_PRERENDER));
+    //m_p2DScene->update(timesys::elapsed(timesys::TICK_PRERENDER));
     LayerPriorityQueueItor itor = m_layersQueue.begin(),
             end = m_layersQueue.end();
     for(; itor != end; itor++) {
         CLayer* pLayer = *itor;
+#if defined(FG_DEBUG)
+        if(g_DebugConfig.isDebugProfiling && !pLayer->getLayerName().empty()) {
+            profile::g_debugProfiling->begin(pLayer->getLayerName());
+        }
+#endif
         pLayer->flush();
         pLayer->sortCalls();
-    }
-#if 0
-    m_p3DScene->flush();
-    m_p2DScene->flush();
 #if defined(FG_DEBUG)
-    if(g_DebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->begin("GFX::3DScene::sortCalls");
+        if(g_DebugConfig.isDebugProfiling && !pLayer->getLayerName().empty()) {
+            profile::g_debugProfiling->end(pLayer->getLayerName());
+        }
+#endif
     }
-#endif
-    m_p3DScene->sortCalls();
-#if defined(FG_DEBUG)
-    if(g_DebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->end("GFX::3DScene::sortCalls");
-        profile::g_debugProfiling->begin("GFX::2DScene::sortCalls");
-    }
-#endif
-    m_p2DScene->sortCalls();
-#if defined(FG_DEBUG)
-    if(g_DebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->end("GFX::2DScene::sortCalls");
-    }
-#endif
-#endif
-
     m_p3DScene->update(timesys::elapsed(timesys::TICK_PRERENDER));
     m_p2DScene->update(timesys::elapsed(timesys::TICK_PRERENDER));
 }
@@ -716,7 +705,7 @@ fgBool gfx::CGfxMain::prepareFrame(void) {
     context::setBlend(FG_FALSE);
     context::frontFace(FrontFace::FACE_CCW);
     context::setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
-
+    // #FIXME
     SDirectionalLight mainLight;
     mainLight.direction = Vec3f(1.0f, 1.0, 1.0f);
     mainLight.ambient = Color4f(0.25f, 0.25f, 0.25f, 1.0f);
