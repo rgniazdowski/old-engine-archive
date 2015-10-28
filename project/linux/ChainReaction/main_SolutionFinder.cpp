@@ -18,7 +18,7 @@
 #include "fgVector.h"
 #include "fgLog.h"
 
-#include "GameLogic/fgGrid.h"
+#include "Game/fgGrid.h"
 #include "Util/fgTime.h"
 #include "Util/fgStrings.h"
 #include "Util/fgPath.h"

@@ -18,7 +18,7 @@
     #define FG_INC_LEVEL_DATA_HOLDER
     #define FG_INC_LEVEL_DATA_HOLDER_BLOCK
 
-    #include "GameLogic/fgGrid.h"
+    #include "Game/fgGrid.h"
     #include "CLevelFile.h"
     #include "SBlockData.h"
 

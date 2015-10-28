@@ -23,7 +23,7 @@
     #endif
 
     #include "fgBool.h"    
-    #include "GameLogic/fgGrid.h"
+    #include "Game/fgGrid.h"
     #include "AdditionalTypes.h"
 
 namespace fg {

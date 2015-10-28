@@ -14,6 +14,7 @@
 #include "ChainReaction.h"
 #include "CLevelFile.h"
 #include "CLevelGenerator.h"
+#include "CLevelSolutionFinder.h"
 
 #include "fgVector.h"
 #include "fgPluginResource.h"
@@ -24,8 +25,8 @@
 #include "Util/fgTime.h"
 #include "Event/fgCallback.h"
 #include "Event/fgEventManager.h"
-#include "GameLogic/fgGameMain.h"
-#include "GameLogic/fgGrid.h"
+#include "Game/fgGameMain.h"
+#include "Game/fgGrid.h"
 #include "GFX/Scene/fgGfx3DScene.h"
 #include "GFX/fgGfxMain.h"
 
@@ -231,6 +232,8 @@ fgBool CChainReaction::initialize(void) {
     m_levelSolver = new CLevelSolver(m_levelDataHolder);
     m_levelVis = new CLevelVisualization(m_levelSolver);
     m_levelVis->setSceneManager(m_pEngineMain->getGfxMain()->get3DScene());
+    // Using default low level node type (OBJECT) for adding nodes based of gfx models
+    m_levelVis->getSceneManager()->setDefaultNodeObjectType(gfx::SCENE_NODE_OBJECT);
 
     unsigned int n = VColor::NUM_COLORS;
     for(unsigned int j = 0; j < NUM_MATERIALS; j++) {
@@ -261,14 +264,17 @@ fgBool CChainReaction::initialize(void) {
             float blackOffset = 0.0f;
             if(i == VColor::BLACK)
                 blackOffset = 0.15f;
-            m_materials[j][i] = new gfx::SMaterial();
-            m_materials[j][i]->diffuseTexName = texNames[j];
-            m_materials[j][i]->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(m_materials[j][i]->diffuseTexName);
-            m_materials[j][i]->shaderName = "sPlainEasy";
-            m_materials[j][i]->diffuse = colors::getColor(colorNames[i]) + blackOffset;
-            m_materials[j][i]->customColor = m_materials[j][i]->diffuse;
-            m_materials[j][i]->setFrontFace(gfx::FrontFace::FACE_CCW);
-            m_materials[j][i]->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+            gfx::SMaterial* pMaterial = new gfx::SMaterial();
+            pMaterial->diffuseTexName = texNames[j];
+            pMaterial->diffuseTex = (gfx::CTextureResource*)m_pEngineMain->getResourceManager()->request(pMaterial->diffuseTexName);
+            pMaterial->shaderName = "sPlainEasy";
+            pMaterial->diffuse = colors::getColor(colorNames[i]) + blackOffset;
+            pMaterial->customColor = pMaterial->diffuse;
+            pMaterial->setFrontFace(gfx::FrontFace::FACE_CCW);
+            pMaterial->blendMode = gfx::BlendMode::BLEND_ADDITIVE;
+            //pMaterial->setDepthWriteMask(FG_FALSE);
+            //pMaterial->setDepthTest(FG_FALSE);
+            m_materials[j][i] = pMaterial;
         }
     }
     m_init = FG_TRUE;
@@ -281,7 +287,7 @@ void CChainReaction::refreshLevelMaterials(void) {
         return;
     if(!m_levelVis->getLevelFile())
         return;
-    const LevelType levelType = m_levelVis->getLevelType();    
+    const LevelType levelType = m_levelVis->getLevelType();
     // 0 - quads / 1 - hexagons / 2 - octagons
     const unsigned int index = (unsigned int)getMaterialIdxFromLevelType(levelType);
     const unsigned int n = VColor::NUM_COLORS;
@@ -585,7 +591,7 @@ void CChainReaction::updateStep(void) {
     if(isPickerDown) {
 
     }
-    float zoomOut = 250.0f;
+    float zoomOut = 350.0f;
     float zoomIn = 120.0f;
     m_drag.zoomProp = (zoomOut - zoomIn) / zoomOut;
     if(pPicked && isPickerDown && !m_drag.pNode && !m_levelSolver->isChainReaction()) {

@@ -321,11 +321,12 @@ void SOctData::rotate(RotationDirection direction, float amount) {
         // exceed
         amount -= newRotation * reverse;
     }
+    const Vec3f& scale = this->pSceneNode->getScale();
     if(shouldRotate) {
         if(this->pSceneNode) {
-            this->pSceneNode->translateMatrix(reverse * translationAxis);
+            this->pSceneNode->translateMatrix(reverse * translationAxis * scale);
             this->pSceneNode->rotate(amount, rotationAxis);
-            this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse);
+            this->pSceneNode->translateMatrix(-1.0f * translationAxis * reverse * scale);
         }
         this->rotation += amount * reverse;
     }

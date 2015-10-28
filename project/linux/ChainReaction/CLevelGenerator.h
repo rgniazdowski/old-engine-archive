@@ -20,7 +20,7 @@
 
     #include "fgTypes.h"
 
-    #include "GameLogic/fgGrid.h"
+    #include "Game/fgGrid.h"
     #include "CLevelDataHolder.h"
     #include "CLevelFile.h"
 

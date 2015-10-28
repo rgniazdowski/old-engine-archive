@@ -19,7 +19,7 @@
 #include "SQuadData.h"
 #include "SHexData.h"
 #include "fgVector.h"
-#include "GameLogic/fgGrid.h"
+#include "Game/fgGrid.h"
 
 #include "Resource/fgResourceManager.h"
 #include "GFX/Scene/fgGfxSceneManager.h"
@@ -154,14 +154,18 @@ fgBool CLevelVisualization::actionBlockMovedCallback(void* systemData, void* use
     }
 #define _this pThis
     _this->fixRootNode();
+    gfx::traits::CDrawable* pDrawable = NULL;
     if(pNewPlace) {
         // replace the color and material in the new location
         if(pNewPlace->pSceneNode && pNewPlace->pSceneNode->getNodeType() == gfx::SCENE_NODE_OBJECT) {
             gfx::CSceneNodeObject* pNodeObj = (gfx::CSceneNodeObject*)pNewPlace->pSceneNode;
-            gfx::CDrawCall* pDrawCall = pNewPlace->pSceneNode->getDrawCall();
+            gfx::CDrawCall* pDrawCall = NULL;
+            if(pNewPlace->pSceneNode->getFirstChild()->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable)) {
+                pDrawCall = pDrawable->getDrawCall();
+            }
             if(pDrawCall) {
                 if(_this->getMaterial(pNewPlace->color) != NULL) {
-                    ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(_this->getMaterial(pNewPlace->color));
+                    ((gfx::CSceneNodeMesh*)pNodeObj->getFirstChild())->setMaterial(_this->getMaterial(pNewPlace->color));
                     pDrawCall->setupMaterial(_this->getMaterial(pNewPlace->color));
                 }
                 status = FG_TRUE;
@@ -319,6 +323,7 @@ gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
     char quadNodeName[64];
     gfx::CModelResource* pModelRes = NULL;
     gfx::CSceneNodeObject* pNodeObj = NULL;
+    gfx::traits::CDrawable* pDrawable;
     gfx::CDrawCall* pDrawCall = NULL;
     calculateNodePosition(x, y, nodePos, NULL, &isHex, &isOct);
     if(isHex) {
@@ -332,18 +337,21 @@ gfx::CSceneNode* CLevelVisualization::prepareSceneNode(unsigned short x,
     if(!pModelRes) {
         return NULL;
     }
-    pNodeObj = new gfx::CSceneNodeObject(pModelRes, NULL);
+    pNodeObj = new gfx::CSceneNodeObject(NULL, NULL);
     pNodeObj->setName(quadNodeName);
+    pNodeObj->setModel(pModelRes);
     pNodeObj->setScale(m_scale, m_scale, 1.0f);
     pNodeObj->setPosition(nodePos.x, nodePos.y, 0.0f);
-    pDrawCall = pNodeObj->getDrawCall();
+    if(pNodeObj->getFirstChild()->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable)) {
+        pDrawCall = pDrawable->getDrawCall();
+    }
     if(pDrawCall) {
         if(getMaterial(color) != NULL) {
-            ((gfx::CSceneNodeMesh*)pNodeObj->getChild())->setMaterial(m_pMaterials[(unsigned int)color]);
+            ((gfx::CSceneNodeMesh*)pNodeObj->getChildByIndex())->setMaterial(m_pMaterials[(unsigned int)color]);
             pDrawCall->setupMaterial(m_pMaterials[(unsigned int)color]);
         }
     }
-    pNodeObj->refreshGfxInternals();
+    this->m_pSceneMgr->refreshGfxInternals(pNodeObj);
     return pNodeObj;
 }
 //------------------------------------------------------------------------------
@@ -433,7 +441,7 @@ fgBool CLevelVisualization::prepareSceneManager(void) {
     m_pSceneMgr->setGroundPlane(gfx::Planef::Z, 0.0f);
     m_pSceneMgr->getSkyBox()->setScale(1250.0f);
     m_pSceneMgr->setSkyBoxFollowsCamera(FG_FALSE);
-    float zDistance = 250.0f; // this should change based on scale and size
+    float zDistance = 350.0f; // this should change based on scale and size
 
     gfx::CCameraAnimation* pCamera = m_pSceneMgr->getCamera();
     pCamera->setType(gfx::CCameraAnimation::CENTER_LOCKED);
@@ -453,6 +461,7 @@ void CLevelVisualization::refreshBlocks(void) {
     CLevelDataHolder* pHolder = getLevelDataHolder();
     BlockDataVec& blocks = pHolder->getBlocks();
     const unsigned int nBlocks = blocks.size();
+    gfx::traits::CDrawable* pDrawable = NULL;
     Vec2f nodePos;
     for(unsigned int i = 0; i < nBlocks; i++) {
         SBlockData* pBlock = blocks[i];
@@ -465,17 +474,19 @@ void CLevelVisualization::refreshBlocks(void) {
                               pBlock->pCellHolder->pos.y,
                               nodePos);
         pNodeObj->setPosition(nodePos.x, nodePos.y, 0.0f);
-        gfx::CDrawCall* pDrawCall = pBlock->pSceneNode->getDrawCall();
+        gfx::CDrawCall* pDrawCall = NULL;
+        if(pBlock->pSceneNode->getFirstChild()->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable)) {
+            pDrawCall = pDrawable->getDrawCall();
+        }
         gfx::SMaterial* pMaterial = this->getMaterial(pBlock->color);
         if(!pMaterial)
             continue;
-
         if(pDrawCall) {
             if(pDrawCall->getMaterial() != pMaterial) {
                 pDrawCall->setupMaterial(pMaterial);
             }
         }
-        gfx::CSceneNodeMesh* pNodeMesh = (gfx::CSceneNodeMesh*)pNodeObj->getChild();
+        gfx::CSceneNodeMesh* pNodeMesh = (gfx::CSceneNodeMesh*)pNodeObj->getFirstChild();
         if(pNodeMesh) {
             if(pNodeMesh->getMaterial() != pMaterial) {
                 pNodeMesh->setMaterial(pMaterial);

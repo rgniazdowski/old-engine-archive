@@ -77,20 +77,14 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </cTool>
@@ -111,20 +105,14 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </ccTool>
@@ -221,18 +209,12 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </cTool>
         <ccTool>
@@ -252,18 +234,12 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
@@ -349,6 +325,8 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
@@ -384,21 +362,15 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_CR_PLUGIN_STATIC</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </ccTool>
@@ -495,6 +467,8 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_CR_PLUGIN_STATIC</Elem>
@@ -528,19 +502,13 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_CR_PLUGIN_STATIC</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_SDL2</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
@@ -628,19 +596,14 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </cTool>
@@ -661,19 +624,14 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </ccTool>
@@ -831,17 +789,12 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </cTool>
         <ccTool>
@@ -862,17 +815,12 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
             <pElem>../../../modules/cpp_btree</pElem>
+            <pElem>../../../modules/assimp/include</pElem>
+            <pElem>../../../modules/bullet/bullet3/src</pElem>
           </incDir>
           <preprocessorList>
+            <Elem>FG_DEFAULTS</Elem>
             <Elem>FG_NO_UNDEF</Elem>
-            <Elem>FG_USING_GLEW</Elem>
-            <Elem>FG_USING_GLM</Elem>
-            <Elem>FG_USING_LUA_PLUS</Elem>
-            <Elem>FG_USING_OPENGL</Elem>
-            <Elem>FG_USING_OPENGL_GLEW</Elem>
-            <Elem>FG_USING_THREADS</Elem>
-            <Elem>FG_USING_TINYXML</Elem>
-            <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </ccTool>
         <fortranCompilerTool>

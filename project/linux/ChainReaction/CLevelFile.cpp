@@ -17,7 +17,7 @@
 #include <climits>
 #include "CLevelFile.h"
 
-#include "GameLogic/fgGrid.h"
+#include "Game/fgGrid.h"
 #include "Util/fgMemory.h"
 #include "Util/fgFile.h"
 #include "Util/fgStrings.h"
