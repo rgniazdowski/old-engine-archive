@@ -275,7 +275,6 @@ void physics::CCollisionBody::getVelocity(float& x, float& y, float& z) const {
 void physics::CCollisionBody::setRotation(const Quaternionf& rotation) {
     btTransform& trans = this->getWorldTransform();
     trans.getBasis().setRotation(*((btQuaternion*) & rotation));
-
 }
 //------------------------------------------------------------------------------
 
@@ -310,10 +309,10 @@ void physics::CCollisionBody::getRotation(Matrix3f& outMatrix) const {
 //------------------------------------------------------------------------------
 
 void physics::CCollisionBody::getRotation(Quaternionf& outRotation) const {
-    btTransform trans;
+    //btTransform trans;
     //btQuaternion q;
-    this->getMotionState()->getWorldTransform(trans);
-    trans.getBasis().getRotation(*((btQuaternion*) & outRotation));
+    //this->getWorldTransform(trans);
+    this->getWorldTransform().getBasis().getRotation(*((btQuaternion*) & outRotation));
     //bullet_helper::copyQuat(outRotation, trans.getRotation());
 }
 //------------------------------------------------------------------------------
