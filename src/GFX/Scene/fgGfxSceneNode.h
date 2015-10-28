@@ -159,7 +159,7 @@ namespace fg {
             /// Scene node father/parent node pointer
             self_type* m_pParent;
 
-        protected:            
+        protected:
             /// Internal object specific model matrix (local)
             Matrix4f m_modelMat;
             /// Final model matrix (chain transformation, world, based on parent)
@@ -171,7 +171,8 @@ namespace fg {
              * @param nodeType
              * @param pParent
              */
-            CSceneNode(SceneNodeType nodeType = SCENE_NODE_INVALID, self_type *pParent = NULL);
+            CSceneNode(SceneNodeType nodeType = SCENE_NODE_INVALID,
+                       self_type *pParent = NULL);
             /**
              * 
              * @param orig
@@ -353,7 +354,7 @@ namespace fg {
              */
             inline void setHalfSize(float x, float y, float z) {
                 setHalfSize(Vector3f(x, y, z));
-            }            
+            }
 
             /**
              * 
@@ -384,7 +385,7 @@ namespace fg {
              */
             inline void setAutoScale(fgBool toggle = FG_TRUE) {
                 setFlag(AUTO_SCALE, toggle);
-            }                       
+            }
 
         public:
             /**
@@ -472,6 +473,13 @@ namespace fg {
              * @return
              */
             self_type* getChildByIndex(const unsigned int index = 0);
+            /**
+             * 
+             * @return 
+             */
+            self_type* getFirstChild(void) {
+                return getChildByIndex(0);
+            }
 
             /**
              * 

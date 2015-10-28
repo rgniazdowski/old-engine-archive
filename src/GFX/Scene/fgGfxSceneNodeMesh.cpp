@@ -188,7 +188,7 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
                                      blendResult.curFrame.dualQuaternions);
         }
     }
-    m_drawCall->draw(math::scale(m_finalModelMat, getScale()) * modelMat);
+    m_drawCall->draw(math::scale(m_finalModelMat, getFinalScale()) * modelMat);
 }
 //------------------------------------------------------------------------------
 

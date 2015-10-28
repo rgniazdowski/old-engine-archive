@@ -320,8 +320,10 @@ void gfx::CSceneNode::update(float delta) {
     //}
     if(getParent()) {
         m_finalModelMat = getParent()->getFinalModelMatrix() * m_modelMat;
+        m_finalScale = getParent()->getFinalScale() * m_scale;
     } else {
         m_finalModelMat = m_modelMat;
+        m_finalScale = m_scale;
     }
     animate(delta);
     // The base version of the updateAABB will update it depending on the collision body
@@ -653,6 +655,10 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
 //------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneNode::getChild(const char *childName) {
+    if(childName == NULL)
+        return NULL;
+    if(!childName[0])
+        return NULL;
     return getChild(std::string(childName));
 }
 //------------------------------------------------------------------------------
@@ -709,7 +715,7 @@ fgBool gfx::CSceneNode::hasChild(const char* childName) {
     if(!childName || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    if(getChild(childName))
+    if(getChild(std::string(childName)))
         status = FG_TRUE;
     return status;
 }

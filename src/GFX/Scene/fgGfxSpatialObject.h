@@ -128,6 +128,12 @@ namespace fg {
                 inline const Vector3f& getScale(void) const {
                     return m_scale;
                 }
+                inline Vector3f& getFinalScale(void) {
+                    return m_finalScale;
+                }
+                inline const Vector3f& getFinalScale(void) const {
+                    return m_finalScale;
+                }
 
             protected:
                 /// Pointer to the tree node in which this (3d/2d/abstract)
