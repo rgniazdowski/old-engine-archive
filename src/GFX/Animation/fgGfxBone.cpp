@@ -378,12 +378,15 @@ void gfx::anim::SBone::getDirectionFromParent(Vector3f& direction) const {
     if(isFirstChild()) {
         direction = Vec3f(0.0f, pParent->length, 0.0f);
     } else if(pParent) {
-        //direction = (this->startPoint - pParent->startPoint);
+        direction = (this->startPoint - pParent->startPoint);
+
         //direction = (pParent->startPoint - this->endPoint);
         //direction = this->endPoint - pParent->startPoint;
         //direction.y -= this->length;
-        direction = this->startPoint - pParent->endPoint;
-        direction.y += pParent->length;
+        if(direction.y >= 0.0f) {
+            direction = this->startPoint - pParent->endPoint;
+            direction.y += pParent->length;
+        }
     } else {
         direction = Vec3f();
     }
@@ -422,6 +425,10 @@ void gfx::anim::SBone::refreshLength(void) {
     this->startPoint = Vec3f(position4f);
     position4f = finalRestPoseMat * Vec4f(0.0f, this->length * matScale.y, 0.0f, 1.0f);
     this->endPoint = Vec3f(position4f);
+
+    Quatf rotDir;
+    Vec3f angles;
+
     finalRestPoseMat = math::scale(finalRestPoseMat, matScale);
     rotDir = math::toQuat(finalRestPoseMat); // rotation in inverse offset
     angles = math::eulerAngles(rotDir);
