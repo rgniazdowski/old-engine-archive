@@ -11,6 +11,7 @@
     #include <map>
 
     #include "GFX/fgGfxMesh.h"
+    #include "GFX/fgGfxShape.h"
     #include "Util/fgFile.h"
 
 namespace fgTinyObj {

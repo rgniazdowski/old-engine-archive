@@ -10,6 +10,7 @@ data/outputFull.log
 data/outputDebug.log
 data/outputDebugFull.log
 data/libChainReaction.so
+data/ChainReaction/level*cr
 data/ChainReaction/libChainReaction.so
 data/EndlessFlying/libEndlessFlying.so
 data/defaultProfile.log
@@ -18,6 +19,7 @@ data-ram
 data/all.log
 data/error.log
 data/debug.log
+project/linux/ChainReaction/data
 project/linux/FlexiGameEditor/obj
 project/linux/FlexiGameEditor/bin
 project/linux/FlexiGameEditor/dist
