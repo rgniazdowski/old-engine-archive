@@ -67,10 +67,6 @@ void gfx::CScene3D::sortCalls(void) {
         return;
     }
     batch_type::sortCalls();
-    /*
-    if(m_physicsWorld) {
-        m_physicsWorld->startFrame();
-    }*/
     // Update the MVP based on the main camera properties
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum const& frustum = getMVP()->getFrustum();
@@ -179,7 +175,12 @@ void gfx::CScene3D::sortCalls(void) {
             // #OCTREE/#QUADTREE for now contains only main nodes (objects) not meshes
             if(pSceneNode->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable) &&
                visibilityResult > 0) {
-                // Checking for pick selection only when node is visible
+                getDrawableQueue().push(pDrawable);
+                getVisibleNodes().push_back(pSceneNode);
+            } else if(pSceneNode->checkNodeType(SCENE_NODE_OBJECT) && visibilityResult > 0) {
+                getVisibleNodes().push_back(pSceneNode);
+            }
+            if(!pSceneNode->getRefHandle().isNull()) {
                 if(m_pickSelection.shouldCheck) {
                     if(!visibilityResult) {
                         m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
@@ -187,19 +188,9 @@ void gfx::CScene3D::sortCalls(void) {
                         m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
                     }
                 }
-                getDrawableQueue().push(pDrawable);
-                getVisibleNodes().push_back(pSceneNode);
-            } else if(pSceneNode->checkNodeType(SCENE_NODE_OBJECT) && visibilityResult > 0) {
-                getVisibleNodes().push_back(pSceneNode);
             }
         } // for every object in tree node
     } // traverse octree
-
-    /*
-    if(m_physicsWorld) {
-        m_physicsWorld->finishFrame();
-    }
-     */
     m_pickSelection.end(getStateFlags());
 }
 //------------------------------------------------------------------------------

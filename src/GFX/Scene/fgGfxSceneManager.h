@@ -232,6 +232,7 @@ namespace fg {
             fgBool shouldInitializeNode(void) const {
                 return (fgBool)!!(m_stateFlags & INITIALIZE_NODE);
             }
+        public:
             /**
              * 
              * @param objectType
@@ -645,7 +646,15 @@ namespace fg {
         public:
             //------------------------------------------------------------------
 
+            /**
+             * 
+             */
             void refreshGfxInternals(void);
+            /**
+             *
+             * @param pSceneNode
+             */
+            void refreshGfxInternals(CSceneNode* pSceneNode);
 
             /**
              * 

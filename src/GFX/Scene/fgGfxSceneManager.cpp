@@ -37,7 +37,7 @@ m_collisionsInfo(),
 m_triggers(),
 m_pickSelection(),
 m_traverse(),
-m_stateFlags(NONE | FRUSTUM_CHECK),
+m_stateFlags(NONE | INITIALIZE_NODE | FRUSTUM_CHECK /*| SKYBOX_FOLLOWS_CAMERA | HIDE_SKYBOX*/),
 m_defaultNodeObjectType(SCENE_NODE_OBJECT),
 m_groundGrid(),
 m_worldSize(),
@@ -375,6 +375,13 @@ void gfx::CSceneManager::refreshGfxInternals(void) {
         }
         pSceneNode->refreshGfxInternals();
     }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::refreshGfxInternals(CSceneNode* pSceneNode) {
+    if(!pSceneNode)
+        return;
+    pSceneNode->refreshGfxInternals();
 }
 //------------------------------------------------------------------------------
 
@@ -955,7 +962,6 @@ void gfx::CSceneManager::sortCalls(void) {
         // Set visibility (non-recursive)
         // The second flag is true by default.
         pSceneNode->setVisible(!!visibilityResult, FG_FALSE);
-
         // Each object is pushed to queue individually
         // Even if it contains children, single draw function should not draw
         // everyone - need specialized function for that
@@ -963,8 +969,14 @@ void gfx::CSceneManager::sortCalls(void) {
         // index (which is determined based on the data in the given draw call)
         // The aabb for each object is updated based on the children.
         if(pSceneNode->queryTrait(fg::traits::DRAWABLE, (void**)&pDrawable) &&
-           visibilityResult > 0 &&
-           !pSceneNode->getRefHandle().isNull()) {
+           visibilityResult > 0) {
+            // push to queue only nodes that have valid handle and are drawable
+            m_drawableQueue.push(pDrawable);
+            m_visibleNodes.push_back(pSceneNode);
+        } else if(pSceneNode->checkNodeType(SCENE_NODE_OBJECT) && visibilityResult > 0) {
+            m_visibleNodes.push_back(pSceneNode);
+        }
+        if(!pSceneNode->getRefHandle().isNull()) {
             if(m_pickSelection.shouldCheck) {
                 if(!visibilityResult) {
                     m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
@@ -972,13 +984,8 @@ void gfx::CSceneManager::sortCalls(void) {
                     m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
                 }
             }
-            // push to queue only nodes that have valid handle and are drawable
-            m_drawableQueue.push(pDrawable);
-            m_visibleNodes.push_back(pSceneNode);
-        } else if(pSceneNode->checkNodeType(SCENE_NODE_OBJECT) && visibilityResult > 0) {
-            m_visibleNodes.push_back(pSceneNode);
         }
-    }
+    } // traverse whole scene graph
     m_pickSelection.end(getStateFlags());
 }
 //------------------------------------------------------------------------------
