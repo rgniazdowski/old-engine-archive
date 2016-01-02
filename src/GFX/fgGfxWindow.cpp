@@ -10,11 +10,7 @@
 
 #include "fgGfxWindow.h"
 #include "fgGfxPlatform.h"
-
-#if defined FG_USING_MARMALADE
-#include "s3e.h"
-#include "s3eTypes.h"
-#endif
+#include "fgColors.h"
 
 using namespace fg;
 
@@ -74,7 +70,7 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         return FG_FALSE;
     }
     if(m_isOpen) {
-#if !defined(FG_USING_EGL) && !defined(FG_USING_MARMALADE_EGL) && !defined(FG_USING_SDL) && !defined(FG_USING_SDL2)
+#if !defined(FG_USING_EGL) && !defined(FG_USING_SDL) && !defined(FG_USING_SDL2)
         m_width = width;
         m_height = height;
 #elif defined(FG_STATIC_LIBRARY)
@@ -85,7 +81,7 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         //CWindow::close();
     }
     fgBool status = FG_TRUE;
-#if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
+#if defined(FG_USING_EGL)
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     EGLContext eglContext = (EGLContext)CPlatform::context()->getGLContext();
     EGLConfig eglConfig = (EGLConfig)CPlatform::getDefaultConfig();
@@ -96,10 +92,8 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         return FG_FALSE;
     }
 
-#if defined FG_USING_MARMALADE
-    eglNativeWindow = s3eGLGetNativeWindow();
-#else
-    // FIXME
+#if 1
+    // FIXME | stand alone EGL wont work 
     return FG_FALSE;
 #endif
     m_EGLSurface = eglCreateWindowSurface(eglDisplay, eglConfig, eglNativeWindow, NULL);
@@ -112,10 +106,10 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
     eglQuerySurface(eglDisplay, m_EGLSurface, EGL_WIDTH, &w);
     fgEGLError("eglQuerySurface");
     if(w < 0 || h < 0) {
-#if defined FG_USING_MARMALADE
-        log::PrintError("EGL: query surface failed, falling back to S3E...");
-        w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
-        h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
+#if 1
+        //log::PrintError("EGL: query surface failed, falling back to S3E...");
+        //w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
+        //h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
 #else 
         // #FIXME
 #endif 
@@ -124,10 +118,6 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
     m_height = h;
 
     FG_LOG_DEBUG("EGL: Window surface created. Dimensions: %dx%d", w, h);
-
-#elif defined(FG_USING_MARMALADE_IWGL)
-    m_width = IwGLGetInt(IW_GL_WIDTH);
-    m_height = IwGLGetInt(IW_GL_HEIGHT);
 
 #elif defined(FG_USING_SDL2)
 
@@ -193,8 +183,6 @@ fgBool gfx::CWindow::close(void) {
         m_sdlWindow = NULL;
         m_sdlFlags = 0;
     }
-#elif defined(FG_USING_IWGL)
-    //
 #endif
     //m_width = 0;
     //m_height = 0;
@@ -220,7 +208,7 @@ void gfx::CWindow::setFullscreen(fgBool toggle) {
 //------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::refreshFS(void) {
-#if !defined(FG_USING_MARMALADE) && !defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+#if !defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
     if(m_isFullscreen) {
         // #FIXME
         //m_sdlFlags |= SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -246,12 +234,10 @@ fgBool gfx::CWindow::refreshFS(void) {
 fgBool gfx::CWindow::swapBuffers(void) {
     if(!m_isOpen)
         return FG_FALSE;
-#if defined(FG_USING_MARMALADE_EGL)
+#if defined(FG_USING_EGL)
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     if(eglDisplay && m_EGLSurface)
         eglSwapBuffers(eglDisplay, m_EGLSurface);
-#elif defined(FG_USING_MARMALADE_IWGL)
-    IwGLSwapBuffers();
 #elif defined(FG_USING_SDL2)
     if(m_sdlWindow)
         SDL_GL_SwapWindow(m_sdlWindow);
@@ -273,14 +259,16 @@ fgBool gfx::CWindow::swapBuffers(void) {
 void gfx::CWindow::clearColor(void) {
 #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
     // #FIXME ?
-    context::clearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    Color4f color = colors::getColor("Gray");
+    context::clearColor(color.x, color.y, color.z, 1.0f);
+    //context::clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #endif
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::registerOnSwap(CallbackFuncPtr pCallback,
-                                        void* pUserData) {
+                                    void* pUserData) {
     if(!pCallback || isRegistered(pCallback))
         return FG_FALSE;
     CallbackData callbackInfo(pCallback, pUserData);

@@ -19,9 +19,6 @@
 
         #include "fgThreadLock.h"
 
-//#ifdef FG_USING_MARMALADE_THREADS
-//#include "s3eThread.h"
-//#endif
         #if defined(FG_USING_SDL2)
             #include <SDL2/SDL_thread.h>
             #include <SDL2/SDL_mutex.h>

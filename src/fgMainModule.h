@@ -29,41 +29,15 @@
         #include <cmath>
         #include <map>
 
-        #if defined(FG_USING_MARMALADE)
-            #include "s3e.h"
-            #include "s3eTypes.h"
-            #include "IwUtil.h"
-            #include "s3eDevice.h"
-        #endif /* FG_USING_MARMALADE */
-
-        #if defined(FG_USING_MARMALADE)
-            #include "Hardware/fgDeviceQuery.h"
-        #endif /* FG_USING_MARMALADE */
-
 namespace fg {
     class CMainModule;
-};
+} // namespace fg
 
-        #if defined(FG_USING_MARMALADE)
-extern "C" int main();
-
-class fgMarmaladeHandlers {
-private:
-    fgMarmaladeHandlers() { };
-    ~fgMarmaladeHandlers() { };
-
-public:
-    static int32_t pauseHandler(void *systemData, void *userData);
-    static int32_t unpauseHandler(void *systemData, void *userData);
-    static int32_t suspendGfxHandler(void *systemData, void *userData);
-    static int32_t resumeGfxHandler(void *systemData, void *userData);
-    static int32_t keyStateChangedHandler(void *systemData, void *userData);
-};
-        #elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+        #if defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
 extern "C" int SDL_main(int argc, char **argv);
         #else
 extern "C" int main(int argc, char *argv[]);
-        #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_PLATFORM_ANDROID */
 
 namespace fg {
 
@@ -71,14 +45,11 @@ namespace fg {
      *
      */
     class CMainModule {
-        #if defined FG_USING_MARMALADE
-        friend class ::fgMarmaladeHandlers;
-        friend int ::main();
-        #elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+        #if defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
         friend int ::SDL_main(int argc, char **argv);
         #else
         friend int ::main(int argc, char *argv[]);
-        #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_PLATFORM_ANDROID */
 
     public:
         /**
@@ -188,12 +159,6 @@ namespace fg {
          * (not the GL un-pause event)
          */
         void focusGainedEvent(void);
-        #if defined(FG_USING_MARMALADE)
-        /**
-         * Handle PRESSING and RELEASING keys
-         */
-        void keyStateChangedEvent(s3eKeyboardEvent* event);
-        #endif /* FG_USING_MARMALADE */
 
     private:
         /// Number of arguments passed to program
@@ -210,10 +175,6 @@ namespace fg {
         fgBool m_isSuspend;
         ///
         fgBool m_isFrameFreeze;
-        #if defined(FG_USING_MARMALADE) // #FIXME
-        ///
-        fgDeviceQuery m_deviceQuery;
-        #endif /* FG_USING_MARMALADE */
         /// Game main class - this is for initialization procedures
         /// contains also functions for handling events, drawing, etc #TODO
         /// Needs refactoring, some level of merging within main module or
@@ -226,4 +187,4 @@ namespace fg {
     #endif /* !defined FG_STATIC_LIBRARY */
 
     #undef FG_INC_MAIN_MODULE_BLOCK
-#endif	/* FG_INC_MAIN_MODULE */
+#endif /* FG_INC_MAIN_MODULE */

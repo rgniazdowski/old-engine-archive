@@ -16,26 +16,15 @@
     #include "fgBool.h"
     #include <cstring>
 
-    #ifdef FG_USING_MARMALADE
-
-        #include "s3eMemory.h"
-
-        #define fgMalloc_sys_	s3eMalloc
-        #define fgFree_sys_	s3eFree
-        #define fgRealloc_sys_	s3eRealloc
-
-// FIXME need more wrappers for marmalade's heap memory handling
-
-    #else
+    #if 1
 
         #include <malloc.h>
 
-        #define fgMalloc_sys_	malloc
-        #define fgFree_sys_	free
-        #define fgRealloc_sys_	realloc
+        #define fgMalloc_sys_ malloc
+        #define fgFree_sys_ free
+        #define fgRealloc_sys_ realloc
 
     #endif
-
 /*
  * This is a special template function for allocating memory.
  * The size argument differs from the standard implementation.
@@ -55,8 +44,7 @@ inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE, Type *u
     }
     return data;
 }
-
-template <> inline void *fgMalloc<void>(const int count , const fgBool clear, void *unused) {
+template <> inline void *fgMalloc<void>(const int count, const fgBool clear, void *unused) {
     if(count <= 0)
         return NULL;
     size_t size = count;
@@ -68,7 +56,6 @@ template <> inline void *fgMalloc<void>(const int count , const fgBool clear, vo
     }
     return data;
 }
-
 template<class Type>
 inline Type *fgRealloc(Type *inptr, const int count = 1, const fgBool clear = FG_TRUE) {
     if(count <= 0)
@@ -82,7 +69,6 @@ inline Type *fgRealloc(Type *inptr, const int count = 1, const fgBool clear = FG
     }
     return data;
 }
-
 template <> inline void *fgRealloc<void>(void *inptr, const int count, const fgBool clear) {
     if(count <= 0)
         return NULL;
@@ -95,7 +81,6 @@ template <> inline void *fgRealloc<void>(void *inptr, const int count, const fgB
     }
     return data;
 }
-
 inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FALSE) {
     if(!item)
         return;
@@ -108,7 +93,6 @@ inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FA
 
     item = NULL;
 }
-
 template<class Type>
 inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
     if(!item)
@@ -123,8 +107,7 @@ inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
     item = NULL;
 }
 
-    //#define fgRealloc fgRealloc_sys_
+//#define fgRealloc fgRealloc_sys_
 
     #undef FG_INC_MEMORY_BLOCK
 #endif /* FG_INC_MEMORY */
-    

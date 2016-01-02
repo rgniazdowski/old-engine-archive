@@ -18,11 +18,6 @@
 #endif
 #include <ctime>
 
-#if defined(FG_USING_MARMALADE)
-#include "s3eDebug.h"
-#include "s3eTimer.h"
-#endif
-
 namespace fg {
     namespace timesys {
 #if defined(FG_USING_PLATFORM_WINDOWS)
@@ -105,7 +100,7 @@ float timesys::elapsed(TickCategory category) {
 //------------------------------------------------------------------------------
 
 float timesys::exact(void) {
-#ifdef FG_USING_PLATFORM_WINDOWS
+#if defined(FG_USING_PLATFORM_WINDOWS)
     //SYSTEMTIME time;
     //GetSystemTime(&time);
     //WORD millis = (time.wSeconds * 1000) + time.wMilliseconds;
@@ -139,9 +134,7 @@ long timesys::seconds(void) {
 //------------------------------------------------------------------------------
 
 unsigned long int timesys::ticks(void) {
-#if defined(FG_USING_MARMALADE)
-    return (unsigned long int)s3eTimerGetMs();
-#elif defined(FG_USING_SDL) || defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL) || defined(FG_USING_SDL2)
     return (unsigned long int)SDL_GetTicks();
 #else
     return (unsigned long int)(timesys::ms());

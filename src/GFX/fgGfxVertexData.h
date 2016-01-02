@@ -498,11 +498,7 @@ namespace fg {
              * @return 
              */
             virtual fgGFXvoid *front(void) const {
-    #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(base_vec_type::begin());
-    #else
                 return (fgGFXvoid *)(&base_vec_type::front());
-    #endif /* FG_USING_MARMALADE */
             }
             /**
              * 
@@ -799,11 +795,7 @@ namespace fg {
              * @return 
              */
             virtual fgGFXvoid *front(void) const {
-    #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(base_vec_type::begin());
-    #else
                 return (fgGFXvoid *)(&base_vec_type::front());
-    #endif /* FG_USING_MARMALADE */
             }
             /**
              * 
@@ -1113,11 +1105,7 @@ namespace fg {
              * @return 
              */
             virtual fgGFXvoid *front(void) const {
-    #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(base_vec_type::begin());
-    #else
                 return (fgGFXvoid *)(&base_vec_type::front());
-    #endif /* FG_USING_MARMALADE */
             }
             /**
              * 
@@ -1430,11 +1418,7 @@ namespace fg {
              * @return
              */
             virtual fgGFXvoid *front(void) const {
-    #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(base_vec_type::begin());
-    #else
                 return (fgGFXvoid *)(&base_vec_type::front());
-    #endif /* FG_USING_MARMALADE */
             }
             /**
              *
@@ -1552,7 +1536,7 @@ namespace fg {
             }
         }; // class CVertexData5HQv
 
-    } // namespace gfxx
+    } // namespace gfx
 } // namespace fg
 
     #undef FG_INC_GFX_VERTEX_DATA_BLOCK

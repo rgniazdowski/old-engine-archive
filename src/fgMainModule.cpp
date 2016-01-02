@@ -20,64 +20,7 @@
 #include "Util/fgStrings.h"
 
 #if !defined(FG_STATIC_LIBRARY)
-#if defined(FG_USING_MARMALADE)
-
-/**
- * Focus lost HANDLER
- */
-int32_t fgMarmaladeHandlers::pauseHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
-    mainModule->focusLostEvent();
-    return 0;
-}
-
-/**
- * Focus restored HANDLER
- */
-int32_t fgMarmaladeHandlers::unpauseHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
-    mainModule->focusGainedEvent();
-    return 0;
-}
-
-/**
- * Focus lost HANDLER
- */
-int32_t fgMarmaladeHandlers::suspendGfxHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
-    mainModule->suspendGfxEvent();
-    return 0;
-}
-
-/**
- * Focus restored HANDLER
- */
-int32_t fgMarmaladeHandlers::resumeGfxHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
-    mainModule->resumeGfxEvent();
-    return 0;
-}
-
-/**
- * Key state changed HANDLER
- */
-int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
-    s3eKeyboardEvent* event = (s3eKeyboardEvent*)systemData;
-    mainModule->keyStateChangedEvent(event);
-    return 0;
-}
-#elif defined(FG_USING_SDL) || defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL) || defined(FG_USING_SDL2)
 namespace fg {
     namespace event {
         static KeyVirtualCode
@@ -400,7 +343,7 @@ namespace fg {
         };
     } // namespace event
 } // namespace fg
-#endif /* FG_USING_MARMALADE */
+#endif /* FG_USING_SDL */
 
 using namespace fg;
 
@@ -415,9 +358,6 @@ m_slow(FG_FALSE),
 m_isExit(FG_FALSE),
 m_isSuspend(FG_FALSE),
 m_isFrameFreeze(FG_FALSE),
-#if defined(FG_USING_MARMALADE) // #FIXME
-m_deviceQuery(),
-#endif /* FG_USING_MARMALADE */
 m_engineMain(NULL) { }
 
 CMainModule::~CMainModule() { }
@@ -462,6 +402,9 @@ event::KeyVirtualCode CMainModule::translateKeyboardCode(const SDL_KeyboardEvent
     const event::KeyVirtualCode keyCode = event::KeyTranslate[index];
     return keyCode;
 }
+
+#include "GFX/Scene/fgGfx3DScene.h"
+
 /**
  * #FIXME - this needs to be maintained differently
  * - maybe add some SDL2 event watches?
@@ -764,30 +707,13 @@ fgBool CMainModule::initProgram(void) {
         // already initialized
         return FG_TRUE;
     }
-
-#if defined(FG_USING_MARMALADE)
-    m_deviceQuery.computeDevice();
-    s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
-    // ?
-    //s3eKeyboardSetInt(S3E_KEYBOARD_GET_CHAR, 1);
-    // Register for keyboard
-    s3eKeyboardRegister(S3E_KEYBOARD_KEY_EVENT, &fgMarmaladeHandlers::keyStateChangedHandler, (void *)this);
-
-    // DEVICE FOCUS – called on any device
-    s3eDeviceRegister(S3E_DEVICE_PAUSE, &fgMarmaladeHandlers::pauseHandler, (void *)this);
-    s3eDeviceRegister(S3E_DEVICE_UNPAUSE, &fgMarmaladeHandlers::unpauseHandler, (void *)this);
-    int32 mustSuspend = s3eGLGetInt(S3E_GL_MUST_SUSPEND); // S3E_GL_VERSION // S3E_EGL_VERSION
-    s3eGLRegister(S3E_GL_SUSPEND, &fgMarmaladeHandlers::suspendGfxHandler, (void *)this);
-    s3eGLRegister(S3E_GL_RESUME, &fgMarmaladeHandlers::resumeGfxHandler, (void *)this);
-
-#endif /* FG_USING_MARMALADE */
     if(!m_engineMain) {
         FG_LOG_DEBUG("Creating game main object...");
         m_engineMain = new fg::CEngineMain(m_argc, m_argv);
     }
     // Well the whole configuration process should update the screen (swap buffers)
-    // this is needed to display splash screen (after marmalade splash screen) and
-    // show the game initialization process by displaying the progress bar
+    // this is needed to display splash screens and show the game initialization
+    // process by displaying the progress bar.
     if(!m_engineMain->loadConfiguration()) {
         return FG_FALSE;
     }
@@ -836,20 +762,6 @@ fgBool CMainModule::mainLoopStep(void) {
         return FG_TRUE;
     }
 
-#if defined(FG_USING_MARMALADE)
-    s3eKeyboardUpdate();
-    if(s3eDeviceCheckQuitRequest()) {
-        m_appInit = FG_FALSE;
-        m_isExit = FG_TRUE;
-        return FG_FALSE;
-    }
-    if(s3eKeyboardGetState(s3eKeyEnter) & S3E_KEY_STATE_PRESSED) {
-        m_appInit = FG_FALSE;
-        m_isExit = FG_TRUE;
-        FG_LOG_DEBUG("ENTER PRESSED...");
-        return FG_FALSE;
-    }
-#endif /* FG_USING_MARMALADE */
     if(m_isExit) {
         m_appInit = FG_FALSE;
         FG_LOG_DEBUG("EXIT IS ACTIVATED - break loop main ! bye!");
@@ -966,33 +878,12 @@ void CMainModule::focusLostEvent(void) {
 void CMainModule::focusGainedEvent(void) {
     FG_LOG_DEBUG("MainModule: Focus gained event");
 }
-#if defined(FG_USING_MARMALADE)
-
-/**
- * Handle PRESSING and RELEASING keys
- */
-void CMainModule::keyStateChangedEvent(s3eKeyboardEvent* event) {
-    if(!m_appInit || !m_engineMain)
-        return;
-    if(event->m_Pressed) {
-        m_engineMain->getInputHandler()->addKeyDown((int)event->m_Key);
-    } else {
-        m_engineMain->getInputHandler()->addKeyUp((int)event->m_Key);
-    }
-}
-#endif /* FG_USING_MARMALADE */
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * Main function that is called when the program starts.
  */
-#if defined(FG_USING_MARMALADE)
-
-extern "C" int main() {
-    IwUtilInit();
-    int argc = 0;
-    char *argv[] = {NULL, NULL};
-#elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+#if defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
 
 extern "C" int SDL_main(int argc, char **argv) {
 #else
@@ -1004,13 +895,13 @@ extern "C" int SDL_main(int argc, char **argv) {
  * @return 
  */
 extern "C" int main(int argc, char *argv[]) {
-#endif /* FG_USING_MARMALADE */
+#endif /* FG_USING_PLATFORM_ANDROID */
     FG_LOG_DEBUG("%s: Starting up!", FG_PACKAGE_FULL_TEXT);
     FG_LOG_DEBUG("%s: build %s %s DEBUG", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
 #if defined(FG_RELEASE)
     FG_LOG_INFO("%s: build %s %s RELEASE", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
 #endif
-#if defined(FG_DEBUG) && !defined(FG_USING_MARMALADE)
+#if defined(FG_DEBUG)
     FG_LOG_DEBUG("%s: Number of arguments: %d", FG_PACKAGE_NAME, argc);
     if(argc) {
         for(int i = 0; i < argc; i++) {
@@ -1018,17 +909,28 @@ extern "C" int main(int argc, char *argv[]) {
         }
     }
 
-#endif
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////
+#if defined(FG_USING_PLATFORM_ANDROID)
+    FG_LOG_DEBUG("DATA INTERNAL STORAGE PATH: %s", android::getInternalDataStorage());
+    FG_LOG_DEBUG("DATA EXTERNAL STORAGE PATH: %s", android::getExternalDataStorage());
+    util::CRegularFile defaultProfile;
+    std::string path;
+    path.append(android::getInternalDataStorage());
+    path.append("/defaultProfile.log");
+    char *profileData = defaultProfile.load(path.c_str());
+    FG_LOG_DEBUG("DATA PROFILE: %s", profileData);
+    fgFree(profileData);
+    defaultProfile.close();
+#endif /* FG_USING_PLATFORM_ANDROID */
+#endif /* FG_DEBUG */
     CMainModule *mainModule = new CMainModule(argc, argv);
     if(!mainModule->initProgram()) {
         mainModule->closeProgram();
         FG_LOG_DEBUG("Deleting main module...");
         delete mainModule;
         FG_LOG_ERROR("Initialization failed, closing program with error");
-#if defined(FG_USING_MARMALADE)
-        IwUtilTerminate();
-        s3eDeviceExit(0);
-#endif /* FG_USING_MARMALADE */		
         return 1;
     }
     // DEVICE YIELD FUNCTION IN HERE
@@ -1036,9 +938,6 @@ extern "C" int main(int argc, char *argv[]) {
     while(FG_TRUE) {
         fgBool status = mainModule->mainLoopStep();
         // DEVICE YIELD FUNCTION IN HERE
-#if defined(FG_USING_MARMALADE)
-        s3eDeviceBacklightOn(); // #FIXME // need to wrap it in something else
-#endif /* FG_USING_MARMALADE */
         if(status == FG_FALSE || mainModule->isExit()) {
             FG_LOG_DEBUG("Main loop break...");
             break;
@@ -1049,10 +948,6 @@ extern "C" int main(int argc, char *argv[]) {
     delete mainModule;
 
     FG_LOG_DEBUG("Successfully closed program");
-#if defined FG_USING_MARMALADE
-    IwUtilTerminate();
-    s3eDeviceExit(0);
-#endif /* FG_USING_MARMALADE */
     return 0;
 }
 #endif

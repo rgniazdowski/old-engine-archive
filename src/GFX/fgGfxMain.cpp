@@ -27,11 +27,6 @@
 
 #include "fgLog.h"
 
-#if defined(FG_USING_MARMALADE)
-#include "s3e.h"
-#include "s3eTypes.h"
-#endif
-
 using namespace fg;
 //------------------------------------------------------------------------------
 
@@ -260,13 +255,13 @@ fgBool gfx::CGfxMain::initGFX(void) {
         }
 #if defined(FG_USING_SDL2)
         gfx::CPlatform::initializeMainContext(m_mainWindow->getSysPtr());
-#endif
+#endif /* FG_USING_SDL2 */
     }
     if(status) {
         if(!context::isInit()) {
 #if !defined(FG_USING_SDL2)
             status = context::initialize();
-#endif
+#endif /* FG_USING_SDL2 */
         }
         if(!context::isInit()) {
             status = FG_FALSE;

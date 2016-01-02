@@ -12,10 +12,6 @@
 #include "fgLog.h"
 #include "fgUnistd.h"
 
-#if defined(FG_USING_MARMALADE)
-#include "s3eDevice.h"
-#endif
-
 #if defined(FG_USING_THREADS)
 
 using namespace fg;
@@ -36,8 +32,6 @@ CThread::~CThread() {
         //this->detach();
 #elif defined(FG_USING_PLATFORM_WINDOWS)
 
-#elif defined(FG_USING_MARMALADE)
-        s3eDeviceRequestQuit();
 #else
         std::terminate();
 #endif

@@ -15,7 +15,6 @@
 #include "Util/fgFile.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 sfx::CSoundResource::CSoundResource() :
@@ -72,37 +71,6 @@ void sfx::CSoundResource::clear(void) {
 fgBool sfx::CSoundResource::loadRawData(void) {
     if(getFilePath(m_quality).empty())
         return FG_FALSE;
-#if defined(FG_USING_MARMALADE_SOUND)
-    m_soundData = NULL;
-    m_size = 0;
-    // fgFile? anyone?
-    s3eFile* fileHandle = s3eFileOpen(getFilePathStr(m_quality), "rb");
-    if(NULL == fileHandle) {
-        FG_LOG_ERROR("SFX: Unable to open audio file '%s', error code: %d", getFilePathStr(m_quality), s3eFileGetError());
-        return FG_FALSE;
-    }
-
-    int fileSize = s3eFileGetSize(fileHandle);
-    unsigned char* buffer = new unsigned char[fileSize + 1];
-    buffer[fileSize] = '\0';
-    memset(buffer, 0, fileSize);
-
-    int objectsRead = s3eFileRead(buffer, fileSize, 1, fileHandle);
-    s3eFileClose(fileHandle);
-
-    if(objectsRead != 1) {
-        FG_LOG_ERROR("SFX: Should read %d bytes of an sound file, read %d instead!", fileSize, objectsRead * fileSize);
-        delete [] buffer;
-        return FG_FALSE;
-    }
-
-    FG_LOG_DEBUG("SFX: Read %d bytes of '%s', buffer = %p", fileSize, getFilePathStr(m_quality), buffer);
-
-    m_soundData = buffer;
-    m_size = fileSize;
-#else
-
-#endif
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -262,21 +230,6 @@ fgBool sfx::CSoundResource::create(void) {
         Mix_VolumeChunk(m_chunkData, m_volume);
         m_isReady = FG_TRUE;
     }
-#elif defined(FG_USING_MARMALADE_SOUND)
-    // Well on Marmalade Sound no conversion is needed - sound is mono, 22050, 16bit
-    // and the files (wav) are all in that format - this can change of course 
-    // #MARMALADE #AUDIO_CONVERTER #STEREO
-    if(strings::endsWith(path, ".wav", FG_FALSE)) {
-        if(loadWavData()) {
-            m_isReady = FG_TRUE;
-        }
-    } else if(strings::endsWith(path, ".raw", FG_FALSE)) {
-        // This only support .raw files for now...
-        if(loadRawData()) {
-            m_isReady = FG_TRUE;
-        }
-    }
-#else
 #endif
     return m_isReady;
 }
@@ -305,7 +258,6 @@ void sfx::CSoundResource::dispose(void) {
     if(m_chunkData) {
         Mix_FreeChunk(m_chunkData);
     }
-#elif defined(FG_USING_MARMALADE_SOUND)
 #endif
     if(m_soundData) {
         fgFree(m_soundData, FG_FALSE);
@@ -318,11 +270,7 @@ void sfx::CSoundResource::dispose(void) {
 //------------------------------------------------------------------------------
 
 fgBool sfx::CSoundResource::isDisposed(void) const {
-#if defined(FG_USING_MARMALADE_SOUND)
-    if(!m_soundData || !m_isReady) {
-        return FG_TRUE;
-    }
-#else
+#if 1
     if(!m_chunkData || !m_isReady) {
         return FG_TRUE;
     }
@@ -342,30 +290,6 @@ void sfx::CSoundResource::play(void) {
         m_isPlaying = FG_TRUE;
         m_isPaused = FG_FALSE;
     }
-#elif defined(FG_USING_MARMALADE_SOUND)
-    // s3eSoundProperty
-    // S3E_SOUND_STEREO_ENABLED 	
-    // [read,int]Return 1 if the sound device is in stereo mode. This is enabled
-    // by setting the [S3E] StereoSound option in your ICF. If the hardware does
-    // not support stereo this will always return 0. In order to generate stereo
-    // sound you must register the S3E_CHANNEL_GEN_AUDIO_STEREO callback on your
-    // channel(s).
-    if(m_soundData) {
-        m_channel = s3eSoundGetFreeChannel();
-        s3eSoundChannelSetInt(m_channel, S3E_CHANNEL_RATE, m_header.sampleRate);
-        s3eDeviceYield(0); // #FIXME
-        s3eSoundChannelPlay(m_channel, (int16*)m_soundData, m_size / 2, 1, 0);
-        // DEVICE YIELD
-        s3eDeviceYield(0); // #FIXME
-        // Check for error
-        s3eSoundError err = s3eSoundGetError();
-        if(err != S3E_SOUND_ERR_NONE) {
-            FG_LOG_ERROR("SFX: name[%s] on channel[%d] error[%d]: %s", m_nameTag.c_str(), m_channel, err, s3eSoundGetErrorString());
-        } else {
-            m_isPlaying = FG_TRUE;
-            m_isPaused = FG_FALSE;
-        }
-    }
 #endif
 }
 //------------------------------------------------------------------------------
@@ -376,12 +300,6 @@ void sfx::CSoundResource::pause(void) {
 #if defined(FG_USING_SDL_MIXER)
     if(!Mix_Paused(m_channel) && isPlaying()) {
         Mix_Pause(m_channel);
-    }
-    m_isPaused = FG_TRUE;
-#elif defined(FG_USING_MARMALADE_SOUND)
-    // 	s3eSoundChannelGetInt (int channel, s3eSoundChannelProperty property)
-    if(isPlaying() && !isPaused()) {
-        s3eSoundChannelPause(m_channel);
     }
     m_isPaused = FG_TRUE;
 #endif
@@ -396,15 +314,6 @@ void sfx::CSoundResource::resume(void) {
         Mix_Resume(m_channel);
     if(Mix_Playing(m_channel))
         m_isPlaying = FG_TRUE;
-#elif defined(FG_USING_MARMALADE_SOUND)
-    if(isPaused()) {
-        s3eSoundChannelResume(m_channel);
-        // Check for error
-        s3eSoundError err = s3eSoundGetError();
-        if(err != S3E_SOUND_ERR_NONE) {
-            FG_LOG_ERROR("SFX: name[%s] on channel[%d] error[%d]: %s", m_nameTag.c_str(), m_channel, err, s3eSoundGetErrorString());
-        }
-    }
 #endif
 }
 //------------------------------------------------------------------------------
@@ -413,9 +322,6 @@ void sfx::CSoundResource::rewind(void) {
     if(!m_isReady)
         return;
 #if defined(FG_USING_SDL_MIXER)
-    stop();
-    play();
-#elif defined(FG_USING_MARMALADE_SOUND)
     stop();
     play();
 #endif
@@ -431,12 +337,6 @@ void sfx::CSoundResource::stop(void) {
     m_channel = 0;
     m_isPlaying = FG_FALSE;
     m_isPaused = FG_FALSE;
-#elif defined(FG_USING_MARMALADE_SOUND)
-    if(isPlaying() && !isPaused()) {
-        s3eSoundChannelStop(m_channel);
-        m_isPlaying = FG_FALSE;
-        m_isPaused = FG_FALSE;
-    }
 #endif
 }
 //------------------------------------------------------------------------------
@@ -446,9 +346,6 @@ fgBool sfx::CSoundResource::isPaused(void) {
         return FG_FALSE;
 #if defined(FG_USING_SDL_MIXER)
     m_isPaused = (fgBool)Mix_Paused(m_channel);
-#elif defined(FG_USING_MARMALADE_SOUND)
-    //s3eSoundChannelGetInt (int channel, s3eSoundChannelProperty property)
-    m_isPaused = (fgBool)s3eSoundChannelGetInt(m_channel, S3E_CHANNEL_PAUSED);
 #endif    
     return m_isPaused;
 }
@@ -459,8 +356,6 @@ fgBool sfx::CSoundResource::isPlaying(void) {
         return FG_FALSE;
 #if defined(FG_USING_SDL_MIXER)
     m_isPlaying = (fgBool)Mix_Playing(m_channel);
-#elif defined(FG_USING_MARMALADE_SOUND)
-    m_isPlaying = (fgBool)s3eSoundChannelGetInt(m_channel, S3E_CHANNEL_STATUS);
 #endif
     return m_isPlaying;
 }
@@ -475,11 +370,6 @@ void sfx::CSoundResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
             Mix_VolumeChunk(m_chunkData, volume);
         //if(isPlaying())
         //    Mix_Volume(m_channel, volume); // ? ? 
-    }
-#elif defined(FG_USING_MARMALADE_SOUND) // SOUND/AUDIO
-    s3eResult result = s3eSoundChannelSetInt(m_channel, S3E_CHANNEL_VOLUME, int(volume * S3E_SOUND_MAX_VOLUME * 0.9f));
-    if(S3E_RESULT_SUCCESS != result) {
-        FG_LOG_ERROR("Error when setting the SFX[%s] volume: %d", getNameStr(), result);
     }
 #endif 
     m_volume = volume;

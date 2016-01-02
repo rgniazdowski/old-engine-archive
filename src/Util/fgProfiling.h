@@ -17,26 +17,9 @@
 
     #define FG_MAX_PROFILE_SAMPLES 16
 
-    #ifdef FG_USING_MARMALADE
-        #include <hash_map>
-        #include <map>
-
-        #ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
-            #define FG_HASH_STD_STRING_TEMPLATE_DEFINED_
-
-namespace std {
-
-    template<> struct hash<std::string> {
-        size_t operator ()(const std::string& x) const {
-            return hash<const char*>()(x.c_str());
-        }
-    };
-};
-
-        #endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
-    #else
+    #if 1
         #include <unordered_map>
-    #endif /* FG_USING_MARMALADE */
+    #endif
 
 namespace fg {
     namespace profile {
@@ -68,7 +51,7 @@ namespace fg {
             SSample() : isValid(FG_FALSE), numInstances(0),
             numOpen(0), name("\0"), startTime(-1.0f), accumulator(0.0f),
             childrenSampleTime(-1.0f), numParents(0) { }
-        };
+        }; // struct SSample
 
         /**
          *
@@ -89,48 +72,19 @@ namespace fg {
              */
             SSampleHistory() : isValid(FG_FALSE), name("\0"), average(0.0f),
             minimum(0.0f), maximum(0.0f) { }
-        };
+        }; // struct SSampleHistory
 
         /**
          *
          */
         class CProfiling {
-    #ifdef FG_USING_MARMALADE
-        protected:
-
-            struct SProfileEqualTo {
-                bool operator ()(const char* s1, const char* s2) const {
-                    return strcmp(s1, s2) == 0;
-                }
-                bool operator ()(const std::string& s1, const std::string& s2) const {
-                    return s1.compare(s2) == 0;
-                }
-            };
-
-            struct SProfileLessTo {
-                bool operator ()(const char* s1, const char* s2) const {
-                    return strcmp(s1, s2) == -1;
-                }
-                bool operator ()(const std::string& s1, const std::string& s2) const {
-                    return s1.compare(s2) == -1;
-                }
-            };
-    #endif // FG_USING_MARMALADE
+    
         protected:
             ///
             typedef std::stack<SSample *> ProfileStack;
             ///
             typedef std::string HashKey;
-    #ifdef FG_USING_MARMALADE
-            ///
-            typedef std::hash<std::string> hashFunc;
-            //typedef std::hash_map<hashKey, fgProfileSample *, hashFunc, profileEqualTo> profileMap;   // #FIXME #WTF
-            //typedef std::hash_map<hashKey, fgProfileSampleHistory *, hashFunc, profileEqualTo> historyMap; // #FIXME #WTF
-            ///
-            typedef std::map<HashKey, SSample *, SProfileLessTo> ProfileMap;
-            ///
-            typedef std::map<HashKey, SSampleHistory *, SProfileLessTo> HistoryMap;
-    #else
+    #if 1
             ///
             typedef std::unordered_map <HashKey, SSample *> ProfileMap;
             ///

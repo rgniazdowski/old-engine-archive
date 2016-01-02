@@ -987,18 +987,15 @@ fgBool gfx::context::initialize(void)
     std::string glName = "OpenGL";
     int r = 0, g = 0, b = 0, a = 0, d = 0, major = 0, minor = 0;
 
-#if defined(FG_USING_MARMALADE_EGL) || defined(FG_USING_EGL)
+#if defined(FG_USING_EGL)
     /**********************************
      * CONTEXT PART - GFX CONTEXT
-     */
-    // Using EGL based on Marmalade build
+     */    
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     EGLConfig eglConfig = (EGLConfig)CPlatform::getDefaultConfig();
 
     // #FIXME !
-#if defined FG_USING_MARMALADE
-    int glVersionN = s3eGLGetInt(S3E_GL_VERSION) >> 8;
-#else
+#if 1
     int glVersionN = 2; // FIXME
 #endif
     if(glVersionN != 2) {
@@ -1071,8 +1068,8 @@ fgBool gfx::context::initialize(void)
     // #FIXME seriously, this context should be created somewhere else, gfx Main ? - #NOPE
     // Well there is a difference here with the EGL - in SDL first there needs to be
     // a window created to bound GL context to it
-    // As for the EGL on Marmalade there is no Window - there's a Surface instead, bound
-    // to the native window - the native window, the handle to it is provided via Marmalade
+    // As for the EGL on mobile there is no Window - there's a Surface instead, bound
+    // to the native window.
     g_GLContext = SDL_GL_CreateContext(g_sdlWindow);
     if(!g_GLContext) {
         FG_LOG_ERROR("GFX: Couldn't create GL context: '%s'", SDL_GetError());
@@ -1230,7 +1227,7 @@ fgBool gfx::context::initialize(void)
     g_params[gfx::MAX_VIEWPORT_DIMS] = SContextParam(GL_MAX_VIEWPORT_DIMS);
     g_params[gfx::SCISSOR_BOX] = SContextParam(GL_SCISSOR_BOX);
     g_params[gfx::SCISSOR_TEST] = SContextParam(GL_SCISSOR_TEST);
-#if defined(FG_USING_OPENGL_ES) || defined(FG_USING_MARMALADE_OPENGL_ES)
+#if defined(FG_USING_OPENGL_ES)
     g_params[gfx::SHADER_BINARY_FORMATS] = SContextParam(GL_SHADER_BINARY_FORMATS);
 #endif
     g_params[gfx::SHADER_COMPILER] = SContextParam(GL_SHADER_COMPILER);
@@ -1270,7 +1267,7 @@ fgBool gfx::context::initialize(void)
 #endif
     std::string glExtensions;
 
-#if defined(FG_USING_MARMALADE)
+#if defined(FG_USING_PLATFORM_MOBILE)
     glExtensions = (const char*)glGetString(GL_EXTENSIONS);
 #elif defined(FG_USING_OPENGL_GLEW)
     if(glewIsSupported("GL_VERSION_3_0") ||
@@ -1364,8 +1361,7 @@ fgBool gfx::context::initialize(void)
     for(int i = 0; i < (int)vparts.size(); i++) {
         strings::trim(vparts[i]);
         if(strings::startsWith(vparts[i].c_str(), "1.0", FG_FALSE)) {
-            if(g_BuildConfig.usingMarmaladeOpenGLES ||
-               g_BuildConfig.usingMarmalade ||
+            if(g_BuildConfig.isPlatformMobile ||
                g_BuildConfig.isPlatformAndroid) {
                 g_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
@@ -1373,8 +1369,7 @@ fgBool gfx::context::initialize(void)
             }
         } else if(strings::startsWith(vparts[i].c_str(), "1.1", FG_FALSE)) {
             g_SLVersion = FG_GFX_GLSL_110;
-            if(g_BuildConfig.usingMarmaladeOpenGLES ||
-               g_BuildConfig.usingMarmalade ||
+            if(g_BuildConfig.isPlatformMobile ||
                g_BuildConfig.isPlatformAndroid) {
                 g_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
@@ -1393,8 +1388,7 @@ fgBool gfx::context::initialize(void)
             g_SLVersion = FG_GFX_GLSL_150;
             selectedVersionNum = "1.5";
         } else if(strings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
-            if(g_BuildConfig.usingMarmaladeOpenGLES ||
-               g_BuildConfig.usingMarmalade ||
+            if(g_BuildConfig.isPlatformMobile ||
                g_BuildConfig.isPlatformAndroid ||
                g_BuildConfig.usingOpenGLES) {
                 g_SLVersion = FG_GFX_ESSL_300;

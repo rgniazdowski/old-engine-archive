@@ -19,21 +19,13 @@
         #include <SDL2/SDL_mixer.h>
     #elif defined(FG_USING_SDL)
         #include <SDL/SDL.h>
-        #include <SDL/SDL_mixer.h>
-    #elif defined(FG_USING_MARMALADE)
-//#error "TODO: Music/Audio support for Marmalade based build!"
-//      #include "s3eFile.h"
-        #ifdef FG_USING_MARMALADE_AUDIO
-            #include "s3eAudio.h" // s3eAudio can play music files
-        #endif /* FG_USING_MARMALADE_AUDIO */
+        #include <SDL/SDL_mixer.h>    
     #endif
 
     #include "Resource/fgResource.h"
 
     #if defined(FG_USING_SDL_MIXER)
-        #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME
-    #elif defined(FG_USING_MARMALADE)
-        #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
+        #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME    
     #else
         #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
     #endif
@@ -61,8 +53,6 @@ namespace fg {
     #if defined(FG_USING_SDL_MIXER)
             ///
             Mix_Music *m_musData;
-    #elif defined(FG_USING_MARMALADE) // AUDIO / SOUND
-            void *m_musData;
     #else
             void *m_musData;
     #endif

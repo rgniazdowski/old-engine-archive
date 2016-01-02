@@ -6,10 +6,10 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
-#ifndef _FG_LOG_H_
-    #define _FG_LOG_H_
+#ifndef FG_INC_LOG
+    #define FG_INC_LOG
 
     #include "fgBuildConfig.h"
     #include "fgMessageCommon.h"
@@ -21,9 +21,7 @@
 namespace fg {
     namespace log {
         
-        ///
         extern const char* DEFAULT_FOLDER;
-        ///
         const unsigned int BUFFER_MAX = 4096;
 
         /**
@@ -66,7 +64,9 @@ namespace fg {
          * @param message
          * @param timestamp
          */
-        void PrintMessageToLog(util::base::CFile *file, msg::SMessage *message, long timestamp = -1);
+        void PrintMessageToLog(util::base::CFile *file,
+                               msg::SMessage *message,
+                               long timestamp = -1);
 
         /**
          * 
@@ -80,8 +80,8 @@ namespace fg {
          */
         void PrintStatusToLog(util::base::CFile *file, msg::SStatus *status);
 
-    };
-};
+    } // namespace log
+} // namespace fg
 
     #if defined(FG_DEBUG) || defined(DEBUG)
         #define FG_LOG_INFO(...) fg::log::PrintInfo(__VA_ARGS__)
@@ -95,4 +95,4 @@ namespace fg {
         #define FG_LOG_WARNING(...) fg::log::PrintWarning(__VA_ARGS__)
     #endif
 
-#endif /* _FG_LOG_H_ */
+#endif /* FG_INC_LOG */

@@ -30,51 +30,6 @@ namespace fg {
     #else
         0,
     #endif
-    #ifdef FG_USING_MARMALADE
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_SENSORS
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_KEYBOARD
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_SOUND
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_AUDIO
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_THREADS
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_IWGX
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_IWGL
-        true,
-    #else
-        false,
-    #endif
-    #ifdef FG_USING_MARMALADE_OPENGL_ES
-        true,
-    #else
-        false,
-    #endif
     #ifdef FG_USING_OPENGL_ES
         true,
     #else
@@ -124,12 +79,7 @@ namespace fg {
         true,
     #else
         false,
-    #endif
-    #ifdef FG_USING_MARMALADE_EGL
-        true,
-    #else
-        false,
-    #endif
+    #endif    
     #ifdef FG_USING_EGL
         true,
     #else
@@ -186,6 +136,16 @@ namespace fg {
         false,
     #endif
     #ifdef FG_USING_ASSIMP
+        true,
+    #else
+        false,
+    #endif
+    #ifdef FG_USING_STEAMWORKS
+        true,
+    #else
+        false,
+    #endif
+    #ifdef FG_USING_OPENVR
         true,
     #else
         false,
@@ -251,6 +211,11 @@ namespace fg {
         false,
     #endif
     #ifdef FG_SUPPORT_WXWIDGETS
+        true,
+    #else
+        false,
+    #endif
+    #ifdef FG_SUPPORT_OPENVR
         true,
     #else
         false,

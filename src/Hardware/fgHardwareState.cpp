@@ -16,10 +16,6 @@
 #include <cstdlib>
 #include <cmath>
 
-#if defined(FG_USING_MARMALADE)
-#include "s3eDevice.h"
-#endif // FG_USING_MARMALADE
-
 #include "Util/fgTime.h"
 
 #if defined(FG_USING_DPI_INFO)
@@ -27,7 +23,6 @@
 #endif // FG_USING_DPI_INFO
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 CHardwareState::CHardwareState() : m_screenHeight(0), m_screenWidth(0),
@@ -69,11 +64,7 @@ void CHardwareState::initDPI(void) {
 }
 //------------------------------------------------------------------------------
 
-void CHardwareState::deviceYield(int ms) {
-#if defined FG_USING_MARMALADE
-    s3eDeviceYield(ms);
-#endif // FG_USING_MARMALADE
-}
+void CHardwareState::deviceYield(int ms) { }
 //------------------------------------------------------------------------------
 
 float CHardwareState::calculateFPS(void) {

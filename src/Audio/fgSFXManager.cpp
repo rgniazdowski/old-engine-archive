@@ -13,13 +13,7 @@
 #include "Resource/fgResourceManager.h"
 #include "fgLog.h"
 
-#include <cstring>
-#include <cstdlib>
-#include <cerrno>
-#include <cstdio>
-
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 sfx::CSfxManager::~CSfxManager() {
@@ -143,27 +137,6 @@ fgBool sfx::CSfxManager::initialize(void) {
         m_init = FG_TRUE;
     }
     // #FIXME - check for errors
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    m_sfxVolume = 0.5f;
-    m_musVolume = 0.5f;
-
-    m_mp3 = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3);
-    if(m_mp3) {
-        FG_LOG_DEBUG("SFX: MP3 codec supported");
-    } else {
-        FG_LOG_ERROR("SFX: No MP3 support!");
-    }
-    m_pcm = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_PCM);
-    if(m_pcm) {
-        FG_LOG_DEBUG("SFX: PCM codec supported");
-    } else {
-        FG_LOG_ERROR("SFX: No PCM support!");
-    }
-    if(m_mp3 && m_pcm) {
-        m_init = FG_TRUE;
-    } else {
-        FG_LOG_ERROR("SFX: Failed to initialize Sound Manager");
-    }
 #endif
     return m_init;
 }
@@ -176,72 +149,50 @@ fgBool sfx::CSfxManager::destroy(void) {
 #if defined(FG_USING_SDL_MIXER)
     Mix_CloseAudio();
     SDL_QuitSubSystem(SDL_INIT_AUDIO);
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    s3eAudioStop();
-#endif /* FG_USING_MARMALADE_AUDIO */
+#endif /* FG_USING_SDL_MIXER */
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 void sfx::CSfxManager::setSfxVolume(CSfxManager::volume_type volume) {
     m_sfxVolume = volume;
-#if defined(FG_USING_MARMALADE)
-    if(m_sfxVolume < 0.0f)
-        m_sfxVolume = 0.01f;
-    if(m_sfxVolume > 1.0f)
-        m_sfxVolume = 1.0f;
-#elif defined(FG_USING_SDL_MIXER)
+#if defined(FG_USING_SDL_MIXER)
     if(m_sfxVolume > MIX_MAX_VOLUME)
         m_sfxVolume = MIX_MAX_VOLUME;
-#endif
-
+#endif /* FG_USING_SDL_MIXER */
     applySfxVolume();
 }
 //------------------------------------------------------------------------------
 
 void sfx::CSfxManager::applySfxVolume(void) {
-#if defined(FG_USING_MARMALADE_SOUND)
-    s3eResult result = s3eSoundSetInt(S3E_SOUND_VOLUME, int(m_sfxVolume * S3E_SOUND_MAX_VOLUME * 0.9f));
-    if(S3E_RESULT_SUCCESS != result) {
-        FG_LOG_ERROR("Error when setting the sfx volume: %d", result);
-    }
-#elif defined(FG_USING_SDL_MIXER)
+#if defined(FG_USING_SDL_MIXER)
     Mix_Volume(-1, (int)m_sfxVolume);
-#endif /* FG_USING_MARMALADE_SOUND */
+#endif /* FG_USING_SDL_MIXER */
 }
 //------------------------------------------------------------------------------
 
 void sfx::CSfxManager::stopAll(void) {
-#if defined(FG_USING_MARMALADE_SOUND)
-    s3eSoundStopAllChannels();
-#elif defined(FG_USING_SDL_MIXER)
+#if defined(FG_USING_SDL_MIXER)
     // Stop playback on all channels
     Mix_HaltChannel(-1);
-#endif /* FG_USING_MARMALADE_SOUND */
+#endif /* FG_USING_SDL_MIXER */
 }
 //------------------------------------------------------------------------------
 
 void sfx::CSfxManager::setMusicVolume(CSfxManager::volume_type volume) {
     m_musVolume = volume;
-#if defined(FG_USING_MARMALADE)
-    if(m_musVolume < 0.0f)
-        m_musVolume = 0.01f;
-    if(m_musVolume > 1.0f)
-        m_musVolume = 1.0f;
-#elif defined(FG_USING_SDL_MIXER)
+#if defined(FG_USING_SDL_MIXER)
     if(m_musVolume > MIX_MAX_VOLUME)
         m_musVolume = MIX_MAX_VOLUME;
-#endif
+#endif /* FG_USING_SDL_MIXER */
     applyMusicVolume();
 }
 //------------------------------------------------------------------------------
 
 void sfx::CSfxManager::applyMusicVolume() {
-#if defined(FG_USING_MARMALADE_AUDIO)
-    s3eResult result = s3eAudioSetInt(S3E_AUDIO_VOLUME, int(m_musVolume * S3E_AUDIO_MAX_VOLUME * 0.85f));
-#elif defined(FG_USING_SDL_MIXER)
+#if defined(FG_USING_SDL_MIXER)
     Mix_VolumeMusic(m_musVolume);
-#endif /* FG_USING_MARMALADE_AUDIO */
+#endif /* FG_USING_SDL_MIXER */
 }
 //------------------------------------------------------------------------------
 

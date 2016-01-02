@@ -23,8 +23,6 @@
         #define FG_SFX_VOLUME_TYPE_DECLARED
         #if defined(FG_USING_SDL_MIXER) || defined(FG_USING_SDL) || defined(FG_USING_SDL2)
             #define FG_SFX_VOLUME_TYPE unsigned short int
-        #elif defined(FG_USING_MARMALADE)
-            #define FG_SFX_VOLUME_TYPE float
         #else
             #define FG_SFX_VOLUME_TYPE int
         #endif
@@ -51,11 +49,7 @@ namespace fg {
             ///
             volume_type m_sfxVolume;
             ///
-            volume_type m_musVolume;
-    #if defined(FG_USING_MARMALADE)
-            fgBool m_mp3;
-            fgBool m_pcm;
-    #endif /* FG_USING_MARMALADE */
+            volume_type m_musVolume;  
             ///
             fg::base::CManager *m_pResourceMgr;
 
@@ -307,10 +301,10 @@ namespace fg {
              */
             fgBool isPaused(const resource::ResourceHandle& soundHandle);
 
-        };
+        }; // class CSfxManager
 
-    };
-};
+    } // namespace sfx
+} // namespace fg
 
 
     #undef FG_INC_SFX_MANAGER_BLOCK

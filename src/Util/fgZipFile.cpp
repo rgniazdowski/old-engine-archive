@@ -21,7 +21,6 @@
 #include <fstream>
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 util::CZipFile::CZipFile() :
@@ -84,7 +83,7 @@ util::CZipFile::CZipFile(const CZipFile& orig) { }
 util::CZipFile::~CZipFile() {
     m_filePath.clear();
     m_selectedFilePath.clear();
-#if !defined(FG_USING_MARMALADE)
+#if 1
     m_selectedFilePath.shrink_to_fit();
     m_filePath.shrink_to_fit();
 #endif
@@ -150,7 +149,7 @@ void util::CZipFile::setPath(const char *filePath) {
             //unsigned int fplen = ((uintptr_t)ext)-((uintptr_t)filePath);
             m_zipPath = filePath;
             m_zipPath.resize(m_zipPath.size() - extlen + 4);
-#if !defined(FG_USING_MARMALADE)
+#if 1
             m_zipPath.shrink_to_fit();
 #endif
             // Full path to the file within the zip file - it cointains also the
@@ -461,9 +460,7 @@ fgBool util::CZipFile::isOpen(void) const {
 //------------------------------------------------------------------------------
 
 fgBool util::CZipFile::exists(void) {
-#if defined FG_USING_MARMALADE
-    return (fgBool)s3eFileCheckExists(m_filePath.c_str());
-#else
+#if 1
     std::ifstream fileCheck(m_filePath);
     return (fgBool)fileCheck.good();
 #endif

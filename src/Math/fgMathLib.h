@@ -173,7 +173,7 @@ namespace fg {
             #if !defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK)
                 #define FG_MATH_GLM_VECTOR_TEMPLATE_MASK
     // #FIXME - This requires c++11
-                #if defined(FG_USING_MARMALADE)
+                #if 0
 
     template<typename T>
     struct Vector2T {
@@ -218,7 +218,7 @@ namespace fg {
     using Vec3T = glm::detail::tvec3<T, glm::defaultp>;
     template<typename T>
     using Vec4T = glm::detail::tvec4<T, glm::defaultp>;
-                #endif /* FG_USING_MARMALADE */
+                #endif /* FG_USING_*/
             #endif /* !defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK */
 
     typedef glm::bvec2 Vector2b;
@@ -248,7 +248,7 @@ namespace fg {
             #if !defined(FG_MATH_GLM_MATRIX_TEMPLATE_MASK)
                 #define FG_MATH_GLM_MATRIX_TEMPLATE_MASK
     // #FIXME - This requires c++11 - alias template/typedef cap
-                #if defined(FG_USING_MARMALADE)
+                #if 0
 
     template<typename T>
     struct Matrix2T {
@@ -293,7 +293,7 @@ namespace fg {
     using Mat3T = glm::detail::tmat3x3<T, glm::defaultp>;
     template<typename T>
     using Mat4T = glm::detail::tmat4x4<T, glm::defaultp>;
-                #endif /* FG_USING_MARMALADE */
+                #endif /* FG_USING_ */
             #endif /* !defined(FG_MATH_MATRIX_TEMPLATE_MASK) */
 
     typedef glm::mat2 Matrix2f;
@@ -311,7 +311,7 @@ namespace fg {
     typedef glm::dquat Quaterniond;
 
             #if !defined(FG_MATH_GLM_QUAT_TEMPLATE_MASK)
-                #if defined(FG_USING_MARMALADE)
+                #if 0
 
     template<typename T>
     struct QuatertionT {
@@ -320,7 +320,7 @@ namespace fg {
                 #else
     template<typename T>
     using QuaternionT = glm::detail::tquat<T, glm::defaultp>;
-                #endif /* FG_USING_MARMALADE */
+                #endif /* FG_USING_ */
             #endif /* !defined(FG_MATH_GLM_QUAT_TEMPLATE_MASK) */
 
         #endif /* !defined(FG_MATH_GLM_QUAT_MASK) */

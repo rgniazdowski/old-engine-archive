@@ -18,13 +18,9 @@
     #define FG_INC_FAST_CMP
     #define FG_INC_FAST_CMP_BLOCK
 
-#include "fgBuildConfig.h"
+    #include "fgBuildConfig.h"
 
-#if defined(FG_USING_MARMALADE)
-    #include "s3eTypes.h"
-#else
     #include <cstdint>
-#endif
     #include "fgBool.h"
 
 namespace fg {
@@ -153,76 +149,60 @@ namespace fg {
             static inline bool less(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data < b.m_data;
             }
-            
             static inline bool less_eq(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data <= b.m_data;
             }
-            
             static inline bool greater(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data > b.m_data;
             }
-            
             static inline bool greater_eq(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data >= b.m_data;
             }
-            
             static inline bool less32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 < b.m_data32;
             }
-            
             static inline bool less_eq32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 <= b.m_data32;
             }
-            
             static inline bool greater32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 > b.m_data32;
             }
-            
             static inline bool greater_eq32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 >= b.m_data32;
             }
-            
             static inline bool less16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 < b.m_data16;
             }
-            
             static inline bool less_eq16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 <= b.m_data16;
             }
-            
             static inline bool greater16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 > b.m_data16;
             }
-            
             static inline bool greater_eq16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 >= b.m_data16;
             }
-            
             static inline bool equal(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data == b.m_data;
             }
-            
             static inline bool equal32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 == b.m_data32;
             }
-            
             static inline bool equal16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 == b.m_data16;
             }
-            
+
         public:
             operator data_type() const {
                 return m_data;
             }
-            
             operator data_type_32() const {
                 return m_data32;
             }
-            
             operator data_type_16() const {
                 return m_data16;
-            }            
-            
+            }
+
         public:
             ///
             static const size_type DATA_MAX_RAW_PARTS = 8;
@@ -259,4 +239,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_FAST_CMP_BLOCK
-#endif	/* FG_INC_FAST_CMP */
+#endif /* FG_INC_FAST_CMP */

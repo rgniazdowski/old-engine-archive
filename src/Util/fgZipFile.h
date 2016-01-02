@@ -21,14 +21,10 @@
     #include "fgBuildConfig.h"
     #include "fgFileBase.h"
 
-    #if defined(FG_USING_MARMALADE)
-        #include "zlib_128/zlib.h"
-        #include "zlib_128/contrib/minizip/unzip.h"
-        #include "zlib_128/contrib/minizip/zip.h"
-    #else
+    #if 1
         #include "unzip.h"
         #include "zip.h"        
-    #endif /* defined FG_USING_MARMALADE */
+    #endif
 
 namespace fg {
     namespace util {
@@ -519,8 +515,8 @@ namespace fg {
              * @return 
              */
             virtual int setPosition(long offset, int whence);
-
         }; // class CZipFile
+        
     } // namespace util
 } // namespace fg
 

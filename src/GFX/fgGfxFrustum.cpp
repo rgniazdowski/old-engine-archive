@@ -145,7 +145,7 @@ void gfx::CFrustum::set(const Matrix4f &matrix) {
      * 
      * * 4. and so on...
      ***************************************************************************/
-#if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES) || defined(FG_USING_MARMALADE_OPENGL_ES) || defined(FG_USING_MARMALADE_IWGL)
+#if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
     // Left clipping plane 
     a = m[3][0] + m[0][0];
     b = m[3][1] + m[0][1];

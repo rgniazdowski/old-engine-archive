@@ -19,21 +19,13 @@
         #include <SDL2/SDL_mixer.h>
     #elif defined(FG_USING_SDL)
         #include <SDL/SDL.h>
-        #include <SDL/SDL_mixer.h>
-    #elif defined(FG_USING_MARMALADE)
-//#warning "TODO: Music/Audio support for Marmalade based build!"
-        #include "s3eFile.h"
-        #if defined(FG_USING_MARMALADE_SOUND)
-            #include "s3eSound.h"
-        #endif /* FG_USING_MARMALADE_SOUND */
+        #include <SDL/SDL_mixer.h>    
     #endif
 
     #include "Resource/fgResource.h"
 
     #if defined(FG_USING_SDL_MIXER)
         #define FG_SOUND_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME
-    #elif defined(FG_USING_MARMALADE)
-        #define FG_SOUND_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
     #else
         #define FG_SOUND_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
     #endif
@@ -43,8 +35,9 @@
 
 namespace fg {
     namespace resource {
-        class CResource; 
-    };
+        class CResource;
+    } // namespace resource
+
     namespace sfx {
         /*
          * 
@@ -148,7 +141,7 @@ namespace fg {
             static size_t size(void) {
                 return sizeof (SWAVHeader);
             }
-        };
+        }; // struct SWAVHeader
 
         /**
          *
@@ -172,7 +165,7 @@ namespace fg {
             static size_t size(void) {
                 return sizeof (SWAVChunkHeader);
             }
-        };
+        }; // struct SWAVChunkHeader
 
         /**
          *
@@ -197,7 +190,7 @@ namespace fg {
             static size_t size(void) {
                 return sizeof (SSoundHeader);
             }
-        };
+        }; // struct SSoundHeader
 
         /**
          * 
@@ -213,8 +206,6 @@ namespace fg {
     #if defined(FG_USING_SDL_MIXER)
             ///
             Mix_Chunk *m_chunkData;
-    #elif defined(FG_USING_MARMALADE) // AUDIO / SOUND
-            void *m_chunkData;
     #else
             void *m_chunkData;
     #endif
@@ -335,11 +326,12 @@ namespace fg {
              * @return 
              */
             int getCurrentChannel(void);
-        };
+        }; // class CSoundResource
+
         ///
         typedef CSoundResource CSound;
-    };
-};
+    } // namespace sfx
+} // namespace fg
 
     #undef FG_INC_SFX_SOUND_RESOURCE_BLOCK
 #endif /* FG_INC_SFX_SOUND_RESOURCE */

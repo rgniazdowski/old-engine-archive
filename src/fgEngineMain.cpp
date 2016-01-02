@@ -66,7 +66,6 @@
 #include "Game/fgGameEntityActor.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 CEngineMain::CEngineMain(int argc, char **argv) :
@@ -446,13 +445,10 @@ fgBool CEngineMain::initialize(void) {
     // DEVICE YIELD
     if(!m_resourceMgr)
         m_resourceMgr = new resource::CResourceManager(m_resourceFactory, m_qualityMgr, this);
-#if defined(FG_USING_MARMALADE)
-    m_resourceMgr->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE) - 1024 * 1024 * 10); // minus 10MB for the structures and other overheads
-    m_resourceMgr->initialize();
-#else
+#if 1
     m_resourceMgr->setMaximumMemory(128 * 1024 * 1024 - 1024 * 1024 * 10); // #FIXME #TODO
     m_resourceMgr->initialize();
-#endif // FG_USING_MARMALADE
+#endif
     {
         // Register additional game entity objects
         m_pNodeFactory->registerObject(game::GAME_ENTITY, new util::CFactoryObject<game::CEntity>());
@@ -1007,7 +1003,7 @@ fgBool CEngineMain::render(void) {
     }
     timesys::markTick(timesys::TICK_RENDER);
     m_hardwareState->calculateFPS();
-#if !defined(FG_USING_MARMALADE)
+#if 1
     if(fpsc < 0) {
         usleep(50 * 1000);
     }
@@ -1117,7 +1113,6 @@ fgBool CEngineMain::update(fgBool force) {
         }
 #endif
     }
-
     // Well this is really useful system, in the end GUI and others will be hooked
     // to EventManager so everything what needs to be done is done in this function
     event::CEventManager::executeEvents();
@@ -1247,11 +1242,11 @@ fgBool CEngineMain::gameKeyboardHandler(event::CArgumentList* argv) {
     event::SKey* pKey = (event::SKey*)pEvent;
     if(pKey->eventType == event::KEY_PRESSED) {
         if(pKey->keyCode == event::FG_KEY_1) {
-            printf("GFX SUSPEND FORCED!\n");
+            FG_LOG_DEBUG("GFX SUSPEND FORCED!\n");
             this->m_gfxMain->suspendGFX();
         }
         if(pKey->keyCode == event::FG_KEY_2) {
-            printf("GFX RESUME FORCED!\n");
+            FG_LOG_DEBUG("GFX RESUME FORCED!\n");
             this->m_gfxMain->resumeGFX();
         }
     }

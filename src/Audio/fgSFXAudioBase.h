@@ -24,9 +24,7 @@
     #if !defined(FG_SFX_VOLUME_TYPE) || !defined(FG_SFX_VOLUME_TYPE_DECLARED)
         #define FG_SFX_VOLUME_TYPE_DECLARED
         #if defined(FG_USING_SDL_MIXER) || defined(FG_USING_SDL) || defined(FG_USING_SDL2)
-            #define FG_SFX_VOLUME_TYPE unsigned short int
-        #elif defined(FG_USING_MARMALADE)
-            #define FG_SFX_VOLUME_TYPE float
+            #define FG_SFX_VOLUME_TYPE unsigned short int        
         #else
             #define FG_SFX_VOLUME_TYPE int
         #endif
@@ -125,10 +123,11 @@ namespace fg {
                 Type getAudioBaseType(void) const {
                     return m_baseType;
                 }
-            };
-        };
-    };
-};
+            }; // class CAudio
+
+        } // namespace base
+    } // namespace sfx
+} // namespace fg
+
     #undef FG_INC_SFX_AUDIO_BASE_BLOCK
 #endif	/* FG_INC_SFX_AUDIO_BASE */
-

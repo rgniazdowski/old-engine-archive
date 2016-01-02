@@ -22,7 +22,7 @@
  * Also other parts of the engine do not care about the Script Subsystem -
  * Some things need to happen behind the scenes ;p
  *
- * However there is a downside to everything:a  If  something  big changes in the
+ * However there is a downside to everything:a  If something  big changes in the
  * system (some refactoring, new classes, different mechanism, addition of smart
  * pointer, custom new/delete, different memory management, etc) - those changes
  * will need  to be  reflected in here also.  It could be  different name of the

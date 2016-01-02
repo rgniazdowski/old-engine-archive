@@ -13,6 +13,7 @@
 
 #ifndef FG_INC_HANDLE_MANAGER
     #define FG_INC_HANDLE_MANAGER
+    #define FG_INC_HANDLE_MANAGER_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
@@ -21,26 +22,7 @@
     #include "fgLog.h"
     #include "fgHandle.h"
     #include "fgNamedHandle.h"
-
-    #ifdef FG_USING_MARMALADE
-        #include <hash_map>
-
-        #ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
-            #define FG_HASH_STD_STRING_TEMPLATE_DEFINED_
-
-namespace std {
-
-    template<> struct hash<std::string> {
-        size_t operator ()(const std::string& x) const {
-            return hash<const char*>()(x.c_str());
-        }
-    };
-};
-
-        #endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
-    #else
-        #include <unordered_map>
-    #endif /* FG_USING_MARMALADE */
+    #include "fgBTreeMap.h"
 
 namespace fg {
     namespace util {
@@ -50,18 +32,7 @@ namespace fg {
          */
         template <typename TDataType, typename THandleType>
         class CHandleManager {
-    #ifdef FG_USING_MARMALADE
-        protected:
-
-            struct hmEqualTo {
-                bool operator ()(const char* s1, const char* s2) const {
-                    return strcmp(s1, s2) == 0;
-                }
-                bool operator ()(const std::string& s1, const std::string& s2) const {
-                    return s1.compare(s2) == 0;
-                }
-            };
-    #endif
+    
         public:
             ///
             typedef CHandleManager<TDataType, THandleType> self_type;
@@ -70,19 +41,15 @@ namespace fg {
             ///
             typedef std::string HashKeyString;
 
-    #if defined(FG_USING_MARMALADE)
-            ///
-            typedef std::hash<std::string> hashFunc;
-            /// Type for map, assigning handle index value to string ID (case sensitive)
-            typedef std::hash_map<HashKeyString, fgRawIndex, hashFunc, hmEqualTo> NameMap;
-    #else
+    #if 1
             /// Special Name map - maps std::string to the index
-            typedef std::unordered_map<HashKeyString, unsigned int> NameMap;
+            typedef btree_map<HashKeyString, unsigned int> NameMap;
             /// Iterator through the Name map
             typedef NameMap::iterator NameMapItor;
     #endif
             /// Hash map - maps the name tags hash sum to the data vector index
-            typedef std::map<unsigned int, unsigned int> HashMap;
+            typedef btree_map<unsigned int, unsigned int> HashMap;
+
             /// Iterator through the hash map
             typedef HashMap::iterator HashMapItor;
 
@@ -550,4 +517,5 @@ inline const DataType* CHandleManager <DataType, HandleType>
 }
     #endif
 
+    #undef FG_INC_HANDLE_MANAGER_BLOCK
 #endif /* FG_INC_HANDLE_MANAGER */

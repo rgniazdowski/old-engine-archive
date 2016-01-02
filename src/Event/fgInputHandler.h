@@ -20,15 +20,10 @@
 
     #define FG_INPUT_MAX_TOUCH_POINTS 10
 
-    #if defined(FG_USING_MARMALADE)
-        #include "s3eTypes.h"
-        #define FG_DEFAULT_POINTER_ID 0
-    #endif
-
     #if defined(FG_USING_SDL2)
 namespace fg {
     class CMainModule;
-};
+} // namespace fg
         #include "SDL2/SDL_events.h"
         #if defined(FG_USING_PLATFORM_ANDROID)
             #define FG_DEFAULT_POINTER_ID 0
@@ -50,10 +45,10 @@ namespace fg {
     namespace event {
 
         /**
-         * fgPointerInputReceiver receives touch events directly from the callbacks
-         * hooked to the Marmalade subsystem or from SDL event queue.
-         * TouchReceiver also interprets touches/swipe and later calls (triggers/throws)
-         *  proper events. It communicates directly to the EventManager
+         * CInputHandler receives touch events directly from the callbacks hooked
+         * to SDL event queue. TouchReceiver also interprets touches/swipe and
+         * later calls (triggers/throws) proper events. It communicates directly
+         * with the EventManager.
          */
         class CInputHandler {
     #if defined(FG_USING_SDL2)

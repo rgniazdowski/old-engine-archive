@@ -12,11 +12,9 @@
     #define FG_INC_UNISTD
     #define FG_INC_UNISTD_BLOCK
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
+    #include "fgBuildConfig.h"
 
-    #if defined(FG_USING_MARMALADE) || defined(FG_USING_PLATFORM_LINUX) || defined(FG_USING_PLATFORM_ANDROID)
+    #if defined(FG_USING_PLATFORM_LINUX) || defined(FG_USING_PLATFORM_ANDROID)
         #include <unistd.h>
     #else 
 
@@ -74,7 +72,7 @@ typedef unsigned __int16 uint16_t;
 typedef unsigned __int32 uint32_t;
 typedef unsigned __int64 uint64_t;
 
-    #endif /* defined MARMALADE || defined PLATFORM LINUX */
+    #endif /* defined PLATFORM LINUX */
 
     #undef FG_INC_UNISTD_BLOCK
 #endif /* FG_INC_UNISTD */

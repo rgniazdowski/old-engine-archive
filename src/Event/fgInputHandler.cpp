@@ -16,24 +16,16 @@
 #include "Hardware/fgHardwareState.h"
 #include "Event/fgEventManager.h"
 
-#include <cstdlib>
 #include <cmath>
 
-#if defined(FG_USING_MARMALADE)
-#ifndef lround
-#define lround lroundf
-#endif
-#include "s3eTypes.h"
-#include "s3ePointer.h"
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
 #include <SDL2/SDL_events.h>
 #endif
 
-///
+
 const unsigned int fg::event::CInputHandler::MAX_TOUCH_POINTS = FG_INPUT_MAX_TOUCH_POINTS;
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 /**
@@ -159,18 +151,7 @@ void event::CInputHandler::initialize(const CHardwareState* pHardwareState) {
     FG_LOG_DEBUG("InputHandler: MAX_OFFSET_FOR_TAP: [%d], MIN SWIPE_X: [%d], MIN SWIPE_Y: [%d], PIXELS_PER_X: [%d], PIXELS_PER_Y: [%d]",
                  MAX_OFFSET_FOR_TAP, MIN_OFFSET_FOR_SWIPE_X, MIN_OFFSET_FOR_SWIPE_Y, PIXELS_PER_STEP_X, PIXELS_PER_STEP_Y);
 
-#if defined(FG_USING_MARMALADE)
-    m_pointerAvailable = s3ePointerGetInt(S3E_POINTER_AVAILABLE) ? FG_TRUE : FG_FALSE;
-    // Register for touches
-    m_useMultitouch = s3ePointerGetInt(S3E_POINTER_MULTI_TOUCH_AVAILABLE) ? FG_TRUE : FG_FALSE;
-    if(m_useMultitouch) {
-        s3ePointerRegister(S3E_POINTER_TOUCH_EVENT, &event::CInputHandler::multiTouchButtonHandler, (void *)this);
-        s3ePointerRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &event::CInputHandler::multiTouchMotionHandler, (void *)this);
-    } else {
-        s3ePointerRegister(S3E_POINTER_BUTTON_EVENT, &event::CInputHandler::singleTouchButtonHandler, (void *)this);
-        s3ePointerRegister(S3E_POINTER_MOTION_EVENT, &event::CInputHandler::singleTouchMotionHandler, (void *)this);
-    }
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
     m_pointerAvailable = FG_TRUE;
 #else
     m_pointerAvailable = FG_TRUE;
@@ -198,15 +179,7 @@ event::CInputHandler::~CInputHandler() {
 
     memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
-#if defined(FG_USING_MARMALADE)
-    if(m_useMultitouch) {
-        s3ePointerUnRegister(S3E_POINTER_TOUCH_EVENT, &event::CInputHandler::multiTouchButtonHandler);
-        s3ePointerUnRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &event::CInputHandler::multiTouchMotionHandler);
-    } else {
-        s3ePointerUnRegister(S3E_POINTER_BUTTON_EVENT, &event::CInputHandler::singleTouchButtonHandler);
-        s3ePointerUnRegister(S3E_POINTER_MOTION_EVENT, &event::CInputHandler::singleTouchMotionHandler);
-    }
-#endif
+
     m_keyDownBinds.clear();
     m_keyUpBinds.clear();
     m_keysUpPool.clear();
@@ -505,7 +478,7 @@ void event::CInputHandler::addKeyPressed(KeyVirtualCode keyCode) {
     } else {
         // key is still being down (1 -> 1)
         m_keysDownPool.push_back(keyCode);
-    }    
+    }
     //m_keyRepeats[(unsigned int)keyCode]++;
     toggleKeyboardMod(keyCode, FG_TRUE);
 }
@@ -647,7 +620,7 @@ void event::CInputHandler::processData(void) {
     //
     // Phase 1: execute keyboard callbacks - from active keys in the pool
     // Please note that these will come from external event queue (low level)
-    // could be SDL2 event queue, or glu/freeglut/X, Marmalade...
+    // could be SDL2 event queue, or glu/freeglut/X, 
     //
 
     // Throw events for keys that just had been pressed down
@@ -725,9 +698,7 @@ void event::CInputHandler::processData(void) {
 
     if(!m_pointerAvailable)
         return;
-#if defined(FG_USING_MARMALADE)
-    s3ePointerUpdate();
-#endif
+
     for(unsigned int i = 0; i < MAX_TOUCH_POINTS; i++) {
         int touchID = i;
         SPointerRawData & touchPtr = m_rawTouches[i];
@@ -818,11 +789,21 @@ void event::CInputHandler::processData(void) {
             touchPtr.m_basicSwipeYSize = touchPtr.m_pointerYEnd - touchPtr.m_pointerYStart;
 
             // Advanced, logical swipes
-            interpretSwipes(MIN_OFFSET_FOR_SWIPE_X, touchPtr.m_pointerXStart, touchPtr.m_pointerXEnd, touchPtr.m_pointerXSwipeInitial, // IN
-                            &touchPtr.m_swipeLeft, &touchPtr.m_swipeRight, &touchPtr.m_swipeXSize); // OUT
+            interpretSwipes(MIN_OFFSET_FOR_SWIPE_X,
+                            touchPtr.m_pointerXStart,
+                            touchPtr.m_pointerXEnd,
+                            touchPtr.m_pointerXSwipeInitial, // IN
+                            &touchPtr.m_swipeLeft,
+                            &touchPtr.m_swipeRight,
+                            &touchPtr.m_swipeXSize); // OUT
 
-            interpretSwipes(MIN_OFFSET_FOR_SWIPE_Y, touchPtr.m_pointerYStart, touchPtr.m_pointerYEnd, touchPtr.m_pointerYSwipeInitial, // IN
-                            &touchPtr.m_swipeUp, &touchPtr.m_swipeDown, &touchPtr.m_swipeYSize); // OUT
+            interpretSwipes(MIN_OFFSET_FOR_SWIPE_Y,
+                            touchPtr.m_pointerYStart,
+                            touchPtr.m_pointerYEnd,
+                            touchPtr.m_pointerYSwipeInitial, // IN
+                            &touchPtr.m_swipeUp,
+                            &touchPtr.m_swipeDown,
+                            &touchPtr.m_swipeYSize); // OUT
 
             touchPtr.m_xSwipeSteps = touchPtr.m_swipeXSize / PIXELS_PER_STEP_X;
             touchPtr.m_ySwipeSteps = touchPtr.m_swipeYSize / PIXELS_PER_STEP_Y;
@@ -954,16 +935,7 @@ int32_t event::CInputHandler::multiTouchButtonHandler(void* systemData, void* us
     if(!systemData || !userData)
         return 0;
     CInputHandler *inputHandler = (CInputHandler *)userData;
-#if defined(FG_USING_MARMALADE)
-    s3ePointerTouchEvent* event = (s3ePointerTouchEvent*)systemData;
-    if(!inputHandler->m_init)
-        return 0;
-    if(event->m_Pressed) {
-        inputHandler->handlePointerPressed(Vector2i(event->m_x, event->m_y), event->m_TouchID);
-    } else {
-        inputHandler->handlePointerReleased(Vector2i(event->m_x, event->m_y), event->m_TouchID);
-    }
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
     SDL_TouchFingerEvent *event = (SDL_TouchFingerEvent *)systemData;
     if(event->type != SDL_FINGERMOTION) {
         //        if(event->state == SDL_PRESSED) { 
@@ -981,12 +953,7 @@ int32_t event::CInputHandler::multiTouchMotionHandler(void* systemData, void* us
     if(!systemData || !userData)
         return 0;
     CInputHandler *inputHandler = (CInputHandler *)userData;
-#if defined(FG_USING_MARMALADE)
-    s3ePointerTouchMotionEvent* event = (s3ePointerTouchMotionEvent*)systemData;
-    if(!inputHandler->m_init)
-        return 0;
-    inputHandler->handlePointerMoved(Vector2i(event->m_x, event->m_y), event->m_TouchID, FG_POINTER_STATE_PRESSED);
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
 #endif
     return 0;
 }
@@ -998,28 +965,25 @@ int32_t event::CInputHandler::singleTouchButtonHandler(void* systemData, void* u
     CInputHandler *inputReceiver = (CInputHandler *)userData;
     if(!inputReceiver->m_init)
         return 0;
-#if defined(FG_USING_MARMALADE)
-    s3ePointerEvent* event = (s3ePointerEvent*)systemData;
-    if(event->m_Pressed) {
-        inputReceiver->handlePointerPressed(Vector2i(event->m_x, event->m_y));
-    } else {
-        inputReceiver->handlePointerReleased(Vector2i(event->m_x, event->m_y));
-    }
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
     SDL_Event *sdlEvent = (SDL_Event *)systemData;
 
     if(sdlEvent->type == SDL_MOUSEBUTTONDOWN) {
         SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
-        inputReceiver->handlePointerPressed(Vector2i(event->x, event->y), (unsigned int)event->button);
+        inputReceiver->handlePointerPressed(Vector2i(event->x, event->y),
+                                            (unsigned int)event->button);
     } else if(sdlEvent->type == SDL_MOUSEBUTTONUP) {
         SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
-        inputReceiver->handlePointerReleased(Vector2i(event->x, event->y), (unsigned int)event->button);
+        inputReceiver->handlePointerReleased(Vector2i(event->x, event->y),
+                                             (unsigned int)event->button);
     } else if(sdlEvent->type == SDL_FINGERDOWN) {
         SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
-        inputReceiver->handlePointerPressed(Vector2i(event->x, event->y), (unsigned int)event->button);
+        inputReceiver->handlePointerPressed(Vector2i(event->x, event->y),
+                                            (unsigned int)event->button);
     } else if(sdlEvent->type == SDL_FINGERUP) {
         SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
-        inputReceiver->handlePointerReleased(Vector2i(event->x, event->y), (unsigned int)event->button);
+        inputReceiver->handlePointerReleased(Vector2i(event->x, event->y),
+                                             (unsigned int)event->button);
     }
 #endif
     return 0;
@@ -1032,11 +996,7 @@ int32_t event::CInputHandler::singleTouchMotionHandler(void* systemData, void* u
     CInputHandler *inputReceiver = (CInputHandler *)userData;
     if(!inputReceiver->m_init)
         return 0;
-#if defined(FG_USING_MARMALADE)
-    s3ePointerMotionEvent* event = (s3ePointerMotionEvent*)systemData;
-
-    inputReceiver->handlePointerMoved(Vector2i(event->m_x, event->m_y));
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
     SDL_MouseMotionEvent *event = (SDL_MouseMotionEvent *)systemData;
     inputReceiver->handlePointerMoved(Vector2i(event->x, event->y)/*, need ID? */, FG_DEFAULT_POINTER_ID, event->state);
 #endif

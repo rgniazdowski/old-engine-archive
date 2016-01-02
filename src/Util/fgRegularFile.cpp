@@ -70,9 +70,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 fgBool util::CRegularFile::exists(const char *filePath) {
-#if defined(FG_USING_MARMALADE)
-    return (fgBool)s3eFileCheckExists(filePath);
-#else
+#if 1
     std::ifstream fileCheck(filePath);
     return (fgBool)fileCheck.good();
 #endif

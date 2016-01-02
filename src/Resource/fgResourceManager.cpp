@@ -623,7 +623,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         } else if(strings::endsWith(fext, "mod", FG_TRUE)) {
             resExtType = resource::MUSIC;
         } else if(strings::endsWith(fext, "raw", FG_TRUE)) {
-            // marmalade #FIXME
+            // m #FIXME
             resExtType = resource::SOUND;
         } else if(strings::endsWith(fext, "particle.ini", FG_TRUE)) {
             resExtType = resource::PARTICLE_EFFECT;

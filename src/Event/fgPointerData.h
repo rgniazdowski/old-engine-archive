@@ -12,31 +12,10 @@
     #define FG_INC_POINTER_DATA
     #define FG_INC_POINTER_DATA_BLOCK
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
+    #include "fgBuildConfig.h"
+    #include "fgBool.h"
 
-    #ifndef FG_INC_BOOL
-        #include "fgBool.h"
-    #endif
-
-    #if defined(FG_USING_MARMALADE)
-
-        #include "s3ePointer.h"
-        #define FG_POINTER_BUTTON_SELECT        ((unsigned int)S3E_POINTER_BUTTON_SELECT)
-        #define FG_POINTER_BUTTON_LEFT          ((unsigned int)S3E_POINTER_BUTTON_LEFTMOUSE)
-        #define FG_POINTER_BUTTON_RIGHT         ((unsigned int)S3E_POINTER_BUTTON_RIGHTMOUSE)
-        #define FG_POINTER_BUTTON_MIDDLE        ((unsigned int)S3E_POINTER_BUTTON_MIDDLEMOUSE)
-        #define FG_POINTER_BUTTON_WHEELUP       ((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELUP)
-        #define FG_POINTER_BUTTON_WHEELDOWN     ((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
-
-        #define FG_POINTER_STATE_UP             ((unsigned int)S3E_POINTER_STATE_UP)
-        #define FG_POINTER_STATE_DOWN           ((unsigned int)S3E_POINTER_STATE_DOWN)
-        #define FG_POINTER_STATE_PRESSED        ((unsigned int)S3E_POINTER_STATE_PRESSED)
-        #define FG_POINTER_STATE_RELEASED       ((unsigned int)S3E_POINTER_STATE_RELEASED)
-        #define FG_POINTER_STATE_UNKNOWN        ((unsigned int)S3E_POINTER_STATE_UNKNOWN)
-
-    #elif defined(FG_USING_SDL2)
+    #if defined(FG_USING_SDL2)
         #include "SDL2/SDL_mouse.h"
         #include "SDL2/SDL_events.h"
         #define FG_POINTER_BUTTON_SELECT            SDL_BUTTON_LEFT
@@ -45,7 +24,7 @@
         #define FG_POINTER_BUTTON_RIGHT             SDL_BUTTON_RIGHT
         #define FG_POINTER_BUTTON_AUX1              SDL_BUTTON_X1
         #define FG_POINTER_BUTTON_AUX2              SDL_BUTTON_X2
-        #define FG_POINTER_BUTTON_WHEELUP           10	
+        #define FG_POINTER_BUTTON_WHEELUP           10
         #define FG_POINTER_BUTTON_WHEELDOWN         11
 
         #define FG_POINTER_STATE_PRESSED            SDL_PRESSED     // 1 0x1
@@ -140,9 +119,10 @@ namespace fg {
             m_relX(0), m_relY(0),
             m_active(FG_FALSE),
             m_pointerTap(FG_FALSE) { }
-        };
-    } // event
-} // fg
+        }; // struct SPointerData
+        
+    } // namespace event
+} // namespace fg
 
     #undef FG_INC_POINTER_DATA_BLOCK
 #endif /* FG_INC_POINTER_DATA */

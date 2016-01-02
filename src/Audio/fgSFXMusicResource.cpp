@@ -78,14 +78,6 @@ fgBool sfx::CMusicResource::create(void) {
         Mix_VolumeMusic(m_volume);
         m_isReady = FG_TRUE;
     }
-#elif defined(FG_USING_MARMALADE) && defined(FG_USING_MARMALADE_AUDIO)
-    // Check if the file exists
-    // Please note that because loading/playing music with Marmalade API
-    // the music file must be a RegularFile - cannot be inside the Zip #NOZIP
-    if(fg::util::CRegularFile::exists(getFilePathStr(m_quality))) {
-        // The file exists so it should be loadable by the s3eAudio API
-        m_isReady = FG_TRUE;
-    }
 #endif
     return m_isReady;
 }
@@ -114,8 +106,6 @@ void sfx::CMusicResource::dispose(void) {
     if(m_musData) {
         Mix_FreeMusic(m_musData);
     }
-#elif defined(FG_USING_MARMALADE)
-    //stop();
 #endif
     m_musData = NULL;
     m_isReady = FG_FALSE;
@@ -136,27 +126,6 @@ void sfx::CMusicResource::play(void) {
 #if defined(FG_USING_SDL_MIXER)
     if(m_musData)
         Mix_PlayMusic(m_musData, 1);
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    if(getFilePath(m_quality).empty())
-        return;
-    s3eAudioStatus status = (s3eAudioStatus)s3eAudioGetInt(S3E_AUDIO_STATUS);
-
-    if(S3E_AUDIO_PAUSED == status) {
-        // This approach allows for mismatch between
-        // paused track and parameter idx
-        s3eAudioResume();
-    } else if(S3E_AUDIO_PLAYING == status) {
-        s3eAudioStop();
-        s3eAudioPlay(getFilePathStr(m_quality), 1);
-    } else {
-        s3eAudioPlay(getFilePathStr(m_quality), 1);
-    }
-
-    // Check for error
-    s3eAudioError err = s3eAudioGetError();
-    if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG_ERROR("SFX: play music error[%d]: %s (status is: %d)", err, s3eAudioGetErrorString(), status);
-    }
 #endif
 }
 //------------------------------------------------------------------------------
@@ -168,23 +137,6 @@ void sfx::CMusicResource::pause(void) {
     if(!Mix_PausedMusic())
         Mix_PauseMusic();
     m_isPaused = FG_TRUE;
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    if(isPlaying()) {
-        s3eAudioPause();
-    } else {
-        m_isPaused = FG_FALSE;
-        return;
-    }
-
-    // Check for error
-    s3eAudioError err = s3eAudioGetError();
-    if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG_ERROR("SFX: pause music error[%d]: %s", err, s3eAudioGetErrorString());
-    } else {
-        m_isPaused = FG_TRUE;
-    }
-    //if(s3eAudioGetInt(S3E_AUDIO_STATUS) == S3E_AUDIO_PAUSED)
-    //m_isPaused = FG_TRUE;
 #endif
 }
 //------------------------------------------------------------------------------
@@ -196,18 +148,6 @@ void sfx::CMusicResource::resume(void) {
     Mix_ResumeMusic();
     if(Mix_PlayingMusic())
         m_isPlaying = FG_TRUE;
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    s3eAudioStatus status = (s3eAudioStatus)s3eAudioGetInt(S3E_AUDIO_STATUS);
-
-    if(S3E_AUDIO_PAUSED == status) {
-        // This approach allows for mismatch between
-        // paused track and parameter idx
-        s3eAudioResume();
-        m_isPlaying = FG_TRUE;
-    } else if(S3E_AUDIO_STOPPED == status) {
-        s3eAudioPlay(getFilePathStr(m_quality), 0);
-        m_isPlaying = FG_TRUE;
-    }
 #endif
 }
 //------------------------------------------------------------------------------
@@ -218,19 +158,6 @@ void sfx::CMusicResource::rewind(void) {
 #if defined(FG_USING_SDL_MIXER)
     if(Mix_PlayingMusic())
         Mix_RewindMusic();
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    if(getFilePath(m_quality).empty())
-        return;
-    s3eAudioStop();
-    s3eAudioPlay(getFilePathStr(m_quality), 0);
-    // Check for error
-    s3eAudioError err = s3eAudioGetError();
-    if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG_ERROR("pauseMus error[%d]: %s", err, s3eAudioGetErrorString());
-    } else {
-        m_isPlaying = FG_TRUE;
-        m_isPaused = FG_FALSE;
-    }
 #endif
 }
 //------------------------------------------------------------------------------
@@ -241,8 +168,6 @@ void sfx::CMusicResource::stop(void) {
 #if defined(FG_USING_SDL_MIXER)
     if(Mix_PlayingMusic())
         Mix_HaltMusic();
-#elif defined(FG_USING_MARMALADE_AUDIO) && defined(FG_USING_MARMALADE)
-    s3eAudioStop();
 #endif
     m_isPlaying = FG_FALSE;
     m_isPaused = FG_FALSE;
@@ -254,9 +179,6 @@ fgBool sfx::CMusicResource::isPaused(void) {
         return FG_FALSE;
 #if defined(FG_USING_SDL_MIXER)
     m_isPaused = (fgBool)Mix_PausedMusic();
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    s3eAudioStatus status = (s3eAudioStatus)s3eAudioGetInt(S3E_AUDIO_STATUS);
-    m_isPaused = (fgBool)(status == S3E_AUDIO_PAUSED);
 #endif    
     return m_isPaused;
 }
@@ -267,8 +189,6 @@ fgBool sfx::CMusicResource::isPlaying(void) {
         return FG_FALSE;
 #if defined(FG_USING_SDL_MIXER)
     m_isPlaying = (fgBool)Mix_PlayingMusic();
-#elif defined(FG_USING_MARMALADE_AUDIO)
-    m_isPlaying = s3eAudioIsPlaying();
 #endif
     return m_isPlaying;
 }
@@ -280,8 +200,6 @@ void sfx::CMusicResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
 #if defined(FG_USING_SDL_MIXER)
     if(volume <= MIX_MAX_VOLUME)
         Mix_VolumeMusic(volume);
-#elif defined(FG_USING_MARMALADE) // SOUND/AUDIO
-
 #endif 
     m_volume = volume;
 }

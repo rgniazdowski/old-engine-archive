@@ -15,9 +15,7 @@
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
 
-    #ifdef FG_USING_MARMALADE
-        #include "s3eFile.h"
-    #else
+    #if 1
         #include <cstdio>
         #include <dirent.h>
         #include <sys/stat.h>
@@ -181,10 +179,7 @@ namespace fg {
             /// iterator to the element in the string vector (file path/name)
             fg::CStringVector::iterator m_fileIt;
 
-    #ifdef FG_USING_MARMALADE
-            /// Marmalade specific structure for reading directory contents
-            s3eFileList *m_fileList;
-    #else
+    #if 1
             /// Currently opened directory
             DIR *m_curDir;
             /// Special structure for traversing the directory

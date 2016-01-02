@@ -18,40 +18,30 @@
     #ifndef FG_GFX_GL_INCLUDES_FINISHED
         #define FG_GFX_GL_INCLUDES_FINISHED
 
-        #if defined(FG_USING_MARMALADE)
-//	MARMALADE SPECIFIC CODE
-
-            #if !defined FG_USING_MARMALADE_OPENGL_ES && defined FG_USING_MARMALADE_IWGL
-                #include <IwGL.h>
-                #define FG_INC_INCLUDED_GL_ // #FIXME
-            #else
-                #include "s3eGL.h"
-            #endif /* FG_USING_MARMALADE_OPENGL_ES */
-
-        #elif defined(FG_USING_PLATFORM_LINUX) && !defined(FG_USING_PLATFORM_ANDROID)/* && !defined FG_USING_MARMALADE */
+       #if defined(FG_USING_PLATFORM_LINUX) && !defined(FG_USING_PLATFORM_ANDROID)
 //	GFX includes for OpenGL/SDL - platform LINUX
 
             #if defined(FG_USING_OPENGL)
 
                 #if !defined(FG_USING_SDL2)
-                    #if !defined(FG_USING_GL_BINDING) && !defined(FG_USING_OPENGL_GLEW)
+                    #if !defined(FG_USING_OPENGL_GLEW)
                         #define GL_GLEXT_PROTOTYPES
                         #include <GL/gl.h>
                         #include <GL/glext.h>
                     #elif defined(FG_USING_OPENGL_GLEW)
                         #include <GL/glew.h>                    
-                    #endif
+                    #endif /* FG_USING_OPENGL_GLEW */
                     #define FG_INC_INCLUDED_GL_
                 #else /* FG_USING_SDL2 */
 // if defined SDL2 - then use specific GL code for SDL2
                     #include <SDL2/SDL.h>
-                    #if !defined(FG_USING_GL_BINDING) && !defined(FG_USING_OPENGL_GLEW)
+                    #if !defined(FG_USING_OPENGL_GLEW)
                         #include <SDL2/SDL_opengl.h>
                     #elif defined(FG_USING_OPENGL_GLEW)
                         #include <GL/glew.h>                    
                     #endif
                     #define FG_INC_INCLUDED_GL_
-                #endif
+                #endif /* FG_USING_SDL2 */
 
             #else /* FG_USING_OPENGL */
 
@@ -61,7 +51,7 @@
 
             #endif /* FG_USING_OPENGL */
 
-        #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_PLATFORM_LINUX && !ANDROID */
 
         #if defined(FG_USING_OPENGL_ES)
 
@@ -193,7 +183,7 @@ namespace fg {
     } // namespace gfx
 } // namespace fg
 
-    #if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
+    #if defined(FG_USING_EGL)
 // #FIXME | this can be also used for EGL / SDL ? make it universal?
 inline unsigned int fgEGLError(const char *afterFunc = NULL) {
     std::map<unsigned int, const char *> errMap;
@@ -275,7 +265,7 @@ inline unsigned int fgEGLError(const char *afterFunc = NULL) {
     }
     return retCode;
 }
-    #endif /* FG_USING_EGL || FG_USING_MARMALADE_EGL */
+    #endif /* FG_USING_EGL */
 
     #ifndef FG_GFX_FALSE
         #define FG_GFX_FALSE	GL_FALSE

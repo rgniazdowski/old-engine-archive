@@ -255,7 +255,7 @@ void script::CMetatables::generateMetatableNames(void) {
     // Lowercase letters a - z ASCII 97 to 122
     // Uppercase letters A - Z ASCII 65 - 90
 
-#if !defined(FG_USING_MARMALADE)
+#if 1
 
     m_metatableInfoVec[EMPTY_MT_ID] = SMetatableInfo("FG_EMPTY", "X");
 

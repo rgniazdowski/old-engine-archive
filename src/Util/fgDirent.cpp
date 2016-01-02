@@ -91,9 +91,7 @@ util::CDirent::CDirent() :
 m_dirPath(),
 m_filePaths(),
 m_fileIt(),
-#if defined(FG_USING_MARMALADE)
-m_fileList(NULL),
-#else
+#if 1
 m_curDir(NULL),
 m_curEntry(NULL),
 #endif
@@ -115,11 +113,6 @@ util::CDirent::CDirent(const std::string &dirPath) {
 //------------------------------------------------------------------------------
 
 util::CDirent::~CDirent() {
-#ifdef FG_USING_MARMALADE
-    // ?
-#else
-    // ?
-#endif
     m_dirPath.clear();
     m_filePaths.clear_optimised();
 }
@@ -162,12 +155,10 @@ fgBool util::CDirent::internal_readZipFile(const std::string& fileName,
 //------------------------------------------------------------------------------
 
 fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
-#ifdef FG_USING_MARMALADE
-    m_fileList = NULL;
-#else
+#if 1
     m_curDir = NULL;
     m_curEntry = NULL;
-#endif /* FG_USING_MARMALADE */
+#endif
 
     m_filePaths.clear_optimised();
 #if defined(FG_USING_PLATFORM_ANDROID)
@@ -188,7 +179,7 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
             m_filePaths.push_back(filePath);
         }
     }
-#else /* CODE BELOW IS FOR MARMALADE / LINUX / WINDOWS */
+#else /* CODE BELOW IS FOR LINUX / WINDOWS / OSX */
     CStringVector dirStack;
     std::string fileName;
     std::string dirPath;
@@ -216,15 +207,7 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
             std::string curDir = dirStack.back();
             dirStack.pop_back();
             FG_LOG_DEBUG("util::dirent: Opening directory for reading: '%s'", curDir.c_str());
-#if defined(FG_USING_MARMALADE)
-            char fileNameStr[FG_FILE_NAME_MAX];
-            m_fileList = s3eFileListDirectory(curDir.c_str());
-            if(!m_fileList)
-                continue;
-
-            while(S3E_RESULT_SUCCESS == s3eFileListNext(m_fileList, fileNameStr, FG_FILE_NAME_MAX - 1)) {
-                fileName = fileNameStr;
-#else
+#if 1
             struct stat fileInfo;
             m_curDir = opendir(curDir.c_str());
             if(!m_curDir) {
@@ -234,7 +217,7 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
 
             while((m_curEntry = readdir(m_curDir)) != NULL) {
                 fileName = m_curEntry->d_name;
-#endif /* FG_USING_MARMALADE */
+#endif
                 if(fileName.empty())
                     continue;
                 // Skip special file names - also dotfiles
@@ -246,15 +229,12 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
                 path::join(filePath, curDir, fileName);
                 fgBool isDir = FG_FALSE;
                 fgBool isZip = FG_FALSE;
-#if defined(FG_USING_MARMALADE)
-                // Check if the path points to a directory
-                isDir = (fgBool)s3eFileGetFileInt(filePath.c_str(), S3E_FILE_ISDIR);
-#else
+#if 1
                 // Check if the path points to a directory
                 if(lstat(filePath.c_str(), &fileInfo) < 0)
                     continue;
                 isDir = (fgBool)S_ISDIR(fileInfo.st_mode);
-#endif /* FG_USING_MARMALADE */
+#endif
                 // Check whether the file points to the zip file
                 // Paths within the zip file listing are always recursive - 
                 // the appended list will always contain all files within a zip file
@@ -284,11 +264,9 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
             } // while(readdir/fileListNext)
             curDir.clear();
             fileName.clear();
-#if defined(FG_USING_MARMALADE)
-            s3eFileListClose(m_fileList);
-#else
+#if 1
             closedir(m_curDir);
-#endif /* FG_USING_MARMALADE */
+#endif
         } // while(!dirStack.empty())
     } // for(...) -> split dir path by ';'
 #endif /* FG_USING_PLATFORM_ANDROID */
@@ -445,9 +423,6 @@ fgBool util::CDirent::rewind(void) {
 
 void util::CDirent::clearList(void) {
     m_isRecursive = FG_FALSE;
-#ifdef FG_USING_MARMALADE
-    m_fileList = NULL;
-#endif
     m_filePaths.clear_optimised();
     m_fileIt = m_filePaths.end();
 }

@@ -10,20 +10,9 @@
 
 #include "fgBuildConfig.h"
 #include "fgLog.h"
-
-#include <cmath>
-#include <cstring>
-
-#ifdef FG_USING_MARMALADE_SENSORS
-#include "s3eTypes.h"
-#include "s3eAccelerometer.h"
-#include "s3eTimer.h"
-#endif
-
 #include "fgSensors.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 static char const * const FG_NONE_TXT = "";
@@ -40,13 +29,13 @@ static char const * const FG_FACE_DOWN_TXT = "Face down";
 
 /// Names of the available sensors
 const char* CSensors::s_sensorsNames[CSensors::FG_SENSORS_TYPES] = {
-                                                                      FG_SENSOR_ACCELEROMETER_TXT,
-                                                                      FG_SENSOR_COMPASS_TXT
+                                                                    FG_SENSOR_ACCELEROMETER_TXT,
+                                                                    FG_SENSOR_COMPASS_TXT
 };
 
 int32_t HarvestCallback(void* systemData, void* userData) {
     CSensors *self = (CSensors *)userData;
-#ifdef FG_USING_MARMALADE_SENSORS
+#if 0
     // Are sensors running?
     if(FG_FALSE == self->m_isRunning) {
         // If no, skip any operation (in
@@ -68,7 +57,7 @@ int32_t HarvestCallback(void* systemData, void* userData) {
         FG_LOG_ERROR("Setting continued sensors-callback failed!");
         return 0;
     }
-#endif // FG_USING_MARMALADE_SENSORS
+#endif
     return 0;
 }
 //------------------------------------------------------------------------------
@@ -87,7 +76,7 @@ CSensors::~CSensors() {
 //------------------------------------------------------------------------------
 
 fgBool CSensors::start(void) {
-#ifdef FG_USING_MARMALADE_SENSORS
+#if 0
     m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] = s3eAccelerometerStart();
     if(m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] == S3E_RESULT_ERROR) {
         FG_LOG_ERROR("ERROR! Accelerometer did not activate!");
@@ -113,16 +102,16 @@ fgBool CSensors::start(void) {
         m_isRunning = FG_FALSE;
         return FG_FALSE;
     }
-#endif // FG_USING_MARMALADE_SENSORS
+#endif
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 void CSensors::stop(void) {
     m_isRunning = FG_FALSE;
-#ifdef FG_USING_MARMALADE_SENSORS
+#if 0
     s3eAccelerometerStop();
-#endif // FG_USING_MARMALADE_SENSORS
+#endif
 }
 //------------------------------------------------------------------------------
 

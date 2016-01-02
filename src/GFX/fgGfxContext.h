@@ -12,13 +12,8 @@
     #define FG_INC_GFX_CONTEXT
     #define FG_INC_GFX_CONTEXT_BLOCK
 
-    #ifndef FG_INC_GFX_GL
-        #include "fgGfxGL.h"
-    #endif
-
-    #ifndef FG_INC_GFX_TYPES
-        #include "fgGfxTypes.h"
-    #endif
+    #include "fgGfxGL.h"
+    #include "fgGfxTypes.h"
 
     #define FG_GFX_PARAM_INVALID                0
     #define FG_GFX_PARAM_BOOL                   1

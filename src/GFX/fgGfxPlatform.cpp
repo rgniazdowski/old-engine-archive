@@ -21,11 +21,6 @@ void *fg::gfx::CPlatform::m_defaultDisplay = 0;
 /// Default config pointer
 void *fg::gfx::CPlatform::m_defaultConfig = 0;
 
-#if defined FG_USING_MARMALADE
-#include "s3e.h"
-#include "s3eTypes.h"
-#endif
-
 using namespace fg;
 //------------------------------------------------------------------------------
 
@@ -46,7 +41,7 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     }
     fgBool status = FG_TRUE;
 
-#if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
+#if defined(FG_USING_EGL)
     /**********************************
      * DISPLAY PART - GFX PLATFORM
      */
@@ -102,10 +97,6 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     FG_LOG_DEBUG("EGL version:     %s", eglQueryString(m_defaultDisplay, EGL_VERSION));
     FG_LOG_DEBUG("EGL extensions:  %s", eglQueryString(m_defaultDisplay, EGL_EXTENSIONS));
     FG_LOG_DEBUG("EGL client APIs: %s", eglQueryString(m_defaultDisplay, EGL_CLIENT_APIS));
-#elif defined(FG_USING_MARMALADE_IWGL)
-
-    status = IwGLInit();
-
 #elif defined(FG_USING_SDL2)
     //#define SDL_MAIN_HANDLED
     //#include "SDL.h"
@@ -199,7 +190,7 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     //int SDL_InitSubSystem(Uint32 flags)
 
     // 
-#elif !defined(FG_USING_SDL2) && !defined(FG_USING_MARMALADE)
+#elif !defined(FG_USING_SDL2)
     context::initialize();
 #endif
 
@@ -212,7 +203,7 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
 fgBool gfx::CPlatform::quit(fgBool suspend) {
     fgBool status = FG_TRUE;
     if(m_init) {
-#if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
+#if defined(FG_USING_EGL)
         if(m_gfxContext)
             delete m_gfxContext;
         m_gfxContext = NULL;
@@ -220,8 +211,6 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
         m_defaultDisplay = 0;
         m_defaultConfig = 0;
         m_init = FG_FALSE;
-#elif defined(FG_USING_MARMALADE_IWGL)
-        IwGLTerminate();
 #elif defined(FG_USING_SDL2)
         context::destroy();
         if(!suspend) {
@@ -253,7 +242,7 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
 //------------------------------------------------------------------------------
 
 #if defined(FG_USING_SDL2)
-
+// this is so bad...
 fgBool gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
     if(!context::isInit())
         context::initialize(sdlWindow);

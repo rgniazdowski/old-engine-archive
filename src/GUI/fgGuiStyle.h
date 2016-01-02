@@ -25,37 +25,21 @@ namespace fg {
     namespace gui {
         class CStyle;
         class CStyleManager;
-    };
-};
+    } // namespace gui
+} // namespace fg
 
-    #define FG_TAG_GUI_STYLE_NAME	"GuiStyle"
-    #define FG_TAG_GUI_STYLE		FG_TAG_TYPE(fg::gui::CStyle)
+    #define FG_TAG_GUI_STYLE_NAME "GuiStyle"
+    #define FG_TAG_GUI_STYLE  FG_TAG_TYPE(fg::gui::CStyle)
 FG_TAG_TEMPLATE_ID_AUTO(fg::gui::CStyle, FG_TAG_GUI_STYLE_NAME);
 
-    #ifdef FG_USING_MARMALADE
-        #include <hash_map>
-
-        #ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
-            #define FG_HASH_STD_STRING_TEMPLATE_DEFINED_
-
-namespace std {
-
-    template<> struct hash<std::string> {
-        size_t operator ()(const std::string& x) const {
-            return hash<const char*>()(x.c_str());
-        }
-    };
-};
-
-        #endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
-    #else
+    #if 1
         #include <unordered_map>
-    #endif /* FG_USING_MARMALADE */
+    #endif
 
 namespace fg {
     namespace resource {
         template<typename THandleType, typename TMapKeyType> class CManagedDataFile;
-    };
+    } // namespace resource
 
     namespace gui {
 
@@ -69,28 +53,12 @@ namespace fg {
          */
         class CStyle : public fg::resource::CManagedDataFile<StyleHandle, Quality> {
             friend class fg::gui::CStyleManager;
-    #ifdef FG_USING_MARMALADE
-        protected:
-
-            struct smEqualTo {
-                bool operator ()(const char* s1, const char* s2) const {
-                    return strcmp(s1, s2) == 0;
-                }
-                bool operator ()(const std::string& s1, const std::string& s2) const {
-                    return s1.compare(s2) == 0;
-                }
-            };
-    #endif
         public:
             typedef CStyle self_type;
             typedef CStyle type;
             typedef fg::resource::CManagedDataFile<StyleHandle, Quality> base_type;
             typedef std::string HashKey;
-    #ifdef FG_USING_MARMALADE	
-            typedef std::hash<std::string> hashFunc;
-            // Type for map, assigning style content value to string ID (case sensitive)
-            typedef std::hash_map <HashKey, CStyleContent, hashFunc, smEqualTo> StyleNameMap;
-    #else
+    #if 1
             typedef std::unordered_map <HashKey, CStyleContent> StyleNameMap;
     #endif
         private:
@@ -171,9 +139,9 @@ namespace fg {
              */
             fgBool copyFullContent(CStyleContent *contents, int num, const char *info);
 
-        };
-    };
-};
+        }; // class CStyle
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_STYLE_BLOCK
 #endif /* FG_INC_GUI_STYLE */
