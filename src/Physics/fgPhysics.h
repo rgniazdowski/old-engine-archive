@@ -35,11 +35,5 @@
 
     #endif
 
-    #if !defined(FG_USING_BULLET) && defined(FG_USING_CYCLONE)
-        #include "Cyclone/fgCollisionBody.h"
-        #include "Cyclone/fgWorld.h"
-        //#include "Cyclone/fgPhysicalWorld.h"
-    #endif
-
     #undef FG_INC_PHYSICS_BLOCK
 #endif	/* FG_INC_PHYSICS */

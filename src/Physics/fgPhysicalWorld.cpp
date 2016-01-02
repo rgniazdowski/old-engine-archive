@@ -32,8 +32,6 @@ m_dynamicsWorld(NULL),
 m_broadphase(NULL),
 m_dispatcher(NULL),
 m_solver(NULL),
-#elif defined(FG_USING_CYCLONE)
-        // cyclone internal
 #else
         // not bullet nor cyclone - dummy
 #endif
@@ -74,8 +72,6 @@ fgBool physics::CPhysicalWorld::initialize(void) {
 
     m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
-#elif defined(FG_USING_CYCLONE)
-    // cyclone internal
 #else
     // not bullet nor cyclone
 #endif
@@ -137,7 +133,6 @@ void physics::CPhysicalWorld::update(float delta) {
         return;
     if(m_dynamicsWorld)
         m_dynamicsWorld->stepSimulation(delta);
-#elif defined(FG_USING_CYCLONE)
 #else
 #endif
 }
@@ -146,8 +141,6 @@ void physics::CPhysicalWorld::update(float delta) {
 void physics::CPhysicalWorld::setupOwnerFor(CAbstractCollisionBody* pBody) {
 #if defined(FG_USING_BULLET)
     pBody->setOwner(m_dynamicsWorld);
-#elif defined(FG_USING_CYCLONE)
-    pBody->setOwner(NULL);
 #else
     pBody->setOwner(NULL);
 #endif
@@ -184,8 +177,6 @@ int physics::CPhysicalWorld::add(CCollisionBody* pBody) {
         pBody->setOwner(m_dynamicsWorld);
     }
     return index;
-#elif defined(FG_USING_CYCLONE)
-    return -1;
 #else
     return -1;
 #endif
@@ -207,8 +198,6 @@ fgBool physics::CPhysicalWorld::remove(CCollisionBody* pBody) {
         }
     }
     return (fgBool)(index >= 0);
-#elif defined(FG_USING_CYCLONE)
-    return FG_FALSE;
 #else
     return FG_FALSE;
 #endif
@@ -230,8 +219,6 @@ fgBool physics::CPhysicalWorld::removeAllCollisionBodies(void) {
         pBody->setOwner(NULL);
     }
     m_collisionBodies.clear();
-    return FG_TRUE;
-#elif defined(FG_USING_CYCLONE)
     return FG_TRUE;
 #else
     return FG_TRUE;

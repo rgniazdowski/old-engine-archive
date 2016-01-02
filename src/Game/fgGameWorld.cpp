@@ -203,7 +203,9 @@ fgBool game::CGameWorld::initialize(void) {
     fgBool status = base_type::initialize();
     status = (fgBool)(physical_world::initialize() && status);
     if(physical_world::getDynamicsWorld()) {
+#if defined(FG_USING_BULLET)
         physical_world::getDynamicsWorld()->setDebugDrawer(m_debugDrawer);
+#endif
     }
     registerCallbacks();
     return status;
@@ -213,7 +215,9 @@ fgBool game::CGameWorld::initialize(void) {
 fgBool game::CGameWorld::destroy(void) {
     fgBool status = base_type::destroy();
     if(physical_world::getDynamicsWorld()) {
+#if defined(FG_USING_BULLET)
         physical_world::getDynamicsWorld()->setDebugDrawer(NULL);
+#endif
     }
     status = (fgBool)(physical_world::destroy() && status);
     unregisterCallbacks();

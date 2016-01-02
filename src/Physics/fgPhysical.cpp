@@ -89,7 +89,7 @@ fgBool physics::traits::CPhysical::hasCollisionBody(void) const {
 //------------------------------------------------------------------------------
 
 fgBool physics::traits::CPhysical::setupCollisionBody(BodyType bodyType) {
-#if defined(FG_USING_BULLET) || defined(FG_USING_CYCLONE)
+#if defined(FG_USING_BULLET)
     if(bodyType == BODY_INVALID)
         return FG_FALSE;
 

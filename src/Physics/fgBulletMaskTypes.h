@@ -52,10 +52,9 @@ namespace fg {
     } // namespace physics
 } // namespace fg
 
-    #elif defined(FG_USING_CYCLONE)
     #else
         #include "fgMaskTypes.h"
     #endif /* not using Bullet && not using Cyclone */
 
     #undef FG_INC_BULLET_MASK_TYPES_BLOCK
-#endif	/* FG_INC_BULLET_MASK_TYPES */
+#endif /* FG_INC_BULLET_MASK_TYPES */

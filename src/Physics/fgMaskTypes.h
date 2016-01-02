@@ -20,7 +20,7 @@
     
     #include "fgBuildConfig.h"
 
-    #if !defined(FG_USING_BULLET) && !defined(FG_USING_CYCLONE)
+    #if !defined(FG_USING_BULLET)
 namespace fg {
     namespace physics {
 

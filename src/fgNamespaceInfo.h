@@ -63,7 +63,21 @@ namespace fg {
          * Platform/system dependent initialization functions.
          */
         namespace platform {
+        }        
+        /**
+         * Animations and mesh skinning.
+         */
+        namespace anim {
+            
         }
+        /**
+         * Holds additional functions for easier conversion between FG and
+         * Assimp various data types.
+         */
+        namespace assimp_helper {
+
+        }
+
     }
     /**
      * GUI namespace contains every class related to the graphical interface.
@@ -102,11 +116,19 @@ namespace fg {
     namespace path {
     }
     /**
-     * The physics namespace includes all cyclone functions and classes.
+     * The physics namespace includes all bullet specific classes functions.
      * It is defined as a namespace to allow function and class names to be
      * simple without causing conflicts.
      */
     namespace physics {
+
+        /**
+         * Holds dditional functions for easier conversion between FG and
+         * Bullet various data types.
+         */
+        namespace bullet_helper {
+
+        }
     }
     /**
      * Namespace holds classes for engine profiling

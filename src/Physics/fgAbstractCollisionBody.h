@@ -179,7 +179,6 @@ namespace fg {
             void setOwner(btDynamicsWorld* pOwner) {
                 m_pOwner = pOwner;
             }
-    #elif defined(FG_USING_CYCLONE)
     #else
             void* getOwner(void) const {
                 return m_pOwner;
@@ -195,8 +194,6 @@ namespace fg {
     #if defined(FG_USING_BULLET)
             ///
             btDynamicsWorld* m_pOwner;
-    #elif defined(FG_USING_CYCLONE)
-            void* m_pOwner;
     #else
             void* m_pOwner;
     #endif

@@ -2197,9 +2197,9 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_4X)(float, float, float, float);
     typedef fgBool(gfx::CSceneNode::*SCENENODE_Bool_C_STR_UINT_IN)(const char*, unsigned int);
 
-    typedef Vector3f& (gfx::CSceneNode::*FUNC_getScale)(void);
+    typedef Vector3f & (gfx::CSceneNode::*FUNC_getScale)(void);
     typedef void (gfx::CSceneNode::*FUNC_setScale)(float, float, float);
-    
+
     const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
     const char* metatableSceneNodeObjectName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_OBJECT_MT_ID);
     const char* metatableSceneNodeMeshName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MESH_MT_ID);
@@ -2334,14 +2334,15 @@ fgBool script::CScriptSubsystem::registerPhysics(void) {
 
 #if defined(FG_USING_LUA_PLUS)
 
-    const char* metatableCollisionBodyName = fgScriptMT->getMetatableName(CMetatables::COLLISION_BODY_MT_ID);
+    const char* metatableCollisionBodyName =
+            fgScriptMT->getMetatableName(CMetatables::COLLISION_BODY_MT_ID);
 
     typedef void (physics::CCollisionBody::*FUNC_setHalfSize)(float, float, float);
     typedef void (physics::CCollisionBody::*FUNC_setLocalScaling)(float, float, float);
     typedef void (physics::CCollisionBody::*FUNC_activate)(bool) const;
     typedef void (physics::CCollisionBody::*FUNC_setRotation)(float, float, float, float);
 
-    typedef physics::BodyType (physics::CCollisionBody::*FUNC_getBodyType)(void) const;
+    typedef physics::BodyType(physics::CCollisionBody::*FUNC_getBodyType)(void)const;
     typedef void (physics::CCollisionBody::*FUNC_setHalfSizeAndMass)(float, float, float, float);
 
     // Register physics::CCollisionBody
@@ -2379,7 +2380,8 @@ fgBool script::CScriptSubsystem::registerPhysics(void) {
                           (physics::CCollisionBody*)0,
                           static_cast<FUNC_activate>
                           (&physics::CCollisionBody::activate))
-            ;
+            .Function("isValid", &script::CScriptSubsystem::__isValid);
+    ;
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }

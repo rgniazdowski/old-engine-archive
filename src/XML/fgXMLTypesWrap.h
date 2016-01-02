@@ -14,9 +14,7 @@
     #include "fgCommon.h"
 
     #if defined(FG_USING_TINYXML)
-        #if !defined(TINYXML_INCLUDED)
-            #include "tinyxml.h"
-        #endif
+        #include "tinyxml.h"
 
 /* Simple wrappers for tiny xml structure types */
 typedef TiXmlAttribute fgXMLAttribute;

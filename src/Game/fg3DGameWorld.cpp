@@ -67,7 +67,7 @@ void game::CGameWorld3D::render(void) {
 
     // now the default debug shader and MVP are reset
     // just call drawDebugWorld on physics world
-#if defined(FG_DEBUG)
+#if defined(FG_DEBUG) && defined(FG_USING_BULLET)
     if(base_type::getDynamicsWorld())
         base_type::getDynamicsWorld()->debugDrawWorld();
 #endif /* FG_DEBUG */
@@ -122,9 +122,11 @@ void game::CGameWorld3D::update(float delta) {
             // reset the scaling factor?           
             // set the proper (local) model matrix for this node
             pSceneNode->setModelMatrix(matrix);
+#if defined(FG_USING_BULLET)
             // #TODO - maybe should use dual quaternions? so just rotation and
             // translation, scaling in separate vector 4+4+3 -> 11 floats
             getDynamicsWorld()->updateSingleAabb(pBody);
+#endif
         }
     }
 }

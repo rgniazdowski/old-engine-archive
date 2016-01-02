@@ -61,13 +61,11 @@ namespace fg {
             btDiscreteDynamicsWorld* getDynamicsWorld(void) const {
                 return m_dynamicsWorld;
             }
-    #elif defined(FG_USING_CYCLONE)
-
     #else
             void* getDynamicsWorld(void) const {
                 return NULL;
             }
-    #endif /* FG_USING_BULLET || FG_USING_CYCLONE */
+    #endif /* FG_USING_BULLET */
 
 
         public:
@@ -148,8 +146,6 @@ namespace fg {
             btCollisionDispatcher* m_dispatcher;
             ///
             btConstraintSolver* m_solver;
-    #elif defined(FG_USING_CYCLONE)
-    #else
     #endif
             ///
             fgBool m_init;
@@ -160,4 +156,4 @@ namespace fg {
 
 
     #undef FG_INC_PHYSICS_PHYSICAL_WORLD_BLOCK
-#endif	/* FG_INC_PHYSICS_PHYSICAL_WORLD */
+#endif /* FG_INC_PHYSICS_PHYSICAL_WORLD */

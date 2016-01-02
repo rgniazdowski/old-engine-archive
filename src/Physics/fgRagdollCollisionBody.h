@@ -485,7 +485,17 @@ namespace fg {
 
     #endif /* FG_USING_BULLET */
 
-    #if !defined(FG_USING_BULLET) && !defined(FG_USING_CYCLONE)
+    #if !defined(FG_USING_BULLET)
+
+        #include "Math/fgUniversalTransform.h"
+        #include "fgBulletUniversalTransform.h"
+        #include "Util/fgBTreeMap.h"
+
+        #include "fgAbstractCollisionBody.h"
+        #include "fgRagdollBoneType.h"
+        #include "fgBoneSmallInfo.h"
+        #include "fgCollisionBody.h"
+
 namespace fg {
     namespace physics {
 
@@ -495,9 +505,14 @@ namespace fg {
             typedef CRagdollCollisionBody self_type;
             typedef CRagdollCollisionBody type;
 
+            typedef CVector<SBoneSmallInfo> BonesInfoVec;
+            typedef CVector<math::SUniversalTransform*> UniversalTransformsVec;
+            typedef CVector<int> QuickBoneMapping;
+            typedef CVector<CCollisionBody*> CollisionBodiesVec;
+
         public:
             CRagdollCollisionBody() : base_type(BODY_INVALID) { }
-            CRagdollCollisionBody(const self_type& orig) { }
+            CRagdollCollisionBody(const self_type& orig) : base_type(BODY_INVALID) { }
             virtual ~CRagdollCollisionBody() { }
 
         public:
@@ -594,16 +609,12 @@ namespace fg {
                 return NULL;
             }
             void getUniversalTransform(unsigned int armatureBoneIndex,
-                                       Matrix4f& outMatrix) {
- }
+                                       Matrix4f& outMatrix) { }
             void setUniversalTransform(unsigned int armatureBoneIndex,
-                                       const Matrix4f& inMatrix) {
- }
-            void setModelMatrix(const Matrix4f& inMatrix) {
- }
+                                       const Matrix4f& inMatrix) { }
+            void setModelMatrix(const Matrix4f& inMatrix) { }
             void setInitialTransform(unsigned int armatureBoneIndex,
-                                     const Matrix4f& inBoneMatrix) {
- }
+                                     const Matrix4f& inBoneMatrix) { }
             void setDefaultInitialTransforms(void) { }
 
         protected:
@@ -620,4 +631,4 @@ namespace fg {
     #endif /* not using Bullet && not using Cyclone */
 
     #undef FG_INC_RAGDOLL_COLLISION_BODY_BLOCK
-#endif	/* FG_INC_COLLISION_RAGDOLL_BODY */
+#endif /* FG_INC_COLLISION_RAGDOLL_BODY */

@@ -273,6 +273,7 @@ fgBool game::CEntityActor::setupCollisionBody(physics::BodyType bodyType) {
 
 void game::CEntityActor::updateAABB(void) {
     base_type::updateAABB();
+#if defined(FG_USING_BULLET)
     if(isRagdolling()) {
         Matrix4f pelvisMatrix;
         physical_type::getRagdollCollisionBody()->getBoneBodies()[0]->getWorldTransform(pelvisMatrix);
@@ -281,5 +282,6 @@ void game::CEntityActor::updateAABB(void) {
 
         m_modelMat = math::inverse(getParent()->getFinalModelMatrix()) * pelvisMatrix;
     }
+#endif
 }
 //------------------------------------------------------------------------------

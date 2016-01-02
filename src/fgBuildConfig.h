@@ -73,7 +73,6 @@
         #undef FG_USING_LUA_PLUS                        //  Is the enhanced Lua C API used?
         #undef FG_USING_LUA                             //  Is the original Lua C API used?
         #undef FG_USING_BULLET                          //  Is the Bullet (physics engine) library used in this build?
-        #undef FG_USING_CYCLONE                         //  Is the Cyclone (physics engine) builtin code used in this build?
         #undef FG_USING_ASSIMP                          //  Is the Open Asset Import Library used in this build?
         #undef FG_USING_PLATFORM_WINDOWS                //  Is the target platform Windows in this build?
         #undef FG_USING_PLATFORM_LINUX                  //  Is the target platform Linux?
@@ -195,9 +194,9 @@
         #undef TIXML_USE_STL
         #define TIXML_USE_STL
 
-        #if !defined(FG_NO_PHYSICS) && !defined(FG_USING_CYCLONE)
+        #if !defined(FG_NO_PHYSICS)
             #undef FG_USING_BULLET
-            #define FG_USING_BULLET
+            //#define FG_USING_BULLET
         #endif
 
         #if !defined(FG_USING_TINY_OBJ)
@@ -477,7 +476,6 @@ namespace fg {
         bool usingLUAPlus; //       Is the enhanced Lua C API used?
         bool usingLUA; //           Is the original Lua C API used?
         bool usingBullet; //        Is the Bullet (physics engine) library used in this build?
-        bool usingCyclone; //       Is the Cyclone (physics engine) builtin code used in this build?
         bool usingAssimp; //        Is the Open Asset Import Library used in this build?
         bool isPlatformWindows; //  Is the target platform Windows in this build?
         bool isPlatformLinux; //    Is the target platform Linux?

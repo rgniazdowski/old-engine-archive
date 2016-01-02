@@ -6,7 +6,7 @@
 
 # Macros
 TOP=`pwd`
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_CONF=Debug_GLEW_SDL2
 CND_DISTDIR=dist
 CND_BUILDDIR=build

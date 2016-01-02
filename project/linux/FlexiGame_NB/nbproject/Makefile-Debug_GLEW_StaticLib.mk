@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Debug_GLEW_StaticLib
 CND_DISTDIR=dist
@@ -35,210 +35,193 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/1279852618/fgTinyObj.o \
-	${OBJECTDIR}/_ext/538025686/tinystr.o \
-	${OBJECTDIR}/_ext/538025686/tinyxml.o \
-	${OBJECTDIR}/_ext/538025686/tinyxmlerror.o \
-	${OBJECTDIR}/_ext/538025686/tinyxmlparser.o \
-	${OBJECTDIR}/_ext/1335969013/fgAndroid.o \
-	${OBJECTDIR}/_ext/1650758620/fgSFXManager.o \
-	${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o \
-	${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o \
-	${OBJECTDIR}/_ext/1654483616/fgArgumentList.o \
-	${OBJECTDIR}/_ext/1654483616/fgEventManager.o \
-	${OBJECTDIR}/_ext/1654483616/fgInputHandler.o \
-	${OBJECTDIR}/_ext/1654483616/fgJoypadController.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxAnimation.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxAnimationChannel.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxAnimationInfo.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxArmature.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxBlending.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxBlendingInfo.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxBone.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxBoneAnimation.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxRagdollBoneAnimation.o \
-	${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o \
-	${OBJECTDIR}/_ext/293675389/fgParticleSystem.o \
-	${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o \
-	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o \
-	${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o \
-	${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfx2DScene.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxAnimated.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBasetree.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspFile.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspNode.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspResource.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspTree.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxNodeFactory.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxOctree.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxPortal.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxPortalProcessor.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxPvsProcessor.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxQuadtree.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneEvent.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneManager.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneNode.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeMesh.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeObject.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeTrigger.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxSceneSkyBox.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxTreeNode.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxTriggerable.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxShader.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxShaderBase.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxShaderConfig.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxShaderDefs.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxShaderManager.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxShaderProgram.o \
-	${OBJECTDIR}/_ext/960776194/fgGfxUniformUpdater.o \
-	${OBJECTDIR}/_ext/34731496/fgTextureLoader.o \
-	${OBJECTDIR}/_ext/34731496/fgTextureManager.o \
-	${OBJECTDIR}/_ext/34731496/fgTextureResource.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxAssimpHelper.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxAttributeData.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxCamera.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxCameraAnimation.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxContext.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxDrawCall.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxDrawingBatch.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxFrustum.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxLight.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxMain.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxMaterial.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxMesh.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxModelResource.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxPlaneGrid.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxPrimitives.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxShape.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxSimpleDrawer.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxSkinnedMesh.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxVertexData.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxWindow.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontBuiltIn.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontDrawer.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontResource.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbArial.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbArialBold.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbConsolas.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbConsolasBold.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbCourier.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbCourierBold.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbTimes.o \
-	${OBJECTDIR}/_ext/1216539907/fgFontStbTimesBold.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiButton.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiCallback.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiConsole.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiContainer.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiEditableText.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiFrame.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiLabel.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiLoader.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiMain.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiMenu.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiPopup.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiScrollArea.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiSlider.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStyle.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStyleContent.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStyleManager.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiTable.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiTextArea.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiToggleButton.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiWidget.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiWidgetManager.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiWindow.o \
-	${OBJECTDIR}/_ext/607599404/fg2DGameWorld.o \
-	${OBJECTDIR}/_ext/607599404/fg3DGameWorld.o \
-	${OBJECTDIR}/_ext/607599404/fgGameEntity.o \
-	${OBJECTDIR}/_ext/607599404/fgGameEntityActor.o \
-	${OBJECTDIR}/_ext/607599404/fgGameEntityMesh.o \
-	${OBJECTDIR}/_ext/607599404/fgGameMain.o \
-	${OBJECTDIR}/_ext/607599404/fgGameWorld.o \
-	${OBJECTDIR}/_ext/607599404/fgGrid.o \
-	${OBJECTDIR}/_ext/607599404/fgIntelligent.o \
-	${OBJECTDIR}/_ext/607599404/fgIntelligentWorld.o \
-	${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o \
-	${OBJECTDIR}/_ext/484399070/fgHardwareState.o \
-	${OBJECTDIR}/_ext/484399070/fgQualityManager.o \
-	${OBJECTDIR}/_ext/484399070/fgSensors.o \
-	${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o \
-	${OBJECTDIR}/_ext/94644411/fgCollisionBody.o \
-	${OBJECTDIR}/_ext/94644411/fgCollisionCoarse.o \
-	${OBJECTDIR}/_ext/94644411/fgCollisionFine.o \
-	${OBJECTDIR}/_ext/94644411/fgContact.o \
-	${OBJECTDIR}/_ext/94644411/fgContactResolver.o \
-	${OBJECTDIR}/_ext/94644411/fgCycloneCoreMath.o \
-	${OBJECTDIR}/_ext/94644411/fgForceGenerator.o \
-	${OBJECTDIR}/_ext/94644411/fgJoint.o \
-	${OBJECTDIR}/_ext/94644411/fgParticle.o \
-	${OBJECTDIR}/_ext/94644411/fgParticleContact.o \
-	${OBJECTDIR}/_ext/94644411/fgParticleContactResolver.o \
-	${OBJECTDIR}/_ext/94644411/fgParticleForceGenerator.o \
-	${OBJECTDIR}/_ext/94644411/fgParticleLink.o \
-	${OBJECTDIR}/_ext/94644411/fgParticleWorld.o \
-	${OBJECTDIR}/_ext/94644411/fgRandom.o \
-	${OBJECTDIR}/_ext/94644411/fgRigidBody.o \
-	${OBJECTDIR}/_ext/94644411/fgWorld.o \
-	${OBJECTDIR}/_ext/1611265229/fgAbstractCollisionBody.o \
-	${OBJECTDIR}/_ext/1611265229/fgBulletHelper.o \
-	${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o \
-	${OBJECTDIR}/_ext/1611265229/fgPhysical.o \
-	${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o \
-	${OBJECTDIR}/_ext/1611265229/fgRagdollCollisionBody.o \
-	${OBJECTDIR}/_ext/942373304/fgResource.o \
-	${OBJECTDIR}/_ext/942373304/fgResourceConfigParser.o \
-	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
-	${OBJECTDIR}/_ext/942373304/fgResourceGroup.o \
-	${OBJECTDIR}/_ext/942373304/fgResourceManager.o \
-	${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o \
-	${OBJECTDIR}/_ext/1210739651/fgScriptMT.o \
-	${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o \
-	${OBJECTDIR}/_ext/166270660/fgThread.o \
-	${OBJECTDIR}/_ext/166270660/fgThreadSem.o \
-	${OBJECTDIR}/_ext/608034620/fgConfig.o \
-	${OBJECTDIR}/_ext/608034620/fgConfigParser.o \
-	${OBJECTDIR}/_ext/608034620/fgConfigWriter.o \
-	${OBJECTDIR}/_ext/608034620/fgDirent.o \
-	${OBJECTDIR}/_ext/608034620/fgFastCmp.o \
-	${OBJECTDIR}/_ext/608034620/fgFile.o \
-	${OBJECTDIR}/_ext/608034620/fgHashFunc.o \
-	${OBJECTDIR}/_ext/608034620/fgPath.o \
-	${OBJECTDIR}/_ext/608034620/fgProfiling.o \
-	${OBJECTDIR}/_ext/608034620/fgRegularFile.o \
-	${OBJECTDIR}/_ext/608034620/fgSettings.o \
-	${OBJECTDIR}/_ext/608034620/fgStrings.o \
-	${OBJECTDIR}/_ext/608034620/fgTime.o \
-	${OBJECTDIR}/_ext/608034620/fgZipFile.o \
-	${OBJECTDIR}/_ext/534573667/fgXMLParser.o \
-	${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o \
-	${OBJECTDIR}/_ext/1386528437/fgColors.o \
-	${OBJECTDIR}/_ext/1386528437/fgCommon.o \
-	${OBJECTDIR}/_ext/1386528437/fgDebugConfig.o \
-	${OBJECTDIR}/_ext/1386528437/fgEngineMain.o \
-	${OBJECTDIR}/_ext/1386528437/fgErrno.o \
-	${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o \
-	${OBJECTDIR}/_ext/1386528437/fgLog.o \
-	${OBJECTDIR}/_ext/1386528437/fgMainModule.o \
-	${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o \
-	${OBJECTDIR}/_ext/1386528437/fgPluginResource.o
+	${OBJECTDIR}/_ext/4c49004a/fgTinyObj.o \
+	${OBJECTDIR}/_ext/dfee612a/tinystr.o \
+	${OBJECTDIR}/_ext/dfee612a/tinyxml.o \
+	${OBJECTDIR}/_ext/dfee612a/tinyxmlerror.o \
+	${OBJECTDIR}/_ext/dfee612a/tinyxmlparser.o \
+	${OBJECTDIR}/_ext/4fa144f5/fgAndroid.o \
+	${OBJECTDIR}/_ext/626493dc/fgSFXManager.o \
+	${OBJECTDIR}/_ext/626493dc/fgSFXMusicResource.o \
+	${OBJECTDIR}/_ext/626493dc/fgSFXSoundResource.o \
+	${OBJECTDIR}/_ext/629d6aa0/fgArgumentList.o \
+	${OBJECTDIR}/_ext/629d6aa0/fgEventManager.o \
+	${OBJECTDIR}/_ext/629d6aa0/fgInputHandler.o \
+	${OBJECTDIR}/_ext/629d6aa0/fgJoypadController.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimation.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimationChannel.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimationInfo.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxArmature.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxBlending.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxBlendingInfo.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxBone.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxBoneAnimation.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxObjectAnimation.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxRagdollBoneAnimation.o \
+	${OBJECTDIR}/_ext/bf7ada54/fgGfxSkinningInfo.o \
+	${OBJECTDIR}/_ext/1181217d/fgParticleSystem.o \
+	${OBJECTDIR}/_ext/1181217d/fgPsParticleEffect.o \
+	${OBJECTDIR}/_ext/1181217d/fgPsParticleEffectCircular.o \
+	${OBJECTDIR}/_ext/1181217d/fgPsParticleEmitter.o \
+	${OBJECTDIR}/_ext/1181217d/fgPsSequentialEffect.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfx2DScene.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfx3DScene.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxAnimated.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBasetree.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspCompiler.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspFile.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspNode.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspResource.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspTree.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspTypes.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxDrawable.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxLooseOctree.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxLooseQuadtree.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxNodeFactory.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxOctree.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxPortal.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxPortalProcessor.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxPvsProcessor.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxQuadtree.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneEvent.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneManager.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNode.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeMesh.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeObject.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeTrigger.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneSkyBox.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxTreeNode.o \
+	${OBJECTDIR}/_ext/3c22bf5c/fgGfxTriggerable.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShader.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderBase.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderConfig.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderDefs.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderManager.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderProgram.o \
+	${OBJECTDIR}/_ext/c6bbb7fe/fgGfxUniformUpdater.o \
+	${OBJECTDIR}/_ext/211f5e8/fgTextureLoader.o \
+	${OBJECTDIR}/_ext/211f5e8/fgTextureManager.o \
+	${OBJECTDIR}/_ext/211f5e8/fgTextureResource.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxAssimpHelper.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxAttributeData.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxCamera.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxCameraAnimation.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxContext.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxDrawCall.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxDrawingBatch.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxFrustum.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxLight.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxMain.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxMaterial.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxMesh.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxModelResource.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxPlatform.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxPolygon.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxShape.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxSimpleDrawer.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxSkinnedMesh.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxVertexData.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxWindow.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontBuiltIn.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontDrawer.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontResource.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbArial.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbArialBold.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbConsolas.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbConsolasBold.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbCourier.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbCourierBold.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbTimes.o \
+	${OBJECTDIR}/_ext/b77d12fd/fgFontStbTimesBold.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiButton.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiCallback.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiConsole.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiContainer.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiDrawer.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiEditableText.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiFrame.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiLabel.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiLoader.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiMain.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiMenu.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiMessageBox.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiPopup.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiPrimitives.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiProgressBar.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiScreenGrid.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiScrollArea.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiSlider.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiStructureSheet.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiStructureSheetParser.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiStyle.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiStyleContent.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiStyleManager.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiTable.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiTextArea.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiToggleButton.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiWidget.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiWidgetFactory.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiWidgetManager.o \
+	${OBJECTDIR}/_ext/e022cec1/fgGuiWindow.o \
+	${OBJECTDIR}/_ext/24373b2c/fg2DGameWorld.o \
+	${OBJECTDIR}/_ext/24373b2c/fg3DGameWorld.o \
+	${OBJECTDIR}/_ext/24373b2c/fgGameEntity.o \
+	${OBJECTDIR}/_ext/24373b2c/fgGameEntityActor.o \
+	${OBJECTDIR}/_ext/24373b2c/fgGameEntityMesh.o \
+	${OBJECTDIR}/_ext/24373b2c/fgGameMain.o \
+	${OBJECTDIR}/_ext/24373b2c/fgGameWorld.o \
+	${OBJECTDIR}/_ext/24373b2c/fgGrid.o \
+	${OBJECTDIR}/_ext/24373b2c/fgIntelligent.o \
+	${OBJECTDIR}/_ext/24373b2c/fgIntelligentWorld.o \
+	${OBJECTDIR}/_ext/e320a822/fgDeviceQuery.o \
+	${OBJECTDIR}/_ext/e320a822/fgHardwareState.o \
+	${OBJECTDIR}/_ext/e320a822/fgQualityManager.o \
+	${OBJECTDIR}/_ext/e320a822/fgSensors.o \
+	${OBJECTDIR}/_ext/2439f642/fgKalmanFilter.o \
+	${OBJECTDIR}/_ext/6009f4cd/fgAbstractCollisionBody.o \
+	${OBJECTDIR}/_ext/6009f4cd/fgBulletHelper.o \
+	${OBJECTDIR}/_ext/6009f4cd/fgCollisionBody.o \
+	${OBJECTDIR}/_ext/6009f4cd/fgPhysical.o \
+	${OBJECTDIR}/_ext/6009f4cd/fgPhysicalWorld.o \
+	${OBJECTDIR}/_ext/6009f4cd/fgRagdollCollisionBody.o \
+	${OBJECTDIR}/_ext/c7d48648/fgResource.o \
+	${OBJECTDIR}/_ext/c7d48648/fgResourceConfigParser.o \
+	${OBJECTDIR}/_ext/c7d48648/fgResourceFactory.o \
+	${OBJECTDIR}/_ext/c7d48648/fgResourceGroup.o \
+	${OBJECTDIR}/_ext/c7d48648/fgResourceManager.o \
+	${OBJECTDIR}/_ext/b7d5943d/fgScriptCallback.o \
+	${OBJECTDIR}/_ext/b7d5943d/fgScriptMT.o \
+	${OBJECTDIR}/_ext/b7d5943d/fgScriptSubsystem.o \
+	${OBJECTDIR}/_ext/9e916c4/fgThread.o \
+	${OBJECTDIR}/_ext/9e916c4/fgThreadSem.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgConfig.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgConfigParser.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgConfigWriter.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgDirent.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgFastCmp.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgFile.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgHashFunc.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgPath.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgProfiling.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgRegularFile.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgSettings.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgStrings.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgTime.o \
+	${OBJECTDIR}/_ext/243ddf3c/fgZipFile.o \
+	${OBJECTDIR}/_ext/e0230d9d/fgXMLParser.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgBuildConfig.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgColors.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgCommon.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgDebugConfig.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgEngineMain.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgErrno.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgErrorCodes.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgLog.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgMainModule.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgMessageSubsystem.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o
 
 
 # C Compiler Flags
@@ -267,1025 +250,940 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a: ${OBJECTFILES}
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a
 
-${OBJECTDIR}/_ext/1279852618/fgTinyObj.o: ../../../modules/tinyobj/upstream/fgTinyObj.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1279852618
+${OBJECTDIR}/_ext/4c49004a/fgTinyObj.o: ../../../modules/tinyobj/upstream/fgTinyObj.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/4c49004a
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1279852618/fgTinyObj.o ../../../modules/tinyobj/upstream/fgTinyObj.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/4c49004a/fgTinyObj.o ../../../modules/tinyobj/upstream/fgTinyObj.cpp
 
-${OBJECTDIR}/_ext/538025686/tinystr.o: ../../../modules/tinyxml/upstream/tinystr.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
+${OBJECTDIR}/_ext/dfee612a/tinystr.o: ../../../modules/tinyxml/upstream/tinystr.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfee612a
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinystr.o ../../../modules/tinyxml/upstream/tinystr.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfee612a/tinystr.o ../../../modules/tinyxml/upstream/tinystr.cpp
 
-${OBJECTDIR}/_ext/538025686/tinyxml.o: ../../../modules/tinyxml/upstream/tinyxml.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
+${OBJECTDIR}/_ext/dfee612a/tinyxml.o: ../../../modules/tinyxml/upstream/tinyxml.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfee612a
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxml.o ../../../modules/tinyxml/upstream/tinyxml.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfee612a/tinyxml.o ../../../modules/tinyxml/upstream/tinyxml.cpp
 
-${OBJECTDIR}/_ext/538025686/tinyxmlerror.o: ../../../modules/tinyxml/upstream/tinyxmlerror.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
+${OBJECTDIR}/_ext/dfee612a/tinyxmlerror.o: ../../../modules/tinyxml/upstream/tinyxmlerror.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfee612a
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlerror.o ../../../modules/tinyxml/upstream/tinyxmlerror.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfee612a/tinyxmlerror.o ../../../modules/tinyxml/upstream/tinyxmlerror.cpp
 
-${OBJECTDIR}/_ext/538025686/tinyxmlparser.o: ../../../modules/tinyxml/upstream/tinyxmlparser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
+${OBJECTDIR}/_ext/dfee612a/tinyxmlparser.o: ../../../modules/tinyxml/upstream/tinyxmlparser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfee612a
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o ../../../modules/tinyxml/upstream/tinyxmlparser.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfee612a/tinyxmlparser.o ../../../modules/tinyxml/upstream/tinyxmlparser.cpp
 
-${OBJECTDIR}/_ext/1335969013/fgAndroid.o: ../../../src/Android/fgAndroid.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1335969013
+${OBJECTDIR}/_ext/4fa144f5/fgAndroid.o: ../../../src/Android/fgAndroid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/4fa144f5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1335969013/fgAndroid.o ../../../src/Android/fgAndroid.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/4fa144f5/fgAndroid.o ../../../src/Android/fgAndroid.cpp
 
-${OBJECTDIR}/_ext/1650758620/fgSFXManager.o: ../../../src/Audio/fgSFXManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
+${OBJECTDIR}/_ext/626493dc/fgSFXManager.o: ../../../src/Audio/fgSFXManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/626493dc
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXManager.o ../../../src/Audio/fgSFXManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/626493dc/fgSFXManager.o ../../../src/Audio/fgSFXManager.cpp
 
-${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o: ../../../src/Audio/fgSFXMusicResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
+${OBJECTDIR}/_ext/626493dc/fgSFXMusicResource.o: ../../../src/Audio/fgSFXMusicResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/626493dc
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o ../../../src/Audio/fgSFXMusicResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/626493dc/fgSFXMusicResource.o ../../../src/Audio/fgSFXMusicResource.cpp
 
-${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o: ../../../src/Audio/fgSFXSoundResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
+${OBJECTDIR}/_ext/626493dc/fgSFXSoundResource.o: ../../../src/Audio/fgSFXSoundResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/626493dc
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o ../../../src/Audio/fgSFXSoundResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/626493dc/fgSFXSoundResource.o ../../../src/Audio/fgSFXSoundResource.cpp
 
-${OBJECTDIR}/_ext/1654483616/fgArgumentList.o: ../../../src/Event/fgArgumentList.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616
+${OBJECTDIR}/_ext/629d6aa0/fgArgumentList.o: ../../../src/Event/fgArgumentList.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/629d6aa0
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgArgumentList.o ../../../src/Event/fgArgumentList.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/629d6aa0/fgArgumentList.o ../../../src/Event/fgArgumentList.cpp
 
-${OBJECTDIR}/_ext/1654483616/fgEventManager.o: ../../../src/Event/fgEventManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616
+${OBJECTDIR}/_ext/629d6aa0/fgEventManager.o: ../../../src/Event/fgEventManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/629d6aa0
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgEventManager.o ../../../src/Event/fgEventManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/629d6aa0/fgEventManager.o ../../../src/Event/fgEventManager.cpp
 
-${OBJECTDIR}/_ext/1654483616/fgInputHandler.o: ../../../src/Event/fgInputHandler.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616
+${OBJECTDIR}/_ext/629d6aa0/fgInputHandler.o: ../../../src/Event/fgInputHandler.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/629d6aa0
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgInputHandler.o ../../../src/Event/fgInputHandler.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/629d6aa0/fgInputHandler.o ../../../src/Event/fgInputHandler.cpp
 
-${OBJECTDIR}/_ext/1654483616/fgJoypadController.o: ../../../src/Event/fgJoypadController.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616
+${OBJECTDIR}/_ext/629d6aa0/fgJoypadController.o: ../../../src/Event/fgJoypadController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/629d6aa0
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgJoypadController.o ../../../src/Event/fgJoypadController.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/629d6aa0/fgJoypadController.o ../../../src/Event/fgJoypadController.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxAnimation.o: ../../../src/GFX/Animation/fgGfxAnimation.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimation.o: ../../../src/GFX/Animation/fgGfxAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxAnimation.o ../../../src/GFX/Animation/fgGfxAnimation.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimation.o ../../../src/GFX/Animation/fgGfxAnimation.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxAnimationChannel.o: ../../../src/GFX/Animation/fgGfxAnimationChannel.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimationChannel.o: ../../../src/GFX/Animation/fgGfxAnimationChannel.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxAnimationChannel.o ../../../src/GFX/Animation/fgGfxAnimationChannel.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimationChannel.o ../../../src/GFX/Animation/fgGfxAnimationChannel.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxAnimationInfo.o: ../../../src/GFX/Animation/fgGfxAnimationInfo.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimationInfo.o: ../../../src/GFX/Animation/fgGfxAnimationInfo.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxAnimationInfo.o ../../../src/GFX/Animation/fgGfxAnimationInfo.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxAnimationInfo.o ../../../src/GFX/Animation/fgGfxAnimationInfo.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxArmature.o: ../../../src/GFX/Animation/fgGfxArmature.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxArmature.o: ../../../src/GFX/Animation/fgGfxArmature.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxArmature.o ../../../src/GFX/Animation/fgGfxArmature.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxArmature.o ../../../src/GFX/Animation/fgGfxArmature.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxBlending.o: ../../../src/GFX/Animation/fgGfxBlending.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxBlending.o: ../../../src/GFX/Animation/fgGfxBlending.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxBlending.o ../../../src/GFX/Animation/fgGfxBlending.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxBlending.o ../../../src/GFX/Animation/fgGfxBlending.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxBlendingInfo.o: ../../../src/GFX/Animation/fgGfxBlendingInfo.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxBlendingInfo.o: ../../../src/GFX/Animation/fgGfxBlendingInfo.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxBlendingInfo.o ../../../src/GFX/Animation/fgGfxBlendingInfo.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxBlendingInfo.o ../../../src/GFX/Animation/fgGfxBlendingInfo.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxBone.o: ../../../src/GFX/Animation/fgGfxBone.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxBone.o: ../../../src/GFX/Animation/fgGfxBone.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxBone.o ../../../src/GFX/Animation/fgGfxBone.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxBone.o ../../../src/GFX/Animation/fgGfxBone.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxBoneAnimation.o: ../../../src/GFX/Animation/fgGfxBoneAnimation.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxBoneAnimation.o: ../../../src/GFX/Animation/fgGfxBoneAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxBoneAnimation.o ../../../src/GFX/Animation/fgGfxBoneAnimation.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxBoneAnimation.o ../../../src/GFX/Animation/fgGfxBoneAnimation.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o: ../../../src/GFX/Animation/fgGfxObjectAnimation.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxObjectAnimation.o: ../../../src/GFX/Animation/fgGfxObjectAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxObjectAnimation.o ../../../src/GFX/Animation/fgGfxObjectAnimation.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxObjectAnimation.o ../../../src/GFX/Animation/fgGfxObjectAnimation.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxRagdollBoneAnimation.o: ../../../src/GFX/Animation/fgGfxRagdollBoneAnimation.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxRagdollBoneAnimation.o: ../../../src/GFX/Animation/fgGfxRagdollBoneAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxRagdollBoneAnimation.o ../../../src/GFX/Animation/fgGfxRagdollBoneAnimation.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxRagdollBoneAnimation.o ../../../src/GFX/Animation/fgGfxRagdollBoneAnimation.cpp
 
-${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o: ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1082467756
+${OBJECTDIR}/_ext/bf7ada54/fgGfxSkinningInfo.o: ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/bf7ada54
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1082467756/fgGfxSkinningInfo.o ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/bf7ada54/fgGfxSkinningInfo.o ../../../src/GFX/Animation/fgGfxSkinningInfo.cpp
 
-${OBJECTDIR}/_ext/293675389/fgParticleSystem.o: ../../../src/GFX/Particles/fgParticleSystem.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+${OBJECTDIR}/_ext/1181217d/fgParticleSystem.o: ../../../src/GFX/Particles/fgParticleSystem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1181217d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgParticleSystem.o ../../../src/GFX/Particles/fgParticleSystem.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1181217d/fgParticleSystem.o ../../../src/GFX/Particles/fgParticleSystem.cpp
 
-${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o: ../../../src/GFX/Particles/fgPsParticleEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+${OBJECTDIR}/_ext/1181217d/fgPsParticleEffect.o: ../../../src/GFX/Particles/fgPsParticleEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1181217d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o ../../../src/GFX/Particles/fgPsParticleEffect.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1181217d/fgPsParticleEffect.o ../../../src/GFX/Particles/fgPsParticleEffect.cpp
 
-${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o: ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+${OBJECTDIR}/_ext/1181217d/fgPsParticleEffectCircular.o: ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1181217d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1181217d/fgPsParticleEffectCircular.o ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp
 
-${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o: ../../../src/GFX/Particles/fgPsParticleEmitter.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+${OBJECTDIR}/_ext/1181217d/fgPsParticleEmitter.o: ../../../src/GFX/Particles/fgPsParticleEmitter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1181217d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o ../../../src/GFX/Particles/fgPsParticleEmitter.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1181217d/fgPsParticleEmitter.o ../../../src/GFX/Particles/fgPsParticleEmitter.cpp
 
-${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o: ../../../src/GFX/Particles/fgPsSequentialEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+${OBJECTDIR}/_ext/1181217d/fgPsSequentialEffect.o: ../../../src/GFX/Particles/fgPsSequentialEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1181217d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o ../../../src/GFX/Particles/fgPsSequentialEffect.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1181217d/fgPsSequentialEffect.o ../../../src/GFX/Particles/fgPsSequentialEffect.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfx2DScene.o: ../../../src/GFX/Scene/fgGfx2DScene.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfx2DScene.o: ../../../src/GFX/Scene/fgGfx2DScene.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfx2DScene.o ../../../src/GFX/Scene/fgGfx2DScene.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfx2DScene.o ../../../src/GFX/Scene/fgGfx2DScene.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o: ../../../src/GFX/Scene/fgGfx3DScene.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfx3DScene.o: ../../../src/GFX/Scene/fgGfx3DScene.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o ../../../src/GFX/Scene/fgGfx3DScene.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfx3DScene.o ../../../src/GFX/Scene/fgGfx3DScene.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxAnimated.o: ../../../src/GFX/Scene/fgGfxAnimated.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxAnimated.o: ../../../src/GFX/Scene/fgGfxAnimated.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxAnimated.o ../../../src/GFX/Scene/fgGfxAnimated.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxAnimated.o ../../../src/GFX/Scene/fgGfxAnimated.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBasetree.o: ../../../src/GFX/Scene/fgGfxBasetree.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBasetree.o: ../../../src/GFX/Scene/fgGfxBasetree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBasetree.o ../../../src/GFX/Scene/fgGfxBasetree.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBasetree.o ../../../src/GFX/Scene/fgGfxBasetree.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o: ../../../src/GFX/Scene/fgGfxBspCompiler.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspCompiler.o: ../../../src/GFX/Scene/fgGfxBspCompiler.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o ../../../src/GFX/Scene/fgGfxBspCompiler.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspCompiler.o ../../../src/GFX/Scene/fgGfxBspCompiler.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspFile.o: ../../../src/GFX/Scene/fgGfxBspFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspFile.o: ../../../src/GFX/Scene/fgGfxBspFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspFile.o ../../../src/GFX/Scene/fgGfxBspFile.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspFile.o ../../../src/GFX/Scene/fgGfxBspFile.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspNode.o: ../../../src/GFX/Scene/fgGfxBspNode.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspNode.o: ../../../src/GFX/Scene/fgGfxBspNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspNode.o ../../../src/GFX/Scene/fgGfxBspNode.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspNode.o ../../../src/GFX/Scene/fgGfxBspNode.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspResource.o: ../../../src/GFX/Scene/fgGfxBspResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspResource.o: ../../../src/GFX/Scene/fgGfxBspResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspResource.o ../../../src/GFX/Scene/fgGfxBspResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspResource.o ../../../src/GFX/Scene/fgGfxBspResource.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspTree.o: ../../../src/GFX/Scene/fgGfxBspTree.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspTree.o: ../../../src/GFX/Scene/fgGfxBspTree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspTree.o ../../../src/GFX/Scene/fgGfxBspTree.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspTree.o ../../../src/GFX/Scene/fgGfxBspTree.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o: ../../../src/GFX/Scene/fgGfxBspTypes.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspTypes.o: ../../../src/GFX/Scene/fgGfxBspTypes.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o ../../../src/GFX/Scene/fgGfxBspTypes.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxBspTypes.o ../../../src/GFX/Scene/fgGfxBspTypes.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o: ../../../src/GFX/Scene/fgGfxDrawable.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxDrawable.o: ../../../src/GFX/Scene/fgGfxDrawable.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxDrawable.o ../../../src/GFX/Scene/fgGfxDrawable.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxDrawable.o ../../../src/GFX/Scene/fgGfxDrawable.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o: ../../../src/GFX/Scene/fgGfxLooseOctree.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxLooseOctree.o: ../../../src/GFX/Scene/fgGfxLooseOctree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o ../../../src/GFX/Scene/fgGfxLooseOctree.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxLooseOctree.o ../../../src/GFX/Scene/fgGfxLooseOctree.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o: ../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxLooseQuadtree.o: ../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxLooseQuadtree.o ../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxLooseQuadtree.o ../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxNodeFactory.o: ../../../src/GFX/Scene/fgGfxNodeFactory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxNodeFactory.o: ../../../src/GFX/Scene/fgGfxNodeFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxNodeFactory.o ../../../src/GFX/Scene/fgGfxNodeFactory.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxNodeFactory.o ../../../src/GFX/Scene/fgGfxNodeFactory.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxOctree.o: ../../../src/GFX/Scene/fgGfxOctree.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxOctree.o: ../../../src/GFX/Scene/fgGfxOctree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxOctree.o ../../../src/GFX/Scene/fgGfxOctree.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxOctree.o ../../../src/GFX/Scene/fgGfxOctree.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxPortal.o: ../../../src/GFX/Scene/fgGfxPortal.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxPortal.o: ../../../src/GFX/Scene/fgGfxPortal.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxPortal.o ../../../src/GFX/Scene/fgGfxPortal.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxPortal.o ../../../src/GFX/Scene/fgGfxPortal.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxPortalProcessor.o: ../../../src/GFX/Scene/fgGfxPortalProcessor.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxPortalProcessor.o: ../../../src/GFX/Scene/fgGfxPortalProcessor.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxPortalProcessor.o ../../../src/GFX/Scene/fgGfxPortalProcessor.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxPortalProcessor.o ../../../src/GFX/Scene/fgGfxPortalProcessor.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxPvsProcessor.o: ../../../src/GFX/Scene/fgGfxPvsProcessor.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxPvsProcessor.o: ../../../src/GFX/Scene/fgGfxPvsProcessor.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxPvsProcessor.o ../../../src/GFX/Scene/fgGfxPvsProcessor.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxPvsProcessor.o ../../../src/GFX/Scene/fgGfxPvsProcessor.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxQuadtree.o: ../../../src/GFX/Scene/fgGfxQuadtree.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxQuadtree.o: ../../../src/GFX/Scene/fgGfxQuadtree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxQuadtree.o ../../../src/GFX/Scene/fgGfxQuadtree.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxQuadtree.o ../../../src/GFX/Scene/fgGfxQuadtree.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneEvent.o: ../../../src/GFX/Scene/fgGfxSceneEvent.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneEvent.o: ../../../src/GFX/Scene/fgGfxSceneEvent.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneEvent.o ../../../src/GFX/Scene/fgGfxSceneEvent.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneEvent.o ../../../src/GFX/Scene/fgGfxSceneEvent.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneManager.o: ../../../src/GFX/Scene/fgGfxSceneManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneManager.o: ../../../src/GFX/Scene/fgGfxSceneManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneManager.o ../../../src/GFX/Scene/fgGfxSceneManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneManager.o ../../../src/GFX/Scene/fgGfxSceneManager.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneNode.o: ../../../src/GFX/Scene/fgGfxSceneNode.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNode.o: ../../../src/GFX/Scene/fgGfxSceneNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneNode.o ../../../src/GFX/Scene/fgGfxSceneNode.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNode.o ../../../src/GFX/Scene/fgGfxSceneNode.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeMesh.o: ../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeMesh.o: ../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeMesh.o ../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeMesh.o ../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeObject.o: ../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeObject.o: ../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeObject.o ../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeObject.o ../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeTrigger.o: ../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeTrigger.o: ../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneNodeTrigger.o ../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneNodeTrigger.o ../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxSceneSkyBox.o: ../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneSkyBox.o: ../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxSceneSkyBox.o ../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxSceneSkyBox.o ../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxTreeNode.o: ../../../src/GFX/Scene/fgGfxTreeNode.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxTreeNode.o: ../../../src/GFX/Scene/fgGfxTreeNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxTreeNode.o ../../../src/GFX/Scene/fgGfxTreeNode.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxTreeNode.o ../../../src/GFX/Scene/fgGfxTreeNode.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxTriggerable.o: ../../../src/GFX/Scene/fgGfxTriggerable.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+${OBJECTDIR}/_ext/3c22bf5c/fgGfxTriggerable.o: ../../../src/GFX/Scene/fgGfxTriggerable.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/3c22bf5c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxTriggerable.o ../../../src/GFX/Scene/fgGfxTriggerable.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/3c22bf5c/fgGfxTriggerable.o ../../../src/GFX/Scene/fgGfxTriggerable.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxShader.o: ../../../src/GFX/Shaders/fgGfxShader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShader.o: ../../../src/GFX/Shaders/fgGfxShader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxShader.o ../../../src/GFX/Shaders/fgGfxShader.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShader.o ../../../src/GFX/Shaders/fgGfxShader.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxShaderBase.o: ../../../src/GFX/Shaders/fgGfxShaderBase.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderBase.o: ../../../src/GFX/Shaders/fgGfxShaderBase.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxShaderBase.o ../../../src/GFX/Shaders/fgGfxShaderBase.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderBase.o ../../../src/GFX/Shaders/fgGfxShaderBase.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxShaderConfig.o: ../../../src/GFX/Shaders/fgGfxShaderConfig.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderConfig.o: ../../../src/GFX/Shaders/fgGfxShaderConfig.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxShaderConfig.o ../../../src/GFX/Shaders/fgGfxShaderConfig.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderConfig.o ../../../src/GFX/Shaders/fgGfxShaderConfig.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxShaderDefs.o: ../../../src/GFX/Shaders/fgGfxShaderDefs.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderDefs.o: ../../../src/GFX/Shaders/fgGfxShaderDefs.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxShaderDefs.o ../../../src/GFX/Shaders/fgGfxShaderDefs.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderDefs.o ../../../src/GFX/Shaders/fgGfxShaderDefs.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxShaderManager.o: ../../../src/GFX/Shaders/fgGfxShaderManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderManager.o: ../../../src/GFX/Shaders/fgGfxShaderManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxShaderManager.o ../../../src/GFX/Shaders/fgGfxShaderManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderManager.o ../../../src/GFX/Shaders/fgGfxShaderManager.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxShaderProgram.o: ../../../src/GFX/Shaders/fgGfxShaderProgram.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderProgram.o: ../../../src/GFX/Shaders/fgGfxShaderProgram.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxShaderProgram.o ../../../src/GFX/Shaders/fgGfxShaderProgram.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxShaderProgram.o ../../../src/GFX/Shaders/fgGfxShaderProgram.cpp
 
-${OBJECTDIR}/_ext/960776194/fgGfxUniformUpdater.o: ../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+${OBJECTDIR}/_ext/c6bbb7fe/fgGfxUniformUpdater.o: ../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c6bbb7fe
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGfxUniformUpdater.o ../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c6bbb7fe/fgGfxUniformUpdater.o ../../../src/GFX/Shaders/fgGfxUniformUpdater.cpp
 
-${OBJECTDIR}/_ext/34731496/fgTextureLoader.o: ../../../src/GFX/Textures/fgTextureLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
+${OBJECTDIR}/_ext/211f5e8/fgTextureLoader.o: ../../../src/GFX/Textures/fgTextureLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/211f5e8
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureLoader.o ../../../src/GFX/Textures/fgTextureLoader.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/211f5e8/fgTextureLoader.o ../../../src/GFX/Textures/fgTextureLoader.cpp
 
-${OBJECTDIR}/_ext/34731496/fgTextureManager.o: ../../../src/GFX/Textures/fgTextureManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
+${OBJECTDIR}/_ext/211f5e8/fgTextureManager.o: ../../../src/GFX/Textures/fgTextureManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/211f5e8
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureManager.o ../../../src/GFX/Textures/fgTextureManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/211f5e8/fgTextureManager.o ../../../src/GFX/Textures/fgTextureManager.cpp
 
-${OBJECTDIR}/_ext/34731496/fgTextureResource.o: ../../../src/GFX/Textures/fgTextureResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
+${OBJECTDIR}/_ext/211f5e8/fgTextureResource.o: ../../../src/GFX/Textures/fgTextureResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/211f5e8
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureResource.o ../../../src/GFX/Textures/fgTextureResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/211f5e8/fgTextureResource.o ../../../src/GFX/Textures/fgTextureResource.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxAssimpHelper.o: ../../../src/GFX/fgGfxAssimpHelper.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxAssimpHelper.o: ../../../src/GFX/fgGfxAssimpHelper.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxAssimpHelper.o ../../../src/GFX/fgGfxAssimpHelper.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxAssimpHelper.o ../../../src/GFX/fgGfxAssimpHelper.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxAttributeData.o: ../../../src/GFX/fgGfxAttributeData.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxAttributeData.o: ../../../src/GFX/fgGfxAttributeData.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxAttributeData.o ../../../src/GFX/fgGfxAttributeData.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxAttributeData.o ../../../src/GFX/fgGfxAttributeData.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxCamera.o: ../../../src/GFX/fgGfxCamera.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxCamera.o: ../../../src/GFX/fgGfxCamera.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxCamera.o ../../../src/GFX/fgGfxCamera.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxCamera.o ../../../src/GFX/fgGfxCamera.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxCameraAnimation.o: ../../../src/GFX/fgGfxCameraAnimation.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxCameraAnimation.o: ../../../src/GFX/fgGfxCameraAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxCameraAnimation.o ../../../src/GFX/fgGfxCameraAnimation.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxCameraAnimation.o ../../../src/GFX/fgGfxCameraAnimation.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxContext.o: ../../../src/GFX/fgGfxContext.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxContext.o: ../../../src/GFX/fgGfxContext.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxContext.o ../../../src/GFX/fgGfxContext.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxContext.o ../../../src/GFX/fgGfxContext.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxDrawCall.o: ../../../src/GFX/fgGfxDrawCall.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxDrawCall.o: ../../../src/GFX/fgGfxDrawCall.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxDrawCall.o ../../../src/GFX/fgGfxDrawCall.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxDrawCall.o ../../../src/GFX/fgGfxDrawCall.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxDrawingBatch.o: ../../../src/GFX/fgGfxDrawingBatch.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxDrawingBatch.o: ../../../src/GFX/fgGfxDrawingBatch.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxDrawingBatch.o ../../../src/GFX/fgGfxDrawingBatch.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxDrawingBatch.o ../../../src/GFX/fgGfxDrawingBatch.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxFrustum.o: ../../../src/GFX/fgGfxFrustum.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxFrustum.o: ../../../src/GFX/fgGfxFrustum.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxFrustum.o ../../../src/GFX/fgGfxFrustum.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxFrustum.o ../../../src/GFX/fgGfxFrustum.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxLight.o: ../../../src/GFX/fgGfxLight.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxLight.o: ../../../src/GFX/fgGfxLight.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxLight.o ../../../src/GFX/fgGfxLight.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxLight.o ../../../src/GFX/fgGfxLight.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxMain.o: ../../../src/GFX/fgGfxMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxMain.o: ../../../src/GFX/fgGfxMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxMain.o ../../../src/GFX/fgGfxMain.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxMain.o ../../../src/GFX/fgGfxMain.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxMaterial.o: ../../../src/GFX/fgGfxMaterial.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxMaterial.o: ../../../src/GFX/fgGfxMaterial.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxMaterial.o ../../../src/GFX/fgGfxMaterial.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxMaterial.o ../../../src/GFX/fgGfxMaterial.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxMesh.o: ../../../src/GFX/fgGfxMesh.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxMesh.o: ../../../src/GFX/fgGfxMesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxMesh.o ../../../src/GFX/fgGfxMesh.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxMesh.o ../../../src/GFX/fgGfxMesh.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxModelResource.o: ../../../src/GFX/fgGfxModelResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxModelResource.o: ../../../src/GFX/fgGfxModelResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxModelResource.o ../../../src/GFX/fgGfxModelResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxModelResource.o ../../../src/GFX/fgGfxModelResource.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxPlaneGrid.o: ../../../src/GFX/fgGfxPlaneGrid.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o: ../../../src/GFX/fgGfxPlaneGrid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPlaneGrid.o ../../../src/GFX/fgGfxPlaneGrid.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o ../../../src/GFX/fgGfxPlaneGrid.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o: ../../../src/GFX/fgGfxPlatform.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxPlatform.o: ../../../src/GFX/fgGfxPlatform.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o ../../../src/GFX/fgGfxPlatform.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPlatform.o ../../../src/GFX/fgGfxPlatform.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o: ../../../src/GFX/fgGfxPolygon.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxPolygon.o: ../../../src/GFX/fgGfxPolygon.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o ../../../src/GFX/fgGfxPolygon.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPolygon.o ../../../src/GFX/fgGfxPolygon.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxPrimitives.o: ../../../src/GFX/fgGfxPrimitives.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o: ../../../src/GFX/fgGfxPrimitives.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPrimitives.o ../../../src/GFX/fgGfxPrimitives.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o ../../../src/GFX/fgGfxPrimitives.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxShape.o: ../../../src/GFX/fgGfxShape.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxShape.o: ../../../src/GFX/fgGfxShape.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxShape.o ../../../src/GFX/fgGfxShape.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxShape.o ../../../src/GFX/fgGfxShape.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxSimpleDrawer.o: ../../../src/GFX/fgGfxSimpleDrawer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxSimpleDrawer.o: ../../../src/GFX/fgGfxSimpleDrawer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxSimpleDrawer.o ../../../src/GFX/fgGfxSimpleDrawer.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxSimpleDrawer.o ../../../src/GFX/fgGfxSimpleDrawer.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxSkinnedMesh.o: ../../../src/GFX/fgGfxSkinnedMesh.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxSkinnedMesh.o: ../../../src/GFX/fgGfxSkinnedMesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxSkinnedMesh.o ../../../src/GFX/fgGfxSkinnedMesh.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxSkinnedMesh.o ../../../src/GFX/fgGfxSkinnedMesh.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxVertexData.o: ../../../src/GFX/fgGfxVertexData.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxVertexData.o: ../../../src/GFX/fgGfxVertexData.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxVertexData.o ../../../src/GFX/fgGfxVertexData.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxVertexData.o ../../../src/GFX/fgGfxVertexData.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGfxWindow.o: ../../../src/GFX/fgGfxWindow.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+${OBJECTDIR}/_ext/e022ccff/fgGfxWindow.o: ../../../src/GFX/fgGfxWindow.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxWindow.o ../../../src/GFX/fgGfxWindow.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxWindow.o ../../../src/GFX/fgGfxWindow.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontBuiltIn.o: ../../../src/GUI/Font/fgFontBuiltIn.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontBuiltIn.o: ../../../src/GUI/Font/fgFontBuiltIn.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontBuiltIn.o ../../../src/GUI/Font/fgFontBuiltIn.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontBuiltIn.o ../../../src/GUI/Font/fgFontBuiltIn.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontDrawer.o: ../../../src/GUI/Font/fgFontDrawer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontDrawer.o: ../../../src/GUI/Font/fgFontDrawer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontDrawer.o ../../../src/GUI/Font/fgFontDrawer.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontDrawer.o ../../../src/GUI/Font/fgFontDrawer.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontResource.o: ../../../src/GUI/Font/fgFontResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontResource.o: ../../../src/GUI/Font/fgFontResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontResource.o ../../../src/GUI/Font/fgFontResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontResource.o ../../../src/GUI/Font/fgFontResource.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbArial.o: ../../../src/GUI/Font/fgFontStbArial.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbArial.o: ../../../src/GUI/Font/fgFontStbArial.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbArial.o ../../../src/GUI/Font/fgFontStbArial.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbArial.o ../../../src/GUI/Font/fgFontStbArial.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbArialBold.o: ../../../src/GUI/Font/fgFontStbArialBold.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbArialBold.o: ../../../src/GUI/Font/fgFontStbArialBold.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbArialBold.o ../../../src/GUI/Font/fgFontStbArialBold.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbArialBold.o ../../../src/GUI/Font/fgFontStbArialBold.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbConsolas.o: ../../../src/GUI/Font/fgFontStbConsolas.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbConsolas.o: ../../../src/GUI/Font/fgFontStbConsolas.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbConsolas.o ../../../src/GUI/Font/fgFontStbConsolas.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbConsolas.o ../../../src/GUI/Font/fgFontStbConsolas.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbConsolasBold.o: ../../../src/GUI/Font/fgFontStbConsolasBold.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbConsolasBold.o: ../../../src/GUI/Font/fgFontStbConsolasBold.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbConsolasBold.o ../../../src/GUI/Font/fgFontStbConsolasBold.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbConsolasBold.o ../../../src/GUI/Font/fgFontStbConsolasBold.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbCourier.o: ../../../src/GUI/Font/fgFontStbCourier.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbCourier.o: ../../../src/GUI/Font/fgFontStbCourier.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbCourier.o ../../../src/GUI/Font/fgFontStbCourier.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbCourier.o ../../../src/GUI/Font/fgFontStbCourier.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbCourierBold.o: ../../../src/GUI/Font/fgFontStbCourierBold.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbCourierBold.o: ../../../src/GUI/Font/fgFontStbCourierBold.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbCourierBold.o ../../../src/GUI/Font/fgFontStbCourierBold.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbCourierBold.o ../../../src/GUI/Font/fgFontStbCourierBold.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbTimes.o: ../../../src/GUI/Font/fgFontStbTimes.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbTimes.o: ../../../src/GUI/Font/fgFontStbTimes.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbTimes.o ../../../src/GUI/Font/fgFontStbTimes.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbTimes.o ../../../src/GUI/Font/fgFontStbTimes.cpp
 
-${OBJECTDIR}/_ext/1216539907/fgFontStbTimesBold.o: ../../../src/GUI/Font/fgFontStbTimesBold.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1216539907
+${OBJECTDIR}/_ext/b77d12fd/fgFontStbTimesBold.o: ../../../src/GUI/Font/fgFontStbTimesBold.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b77d12fd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1216539907/fgFontStbTimesBold.o ../../../src/GUI/Font/fgFontStbTimesBold.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b77d12fd/fgFontStbTimesBold.o ../../../src/GUI/Font/fgFontStbTimesBold.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiButton.o: ../../../src/GUI/fgGuiButton.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiButton.o: ../../../src/GUI/fgGuiButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiButton.o ../../../src/GUI/fgGuiButton.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiButton.o ../../../src/GUI/fgGuiButton.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiCallback.o: ../../../src/GUI/fgGuiCallback.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiCallback.o: ../../../src/GUI/fgGuiCallback.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiCallback.o ../../../src/GUI/fgGuiCallback.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiCallback.o ../../../src/GUI/fgGuiCallback.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiConsole.o: ../../../src/GUI/fgGuiConsole.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiConsole.o: ../../../src/GUI/fgGuiConsole.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiConsole.o ../../../src/GUI/fgGuiConsole.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiConsole.o ../../../src/GUI/fgGuiConsole.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiContainer.o: ../../../src/GUI/fgGuiContainer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiContainer.o: ../../../src/GUI/fgGuiContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiContainer.o ../../../src/GUI/fgGuiContainer.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiContainer.o ../../../src/GUI/fgGuiContainer.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o: ../../../src/GUI/fgGuiDrawer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiDrawer.o: ../../../src/GUI/fgGuiDrawer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o ../../../src/GUI/fgGuiDrawer.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiDrawer.o ../../../src/GUI/fgGuiDrawer.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiEditableText.o: ../../../src/GUI/fgGuiEditableText.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiEditableText.o: ../../../src/GUI/fgGuiEditableText.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiEditableText.o ../../../src/GUI/fgGuiEditableText.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiEditableText.o ../../../src/GUI/fgGuiEditableText.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiFrame.o: ../../../src/GUI/fgGuiFrame.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiFrame.o: ../../../src/GUI/fgGuiFrame.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiFrame.o ../../../src/GUI/fgGuiFrame.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiFrame.o ../../../src/GUI/fgGuiFrame.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiLabel.o: ../../../src/GUI/fgGuiLabel.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiLabel.o: ../../../src/GUI/fgGuiLabel.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiLabel.o ../../../src/GUI/fgGuiLabel.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiLabel.o ../../../src/GUI/fgGuiLabel.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiLoader.o: ../../../src/GUI/fgGuiLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiLoader.o: ../../../src/GUI/fgGuiLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiLoader.o ../../../src/GUI/fgGuiLoader.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiLoader.o ../../../src/GUI/fgGuiLoader.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiMain.o: ../../../src/GUI/fgGuiMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiMain.o: ../../../src/GUI/fgGuiMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMain.o ../../../src/GUI/fgGuiMain.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiMain.o ../../../src/GUI/fgGuiMain.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiMenu.o: ../../../src/GUI/fgGuiMenu.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiMenu.o: ../../../src/GUI/fgGuiMenu.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMenu.o ../../../src/GUI/fgGuiMenu.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiMenu.o ../../../src/GUI/fgGuiMenu.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o: ../../../src/GUI/fgGuiMessageBox.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiMessageBox.o: ../../../src/GUI/fgGuiMessageBox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o ../../../src/GUI/fgGuiMessageBox.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiMessageBox.o ../../../src/GUI/fgGuiMessageBox.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiPopup.o: ../../../src/GUI/fgGuiPopup.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiPopup.o: ../../../src/GUI/fgGuiPopup.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiPopup.o ../../../src/GUI/fgGuiPopup.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiPopup.o ../../../src/GUI/fgGuiPopup.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o: ../../../src/GUI/fgGuiPrimitives.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiPrimitives.o: ../../../src/GUI/fgGuiPrimitives.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o ../../../src/GUI/fgGuiPrimitives.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiPrimitives.o ../../../src/GUI/fgGuiPrimitives.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o: ../../../src/GUI/fgGuiProgressBar.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiProgressBar.o: ../../../src/GUI/fgGuiProgressBar.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o ../../../src/GUI/fgGuiProgressBar.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiProgressBar.o ../../../src/GUI/fgGuiProgressBar.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o: ../../../src/GUI/fgGuiScreenGrid.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiScreenGrid.o: ../../../src/GUI/fgGuiScreenGrid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o ../../../src/GUI/fgGuiScreenGrid.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiScreenGrid.o ../../../src/GUI/fgGuiScreenGrid.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiScrollArea.o: ../../../src/GUI/fgGuiScrollArea.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiScrollArea.o: ../../../src/GUI/fgGuiScrollArea.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiScrollArea.o ../../../src/GUI/fgGuiScrollArea.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiScrollArea.o ../../../src/GUI/fgGuiScrollArea.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiSlider.o: ../../../src/GUI/fgGuiSlider.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiSlider.o: ../../../src/GUI/fgGuiSlider.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiSlider.o ../../../src/GUI/fgGuiSlider.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiSlider.o ../../../src/GUI/fgGuiSlider.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o: ../../../src/GUI/fgGuiStructureSheet.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiStructureSheet.o: ../../../src/GUI/fgGuiStructureSheet.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o ../../../src/GUI/fgGuiStructureSheet.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiStructureSheet.o ../../../src/GUI/fgGuiStructureSheet.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o: ../../../src/GUI/fgGuiStructureSheetParser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiStructureSheetParser.o: ../../../src/GUI/fgGuiStructureSheetParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o ../../../src/GUI/fgGuiStructureSheetParser.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiStructureSheetParser.o ../../../src/GUI/fgGuiStructureSheetParser.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStyle.o: ../../../src/GUI/fgGuiStyle.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiStyle.o: ../../../src/GUI/fgGuiStyle.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyle.o ../../../src/GUI/fgGuiStyle.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiStyle.o ../../../src/GUI/fgGuiStyle.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStyleContent.o: ../../../src/GUI/fgGuiStyleContent.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiStyleContent.o: ../../../src/GUI/fgGuiStyleContent.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyleContent.o ../../../src/GUI/fgGuiStyleContent.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiStyleContent.o ../../../src/GUI/fgGuiStyleContent.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStyleManager.o: ../../../src/GUI/fgGuiStyleManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiStyleManager.o: ../../../src/GUI/fgGuiStyleManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyleManager.o ../../../src/GUI/fgGuiStyleManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiStyleManager.o ../../../src/GUI/fgGuiStyleManager.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiTable.o: ../../../src/GUI/fgGuiTable.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiTable.o: ../../../src/GUI/fgGuiTable.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiTable.o ../../../src/GUI/fgGuiTable.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiTable.o ../../../src/GUI/fgGuiTable.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiTextArea.o: ../../../src/GUI/fgGuiTextArea.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiTextArea.o: ../../../src/GUI/fgGuiTextArea.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiTextArea.o ../../../src/GUI/fgGuiTextArea.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiTextArea.o ../../../src/GUI/fgGuiTextArea.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiToggleButton.o: ../../../src/GUI/fgGuiToggleButton.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiToggleButton.o: ../../../src/GUI/fgGuiToggleButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiToggleButton.o ../../../src/GUI/fgGuiToggleButton.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiToggleButton.o ../../../src/GUI/fgGuiToggleButton.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiWidget.o: ../../../src/GUI/fgGuiWidget.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiWidget.o: ../../../src/GUI/fgGuiWidget.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWidget.o ../../../src/GUI/fgGuiWidget.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiWidget.o ../../../src/GUI/fgGuiWidget.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o: ../../../src/GUI/fgGuiWidgetFactory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiWidgetFactory.o: ../../../src/GUI/fgGuiWidgetFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o ../../../src/GUI/fgGuiWidgetFactory.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiWidgetFactory.o ../../../src/GUI/fgGuiWidgetFactory.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiWidgetManager.o: ../../../src/GUI/fgGuiWidgetManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiWidgetManager.o: ../../../src/GUI/fgGuiWidgetManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWidgetManager.o ../../../src/GUI/fgGuiWidgetManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiWidgetManager.o ../../../src/GUI/fgGuiWidgetManager.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiWindow.o: ../../../src/GUI/fgGuiWindow.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+${OBJECTDIR}/_ext/e022cec1/fgGuiWindow.o: ../../../src/GUI/fgGuiWindow.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022cec1
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWindow.o ../../../src/GUI/fgGuiWindow.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022cec1/fgGuiWindow.o ../../../src/GUI/fgGuiWindow.cpp
 
-${OBJECTDIR}/_ext/607599404/fg2DGameWorld.o: ../../../src/Game/fg2DGameWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fg2DGameWorld.o: ../../../src/Game/fg2DGameWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fg2DGameWorld.o ../../../src/Game/fg2DGameWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fg2DGameWorld.o ../../../src/Game/fg2DGameWorld.cpp
 
-${OBJECTDIR}/_ext/607599404/fg3DGameWorld.o: ../../../src/Game/fg3DGameWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fg3DGameWorld.o: ../../../src/Game/fg3DGameWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fg3DGameWorld.o ../../../src/Game/fg3DGameWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fg3DGameWorld.o ../../../src/Game/fg3DGameWorld.cpp
 
-${OBJECTDIR}/_ext/607599404/fgGameEntity.o: ../../../src/Game/fgGameEntity.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgGameEntity.o: ../../../src/Game/fgGameEntity.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameEntity.o ../../../src/Game/fgGameEntity.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgGameEntity.o ../../../src/Game/fgGameEntity.cpp
 
-${OBJECTDIR}/_ext/607599404/fgGameEntityActor.o: ../../../src/Game/fgGameEntityActor.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgGameEntityActor.o: ../../../src/Game/fgGameEntityActor.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameEntityActor.o ../../../src/Game/fgGameEntityActor.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgGameEntityActor.o ../../../src/Game/fgGameEntityActor.cpp
 
-${OBJECTDIR}/_ext/607599404/fgGameEntityMesh.o: ../../../src/Game/fgGameEntityMesh.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgGameEntityMesh.o: ../../../src/Game/fgGameEntityMesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameEntityMesh.o ../../../src/Game/fgGameEntityMesh.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgGameEntityMesh.o ../../../src/Game/fgGameEntityMesh.cpp
 
-${OBJECTDIR}/_ext/607599404/fgGameMain.o: ../../../src/Game/fgGameMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgGameMain.o: ../../../src/Game/fgGameMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameMain.o ../../../src/Game/fgGameMain.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgGameMain.o ../../../src/Game/fgGameMain.cpp
 
-${OBJECTDIR}/_ext/607599404/fgGameWorld.o: ../../../src/Game/fgGameWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgGameWorld.o: ../../../src/Game/fgGameWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGameWorld.o ../../../src/Game/fgGameWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgGameWorld.o ../../../src/Game/fgGameWorld.cpp
 
-${OBJECTDIR}/_ext/607599404/fgGrid.o: ../../../src/Game/fgGrid.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgGrid.o: ../../../src/Game/fgGrid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgGrid.o ../../../src/Game/fgGrid.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgGrid.o ../../../src/Game/fgGrid.cpp
 
-${OBJECTDIR}/_ext/607599404/fgIntelligent.o: ../../../src/Game/fgIntelligent.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgIntelligent.o: ../../../src/Game/fgIntelligent.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgIntelligent.o ../../../src/Game/fgIntelligent.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgIntelligent.o ../../../src/Game/fgIntelligent.cpp
 
-${OBJECTDIR}/_ext/607599404/fgIntelligentWorld.o: ../../../src/Game/fgIntelligentWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607599404
+${OBJECTDIR}/_ext/24373b2c/fgIntelligentWorld.o: ../../../src/Game/fgIntelligentWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/24373b2c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607599404/fgIntelligentWorld.o ../../../src/Game/fgIntelligentWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/24373b2c/fgIntelligentWorld.o ../../../src/Game/fgIntelligentWorld.cpp
 
-${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o: ../../../src/Hardware/fgDeviceQuery.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
+${OBJECTDIR}/_ext/e320a822/fgDeviceQuery.o: ../../../src/Hardware/fgDeviceQuery.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e320a822
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o ../../../src/Hardware/fgDeviceQuery.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e320a822/fgDeviceQuery.o ../../../src/Hardware/fgDeviceQuery.cpp
 
-${OBJECTDIR}/_ext/484399070/fgHardwareState.o: ../../../src/Hardware/fgHardwareState.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
+${OBJECTDIR}/_ext/e320a822/fgHardwareState.o: ../../../src/Hardware/fgHardwareState.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e320a822
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgHardwareState.o ../../../src/Hardware/fgHardwareState.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e320a822/fgHardwareState.o ../../../src/Hardware/fgHardwareState.cpp
 
-${OBJECTDIR}/_ext/484399070/fgQualityManager.o: ../../../src/Hardware/fgQualityManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
+${OBJECTDIR}/_ext/e320a822/fgQualityManager.o: ../../../src/Hardware/fgQualityManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e320a822
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgQualityManager.o ../../../src/Hardware/fgQualityManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e320a822/fgQualityManager.o ../../../src/Hardware/fgQualityManager.cpp
 
-${OBJECTDIR}/_ext/484399070/fgSensors.o: ../../../src/Hardware/fgSensors.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
+${OBJECTDIR}/_ext/e320a822/fgSensors.o: ../../../src/Hardware/fgSensors.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e320a822
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgSensors.o ../../../src/Hardware/fgSensors.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e320a822/fgSensors.o ../../../src/Hardware/fgSensors.cpp
 
-${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o: ../../../src/Math/fgKalmanFilter.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/607778370
+${OBJECTDIR}/_ext/2439f642/fgKalmanFilter.o: ../../../src/Math/fgKalmanFilter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/2439f642
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o ../../../src/Math/fgKalmanFilter.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2439f642/fgKalmanFilter.o ../../../src/Math/fgKalmanFilter.cpp
 
-${OBJECTDIR}/_ext/94644411/fgCollisionBody.o: ../../../src/Physics/Cyclone/fgCollisionBody.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/6009f4cd/fgAbstractCollisionBody.o: ../../../src/Physics/fgAbstractCollisionBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/6009f4cd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgCollisionBody.o ../../../src/Physics/Cyclone/fgCollisionBody.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/6009f4cd/fgAbstractCollisionBody.o ../../../src/Physics/fgAbstractCollisionBody.cpp
 
-${OBJECTDIR}/_ext/94644411/fgCollisionCoarse.o: ../../../src/Physics/Cyclone/fgCollisionCoarse.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/6009f4cd/fgBulletHelper.o: ../../../src/Physics/fgBulletHelper.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/6009f4cd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgCollisionCoarse.o ../../../src/Physics/Cyclone/fgCollisionCoarse.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/6009f4cd/fgBulletHelper.o ../../../src/Physics/fgBulletHelper.cpp
 
-${OBJECTDIR}/_ext/94644411/fgCollisionFine.o: ../../../src/Physics/Cyclone/fgCollisionFine.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/6009f4cd/fgCollisionBody.o: ../../../src/Physics/fgCollisionBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/6009f4cd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgCollisionFine.o ../../../src/Physics/Cyclone/fgCollisionFine.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/6009f4cd/fgCollisionBody.o ../../../src/Physics/fgCollisionBody.cpp
 
-${OBJECTDIR}/_ext/94644411/fgContact.o: ../../../src/Physics/Cyclone/fgContact.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/6009f4cd/fgPhysical.o: ../../../src/Physics/fgPhysical.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/6009f4cd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgContact.o ../../../src/Physics/Cyclone/fgContact.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/6009f4cd/fgPhysical.o ../../../src/Physics/fgPhysical.cpp
 
-${OBJECTDIR}/_ext/94644411/fgContactResolver.o: ../../../src/Physics/Cyclone/fgContactResolver.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/6009f4cd/fgPhysicalWorld.o: ../../../src/Physics/fgPhysicalWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/6009f4cd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgContactResolver.o ../../../src/Physics/Cyclone/fgContactResolver.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/6009f4cd/fgPhysicalWorld.o ../../../src/Physics/fgPhysicalWorld.cpp
 
-${OBJECTDIR}/_ext/94644411/fgCycloneCoreMath.o: ../../../src/Physics/Cyclone/fgCycloneCoreMath.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/6009f4cd/fgRagdollCollisionBody.o: ../../../src/Physics/fgRagdollCollisionBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/6009f4cd
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgCycloneCoreMath.o ../../../src/Physics/Cyclone/fgCycloneCoreMath.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/6009f4cd/fgRagdollCollisionBody.o ../../../src/Physics/fgRagdollCollisionBody.cpp
 
-${OBJECTDIR}/_ext/94644411/fgForceGenerator.o: ../../../src/Physics/Cyclone/fgForceGenerator.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/c7d48648/fgResource.o: ../../../src/Resource/fgResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c7d48648
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgForceGenerator.o ../../../src/Physics/Cyclone/fgForceGenerator.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c7d48648/fgResource.o ../../../src/Resource/fgResource.cpp
 
-${OBJECTDIR}/_ext/94644411/fgJoint.o: ../../../src/Physics/Cyclone/fgJoint.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/c7d48648/fgResourceConfigParser.o: ../../../src/Resource/fgResourceConfigParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c7d48648
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgJoint.o ../../../src/Physics/Cyclone/fgJoint.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c7d48648/fgResourceConfigParser.o ../../../src/Resource/fgResourceConfigParser.cpp
 
-${OBJECTDIR}/_ext/94644411/fgParticle.o: ../../../src/Physics/Cyclone/fgParticle.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/c7d48648/fgResourceFactory.o: ../../../src/Resource/fgResourceFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c7d48648
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgParticle.o ../../../src/Physics/Cyclone/fgParticle.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c7d48648/fgResourceFactory.o ../../../src/Resource/fgResourceFactory.cpp
 
-${OBJECTDIR}/_ext/94644411/fgParticleContact.o: ../../../src/Physics/Cyclone/fgParticleContact.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/c7d48648/fgResourceGroup.o: ../../../src/Resource/fgResourceGroup.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c7d48648
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgParticleContact.o ../../../src/Physics/Cyclone/fgParticleContact.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c7d48648/fgResourceGroup.o ../../../src/Resource/fgResourceGroup.cpp
 
-${OBJECTDIR}/_ext/94644411/fgParticleContactResolver.o: ../../../src/Physics/Cyclone/fgParticleContactResolver.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/c7d48648/fgResourceManager.o: ../../../src/Resource/fgResourceManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/c7d48648
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgParticleContactResolver.o ../../../src/Physics/Cyclone/fgParticleContactResolver.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/c7d48648/fgResourceManager.o ../../../src/Resource/fgResourceManager.cpp
 
-${OBJECTDIR}/_ext/94644411/fgParticleForceGenerator.o: ../../../src/Physics/Cyclone/fgParticleForceGenerator.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/b7d5943d/fgScriptCallback.o: ../../../src/Scripting/fgScriptCallback.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b7d5943d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgParticleForceGenerator.o ../../../src/Physics/Cyclone/fgParticleForceGenerator.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b7d5943d/fgScriptCallback.o ../../../src/Scripting/fgScriptCallback.cpp
 
-${OBJECTDIR}/_ext/94644411/fgParticleLink.o: ../../../src/Physics/Cyclone/fgParticleLink.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/b7d5943d/fgScriptMT.o: ../../../src/Scripting/fgScriptMT.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b7d5943d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgParticleLink.o ../../../src/Physics/Cyclone/fgParticleLink.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b7d5943d/fgScriptMT.o ../../../src/Scripting/fgScriptMT.cpp
 
-${OBJECTDIR}/_ext/94644411/fgParticleWorld.o: ../../../src/Physics/Cyclone/fgParticleWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/b7d5943d/fgScriptSubsystem.o: ../../../src/Scripting/fgScriptSubsystem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b7d5943d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgParticleWorld.o ../../../src/Physics/Cyclone/fgParticleWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b7d5943d/fgScriptSubsystem.o ../../../src/Scripting/fgScriptSubsystem.cpp
 
-${OBJECTDIR}/_ext/94644411/fgRandom.o: ../../../src/Physics/Cyclone/fgRandom.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/9e916c4/fgThread.o: ../../../src/Thread/fgThread.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/9e916c4
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgRandom.o ../../../src/Physics/Cyclone/fgRandom.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/9e916c4/fgThread.o ../../../src/Thread/fgThread.cpp
 
-${OBJECTDIR}/_ext/94644411/fgRigidBody.o: ../../../src/Physics/Cyclone/fgRigidBody.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/9e916c4/fgThreadSem.o: ../../../src/Thread/fgThreadSem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/9e916c4
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgRigidBody.o ../../../src/Physics/Cyclone/fgRigidBody.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/9e916c4/fgThreadSem.o ../../../src/Thread/fgThreadSem.cpp
 
-${OBJECTDIR}/_ext/94644411/fgWorld.o: ../../../src/Physics/Cyclone/fgWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/94644411
+${OBJECTDIR}/_ext/243ddf3c/fgConfig.o: ../../../src/Util/fgConfig.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/94644411/fgWorld.o ../../../src/Physics/Cyclone/fgWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgConfig.o ../../../src/Util/fgConfig.cpp
 
-${OBJECTDIR}/_ext/1611265229/fgAbstractCollisionBody.o: ../../../src/Physics/fgAbstractCollisionBody.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+${OBJECTDIR}/_ext/243ddf3c/fgConfigParser.o: ../../../src/Util/fgConfigParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgAbstractCollisionBody.o ../../../src/Physics/fgAbstractCollisionBody.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgConfigParser.o ../../../src/Util/fgConfigParser.cpp
 
-${OBJECTDIR}/_ext/1611265229/fgBulletHelper.o: ../../../src/Physics/fgBulletHelper.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+${OBJECTDIR}/_ext/243ddf3c/fgConfigWriter.o: ../../../src/Util/fgConfigWriter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgBulletHelper.o ../../../src/Physics/fgBulletHelper.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgConfigWriter.o ../../../src/Util/fgConfigWriter.cpp
 
-${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o: ../../../src/Physics/fgCollisionBody.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+${OBJECTDIR}/_ext/243ddf3c/fgDirent.o: ../../../src/Util/fgDirent.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o ../../../src/Physics/fgCollisionBody.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgDirent.o ../../../src/Util/fgDirent.cpp
 
-${OBJECTDIR}/_ext/1611265229/fgPhysical.o: ../../../src/Physics/fgPhysical.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+${OBJECTDIR}/_ext/243ddf3c/fgFastCmp.o: ../../../src/Util/fgFastCmp.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgPhysical.o ../../../src/Physics/fgPhysical.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgFastCmp.o ../../../src/Util/fgFastCmp.cpp
 
-${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o: ../../../src/Physics/fgPhysicalWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+${OBJECTDIR}/_ext/243ddf3c/fgFile.o: ../../../src/Util/fgFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgPhysicalWorld.o ../../../src/Physics/fgPhysicalWorld.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgFile.o ../../../src/Util/fgFile.cpp
 
-${OBJECTDIR}/_ext/1611265229/fgRagdollCollisionBody.o: ../../../src/Physics/fgRagdollCollisionBody.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+${OBJECTDIR}/_ext/243ddf3c/fgHashFunc.o: ../../../src/Util/fgHashFunc.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgRagdollCollisionBody.o ../../../src/Physics/fgRagdollCollisionBody.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgHashFunc.o ../../../src/Util/fgHashFunc.cpp
 
-${OBJECTDIR}/_ext/942373304/fgResource.o: ../../../src/Resource/fgResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+${OBJECTDIR}/_ext/243ddf3c/fgPath.o: ../../../src/Util/fgPath.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResource.o ../../../src/Resource/fgResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgPath.o ../../../src/Util/fgPath.cpp
 
-${OBJECTDIR}/_ext/942373304/fgResourceConfigParser.o: ../../../src/Resource/fgResourceConfigParser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+${OBJECTDIR}/_ext/243ddf3c/fgProfiling.o: ../../../src/Util/fgProfiling.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceConfigParser.o ../../../src/Resource/fgResourceConfigParser.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgProfiling.o ../../../src/Util/fgProfiling.cpp
 
-${OBJECTDIR}/_ext/942373304/fgResourceFactory.o: ../../../src/Resource/fgResourceFactory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+${OBJECTDIR}/_ext/243ddf3c/fgRegularFile.o: ../../../src/Util/fgRegularFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceFactory.o ../../../src/Resource/fgResourceFactory.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgRegularFile.o ../../../src/Util/fgRegularFile.cpp
 
-${OBJECTDIR}/_ext/942373304/fgResourceGroup.o: ../../../src/Resource/fgResourceGroup.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+${OBJECTDIR}/_ext/243ddf3c/fgSettings.o: ../../../src/Util/fgSettings.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceGroup.o ../../../src/Resource/fgResourceGroup.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgSettings.o ../../../src/Util/fgSettings.cpp
 
-${OBJECTDIR}/_ext/942373304/fgResourceManager.o: ../../../src/Resource/fgResourceManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+${OBJECTDIR}/_ext/243ddf3c/fgStrings.o: ../../../src/Util/fgStrings.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceManager.o ../../../src/Resource/fgResourceManager.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgStrings.o ../../../src/Util/fgStrings.cpp
 
-${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o: ../../../src/Scripting/fgScriptCallback.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
+${OBJECTDIR}/_ext/243ddf3c/fgTime.o: ../../../src/Util/fgTime.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o ../../../src/Scripting/fgScriptCallback.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgTime.o ../../../src/Util/fgTime.cpp
 
-${OBJECTDIR}/_ext/1210739651/fgScriptMT.o: ../../../src/Scripting/fgScriptMT.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
+${OBJECTDIR}/_ext/243ddf3c/fgZipFile.o: ../../../src/Util/fgZipFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/243ddf3c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptMT.o ../../../src/Scripting/fgScriptMT.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/243ddf3c/fgZipFile.o ../../../src/Util/fgZipFile.cpp
 
-${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o: ../../../src/Scripting/fgScriptSubsystem.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
+${OBJECTDIR}/_ext/e0230d9d/fgXMLParser.o: ../../../src/XML/fgXMLParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e0230d9d
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o ../../../src/Scripting/fgScriptSubsystem.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e0230d9d/fgXMLParser.o ../../../src/XML/fgXMLParser.cpp
 
-${OBJECTDIR}/_ext/166270660/fgThread.o: ../../../src/Thread/fgThread.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/166270660
+${OBJECTDIR}/_ext/52a4beb5/fgBuildConfig.o: ../../../src/fgBuildConfig.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/166270660/fgThread.o ../../../src/Thread/fgThread.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgBuildConfig.o ../../../src/fgBuildConfig.cpp
 
-${OBJECTDIR}/_ext/166270660/fgThreadSem.o: ../../../src/Thread/fgThreadSem.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/166270660
+${OBJECTDIR}/_ext/52a4beb5/fgColors.o: ../../../src/fgColors.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/166270660/fgThreadSem.o ../../../src/Thread/fgThreadSem.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgColors.o ../../../src/fgColors.cpp
 
-${OBJECTDIR}/_ext/608034620/fgConfig.o: ../../../src/Util/fgConfig.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgCommon.o: ../../../src/fgCommon.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgConfig.o ../../../src/Util/fgConfig.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgCommon.o ../../../src/fgCommon.cpp
 
-${OBJECTDIR}/_ext/608034620/fgConfigParser.o: ../../../src/Util/fgConfigParser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgDebugConfig.o: ../../../src/fgDebugConfig.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgConfigParser.o ../../../src/Util/fgConfigParser.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgDebugConfig.o ../../../src/fgDebugConfig.cpp
 
-${OBJECTDIR}/_ext/608034620/fgConfigWriter.o: ../../../src/Util/fgConfigWriter.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgEngineMain.o: ../../../src/fgEngineMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgConfigWriter.o ../../../src/Util/fgConfigWriter.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgEngineMain.o ../../../src/fgEngineMain.cpp
 
-${OBJECTDIR}/_ext/608034620/fgDirent.o: ../../../src/Util/fgDirent.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgErrno.o: ../../../src/fgErrno.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgDirent.o ../../../src/Util/fgDirent.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgErrno.o ../../../src/fgErrno.cpp
 
-${OBJECTDIR}/_ext/608034620/fgFastCmp.o: ../../../src/Util/fgFastCmp.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgErrorCodes.o: ../../../src/fgErrorCodes.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgFastCmp.o ../../../src/Util/fgFastCmp.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgErrorCodes.o ../../../src/fgErrorCodes.cpp
 
-${OBJECTDIR}/_ext/608034620/fgFile.o: ../../../src/Util/fgFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgLog.o: ../../../src/fgLog.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgFile.o ../../../src/Util/fgFile.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgLog.o ../../../src/fgLog.cpp
 
-${OBJECTDIR}/_ext/608034620/fgHashFunc.o: ../../../src/Util/fgHashFunc.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgMainModule.o: ../../../src/fgMainModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgHashFunc.o ../../../src/Util/fgHashFunc.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgMainModule.o ../../../src/fgMainModule.cpp
 
-${OBJECTDIR}/_ext/608034620/fgPath.o: ../../../src/Util/fgPath.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgMessageSubsystem.o: ../../../src/fgMessageSubsystem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgPath.o ../../../src/Util/fgPath.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgMessageSubsystem.o ../../../src/fgMessageSubsystem.cpp
 
-${OBJECTDIR}/_ext/608034620/fgProfiling.o: ../../../src/Util/fgProfiling.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o: ../../../src/fgPluginResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgProfiling.o ../../../src/Util/fgProfiling.cpp
-
-${OBJECTDIR}/_ext/608034620/fgRegularFile.o: ../../../src/Util/fgRegularFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgRegularFile.o ../../../src/Util/fgRegularFile.cpp
-
-${OBJECTDIR}/_ext/608034620/fgSettings.o: ../../../src/Util/fgSettings.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgSettings.o ../../../src/Util/fgSettings.cpp
-
-${OBJECTDIR}/_ext/608034620/fgStrings.o: ../../../src/Util/fgStrings.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgStrings.o ../../../src/Util/fgStrings.cpp
-
-${OBJECTDIR}/_ext/608034620/fgTime.o: ../../../src/Util/fgTime.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgTime.o ../../../src/Util/fgTime.cpp
-
-${OBJECTDIR}/_ext/608034620/fgZipFile.o: ../../../src/Util/fgZipFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgZipFile.o ../../../src/Util/fgZipFile.cpp
-
-${OBJECTDIR}/_ext/534573667/fgXMLParser.o: ../../../src/XML/fgXMLParser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534573667
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534573667/fgXMLParser.o ../../../src/XML/fgXMLParser.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o: ../../../src/fgBuildConfig.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o ../../../src/fgBuildConfig.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgColors.o: ../../../src/fgColors.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgColors.o ../../../src/fgColors.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgCommon.o: ../../../src/fgCommon.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgCommon.o ../../../src/fgCommon.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgDebugConfig.o: ../../../src/fgDebugConfig.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgDebugConfig.o ../../../src/fgDebugConfig.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgEngineMain.o: ../../../src/fgEngineMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgEngineMain.o ../../../src/fgEngineMain.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgErrno.o: ../../../src/fgErrno.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgErrno.o ../../../src/fgErrno.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o: ../../../src/fgErrorCodes.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o ../../../src/fgErrorCodes.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgLog.o: ../../../src/fgLog.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgLog.o ../../../src/fgLog.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgMainModule.o: ../../../src/fgMainModule.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgMainModule.o ../../../src/fgMainModule.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o: ../../../src/fgMessageSubsystem.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o ../../../src/fgMessageSubsystem.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgPluginResource.o: ../../../src/fgPluginResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DFG_NO_UNDEF -DFG_DEBUG -D_DEBUG -DDEBUG -DFG_STATIC_LIBRARY -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgPluginResource.o ../../../src/fgPluginResource.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o ../../../src/fgPluginResource.cpp
 
 # Subprojects
 .build-subprojects:

@@ -75,6 +75,7 @@ void xml::CParser::freeXML(void) {
     m_rootXMLElement = NULL;
     m_currentXMLNode = NULL;
     m_contentHandler = NULL;
+    m_currentXMLAttribute = NULL;
     while(!m_parsingStack.empty()) {
         m_parsingStack.pop();
     }

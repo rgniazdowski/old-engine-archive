@@ -21,10 +21,11 @@
     #include "fgBulletMaskTypes.h"
     #include "fgAbstractCollisionBody.h"
     #include "fgBool.h"
+    #include "Math/fgMathLib.h"
+    #include "Math/fgDualQuaternion.h"
 
     #if defined(FG_USING_BULLET)
-        #include "Math/fgMathLib.h"
-        #include "Math/fgDualQuaternion.h"
+
         #include "BulletDynamics/Dynamics/btRigidBody.h"
         #include "BulletCollision/CollisionShapes/btCollisionShape.h"
 
@@ -214,7 +215,7 @@ namespace fg {
 
 //------------------------------------------------------------------------------
 
-    #if !defined(FG_USING_BULLET) && !defined(FG_USING_CYCLONE)
+    #if !defined(FG_USING_BULLET)
 namespace fg {
     namespace physics {
         class CPhysicalWorld;
@@ -381,14 +382,13 @@ namespace fg {
             void setWorldTransform(const DualQuaternionf& dq) { }
             void setWorldTransform(float* matrix) { }
             //------------------------------------------------------------------
-
             fgBool isActive(void) const {
                 return FG_FALSE;
             }
-
             fgBool isStaticObject(void) const {
                 return FG_TRUE;
             }
+            void activate(bool activation) const { }
         protected:
             virtual void setupBody(BodyType bodyType) { }
         }; // class CCollisionBody
@@ -398,4 +398,4 @@ namespace fg {
     #endif /* not using Bullet && not using Cyclone */
 
     #undef FG_INC_COLLISION_BODY_BLOCK
-#endif	/* FG_INC_COLLISION_BODY */
+#endif /* FG_INC_COLLISION_BODY */
