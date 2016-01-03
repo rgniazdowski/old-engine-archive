@@ -418,7 +418,9 @@ namespace fg {
 
         protected:
             fgBool helper_initializeJoint(const RagdollBoneType boneA,
-                                          const RagdollBoneType boneB = BONE_INVALID);
+                                          int boneAIndex,
+                                          const RagdollBoneType boneB,
+                                          int boneBIndex);
 
             fgBool helper_initializeBone(unsigned int bodyBoneIndex,
                                          const Vec3f& position,

@@ -37,7 +37,7 @@ m_ragdollAnimation(NULL) {
     // now will need to set model and collision body type
     // also depending on model type - ragdoll body
 
-    // not GAME_ENTITY_MESH
+    // not GAME_ENTITY_MESH !!!
     base_type::setDefaultMeshChildType(gfx::SCENE_NODE_MESH);
     this->setModel(pModel);
     // NOTE: presence of physical trait does not imply usage of collision body...
@@ -48,6 +48,8 @@ game::CEntityActor::CEntityActor(const self_type& orig) : base_type(orig), physi
     setNodeType(self_type::SELF_ENTITY_TYPE);
     setNodeTypeMask(self_type::SELF_ENTITY_TYPE);
     setNodeTrait(physical_type::SELF_TRAIT);
+    // this is important - with actor body there is no need for ENTITY_MESH
+    // children - only NODE_MESH which does not have physical properties.
     base_type::setDefaultMeshChildType(gfx::SCENE_NODE_MESH);
     // need a little hack here...
     //gfx::CModelResource* pModel = orig.getModel();
@@ -197,22 +199,6 @@ void game::CEntityActor::startRagdolling(void) {
             break; // ooops! #FIXME need to get merged animation and list of bones
         }
         pBody->startRagdolling();
-#if 0
-        btVector3 deathV;
-        deathV.setX(-150.0f);
-        deathV.setY(300.0f);
-        deathV.setZ(-1500.0f);
-        pBody->getBoneBodies()[0]->applyCentralImpulse(deathV);
-        pBody->getBoneBodies()[1]->applyCentralImpulse(deathV);
-        pBody->getBoneBodies()[2]->applyCentralImpulse(deathV);
-        //pBody->getBoneBodies()[3]->applyCentralImpulse(btVector3(deathV.x, deathV.y, deathV.z));
-        //pBody->getBoneBodies()[4]->applyCentralImpulse(btVector3(deathV.x, deathV.y, deathV.z));
-
-        pBody->getBoneBodies()[8]->applyCentralImpulse(deathV);
-        pBody->getBoneBodies()[9]->applyCentralImpulse(deathV);
-        pBody->getBoneBodies()[10]->applyCentralImpulse(deathV);
-        pBody->getBoneBodies()[11]->applyCentralImpulse(deathV);
-#endif
         status = pBody->isRagdolling();
     }
     if(!status)
@@ -233,6 +219,8 @@ void game::CEntityActor::startRagdolling(void) {
 void game::CEntityActor::stopRagdolling(void) {
     if(isRagdoll()) {
         getRagdollCollisionBody()->stopRagdolling();
+// #FIXME - should preserve ragdoll animation? (bones need to have state updated)
+#if 0
         this->removeAnimation(m_ragdollAnimation);
         ChildrenVec& children = this->getChildren();
         const unsigned int n = children.size();
@@ -242,6 +230,7 @@ void game::CEntityActor::stopRagdolling(void) {
                 continue;
             pChild->removeAnimation(m_ragdollAnimation);
         }
+#endif
     }
 }
 //------------------------------------------------------------------------------

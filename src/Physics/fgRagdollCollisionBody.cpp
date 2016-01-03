@@ -14,6 +14,8 @@
  * Created on October 10, 2015, 12:47 AM
  */
 
+#include <stack>
+
 #include "fgRagdollCollisionBody.h"
 #include "fgCollisionBody.h"
 
@@ -130,7 +132,10 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
     m_boneMapping.resize(armatureSize, -1);
     m_typeMapping.clear();
     const unsigned int nBonesInfo = bonesInfo.size();
-    fgBool hasHead = FG_FALSE, hasNeck = FG_FALSE, hasSpine = FG_FALSE, hasPelvis = FG_FALSE;
+    fgBool hasHead = FG_FALSE,
+            hasNeck = FG_FALSE,
+            hasSpine = FG_FALSE,
+            hasPelvis = FG_FALSE;
     for(unsigned int i = 0; i < nBonesInfo; i++) {
         const SBoneSmallInfo& info = bonesInfo[i];
         if(info.boneType == BONE_INVALID)
@@ -209,70 +214,66 @@ fgBool physics::CRagdollCollisionBody::initializeFrom(const BonesInfoVec& bonesI
     } // for each bone info map entry    
     // there are standard joint pairs can create array with joint chains...
 
-    // First initialize joints with bones that have matching type.
-    // These are the bones that are most likely to repeat.
-    // This is for use-case when the arms or legs have more parts.
-    // However this will wont work if for example armature is for
-    // some non-humanoid monster (which has more than two arms or legs)
-#if 1
-    helper_initializeJoint(BONE_SPINE, BONE_SPINE);
-    helper_initializeJoint(BONE_ARM_LEFT, BONE_ARM_LEFT);
-    helper_initializeJoint(BONE_ARM_RIGHT, BONE_ARM_RIGHT);
-    helper_initializeJoint(BONE_LEG_LEFT, BONE_LEG_LEFT);
-    helper_initializeJoint(BONE_LEG_RIGHT, BONE_LEG_RIGHT);
+    // Need to traverse the whole bone structure.
+    // Keep in mind that this will be tricky as there is no list of children,
+    // only information about parent for each bone.
+    // Will use stack for this and array with visited ids.
+    std::stack<int> bStack;
+    CVector<int> bVisited;
+    bVisited.reserve(armatureSize); // ?
+    const int nBones = (int)m_bonesInfo.size();
+    // traverse the bone list starting from the last one
+    for(int idxBone = nBones - 1; idxBone >= 0; idxBone--) {
+        if(bVisited.contains(idxBone))
+            continue;
+        bStack.push(idxBone);
+        while(!bStack.empty()) {
+            int childBoneIdx = bStack.top();
+            bStack.pop();
+            // mark the bone as visited
+            bVisited.push_back(childBoneIdx);
 
-    if(hasPelvis && hasSpine)
-        helper_initializeJoint(BONE_PELVIS, BONE_SPINE);
-    if(hasSpine && hasNeck)
-        helper_initializeJoint(BONE_SPINE, BONE_NECK);
-    if(hasNeck && hasHead)
-        helper_initializeJoint(BONE_NECK, BONE_HEAD);
-    if(!hasNeck && hasHead && hasSpine)
-        helper_initializeJoint(BONE_SPINE, BONE_HEAD);
-
-    if(hasPelvis) {
-        helper_initializeJoint(BONE_PELVIS, BONE_THIGH_LEFT);
-        helper_initializeJoint(BONE_PELVIS, BONE_THIGH_RIGHT);
-    }
-
-    helper_initializeJoint(BONE_THIGH_LEFT, BONE_LEG_LEFT);
-    helper_initializeJoint(BONE_THIGH_RIGHT, BONE_LEG_RIGHT);
-
-    helper_initializeJoint(BONE_LEG_LEFT, BONE_FOOT_LEFT);
-    helper_initializeJoint(BONE_LEG_RIGHT, BONE_FOOT_RIGHT);
-
-    if(hasSpine) {
-        helper_initializeJoint(BONE_SPINE, BONE_ARM_LEFT);
-        helper_initializeJoint(BONE_SPINE, BONE_ARM_RIGHT);
-    }
-
-    helper_initializeJoint(BONE_ARM_LEFT, BONE_FOREARM_LEFT);
-    helper_initializeJoint(BONE_ARM_RIGHT, BONE_FOREARM_RIGHT);
-
-    helper_initializeJoint(BONE_FOREARM_LEFT, BONE_HAND_LEFT);
-    helper_initializeJoint(BONE_FOREARM_RIGHT, BONE_HAND_RIGHT);
-
-    // if only one bone type is specified - will try to auto-detect parent
-    // and connect joint with it
-    helper_initializeJoint(BONE_FACE_EXTRA);
-    helper_initializeJoint(BONE_BACK_EXTRA);
-    helper_initializeJoint(BONE_FRONT_EXTRA);
-#endif
-
+            // now need to get type of the first bone
+            // get parent idx ; get type for each one of them
+            // and call initialize_Joint (which needs to get different parameters)
+            SBoneSmallInfo* pChildBone = &m_bonesInfo[childBoneIdx];
+            if(pChildBone->parentIdx < 0) {
+                // no parent? well...
+                continue;
+            }
+            int parentBoneIdx = m_boneMapping[pChildBone->parentIdx];
+            if(parentBoneIdx < 0) {
+                continue;
+            }
+            SBoneSmallInfo* pParentBone = &m_bonesInfo[parentBoneIdx];
+            if(pParentBone->boneType == BONE_INVALID) {
+                continue;
+            }
+            helper_initializeJoint(pParentBone->boneType,
+                                   parentBoneIdx,
+                                   pChildBone->boneType,
+                                   childBoneIdx);
+        } // while stack not empty
+    } // reverse traversal
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
 fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneType boneA,
-                                                              const RagdollBoneType boneB) {
-    fgBool status = FG_FALSE, isSingle = FG_FALSE, isEqual = FG_FALSE, isFlipped = FG_FALSE;
-    if(boneB == BONE_INVALID) {
-        isSingle = FG_TRUE;
+                                                              int boneAIndex,
+                                                              const RagdollBoneType boneB,
+                                                              int boneBIndex) {
+    fgBool status = FG_FALSE,
+            isEqual = (fgBool)(boneA == boneB),
+            isFlipped = FG_FALSE,
+            useHinge = FG_FALSE; // when false - will use cone
+
+    if(boneB == BONE_INVALID || boneAIndex < 0 || boneBIndex < 0) {
+        return FG_FALSE;
     }
     if(boneA == BONE_INVALID)
         return FG_FALSE;
-    isEqual = (fgBool)(boneA == boneB);
-    JointID jointID;
+    
     if(m_typeMapping.find(boneA) == m_typeMapping.end()) {
         // no such bone in the armature? ignore!
         return FG_FALSE;
@@ -280,90 +281,15 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
     if(m_bones.empty() || m_bonesInfo.empty()) {
         return FG_FALSE; // nothing to do
     }
-    if(isSingle) {
-        fgBool finalStatus = FG_TRUE;
-        const unsigned int n = m_typeMapping[boneA].size();
-        for(unsigned int i = 0; i < n; i++) {
-            // need just to check if parent exists - call self with proper arg
-            int boneAIndex = m_typeMapping[boneA].at(i);
-            SBoneSmallInfo* infoA = &m_bonesInfo[boneAIndex];
-
-            if(infoA->parentIdx < 0)
-                return FG_FALSE;
-            int boneBIndex = m_boneMapping[infoA->parentIdx];
-            if(boneBIndex < 0)
-                return FG_FALSE;
-            SBoneSmallInfo * infoB = &m_bonesInfo[boneBIndex];
-            if(infoB->boneType == BONE_INVALID)
-                return FG_FALSE;
-            if(infoB->boneType == boneA); // ?
-
-            status = helper_initializeJoint(infoB->boneType, boneA);
-            finalStatus = (finalStatus && status);
-        }
-        return finalStatus;
-    }
-    if(m_typeMapping.find(boneB) == m_typeMapping.end()) {
-        // no such bone in the armature? ignore!
-        return FG_FALSE;
-    }
-    jointID = JointID(boneA, boneB);
-    int firstIdx = 0, secondIdx = 0;
-    if(isEqual) {
-        if(m_typeMapping[boneA].size() <= 1) {
-            // have just one type // nothing to do
-            return FG_FALSE;
-        }
-        secondIdx = 1;
-    } else {
-        // not equal
-        if(m_typeMapping[boneA].size() > 1) {
-            // there are multiple bones for A
-            // they probably are chained - need to select the most upper one
-            // or probably the most proper way... choose parent? if type matches
-            int tmpBoneBIndex = m_typeMapping[boneB].at(0); // whay 0?
-            SBoneSmallInfo* tmpInfoB = &m_bonesInfo[tmpBoneBIndex];
-            if(tmpInfoB->parentIdx >= 0) {
-                int newBoneAIndex = m_boneMapping[tmpInfoB->parentIdx];
-                if(newBoneAIndex >= 0) {
-                    int newIndex = m_typeMapping[boneA].find(newBoneAIndex);
-                    if(newIndex != -1) {
-                        firstIdx = newIndex;
-                    }
-                }
-            }
-            // probably need to forget about matching bones by type and just bind
-            // children to parents and selecting proper constraint based on type...
-            // this is just fubar ! ! #FIXME
-        }
-    }
+    JointID jointID = JointID(boneA, boneB);
     btHingeConstraint* pHinge = NULL;
     btConeTwistConstraint* pCone = NULL;
     btTypedConstraint* pTypedConstraint = NULL;
     btTransform localA, localB;
-    fgBool useHinge = FG_FALSE; // when false - will use cone
     Vec3f limit;
-    while(true) {
+    {
         localA.setIdentity();
         localB.setIdentity();
-        isFlipped = FG_FALSE;
-        useHinge = FG_FALSE;
-        limit = Vec3f();
-        if(!isEqual) {
-            if(m_joints.count(jointID) > 0) {
-                m_joints.jointsMap.find(jointID).key().check(jointID.first, jointID.second, &isFlipped);
-                if(isFlipped)
-                    firstIdx++;
-                else
-                    secondIdx++;
-            }
-            isFlipped = FG_FALSE;
-        }
-        // use only first indexed bones...
-        // (should be different? like checking center position?)
-        // let's rely on bones order this time #FIXME
-        int boneAIndex = m_typeMapping[boneA].at(firstIdx);
-        int boneBIndex = m_typeMapping[boneB].at(secondIdx);
 
         SBoneSmallInfo* infoA = &m_bonesInfo[boneAIndex];
         SBoneSmallInfo* infoB = &m_bonesInfo[boneBIndex];
@@ -490,56 +416,7 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
             std::swap<Matrix4f*>(pMatrixA, pMatrixB);
             std::swap<Vector3f*>(pRotationA, pRotationB);
         } // now know what comes before and what after
-        Vec3f originA = Vec3f(0.0f, 0.0f, 0.0f), originB = Vec3f(0.0f, 0.0f, 0.0f);
-#if 0
-        {
-            const Vec3f As_Bs_diff = (infoA->startPoint - infoB->startPoint);
-            const Vec3f Ae_Be_diff = (infoA->endPoint - infoB->endPoint);
-            const Vec3f Ae_Bs_diff = (infoA->endPoint - infoB->startPoint);
 
-            const float As_Bs_len = math::length(As_Bs_diff);
-            const float Ae_Be_len = math::length(Ae_Be_diff);
-            const float Ae_Bs_len = math::length(Ae_Bs_diff);
-
-            float closestDistance = As_Bs_len;
-            closestDistance = math::min(closestDistance, Ae_Be_len);
-            closestDistance = math::min(closestDistance, Ae_Bs_len);
-
-            if(As_Bs_len - closestDistance <= FG_EPSILON) {
-                printf("A_start & B_start are the closest\n");
-                // Astart and Bstart are the closest - this means that they are
-                // pointing in opposite(almost) directions - joint needs to be
-                // between two start points
-                // originA is offset to joint from point view of A
-                originA = (infoB->startPoint - infoA->startPoint); // / 2.0f;
-                originA.y -= infoA->length / 2.0f;
-                // originB is offset to joint from point view of B (local space)
-                //originB = (infoA->startPoint - infoB->startPoint) / 2.0f;
-                originB.y -= infoB->length / 2.0f;
-            } else if(Ae_Be_len - closestDistance <= FG_EPSILON) {
-                printf("A_end & B_end are the closest\n");
-                // Aend and Bend are the closest - this means that they are
-                // pointing toward each other
-                originA = (infoB->endPoint - infoA->endPoint); // / 2.0f;
-                originA.y += infoA->length / 2.0f;
-                //originB = (infoA->endPoint - infoB->endPoint) / 2.0f;
-                originB.y += infoB->length / 2.0f;
-            } else if(Ae_Bs_len - closestDistance <= FG_EPSILON) {
-                printf("A_end & B_start are the closest\n");
-                // Aend and Bstart are the closest - they point in the same direction
-                // one after another
-                originA = (infoB->startPoint - infoA->endPoint); /// 2.0f;
-                //Vec3f centerPoint;
-                //infoA->getCenterPoint(centerPoint);
-                //originA = (infoB->startPoint - centerPoint);
-                originA.y += infoA->length / 2.0f;
-                //originB = (infoA->endPoint - infoB->startPoint) / 2.0f;
-                originB.y -= infoB->length / 2.0f;
-            } else {
-                // bones passed to this function are flipped?
-            }
-        }
-#endif
         if(useHinge) {
             {
                 btTransform globalFrame;
@@ -583,16 +460,6 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
         pTypedConstraint->setDbgDrawSize(10.0f);
         m_joints.addConstraint(jointID, pTypedConstraint);
         status = FG_TRUE;
-        //-------------------------------------------
-        if(!isEqual) {
-            // need to check here if there are any multiple bones...
-            // but what to do with them?
-            break;
-        }
-        secondIdx++;
-        if((unsigned int)secondIdx >= m_typeMapping[boneB].size())
-            break;
-        firstIdx++;
     }
     return status;
 }

@@ -167,7 +167,7 @@
 
         #if !defined(FG_NO_PHYSICS)
             #undef FG_USING_BULLET
-//#define FG_USING_BULLET
+            #define FG_USING_BULLET
         #endif
 
         #if !defined(FG_USING_TINY_OBJ)
@@ -237,14 +237,6 @@
     #if defined(FG_USING_PLATFORM_LINUX)
         #if !defined(FG_USING_TINYXML)
             #define FG_USING_TINYXML
-        #endif
-    #endif
-
-// Use TinyXML also on Android
-    #if defined(FG_USING_PLATFORM_ANDROID)
-        #if !defined(FG_USING_TINYXML)
-            #define FG_USING_TINYXML
-            #undef TIXML_USE_STL // on android TinyXML should not use STL
         #endif
     #endif
 
