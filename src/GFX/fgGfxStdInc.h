@@ -17,7 +17,7 @@
     #endif
 
     #include "fgGfxGL.h"
-    #include "fgGfxPlatform.h"
+    #include "fgGfxContext.h"
     #include "fgTypes.h"
     #include "fgGfxTypes.h"
 

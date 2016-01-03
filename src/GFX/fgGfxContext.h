@@ -1910,8 +1910,6 @@ namespace fg {
             }
         }; // SContextParam
 
-        class CPlatform;
-
         namespace context {
 
             ///

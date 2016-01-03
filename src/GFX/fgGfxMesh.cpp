@@ -9,7 +9,6 @@
  ******************************************************************************/
 
 #include "fgGfxMesh.h"
-#include "fgGfxPlatform.h"
 #include "Util/fgMemory.h"
 
 using namespace fg;
@@ -217,7 +216,7 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
 //------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
-    if(!gfx::CPlatform::isInit())
+    if(!gfx::context::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 4;
@@ -453,7 +452,7 @@ fgGFXvoid *gfx::SMeshAoS::getIndicesPointer(void) const {
 //------------------------------------------------------------------------------
 
 fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
-    if(!gfx::CPlatform::isInit())
+    if(!gfx::context::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 2;

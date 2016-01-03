@@ -4,10 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>../../../src/fgApplication.h</itemPath>
       <itemPath>../../../src/fgEnumFlags.h</itemPath>
       <itemPath>../../../src/fgNamespaceInfo.h</itemPath>
       <itemPath>../../../src/fgPluginResource.h</itemPath>
       <itemPath>../../../src/fgQueue.h</itemPath>
+      <itemPath>../../../src/fgSDLApplication.h</itemPath>
       <itemPath>../../../src/fgWindowsStd.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -240,8 +242,6 @@
         <itemPath>../../../src/GFX/fgGfxPlane.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlaneGrid.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlaneGrid.h</itemPath>
-        <itemPath>../../../src/GFX/fgGfxPlatform.cpp</itemPath>
-        <itemPath>../../../src/GFX/fgGfxPlatform.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPolygon.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPolygon.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPrimitives.cpp</itemPath>
@@ -500,6 +500,7 @@
         <itemPath>../../../src/XML/fgXMLParser.h</itemPath>
         <itemPath>../../../src/XML/fgXMLTypesWrap.h</itemPath>
       </logicalFolder>
+      <itemPath>../../../src/fgApplication.cpp</itemPath>
       <itemPath>../../../src/fgBool.h</itemPath>
       <itemPath>../../../src/fgBuildConfig.cpp</itemPath>
       <itemPath>../../../src/fgBuildConfig.h</itemPath>
@@ -519,19 +520,19 @@
       <itemPath>../../../src/fgGameErrorCodes.h</itemPath>
       <itemPath>../../../src/fgLog.cpp</itemPath>
       <itemPath>../../../src/fgLog.h</itemPath>
-      <itemPath>../../../src/fgMainModule.cpp</itemPath>
-      <itemPath>../../../src/fgMainModule.h</itemPath>
       <itemPath>../../../src/fgManagerBase.h</itemPath>
       <itemPath>../../../src/fgMessageCommon.h</itemPath>
       <itemPath>../../../src/fgMessageSubsystem.cpp</itemPath>
       <itemPath>../../../src/fgMessageSubsystem.h</itemPath>
       <itemPath>../../../src/fgPluginResource.cpp</itemPath>
+      <itemPath>../../../src/fgSDLApplication.cpp</itemPath>
       <itemPath>../../../src/fgSingleton.h</itemPath>
       <itemPath>../../../src/fgStatus.h</itemPath>
       <itemPath>../../../src/fgTraits.h</itemPath>
       <itemPath>../../../src/fgTypes.h</itemPath>
       <itemPath>../../../src/fgUnistd.h</itemPath>
       <itemPath>../../../src/fgVector.h</itemPath>
+      <itemPath>../../../src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -1525,10 +1526,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
@@ -2400,6 +2397,10 @@
       </item>
       <item path="../../../src/XML/fgXMLTypesWrap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgBool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="8">
@@ -2440,10 +2441,6 @@
       </item>
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -2463,6 +2460,10 @@
       </item>
       <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgSDLApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgSDLApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -2477,6 +2478,8 @@
       </item>
       <item path="../../../src/fgWindowsStd.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
     </conf>
     <conf name="Release_GLEW_SDL2" type="1">
       <toolsSet>
@@ -2490,7 +2493,7 @@
           <stripSymbols>true</stripSymbols>
           <architecture>2</architecture>
           <standard>10</standard>
-          <commandlineTool>/usr/lib/distcc/bin/gcc-4.8.1</commandlineTool>
+          <commandlineTool>gcc</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -2516,7 +2519,7 @@
           <stripSymbols>true</stripSymbols>
           <architecture>2</architecture>
           <standard>8</standard>
-          <commandlineTool>/usr/lib/distcc/bin/g++-4.8.1</commandlineTool>
+          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -3442,10 +3445,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
@@ -4317,6 +4316,10 @@
       </item>
       <item path="../../../src/XML/fgXMLTypesWrap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgBool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="0">
@@ -4357,10 +4360,6 @@
       </item>
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -4380,6 +4379,10 @@
       </item>
       <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgSDLApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgSDLApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -4393,6 +4396,8 @@
       <item path="../../../src/fgVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgWindowsStd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Debug" type="1">
@@ -5335,10 +5340,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
@@ -6210,6 +6211,10 @@
       </item>
       <item path="../../../src/XML/fgXMLTypesWrap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgBool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="0">
@@ -6250,10 +6255,6 @@
       </item>
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -6273,6 +6274,10 @@
       </item>
       <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgSDLApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgSDLApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -6286,6 +6291,8 @@
       <item path="../../../src/fgVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgWindowsStd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -7214,10 +7221,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
@@ -8089,6 +8092,10 @@
       </item>
       <item path="../../../src/XML/fgXMLTypesWrap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgBool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="0">
@@ -8129,10 +8136,6 @@
       </item>
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -8152,6 +8155,10 @@
       </item>
       <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgSDLApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgSDLApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -8165,6 +8172,8 @@
       <item path="../../../src/fgVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgWindowsStd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Debug_GLEW_StaticLib" type="3">
@@ -9098,10 +9107,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
@@ -9973,6 +9978,10 @@
       </item>
       <item path="../../../src/XML/fgXMLTypesWrap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgBool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="8">
@@ -10013,10 +10022,6 @@
       </item>
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -10036,6 +10041,10 @@
       </item>
       <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgSDLApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgSDLApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -10049,6 +10058,8 @@
       <item path="../../../src/fgVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgWindowsStd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release_GLEW_StaticLib" type="3">
@@ -10972,10 +10983,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
@@ -11847,6 +11854,10 @@
       </item>
       <item path="../../../src/XML/fgXMLTypesWrap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgBool.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="8">
@@ -11887,10 +11898,6 @@
       </item>
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -11910,6 +11917,10 @@
       </item>
       <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgSDLApplication.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgSDLApplication.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -11923,6 +11934,8 @@
       <item path="../../../src/fgVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgWindowsStd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

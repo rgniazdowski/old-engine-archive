@@ -12,21 +12,10 @@
     #define FG_INC_GFX_DRAW_CALL
     #define FG_INC_GFX_DRAW_CALL_BLOCK
 
-    #ifndef FG_INC_GFX_PRIMITIVES
-        #include "fgGfxPrimitives.h"
-    #endif
-
-    #ifndef FG_INC_GFX_SHADER_DEFS
-        #include "GFX/Shaders/fgGFXShaderDefs.h"
-    #endif
-    #ifndef FG_INC_GFX_TYPES
-        #include "fgGfxTypes.h"
-    #endif
-
-    #ifndef FG_INC_GFX_MVP_MATRIX
-        #include "fgGfxMVPMatrix.h"
-    #endif
-
+    #include "fgGfxPrimitives.h"
+    #include "GFX/Shaders/fgGfxShaderDefs.h"
+    #include "fgGfxTypes.h"
+    #include "fgGfxMVPMatrix.h"
     #include "fgGfxShape.h"
 
     #include "Util/fgFastCmp.h"

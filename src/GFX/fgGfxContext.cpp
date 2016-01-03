@@ -11,7 +11,6 @@
 #include "fgGfxContext.h"
 #include "Util/fgStrings.h"
 #include "Util/fgMemory.h"
-#include "fgGfxPlatform.h"
 
 //------------------------------------------------------------------------------
 
@@ -987,37 +986,7 @@ fgBool gfx::context::initialize(void)
     std::string glName = "OpenGL";
     int r = 0, g = 0, b = 0, a = 0, d = 0, major = 0, minor = 0;
 
-#if defined(FG_USING_EGL)
-    /**********************************
-     * CONTEXT PART - GFX CONTEXT
-     */    
-    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
-    EGLConfig eglConfig = (EGLConfig)CPlatform::getDefaultConfig();
-
-    // #FIXME !
-#if 1
-    int glVersionN = 2; // FIXME
-#endif
-    if(glVersionN != 2) {
-        FG_LOG_ERROR("GFX: reported GL version: %d", glVersionN);
-        FG_LOG_ERROR("GFX: required GLES v2.x");
-        return; // #FIXME
-    }
-    FG_LOG_DEBUG("EGL: requesting GL version: %d", glVersionN);
-    EGLint attribs[] = {EGL_CONTEXT_CLIENT_VERSION, glVersionN, EGL_NONE,};
-    g_GLContext = eglCreateContext(eglDisplay, eglConfig, NULL, attribs);
-    if(!g_GLContext) {
-        FG_LOG_ERROR("EGL: CreateContext failed");
-        fgEGLError("eglCreateContext");
-        return;
-    }
-    EGLenum boundAPI = eglQueryAPI();
-    if(boundAPI != EGL_OPENGL_ES_API) {
-        FG_LOG_DEBUG("EGL is not bound to OpenGL ES api");
-    } else {
-        FG_LOG_DEBUG("EGL bound to OpenGL ES api");
-    }
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
     /**********************************
      * CONTEXT PART - GFX CONTEXT
      */
@@ -1446,11 +1415,6 @@ void gfx::context::destroy(void) {
     if(g_GLContext)
         SDL_GL_DeleteContext(g_GLContext);
     g_GLContext = NULL;
-#elif defined(FG_USING_EGL)
-    if(g_GLContext) {
-        eglDestroyContext(CPlatform::getDefaultDisplay(), g_GLContext);
-        g_GLContext = NULL;
-    }
 #endif
     g_params.clear();
     g_contextInit = FG_FALSE;

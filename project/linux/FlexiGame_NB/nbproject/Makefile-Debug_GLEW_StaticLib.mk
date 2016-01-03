@@ -116,7 +116,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxMesh.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxModelResource.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o \
-	${OBJECTDIR}/_ext/e022ccff/fgGfxPlatform.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxPolygon.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxShape.o \
@@ -211,6 +210,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/243ddf3c/fgTime.o \
 	${OBJECTDIR}/_ext/243ddf3c/fgZipFile.o \
 	${OBJECTDIR}/_ext/e0230d9d/fgXMLParser.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgApplication.o \
 	${OBJECTDIR}/_ext/52a4beb5/fgBuildConfig.o \
 	${OBJECTDIR}/_ext/52a4beb5/fgColors.o \
 	${OBJECTDIR}/_ext/52a4beb5/fgCommon.o \
@@ -219,9 +219,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/52a4beb5/fgErrno.o \
 	${OBJECTDIR}/_ext/52a4beb5/fgErrorCodes.o \
 	${OBJECTDIR}/_ext/52a4beb5/fgLog.o \
-	${OBJECTDIR}/_ext/52a4beb5/fgMainModule.o \
 	${OBJECTDIR}/_ext/52a4beb5/fgMessageSubsystem.o \
-	${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o
+	${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o \
+	${OBJECTDIR}/_ext/52a4beb5/fgSDLApplication.o \
+	${OBJECTDIR}/_ext/52a4beb5/main.o
 
 
 # C Compiler Flags
@@ -654,11 +655,6 @@ ${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o: ../../../src/GFX/fgGfxPlaneGrid.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o ../../../src/GFX/fgGfxPlaneGrid.cpp
-
-${OBJECTDIR}/_ext/e022ccff/fgGfxPlatform.o: ../../../src/GFX/fgGfxPlatform.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPlatform.o ../../../src/GFX/fgGfxPlatform.cpp
 
 ${OBJECTDIR}/_ext/e022ccff/fgGfxPolygon.o: ../../../src/GFX/fgGfxPolygon.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
@@ -1130,6 +1126,11 @@ ${OBJECTDIR}/_ext/e0230d9d/fgXMLParser.o: ../../../src/XML/fgXMLParser.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e0230d9d/fgXMLParser.o ../../../src/XML/fgXMLParser.cpp
 
+${OBJECTDIR}/_ext/52a4beb5/fgApplication.o: ../../../src/fgApplication.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgApplication.o ../../../src/fgApplication.cpp
+
 ${OBJECTDIR}/_ext/52a4beb5/fgBuildConfig.o: ../../../src/fgBuildConfig.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
@@ -1170,11 +1171,6 @@ ${OBJECTDIR}/_ext/52a4beb5/fgLog.o: ../../../src/fgLog.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgLog.o ../../../src/fgLog.cpp
 
-${OBJECTDIR}/_ext/52a4beb5/fgMainModule.o: ../../../src/fgMainModule.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgMainModule.o ../../../src/fgMainModule.cpp
-
 ${OBJECTDIR}/_ext/52a4beb5/fgMessageSubsystem.o: ../../../src/fgMessageSubsystem.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
@@ -1184,6 +1180,16 @@ ${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o: ../../../src/fgPluginResource.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgPluginResource.o ../../../src/fgPluginResource.cpp
+
+${OBJECTDIR}/_ext/52a4beb5/fgSDLApplication.o: ../../../src/fgSDLApplication.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/fgSDLApplication.o ../../../src/fgSDLApplication.cpp
+
+${OBJECTDIR}/_ext/52a4beb5/main.o: ../../../src/main.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/52a4beb5
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_DEFAULTS -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/52a4beb5/main.o ../../../src/main.cpp
 
 # Subprojects
 .build-subprojects:

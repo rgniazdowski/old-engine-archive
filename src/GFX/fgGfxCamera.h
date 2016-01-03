@@ -14,9 +14,7 @@
 
 // FIXME! #mathlib too big?
     #include "Math/fgMathLib.h"
-    #ifndef FG_INC_GFX_FRUSTUM
-        #include "fgGfxFrustum.h"
-    #endif
+    #include "fgGfxFrustum.h"
 
 namespace fg {
     namespace gfx {

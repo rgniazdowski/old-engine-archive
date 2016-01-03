@@ -9,7 +9,7 @@
  *******************************************************/
 
 #include "fgGfxWindow.h"
-#include "fgGfxPlatform.h"
+#include "fgGfxContext.h"
 #include "fgColors.h"
 
 using namespace fg;
@@ -19,9 +19,7 @@ using namespace fg;
 gfx::CWindow::CWindow() :
 m_onSwapCallbacks(),
 m_title(),
-#if defined(FG_USING_EGL)
-m_EGLSurface(0),
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
 m_sdlWindow(NULL),
 m_sdlFlags(0),
 #endif
@@ -36,9 +34,7 @@ m_isOpen(FG_FALSE) { }
 gfx::CWindow::CWindow(const char *title, unsigned int width, unsigned int height) :
 m_onSwapCallbacks(),
 m_title(),
-#if defined(FG_USING_EGL)
-m_EGLSurface(0),
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
 m_sdlWindow(NULL),
 m_sdlFlags(0),
 #endif
@@ -48,12 +44,12 @@ m_isFullscreen(FG_FALSE),
 m_isHW(FG_FALSE),
 m_isDB(FG_FALSE),
 m_isOpen(FG_FALSE) {
-    CWindow::setup(title, width, height);
+    self_type::setup(title, width, height);
 }
 //------------------------------------------------------------------------------
 
 gfx::CWindow::~CWindow() {
-    close();
+    this->close();
     int n = m_onSwapCallbacks.size();
     for(int i = 0; i < n; i++) {
         CallbackData &info = m_onSwapCallbacks[i];
@@ -64,13 +60,9 @@ gfx::CWindow::~CWindow() {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
-    if(!CPlatform::isInit()) {
-        FG_LOG_ERROR("GFX: Cannot setup window without platform initialized.");
-        return FG_FALSE;
-    }
+fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {    
     if(m_isOpen) {
-#if !defined(FG_USING_EGL) && !defined(FG_USING_SDL) && !defined(FG_USING_SDL2)
+#if !defined(FG_USING_SDL2)
         m_width = width;
         m_height = height;
 #elif defined(FG_STATIC_LIBRARY)
@@ -78,49 +70,9 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         m_height = height;
 #endif
         return FG_TRUE;
-        //CWindow::close();
     }
     fgBool status = FG_TRUE;
-#if defined(FG_USING_EGL)
-    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
-    EGLContext eglContext = (EGLContext)CPlatform::context()->getGLContext();
-    EGLConfig eglConfig = (EGLConfig)CPlatform::getDefaultConfig();
-    EGLNativeWindowType eglNativeWindow = 0;
-
-    if(!eglDisplay || !eglContext || !eglConfig) {
-        FG_LOG_ERROR("GfxWindow: Current configuration is malformed");
-        return FG_FALSE;
-    }
-
-#if 1
-    // FIXME | stand alone EGL wont work 
-    return FG_FALSE;
-#endif
-    m_EGLSurface = eglCreateWindowSurface(eglDisplay, eglConfig, eglNativeWindow, NULL);
-    fgEGLError("eglCreateWindowSurface");
-    eglMakeCurrent(eglDisplay, m_EGLSurface, m_EGLSurface, eglContext);
-    fgEGLError("eglMakeCurrent");
-    EGLint w = -1, h = -1;
-    eglQuerySurface(eglDisplay, m_EGLSurface, EGL_HEIGHT, &h);
-    fgEGLError("eglQuerySurface");
-    eglQuerySurface(eglDisplay, m_EGLSurface, EGL_WIDTH, &w);
-    fgEGLError("eglQuerySurface");
-    if(w < 0 || h < 0) {
-#if 1
-        //log::PrintError("EGL: query surface failed, falling back to S3E...");
-        //w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
-        //h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
-#else 
-        // #FIXME
-#endif 
-    }
-    m_width = w;
-    m_height = h;
-
-    FG_LOG_DEBUG("EGL: Window surface created. Dimensions: %dx%d", w, h);
-
-#elif defined(FG_USING_SDL2)
-
+#if defined(FG_USING_SDL2)
     m_width = width;
     m_height = height;
     if(!title)
@@ -158,26 +110,8 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
 //------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::close(void) {
-    if(!CPlatform::isInit()) {
-        FG_LOG_ERROR("GFX: Platform not initialized.");
-        return FG_FALSE;
-    }
     fgBool status = FG_TRUE;
-#if defined(FG_USING_EGL)
-    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
-    // Getting context in the gfx window makes sense under EGL - it's safe
-    // to asume (for now) that there's just one context and one window
-    // It supposed to be more flexible though
-    EGLContext eglContext = (EGLContext)CPlatform::context()->getGLContext();
-    if(eglDisplay) {
-        eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        if(m_EGLSurface)
-            eglDestroySurface(eglDisplay, m_EGLSurface);
-        m_EGLSurface = NULL;
-    }
-
-#elif defined(FG_USING_SDL2)
-
+#if defined(FG_USING_SDL2)
     if(m_sdlWindow) {
         SDL_DestroyWindow(m_sdlWindow);
         m_sdlWindow = NULL;
@@ -234,11 +168,7 @@ fgBool gfx::CWindow::refreshFS(void) {
 fgBool gfx::CWindow::swapBuffers(void) {
     if(!m_isOpen)
         return FG_FALSE;
-#if defined(FG_USING_EGL)
-    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
-    if(eglDisplay && m_EGLSurface)
-        eglSwapBuffers(eglDisplay, m_EGLSurface);
-#elif defined(FG_USING_SDL2)
+#if defined(FG_USING_SDL2)
     if(m_sdlWindow)
         SDL_GL_SwapWindow(m_sdlWindow);
 #endif

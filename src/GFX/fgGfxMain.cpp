@@ -225,11 +225,7 @@ void gfx::CGfxMain::unregisterProgramCallbacks(void) {
 fgBool gfx::CGfxMain::initGFX(void) {
     float t1 = timesys::ms();
     fgBool status = FG_TRUE;
-
-    if(!gfx::CPlatform::initialize()) {
-        // ERROR
-        status = FG_FALSE;
-    }
+    
     if(!m_mainWindow && status) {
         m_mainWindow = new gfx::CWindow();
     }
@@ -254,7 +250,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
             status = FG_FALSE;
         }
 #if defined(FG_USING_SDL2)
-        gfx::CPlatform::initializeMainContext(m_mainWindow->getSysPtr());
+        gfx::context::initialize(m_mainWindow->getSysPtr());
 #endif /* FG_USING_SDL2 */
     }
     if(status) {
@@ -564,14 +560,14 @@ void gfx::CGfxMain::setupLoader(void) {
 void gfx::CGfxMain::closeGFX(fgBool suspend) {
     FG_LOG_DEBUG("Closing GFX subsystem...");
     if(m_init) {
-#if defined(FG_USING_SDL2)
-        // context::getGLContext()
+#if defined(FG_USING_SDL2)        
         SDL_GL_MakeCurrent(m_mainWindow->getSysPtr(), NULL);
 #endif
         if(m_mainWindow && !suspend) {
             m_mainWindow->close();
         }
-        gfx::CPlatform::quit(suspend);
+        //gfx::CPlatform::quit(suspend);
+        context::destroy();
         unregisterResourceCallbacks();
         unregisterSceneCallbacks();
     }

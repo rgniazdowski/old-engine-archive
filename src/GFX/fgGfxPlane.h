@@ -19,9 +19,7 @@
     #define FG_INC_GFX_PLANE_BLOCK
 
     #include "fgBool.h"
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif 
+    #include "Math/fgMathLib.h"
 
 namespace fg {
     namespace gfx {
@@ -401,4 +399,4 @@ namespace fg {
 }
 
     #undef FG_INC_GFX_PLANE_BLOCK
-#endif	/* FG_INC_GFX_PLANE */
+#endif /* FG_INC_GFX_PLANE */

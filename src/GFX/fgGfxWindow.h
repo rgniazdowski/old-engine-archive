@@ -16,9 +16,7 @@
         #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxWindow inside of GfxTypes header."
     #endif
 
-    #ifndef FG_INC_GFX_GL
-        #include "fgGfxGL.h"
-    #endif
+    #include "fgGfxGL.h"
 
 namespace fg {
     namespace gfx {
@@ -80,7 +78,7 @@ namespace fg {
              *
              */
             void clearColor(void);
-            
+
             /**
              *
              * @param pCallback
@@ -95,8 +93,7 @@ namespace fg {
              */
             fgBool isRegistered(CallbackFuncPtr pCallback);
 
-            ////////////////////////////////////////////////////////////////////
-
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -124,7 +121,6 @@ namespace fg {
              * @param toggle
              */
             void setFullscreen(fgBool toggle = FG_TRUE);
-
             /**
              * 
              * @return 
@@ -136,11 +132,7 @@ namespace fg {
     #if defined(FG_USING_SDL2)
             SDL_Window* getSysPtr(void) const {
                 return m_sdlWindow;
-            }
-    #elif defined(FG_USING_EGL)
-            EGLSurface getSysPtr(void) const {
-                return m_EGLSurface;
-            }
+            }   
     #else
             void *getSysPtr(void) const {
                 return NULL;
@@ -183,9 +175,7 @@ namespace fg {
         private:
             /// 
             std::string m_title;
-    #if defined FG_USING_EGL
-            EGLSurface m_EGLSurface;
-    #elif defined FG_USING_SDL2
+    #if defined FG_USING_SDL2
             SDL_Window* m_sdlWindow;
             Uint32 m_sdlFlags;
     #endif
@@ -201,9 +191,10 @@ namespace fg {
             fgBool m_isDB;
             ///
             fgBool m_isOpen;
-        };
-    };
-};
+        }; // class CWindow
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_WINDOW_BLOCK
 #endif /* FG_INC_GFX_WINDOW */

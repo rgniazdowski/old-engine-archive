@@ -9,7 +9,7 @@
  ******************************************************************************/
 
 #include "fgGfxVertexData.h"
-#include "fgGfxPlatform.h"
+#include "fgGfxContext.h"
 #include "Util/fgMemory.h"
 
 using namespace fg;
@@ -135,7 +135,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
 //------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData2v::genBuffers(void) {
-    if(!fg::gfx::CPlatform::isInit())
+    if(!gfx::context::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
@@ -320,7 +320,7 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
 //------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData3v::genBuffers(void) {
-    if(!fg::gfx::CPlatform::isInit())
+    if(!gfx::context::isInit())
         return FG_GFX_FALSE;
     int& count = getRefVBOCount();
     count = 1;
@@ -538,7 +538,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
 //------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData4v::genBuffers(void) {
-    if(!fg::gfx::CPlatform::isInit())
+    if(!gfx::context::isInit())
         return FG_GFX_FALSE;
     int& count = getRefVBOCount();
     count = 1;
@@ -790,7 +790,7 @@ fgGFXboolean gfx::CVertexData5HQv::setupAttributes(SAttributeData *pDataArray) c
 //------------------------------------------------------------------------------
 
 fgGFXboolean gfx::CVertexData5HQv::genBuffers(void) {
-    if(!fg::gfx::CPlatform::isInit())
+    if(!gfx::context::isInit())
         return FG_GFX_FALSE;
     int& count = getRefVBOCount();
     count = 1;
