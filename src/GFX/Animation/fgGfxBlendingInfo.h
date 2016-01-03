@@ -212,7 +212,8 @@ namespace fg {
                  * @param pSecond
                  * @return
                  */
-                SBlendingPair const* get(CAnimation* pFirst, CAnimation* pSecond) const;
+                SBlendingPair const* get(CAnimation* pFirst,
+                                         CAnimation* pSecond) const;
 
             }; // struct SBlendingInfo
 
@@ -221,4 +222,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_ANIM_BLENDING_INFO_BLOCK
-#endif	/* FG_INC_GFX_ANIM_BLENDING_INFO */
+#endif /* FG_INC_GFX_ANIM_BLENDING_INFO */

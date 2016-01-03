@@ -61,6 +61,14 @@ void gfx::anim::CAnimation::clear(void) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::anim::CAnimation::bake(void) {
+    const unsigned int n = count();
+    for(unsigned int i = 0; i < n; i++) {
+        this->m_channels[i].bake();
+    }
+}
+//------------------------------------------------------------------------------
+
 gfx::anim::SAnimationChannel* gfx::anim::CAnimation::getChannel(const std::string& name) {
     if(name.empty() || isEmpty())
         return NULL;

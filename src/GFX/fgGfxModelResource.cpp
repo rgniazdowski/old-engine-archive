@@ -330,8 +330,8 @@ void gfx::CModelResource::SModelSkinning::translatePositionKeys(const std::strin
                     refChannel.positionKeys[idxKey].value += translation;
                     // so now the model should display properly
                 }
-                break; 
-            }            
+                break;
+            }
         } // for every channel
     } // for every animation
 }
@@ -1094,6 +1094,12 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     refreshInternalData(); // recalculate internals
     setFlag(RIGGED, (fgBool)(pArmature != NULL));
     setFlag(ANIMATED, (fgBool)(m_skinning.animations.size() > 0));
+    // After everything - bake animations 
+    unsigned int nAnims = m_skinning.animations.size();
+    for(unsigned int i = 0; i < nAnims; i++) {
+        if(m_skinning.animations[i])
+            m_skinning.animations[i]->bake();
+    }
     return FG_TRUE;
 }
 #endif
@@ -1456,12 +1462,12 @@ gfx::anim::CAnimation* gfx::CModelResource::getMatchingAnimation(const std::stri
     if(name.empty())
         return NULL;
     return m_skinning.getAnimation(name.c_str(), strings::MATCH_CASE_INSENSITIVE | strings::MATCH_SUBSTR);
- }
+}
 //------------------------------------------------------------------------------
 
 gfx::anim::CAnimation* gfx::CModelResource::getMatchingAnimation(const char* name) {
     return m_skinning.getAnimation(name, strings::MATCH_CASE_INSENSITIVE | strings::MATCH_SUBSTR);
- }
+}
 //------------------------------------------------------------------------------
 
 void gfx::CModelResource::refreshSkinningInfo(void) {

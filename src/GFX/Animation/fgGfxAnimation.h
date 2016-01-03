@@ -85,6 +85,8 @@ namespace fg {
                  */
                 virtual void clear(void);
 
+                virtual void bake(void);
+
             public:
                 /**
                  *

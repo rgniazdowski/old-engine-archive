@@ -7,7 +7,7 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-/* 
+/*
  * File:   fgGfxAnimationChannel.h
  * Author: vigilant
  *
@@ -19,6 +19,7 @@
     #define FG_INC_GFX_ANIMATION_CHANNEL_BLOCK
 
     #include "Math/fgMathLib.h"
+    #include "Math/fgDualQuaternion.h"
     #include "fgVector.h"
 
 namespace fg {
@@ -34,13 +35,19 @@ namespace fg {
                 typedef float time_type;
                 typedef typename Vector3T<T>::type value_type;
 
-                float elapsed;
+                time_type elapsed;
                 value_type value;
                 SVectorKeyT() : elapsed(0.0f), value() { }
-                SVectorKeyT(float _elapsed, const value_type& _value) : elapsed(_elapsed), value(_value) { }
+                SVectorKeyT(const self_type& orig) {
+                    this->elapsed = orig.elapsed;
+                    this->value = orig.value;
+                }
+                SVectorKeyT(time_type _elapsed, const value_type& _value) :
+                elapsed(_elapsed),
+                value(_value) { }
                 virtual ~SVectorKeyT() {
                     value = value_type();
-                    elapsed = 0.0f;
+                    elapsed = (time_type)0;
                 }
             }; // struct SVectorKeyT<T>
 
@@ -55,18 +62,55 @@ namespace fg {
                 typedef float time_type;
                 typedef QuaternionT<T> value_type;
 
-                float elapsed;
+                time_type elapsed;
                 value_type value;
                 SQuatKeyT() : elapsed(0.0f), value() { }
-                SQuatKeyT(float _elapsed, const value_type& _value) : elapsed(_elapsed), value(_value) { }
+                SQuatKeyT(time_type _elapsed, const value_type& _value) : elapsed(_elapsed), value(_value) { }
                 virtual ~SQuatKeyT() {
                     value = value_type();
-                    elapsed = 0.0f;
+                    elapsed = (time_type)0;
                 }
             }; // struct SQuatKeyT<T>
 
             typedef SQuatKeyT<float> SQuatKeyf;
             typedef SQuatKeyf SRotationKeyf;
+
+            template<typename T>
+            struct SMatrixKeyT {
+                typedef SMatrixKeyT<T> self_type;
+                typedef float time_type;
+                typedef typename Matrix4T<T>::type value_type;
+
+                time_type elapsed;
+                value_type value;
+                SMatrixKeyT() : elapsed(0.0f), value() { }
+                SMatrixKeyT(time_type _elapsed, const value_type& _value) : elapsed(_elapsed), value(_value) { }
+                virtual ~SMatrixKeyT() {
+                    value = value_type();
+                    elapsed = (time_type)0;
+                }
+            }; // struct SMatrixKeyT<T>
+
+            typedef SMatrixKeyT<float> SMatrixKeyf;
+
+            template<typename T>
+            struct SDualQuatKeyT {
+                typedef SDualQuatKeyT<T> self_type;
+                typedef float time_type;
+                typedef typename DualQuaternionT<T, math::precision::defaultp>::type value_type;
+
+                time_type elapsed;
+                value_type value;
+                SDualQuatKeyT() : elapsed(0.0f), value() { }
+                SDualQuatKeyT(time_type _elapsed, const value_type& _value) :
+                elapsed(_elapsed), value(_value) { }
+                virtual ~SDualQuatKeyT() {
+                    value = value_type();
+                    elapsed = (time_type)0;
+                }
+            }; // struct SDualQuatKeyT<T>
+
+            typedef SDualQuatKeyT<float> SDualQuatKeyf;
 
             /**
              *
@@ -74,6 +118,12 @@ namespace fg {
             struct SAnimationChannel {
                 typedef SAnimationChannel self_type;
                 typedef SAnimationChannel type;
+
+                typedef CVector<SVectorKeyf> PositionKeys;
+                typedef CVector<SQuatKeyf> RotationKeys;
+                typedef CVector<SVectorKeyf> ScalingKeys;
+                typedef CVector<SMatrixKeyf> MatrixKeys;
+                typedef CVector<SDualQuatKeyf> DualQuatKeys;
 
                 /**
                  *
@@ -102,7 +152,8 @@ namespace fg {
                  * @param result
                  * @param currentTime
                  */
-                void getPositionInterpolated(Vector3f& result, float currentTime = 0.0f);
+                void getPositionInterpolated(Vector3f& result,
+                                             float currentTime = 0.0f);
                 /**
                  *
                  * @param currentTime
@@ -123,7 +174,8 @@ namespace fg {
                  * @param result
                  * @param currentTime
                  */
-                void getScaleInterpolated(Vector3f& result, float currentTime = 0.0f);
+                void getScaleInterpolated(Vector3f& result,
+                                          float currentTime = 0.0f);
                 /**
                  *
                  * @param currentTime
@@ -144,7 +196,8 @@ namespace fg {
                  * @param result
                  * @param currentTime
                  */
-                void getRotationInterpolated(Quaternionf& result, float currentTime = 0.0f);
+                void getRotationInterpolated(Quaternionf& result,
+                                             float currentTime = 0.0f);
                 /**
                  *
                  * @param currentTime
@@ -174,13 +227,33 @@ namespace fg {
                  * @param result
                  * @param currentTime
                  */
-                void getMatrixInterpolated(Matrix4f& result, float currentTime = 0.0f);
+                void getMatrixInterpolated(Matrix4f& result,
+                                           float currentTime = 0.0f);
                 /**
                  *
                  * @param currentTime
                  * @return
                  */
                 Matrix4f getMatrixInterpolated(float currentTime = 0.0f);
+
+                //--------------------------------------------------------------
+
+                void getDualQuaternion(DualQuaternionf& result,
+                                       float currentTime = 0.0f);
+
+                DualQuaternionf getDualQuaternion(float currentTime = 0.0f);
+
+                //--------------------------------------------------------------
+
+                void getDualQuaternionInterpolated(DualQuaternionf& result,
+                                                   float currentTime = 0.0f);
+
+                /**
+                 *
+                 * @param currentTime
+                 * @return
+                 */
+                DualQuaternionf getDualQuaternionInterpolated(float currentTime = 0.0f);
 
                 //--------------------------------------------------------------
 
@@ -195,9 +268,17 @@ namespace fg {
                          Quaternionf& outRotation,
                          Vector3f& outScale,
                          float currentTime = 0.0f);
+                inline void get(Matrix4f& outMatrix,
+                                float currentTime = 0.0f) {
+                    getMatrix(outMatrix, currentTime);
+                }
+                inline void get(DualQuaternionf& outDQ,
+                                float currentTime = 0.0f) {
+                    getDualQuaternion(outDQ, currentTime);
+                }
 
                 /**
-                 * 
+                 *
                  * @param outPosition
                  * @param outRotation
                  * @param outScale
@@ -207,6 +288,14 @@ namespace fg {
                                      Quaternionf& outRotation,
                                      Vector3f& outScale,
                                      float currentTime = 0.0f);
+                inline void getInterpolated(Matrix4f& outMatrix,
+                                            float currentTime = 0.0f) {
+                    getMatrixInterpolated(outMatrix, currentTime);
+                }
+                inline void getInterpolated(DualQuaternionf& outDQ,
+                                            float currentTime = 0.0f) {
+                    getDualQuaternionInterpolated(outDQ, currentTime);
+                }
 
                 //--------------------------------------------------------------
 
@@ -215,19 +304,43 @@ namespace fg {
                  */
                 void clearKeys(void);
 
+                /**
+                 *
+                 */
+                void bake(fgBool force = FG_FALSE);
+                fgBool isBaked(void) const {
+                    return m_isBaked;
+                }
+                fgBool shouldBakeDQ(void) const {
+                    return m_shouldBakeDQ;
+                }
+                void setBakeDQ(const fgBool toggle) {
+                    m_shouldBakeDQ = toggle;
+                }
+
             public:
                 ///
                 std::string targetName;
                 ///
-                CVector<SVectorKeyf> positionKeys;
+                PositionKeys positionKeys;
                 ///
-                CVector<SQuatKeyf> rotationKeys;
+                RotationKeys rotationKeys;
                 ///
-                CVector<SVectorKeyf> scalingKeys;
+                ScalingKeys scalingKeys;
+                /// special matrix keys (pre-baked)
+                MatrixKeys matrixKeys;
+                /// special dual quaternion keys (pre-baked - for faster retrieval)
+                /// to have it accessible - need to call bake()
+                DualQuatKeys dualQuatKeys;
+
+            protected:
+                fgBool m_isBaked;
+                fgBool m_shouldBakeDQ;
 
             }; // struct SAnimationChannel
+
         } // namespace anim
     } // namespace gfx
 } // namespace fg
     #undef FG_INC_GFX_ANIMATION_CHANNEL_BLOCK
-#endif	/* FG_INC_GFX_ANIMATION_CHANNEL */
+#endif /* FG_INC_GFX_ANIMATION_CHANNEL */

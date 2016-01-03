@@ -24,8 +24,8 @@ namespace fg {
 
     template <typename T, math::precision P>
     struct DualQuaternionT {
-        typedef DualQuaternionT self_type;
-        typedef DualQuaternionT type;
+        typedef DualQuaternionT<T, P> self_type;
+        typedef DualQuaternionT<T, P> type;
         typedef T value_type;
         typedef QuaternionT<T> quat_type;
         typedef math::detail::tvec3<T, P> vec_type;
