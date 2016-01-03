@@ -28,9 +28,7 @@
 
     #include "fgBuildConfig.h"
 
-    #ifndef FG_INC_GFX_TYPES
-        #include "GFX/fgGfxTypes.h"
-    #endif
+    #include "GFX/fgGfxTypes.h"
 
     #include "fgScriptCD_Event.h"
     #include "fgScriptCD_Game.h"
@@ -41,17 +39,9 @@
     #include "fgScriptCD_Resource.h"
     #include "fgScriptCD_Scene.h"
 
-    #ifndef FG_INC_SFX_AUDIO_BASE
-        #include "Audio/fgSFXAudioBase.h"
-    #endif
-
-    #ifndef FG_INC_SFX_MUSIC_RESOURCE
-        #include "Audio/fgSFXMusicResource.h"
-    #endif
-
-    #ifndef FG_INC_SFX_SOUND_RESOURCE
-        #include "Audio/fgSFXSoundResource.h"
-    #endif
+    #include "Audio/fgSFXAudioBase.h"
+    #include "Audio/fgSFXMusicResource.h"
+    #include "Audio/fgSFXSoundResource.h"
 
 namespace fg {
     namespace script {
@@ -168,4 +158,4 @@ namespace LPCD {
 //------------------------------------------------------------------------------
 
     #undef FG_INC_SCRIPT_CD_BLOCK
-#endif	/* FG_INC_SCRIPT_CD */
+#endif /* FG_INC_SCRIPT_CD */

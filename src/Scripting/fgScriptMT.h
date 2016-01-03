@@ -179,6 +179,7 @@ namespace fg {
                 //
                 GAME_ENTITY_MT_ID,
                 GAME_ENTITY_MESH_MT_ID,
+                GAME_ENTITY_ACTOR_MT_ID,
 
                 //
                 // 3D/2D GFX Scene Node & other types

@@ -38,6 +38,7 @@
 
         #include "Game/fgGameEntity.h"
         #include "Game/fgGameEntityMesh.h"
+        #include "Game/fgGameEntityActor.h"
         
 namespace LPCD {
 
@@ -65,6 +66,21 @@ namespace LPCD {
 
     template<> struct Type<fg::game::CEntityMesh*&> :
     public Type<fg::game::CEntityMesh*> {
+    };
+
+    //template<> struct Type<const fg::game::CEntityMesh*&> :
+    //public Type<fg::game::CEntityMesh*> {
+    //};
+
+    //--------------------------------------------------------------------------
+
+    template<> struct Type<fg::game::CEntityActor*> :
+    public TypeBoxPtrEasy<fg::game::CEntityActor*,
+    fg::script::CMetatables::GAME_ENTITY_ACTOR_MT_ID> {
+    };
+
+    template<> struct Type<fg::game::CEntityActor*&> :
+    public Type<fg::game::CEntityActor*> {
     };
 
     //template<> struct Type<const fg::game::CEntityMesh*&> :

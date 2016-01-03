@@ -208,7 +208,7 @@ script::CMetatables::METAID script::CMetatables::getMetatableIDFromNodeType(cons
     } else if(nodeType == game::GAME_ENTITY_MESH) {
         metaID = CMetatables::GAME_ENTITY_MESH_MT_ID;
     } else if(nodeType == game::GAME_ENTITY_ACTOR) {
-        metaID = CMetatables::GAME_ENTITY_MT_ID; // #FIXME
+        metaID = CMetatables::GAME_ENTITY_ACTOR_MT_ID; // #FIXME
     }
     return metaID;
 }
@@ -233,9 +233,9 @@ unsigned int script::CMetatables::getNodeTypeFromMetatableID(const unsigned shor
         case GAME_ENTITY_MESH_MT_ID:
             nodeType = game::GAME_ENTITY_MESH;
             break;
-            //case GAME_ENTITY_ACTOR_MT_ID:
-            //    nodeType = game::GAME_ENTITY_ACTOR;
-            //    break;
+        case GAME_ENTITY_ACTOR_MT_ID:
+            nodeType = game::GAME_ENTITY_ACTOR;
+            break;
         default:
             break;
     };
@@ -368,6 +368,7 @@ void script::CMetatables::generateMetatableNames(void) {
     // Game objects
     m_metatableInfoVec[GAME_ENTITY_MT_ID] = SMetatableInfo("FG_GAME_ENT", "T");
     m_metatableInfoVec[GAME_ENTITY_MESH_MT_ID] = SMetatableInfo("FG_GAME_ENT_MESH", "T");
+    m_metatableInfoVec[GAME_ENTITY_ACTOR_MT_ID] = SMetatableInfo("FG_GAME_ENT_ACTOR", "T");
 
     // GFX Scene Node type
     m_metatableInfoVec[SCENE_NODE_MT_ID] = SMetatableInfo("FG_SCENE_NODE", "T");

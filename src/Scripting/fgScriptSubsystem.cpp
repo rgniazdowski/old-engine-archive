@@ -2392,14 +2392,23 @@ fgBool script::CScriptSubsystem::registerGameEntities(void) {
         return FG_TRUE;
 
 #if defined(FG_USING_LUA_PLUS)
-    const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
-    const char* metatableSceneNodeObjectName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_OBJECT_MT_ID);
-    const char* metatableSceneNodeMeshName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MESH_MT_ID);
-    const char* metatableGameEntityName = fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_MT_ID);
-    const char* metatableGameEntityMeshName = fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_MESH_MT_ID);
+    const char* mtSceneNodeName =
+            fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
+    const char* mtSceneNodeObjectName =
+            fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_OBJECT_MT_ID);
+    const char* mtSceneNodeMeshName =
+            fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MESH_MT_ID);
+    const char* mtGameEntityName =
+            fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_MT_ID);
+    const char* mtGameEntityMeshName =
+            fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_MESH_MT_ID);
+    const char* mtGameEntityActorName =
+            fgScriptMT->getMetatableName(CMetatables::GAME_ENTITY_ACTOR_MT_ID);
 
     // Register game::CEntity metatable
-    LPCD::Class(m_luaState->GetCState(), metatableGameEntityName, metatableSceneNodeObjectName)
+    LPCD::Class(m_luaState->GetCState(),
+                mtGameEntityName,
+                mtSceneNodeObjectName)
             ;
 
     // need to statically cast function pointers to be called from CEntityMesh pointer type
@@ -2411,25 +2420,60 @@ fgBool script::CScriptSubsystem::registerGameEntities(void) {
     // Need to add functions for checking specific type of the object and
     // up-casting it manually if needed - up-casting in this case means changing the
     // metatable of the given Lua side object.
-    typedef physics::CCollisionBody * (game::CEntityMesh::*FUNC_getCollisionBody)(void);
-    typedef fgBool(game::CEntityMesh::*FUNC_hasCollisionBody)(void)const;
-    typedef physics::BodyType(game::CEntityMesh::*FUNC_getBodyType)(void)const;
-    // Register game::CEntityMesh metatable
-    LPCD::Class(m_luaState->GetCState(), metatableGameEntityMeshName, metatableSceneNodeMeshName)
-            .ObjectDirect("hasCollisionBody",
-                          (game::CEntityMesh *)0,
-                          static_cast<FUNC_hasCollisionBody>
-                          (&game::CEntityMesh::hasCollisionBody))
-            .ObjectDirect("getBodyType",
-                          (game::CEntityMesh*)0,
-                          static_cast<FUNC_getBodyType>
-                          (&game::CEntityMesh::getBodyType))
-            .ObjectDirect("getCollisionBody",
-                          (game::CEntityMesh*)0,
-                          static_cast<FUNC_getCollisionBody>
-                          (&game::CEntityMesh::getCollisionBody))
-            ;
+    {
+        typedef physics::CCollisionBody * (game::CEntityMesh::*FUNC_getCollisionBody)(void);
+        typedef fgBool(game::CEntityMesh::*FUNC_hasCollisionBody)(void)const;
+        typedef physics::BodyType(game::CEntityMesh::*FUNC_getBodyType)(void)const;
+        // Register game::CEntityMesh metatable (extends gfx::CSceneNodeMesh + traits::CPhysical)
+        LPCD::Class(m_luaState->GetCState(),
+                    mtGameEntityMeshName,
+                    mtSceneNodeMeshName)
+                .ObjectDirect("hasCollisionBody",
+                              (game::CEntityMesh *)0,
+                              static_cast<FUNC_hasCollisionBody>
+                              (&game::CEntityMesh::hasCollisionBody))
+                .ObjectDirect("getBodyType",
+                              (game::CEntityMesh*)0,
+                              static_cast<FUNC_getBodyType>
+                              (&game::CEntityMesh::getBodyType))
+                .ObjectDirect("getCollisionBody",
+                              (game::CEntityMesh*)0,
+                              static_cast<FUNC_getCollisionBody>
+                              (&game::CEntityMesh::getCollisionBody))
+                ;
+    }
 
+    {
+        typedef physics::CCollisionBody * (game::CEntityActor::*FUNC_getCollisionBody)(void);
+        typedef fgBool(game::CEntityActor::*FUNC_hasCollisionBody)(void)const;
+        typedef physics::BodyType(game::CEntityActor::*FUNC_getBodyType)(void)const;
+        // Register game::CEntityActor metatable (extends game::CEntity + traits::CPhysical)
+        LPCD::Class(m_luaState->GetCState(),
+                    mtGameEntityActorName,
+                    mtGameEntityName)
+                .ObjectDirect("hasCollisionBody",
+                              (game::CEntityActor *)0,
+                              static_cast<FUNC_hasCollisionBody>
+                              (&game::CEntityActor::hasCollisionBody))
+                .ObjectDirect("getBodyType",
+                              (game::CEntityActor*)0,
+                              static_cast<FUNC_getBodyType>
+                              (&game::CEntityActor::getBodyType))
+                .ObjectDirect("getCollisionBody",
+                              (game::CEntityActor*)0,
+                              static_cast<FUNC_getCollisionBody>
+                              (&game::CEntityActor::getCollisionBody))
+                .ObjectDirect("startRagdolling",
+                              (game::CEntityActor*)0,
+                              &game::CEntityActor::startRagdolling)
+                .ObjectDirect("stopRagdolling",
+                              (game::CEntityActor*)0,
+                              &game::CEntityActor::stopRagdolling)
+                .ObjectDirect("isRagdolling",
+                              (game::CEntityActor*)0,
+                              &game::CEntityActor::isRagdolling)
+                ;
+    }
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
