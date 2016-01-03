@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Release_STATIC
 CND_DISTDIR=dist
@@ -79,67 +79,67 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libchainreaction.a: ${OBJECTFILES}
 ${OBJECTDIR}/AdditionalTypes.o: AdditionalTypes.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AdditionalTypes.o AdditionalTypes.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AdditionalTypes.o AdditionalTypes.cpp
 
 ${OBJECTDIR}/CLevelDataHolder.o: CLevelDataHolder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelDataHolder.o CLevelDataHolder.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelDataHolder.o CLevelDataHolder.cpp
 
 ${OBJECTDIR}/CLevelFile.o: CLevelFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelFile.o CLevelFile.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelFile.o CLevelFile.cpp
 
 ${OBJECTDIR}/CLevelGenerator.o: CLevelGenerator.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelGenerator.o CLevelGenerator.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelGenerator.o CLevelGenerator.cpp
 
 ${OBJECTDIR}/CLevelSolution.o: CLevelSolution.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolution.o CLevelSolution.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolution.o CLevelSolution.cpp
 
 ${OBJECTDIR}/CLevelSolutionFinder.o: CLevelSolutionFinder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolutionFinder.o CLevelSolutionFinder.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolutionFinder.o CLevelSolutionFinder.cpp
 
 ${OBJECTDIR}/CLevelSolver.o: CLevelSolver.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolver.o CLevelSolver.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelSolver.o CLevelSolver.cpp
 
 ${OBJECTDIR}/CLevelVisualization.o: CLevelVisualization.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelVisualization.o CLevelVisualization.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/CLevelVisualization.o CLevelVisualization.cpp
 
 ${OBJECTDIR}/ChainReaction.o: ChainReaction.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ChainReaction.o ChainReaction.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ChainReaction.o ChainReaction.cpp
 
 ${OBJECTDIR}/SBlockData.o: SBlockData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SBlockData.o SBlockData.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SBlockData.o SBlockData.cpp
 
 ${OBJECTDIR}/SHexData.o: SHexData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SHexData.o SHexData.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SHexData.o SHexData.cpp
 
 ${OBJECTDIR}/SOctData.o: SOctData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SOctData.o SOctData.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SOctData.o SOctData.cpp
 
 ${OBJECTDIR}/SQuadData.o: SQuadData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SQuadData.o SQuadData.cpp
+	$(COMPILE.cc) -O2 -s -DFG_CR_PLUGIN_STATIC -DFG_DEFAULTS -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SQuadData.o SQuadData.cpp
 
 # Subprojects
 .build-subprojects:
