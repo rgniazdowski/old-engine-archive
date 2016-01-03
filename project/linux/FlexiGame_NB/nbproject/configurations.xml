@@ -584,7 +584,6 @@
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>FG_DEFAULTS</Elem>
-            <Elem>FG_NO_UNDEF</Elem>
             <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
@@ -613,7 +612,6 @@
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
             <Elem>FG_DEFAULTS</Elem>
-            <Elem>FG_NO_UNDEF</Elem>
             <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
@@ -2510,7 +2508,6 @@
           </incDir>
           <preprocessorList>
             <Elem>FG_DEFAULTS</Elem>
-            <Elem>FG_NO_UNDEF</Elem>
             <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </cTool>
@@ -2538,7 +2535,6 @@
           <commandLine>-O2</commandLine>
           <preprocessorList>
             <Elem>FG_DEFAULTS</Elem>
-            <Elem>FG_NO_UNDEF</Elem>
             <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
         </ccTool>
