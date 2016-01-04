@@ -22,6 +22,8 @@
 // #include "Game/CEntity.h"
 
     #include "fgGameEntity.h"
+    #include "GFX/fgGfxMesh.h"
+    #include "GFX/fgGfxSkinnedMesh.h"
     #include "Physics/fgPhysical.h"
 
 namespace fg {
@@ -115,4 +117,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GAME_ENTITY_ACTOR_BLOCK
-#endif	/* FG_INC_GAME_ENTITY_ACTOR */
+#endif /* FG_INC_GAME_ENTITY_ACTOR */

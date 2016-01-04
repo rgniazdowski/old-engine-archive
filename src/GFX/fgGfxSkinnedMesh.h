@@ -20,7 +20,7 @@
 
     #include "fgGfxMesh.h"
     #include "Animation/fgGfxBone.h"
-    #include "Animation/fgGfxSkinningInfo.h"
+    #include "Animation/fgGfxBlendingInfo.h"
 
 namespace fg {
     namespace gfx {
@@ -134,8 +134,10 @@ namespace fg {
             BoneBoxesVec boneBoxes;
             ///
             BoneEdgesVec boneEdges;
-            ///
-            anim::SSkinningInfo skinningInfo;
+            /// Custom blending info for bones attached to this mesh.
+            /// Blending info is an array with special structures. Each contains
+            /// animation pair and a list of weights (proportions for each bone)
+            anim::SBlendingInfo blendingInfo;
 
             /**
              *
@@ -170,8 +172,9 @@ namespace fg {
 
             /**
              *
+             * @param armatureInfo
              */
-            virtual void refreshSkinningInfo() = 0;
+            virtual void initSkinningInfo(const anim::SBlendingInfo& armatureInfo) = 0;
 
             /**
              * Helper function for calculating current animation frame             
@@ -217,19 +220,22 @@ namespace fg {
             /**
              *
              */
-            void refreshSkinningInfo(SMeshBase* pMeshSuper);
+            void initSkinningInfo(const anim::SBlendingInfo& armatureInfo,
+                                  SMeshBase* pMeshSuper);
             /**
              *
              * @param pDataArray
              * @return
              */
-            fgGFXboolean refreshAttributes(const SMeshBase* pMeshSuper, SAttributeData* pDataArray) const;
+            fgGFXboolean refreshAttributes(const SMeshBase* pMeshSuper,
+                                           SAttributeData* pDataArray) const;
             /**
              *
              * @param pDataArray
              * @return
              */
-            fgGFXboolean setupAttributes(const SMeshBase* pMeshSuper, SAttributeData* pDataArray) const;
+            fgGFXboolean setupAttributes(const SMeshBase* pMeshSuper,
+                                         SAttributeData* pDataArray) const;
 
             /**
              *
@@ -306,7 +312,7 @@ namespace fg {
             /**
              * 
              */
-            virtual void refreshSkinningInfo(void);
+            virtual void initSkinningInfo(const anim::SBlendingInfo& armatureInfo);
             /**
              * 
              * @return
@@ -408,7 +414,7 @@ namespace fg {
             /**
              *
              */
-            virtual void refreshSkinningInfo(void);
+            virtual void initSkinningInfo(const anim::SBlendingInfo& armatureInfo);
             /**
              *
              * @return
@@ -427,4 +433,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_SKINNED_MESH_BLOCK
-#endif	/* FG_INC_GFX_SKINNED_MESH */
+#endif /* FG_INC_GFX_SKINNED_MESH */

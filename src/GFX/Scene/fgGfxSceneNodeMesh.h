@@ -18,12 +18,14 @@
     #define FG_INC_GFX_SCENE_NODE_MESH
     #define FG_INC_GFX_SCENE_NODE_MESH_BLOCK
 
-    #include "fgGfxSceneNode.h"
-    #include "GFX/fgGfxMesh.h"
+    #include "fgGfxSceneNode.h"    
 
 namespace fg {
     namespace gfx {
 
+        struct SMeshBase;
+        struct SMeshSoA;
+        struct SMeshAoS;
         struct SSkinnedMesh;
 
         class CSceneManager;
@@ -81,11 +83,7 @@ namespace fg {
              *
              * @return
              */
-            fgBool isSkinnedMesh(void) const {
-                if(!m_pMesh)
-                    return FG_FALSE;
-                return m_pMesh->isSkinnedMesh();
-            }
+            fgBool isSkinnedMesh(void) const;
             /**
              *
              * @return

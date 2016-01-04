@@ -17,6 +17,7 @@
     #include "fgGfxShape.h"
     #include "Resource/fgResource.h"
     #include "Util/fgStrings.h"
+    #include "Animation/fgGfxSkinningInfo.h"
 
     #if defined(FG_USING_ASSIMP)
 namespace Assimp {
@@ -840,7 +841,7 @@ namespace fg {
             /**
              *
              */
-            void refreshSkinningInfo(void);
+            void initSkinningInfo(void);
             //------------------------------------------------------------------
 
         protected:

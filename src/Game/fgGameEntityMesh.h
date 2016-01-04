@@ -21,6 +21,8 @@
     #include "GFX/Scene/fgGfxSceneNodeMesh.h"
     #include "fgGameEntityType.h"
     #include "Physics/fgPhysical.h"
+    #include "GFX/fgGfxMesh.h"
+    #include "GFX/fgGfxSkinnedMesh.h"
 
 namespace fg {
     namespace gfx {

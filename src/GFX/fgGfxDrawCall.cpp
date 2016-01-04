@@ -12,6 +12,8 @@
 #include "GFX/Shaders/fgGfxShaderProgram.h"
 #include "GFX/Textures/fgTextureResource.h"
 #include "GFX/fgGfxMaterial.h"
+#include "GFX/fgGfxMesh.h"
+#include "GFX/fgGfxShape.h"
 
 using namespace fg;
 

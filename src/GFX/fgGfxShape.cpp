@@ -15,6 +15,7 @@
  */
 
 #include "fgGfxShape.h"
+#include "fgGfxSkinnedMesh.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------

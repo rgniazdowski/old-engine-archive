@@ -499,12 +499,9 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
             // #FIXME
             m_numTriangles += shape->mesh->getNumIndices() / 3;
 
-            if(shape->mesh->isSkinnedMesh()) {
-                SSkinnedMesh* pSkinned = shape->getSkinnedMesh();
-                pSkinned->skinningInfo.boneTypesMap = m_skinning.skinningInfo.boneTypesMap;
-                pSkinned->skinningInfo.armatureInfo = m_skinning.skinningInfo.armatureInfo;
-                pSkinned->skinningInfo.actionsMap = m_skinning.skinningInfo.actionsMap;
-            }
+            /*if(shape->mesh->isSkinnedMesh()) {
+                SSkinnedMesh* pSkinned = shape->getSkinnedMesh();                
+            }*/
         }
         this->m_size += shape->getDataSize();
     }
@@ -1227,7 +1224,7 @@ fgBool gfx::CModelResource::create(void) {
 
     if(!this->m_size) return FG_FALSE;
     this->updateAABB();
-    this->refreshSkinningInfo();
+    this->initSkinningInfo();
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -1470,12 +1467,12 @@ gfx::anim::CAnimation* gfx::CModelResource::getMatchingAnimation(const char* nam
 }
 //------------------------------------------------------------------------------
 
-void gfx::CModelResource::refreshSkinningInfo(void) {
+void gfx::CModelResource::initSkinningInfo(void) {
     const unsigned int n = m_shapes.size();
     for(unsigned int i = 0; i < n; i++) {
         if(!m_shapes[i]->isSkinned())
             continue;
-        m_shapes[i]->getSkinnedMesh()->refreshSkinningInfo();
+        m_shapes[i]->getSkinnedMesh()->initSkinningInfo(m_skinning.skinningInfo.armatureInfo);
     }
 }
 //------------------------------------------------------------------------------

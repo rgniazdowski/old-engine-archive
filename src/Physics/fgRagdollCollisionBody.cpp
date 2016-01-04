@@ -8,22 +8,20 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 /*
- * File:   fgCollisionRagdollBody.cpp
+ * File:   fgRagdollCollisionBody.cpp
  * Author: vigilant
  *
  * Created on October 10, 2015, 12:47 AM
  */
 
-#include <stack>
-
 #include "fgRagdollCollisionBody.h"
 #include "fgCollisionBody.h"
+#include <stack>
 
 #if defined(FG_USING_BULLET)
 #include "BulletDynamics/ConstraintSolver/btConeTwistConstraint.h"
 #include "BulletDynamics/ConstraintSolver/btHingeConstraint.h"
 #include "BulletDynamics/Dynamics/btDynamicsWorld.h"
-
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -82,12 +80,10 @@ void physics::CRagdollCollisionBody::setMass(float mass) {
             totalLength += boneInfo.length;
         }
     }
-
     for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
         SBoneSmallInfo const& boneInfo = m_bonesInfo[boneIdx];
         CCollisionBody* pBody = m_bones[boneIdx]; // same positioning
         if(!pBody) {
-            // ?
             continue;
         }
         float bodyMass;
@@ -415,7 +411,7 @@ fgBool physics::CRagdollCollisionBody::helper_initializeJoint(const RagdollBoneT
             std::swap<CCollisionBody*>(pBoneBodyA, pBoneBodyB);
             std::swap<Matrix4f*>(pMatrixA, pMatrixB);
             std::swap<Vector3f*>(pRotationA, pRotationB);
-        } // now know what comes before and what after
+        } // now know what comes before and what after <- this is proper English :)
 
         if(useHinge) {
             {
@@ -537,7 +533,6 @@ void physics::CRagdollCollisionBody::startRagdolling(void) {
     const unsigned int nBones = m_bones.size();
     for(unsigned int i = 0; i < nBones; i++) {
         CCollisionBody* pBoneBody = m_bones[i];
-
         if(!pBoneBody)
             continue;
         pBoneBody->setWorldTransform(m_modelMat * m_initialTransforms[i]);
@@ -552,7 +547,6 @@ void physics::CRagdollCollisionBody::startRagdolling(void) {
 
 void physics::CRagdollCollisionBody::stopRagdolling(void) {
     if(!m_isRagdolling) {
-
         return; // ignore
     }
     // first unregister joints
@@ -573,7 +567,7 @@ physics::CCollisionBody* physics::CRagdollCollisionBody::getBoneBody(unsigned in
         return NULL;
     }
     const int index = m_boneMapping[armatureBoneIndex];
-    if(index >= 0 && index < m_bones.size()) {
+    if(index >= 0 && index < (int)m_bones.size()) {
         if(outIndex)
             *outIndex = index;
         return m_bones.at(index);
@@ -638,7 +632,7 @@ physics::CCollisionBody* physics::CRagdollCollisionBody::getParentBoneBody(CColl
         return NULL;
     }
     int parentBodyIndex = m_boneMapping[parentBoneIndex];
-    if(parentBodyIndex < 0 || parentBodyIndex >= m_bones.size()) {
+    if(parentBodyIndex < 0 || parentBodyIndex >= (int)m_bones.size()) {
         return NULL;
     }
     return m_bones[parentBodyIndex];
@@ -657,7 +651,7 @@ physics::CCollisionBody* physics::CRagdollCollisionBody::getParentBoneBody(unsig
         return NULL;
     }
     int parentBodyIndex = m_boneMapping[parentBoneIndex];
-    if(parentBodyIndex < 0 || parentBodyIndex >= m_bones.size()) {
+    if(parentBodyIndex < 0 || parentBodyIndex >= (int)m_bones.size()) {
         return NULL;
     }
     return m_bones[parentBodyIndex];
@@ -677,7 +671,7 @@ physics::CCollisionBody* physics::CRagdollCollisionBody::getParentBoneBody(const
         return NULL;
     }
     int parentBodyIndex = m_boneMapping[parentBoneIndex];
-    if(parentBodyIndex < 0 || parentBodyIndex >= m_bones.size()) {
+    if(parentBodyIndex < 0 || parentBodyIndex >= (int)m_bones.size()) {
         return NULL;
     }
     if(outIndex)
@@ -763,7 +757,6 @@ fgBool physics::CRagdollCollisionBody::addRigidBodiesToOwner(void) {
             continue;
         if(!pBoneBody->getRigidBody())
             continue;
-
         if(objects.findLinearSearch(pBoneBody->getRigidBody()) != objects.size())
             continue; // object already exists - ignore
         //pBoneBody->activate();
@@ -784,7 +777,6 @@ fgBool physics::CRagdollCollisionBody::removeRigidBodiesFromOwner(void) {
         CCollisionBody* pBoneBody = m_bones[i];
         if(!pBoneBody)
             continue;
-
         if(!pBoneBody->getRigidBody())
             continue;
         m_pOwner->removeRigidBody(pBoneBody->getRigidBody());
@@ -807,7 +799,6 @@ fgBool physics::CRagdollCollisionBody::registerJoints(void) {
             if(!constraints[i])
                 continue;
             // enabled flag means that the constraint is already in the world
-
             if(constraints[i]->isEnabled() == false)
                 m_pOwner->addConstraint(constraints[i], true);
             constraints[i]->setEnabled(true);
@@ -827,7 +818,6 @@ fgBool physics::CRagdollCollisionBody::unregisterJoints(void) {
         ConstraintsVec& constraints = itor->second;
         const unsigned int n = constraints.size();
         for(unsigned int i = 0; i < n; i++) {
-
             if(!constraints[i])
                 continue;
             m_pOwner->removeConstraint(constraints[i]);
@@ -850,7 +840,6 @@ fgBool physics::CRagdollCollisionBody::destroyJoints(void) {
         ConstraintsVec& constraints = itor->second;
         const unsigned int n = constraints.size();
         for(unsigned int i = 0; i < n; i++) {
-
             if(constraints[i])
                 delete constraints[i];
             constraints[i] = NULL;
@@ -874,7 +863,6 @@ fgBool physics::CRagdollCollisionBody::destroyBones(void) {
     // destroy
     const unsigned int nBones = m_bones.size();
     for(unsigned int i = 0; i < nBones; i++) {
-
         if(m_bones[i])
             delete m_bones[i];
         m_bones[i] = NULL;

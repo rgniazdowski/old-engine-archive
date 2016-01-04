@@ -18,12 +18,13 @@
     #define FG_INC_GFX_SHAPE
     #define FG_INC_GFX_SHAPE_BLOCK
 
-    #include "fgGfxMesh.h"
-    #include "fgGfxSkinnedMesh.h"
+    #include "fgGfxMesh.h"    
     #include "fgGfxMaterial.h"
 
 namespace fg {
     namespace gfx {
+
+        struct SSkinnedMesh;
 
         /**
          *

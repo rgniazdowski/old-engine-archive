@@ -16,6 +16,8 @@
 
 #include "fgGfxSceneNodeMesh.h"
 #include "fgGfxSceneManager.h"
+#include "GFX/fgGfxSkinnedMesh.h"
+#include "GFX/fgGfxShape.h"
 #include "GFX/Animation/fgGfxAnimation.h"
 #include "GFX/Animation/fgGfxBlending.h"
 
@@ -86,6 +88,13 @@ gfx::SSkinnedMesh* gfx::CSceneNodeMesh::getSkinnedMesh(void) const {
 }
 //------------------------------------------------------------------------------
 
+fgBool gfx::CSceneNodeMesh::isSkinnedMesh(void) const {
+    if(!m_pMesh)
+        return FG_FALSE;
+    return m_pMesh->isSkinnedMesh();
+}
+//------------------------------------------------------------------------------
+
 void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     m_pMesh = pMesh;
     if(!pMesh)
@@ -137,16 +146,9 @@ void gfx::CSceneNodeMesh::animate(float delta) {
         anim::SAnimationInfo &animationInfo = animations[animId];
         // calculate will check if animation is compatible
         // #FIXME - this will recalculate animation step if the model has
-        // two or more shapes with the same animation - need to check it
-        // somehow
+        // two or more shapes with the same animation - need to check it somehow
         pSkinnedMesh->calculate(animationInfo, delta);
     }
-    /*
-     anim::SBlendingInfo* pBlendInfo = pSkinnedMesh->getSkinningInfo()->getBlendingInfo();
-     anim::SAnimationInfo blendResult;
-     anim::blendAnimations(animations, anim::Type::BONE, pBlendInfo, &blendResult);
-
-     */
     // Base function version will merge all compatible animations into one.
     // Merged animations can be retrieved by their type.
     // Bone animations can be applied only to skinned mesh.
@@ -177,7 +179,7 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
             animated_type::AnimationsVec& animations = getAnimations();
             if(animations.empty())
                 return;
-            const anim::SBlendingInfo& pBlendInfo = pSkinnedMesh->skinningInfo.blendingInfo;
+            const anim::SBlendingInfo& pBlendInfo = pSkinnedMesh->blendingInfo;
             anim::SAnimationInfo blendResult;
             int blendCount = anim::blendAnimations(animations,
                                                    anim::Type::BONE,

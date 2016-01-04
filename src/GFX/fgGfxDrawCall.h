@@ -15,8 +15,7 @@
     #include "fgGfxPrimitives.h"
     #include "GFX/Shaders/fgGfxShaderDefs.h"
     #include "fgGfxTypes.h"
-    #include "fgGfxMVPMatrix.h"
-    #include "fgGfxShape.h"
+    #include "fgGfxMVPMatrix.h"    
 
     #include "Util/fgFastCmp.h"
     #include "Textures/fgTextureTypes.h"
@@ -54,6 +53,10 @@ namespace fg {
 
         class CDrawingBatch;
         struct SMaterial;
+        struct SShape;
+        struct SMeshBase;
+        struct SMeshSoA;
+        struct SMeshAoS;
         class CShaderProgram;
         class CTextureResource;
 
