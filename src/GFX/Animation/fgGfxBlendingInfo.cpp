@@ -109,7 +109,7 @@ fgBool gfx::anim::SBlendingPair::isFlipped(const AnimationPair& pair) {
 //------------------------------------------------------------------------------
 
 gfx::anim::SBlendingInfo::SBlendingInfo() : base_type() {
-    this->reserve(2);
+    //this->reserve(2);
 }
 //------------------------------------------------------------------------------
 

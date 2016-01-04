@@ -135,9 +135,11 @@ namespace fg {
 
         private:
             /// Pointer to external mesh that this object represents
-            SMeshBase *m_pMesh;
+            SMeshBase* m_pMesh;
             ///
-            SMaterial *m_pMaterial;
+            SMaterial* m_pMaterial;
+            ///
+            CVector<DualQuaternionf>* m_pCurrentDQ;
         }; // class CSceneNodeMesh
 
     } // namespace gfx

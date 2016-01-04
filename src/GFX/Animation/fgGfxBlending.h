@@ -38,7 +38,7 @@ namespace fg {
             int blendAnimations(const CVector<anim::SAnimationInfo>& anims, 
                                 Type animType,
                                 const SBlendingInfo& blendInfo,
-                                SAnimationInfo* pResult);
+                                SAnimationFrameInfo* pResult);
 
         } // namespace anim
     } // namespace gfx

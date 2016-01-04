@@ -26,7 +26,10 @@ using namespace fg;
 
 gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
 base_type(SCENE_NODE_MESH, pParent),
-drawable_type() {
+drawable_type(),
+m_pMesh(NULL),
+m_pMaterial(NULL),
+m_pCurrentDQ(NULL) {
     if(!m_drawCall) {
         m_drawCall = new CDrawCall(DRAW_CALL_MESH,
                                    ATTRIBUTE_POSITION_BIT |
@@ -141,13 +144,21 @@ void gfx::CSceneNodeMesh::animate(float delta) {
     animated_type::AnimationsVec& animations = getAnimations();
     if(animations.empty())
         return;
+    unsigned int nBoneAnims = 0;
+    int nFirstId = -1;
     const unsigned int nAnimations = animations.size();
     for(unsigned int animId = 0; animId < nAnimations; animId++) {
         anim::SAnimationInfo &animationInfo = animations[animId];
         // calculate will check if animation is compatible
         // #FIXME - this will recalculate animation step if the model has
         // two or more shapes with the same animation - need to check it somehow
-        pSkinnedMesh->calculate(animationInfo, delta);
+        if(animationInfo.pAnimation->getType() == anim::Type::BONE ||
+           animationInfo.pAnimation->getType() == anim::Type::BONE_RAGDOLL) {
+            pSkinnedMesh->calculate(animationInfo, delta);
+            nBoneAnims++;
+            if(nBoneAnims == 1)
+                nFirstId = (int)animId;
+        }
     }
     // Base function version will merge all compatible animations into one.
     // Merged animations can be retrieved by their type.
@@ -156,6 +167,25 @@ void gfx::CSceneNodeMesh::animate(float delta) {
     // matrix used to transform the node. This matrix is simply copied into
     // m_modelMatrix. NOTE: Node transformation matrix is relative to the parent.
     base_type::animate(delta);
+
+    // Now for merging part
+    if(nBoneAnims > 1) {
+        anim::SAnimationFrameInfo* pInfo =
+                animated_type::prepareBlendedFrame(anim::Type::BONE);
+        const anim::SBlendingInfo& pBlendInfo = pSkinnedMesh->blendingInfo;
+
+        int blendCount = anim::blendAnimations(animations,
+                                               anim::Type::BONE,
+                                               pBlendInfo,
+                                               pInfo);
+        if(!blendCount)
+            m_pCurrentDQ = &animations[nFirstId].curFrame.dualQuaternions;
+        else
+            m_pCurrentDQ = NULL;
+
+    } else if(nBoneAnims == 1) {
+        m_pCurrentDQ = &animations[nFirstId].curFrame.dualQuaternions;
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -168,26 +198,13 @@ void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
     CShaderProgram* pProgram = m_drawCall->getShaderProgram();
     if(pProgram && nAnimations) {
         pProgram->use();
-        if(animations.size() == 1) {
-            // the index of animation should not be zero...
+        if(m_pCurrentDQ) {
             pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
-                                 animations[0].curFrame.dualQuaternions);
-        } else if(animations.size() == 2) {
-            SSkinnedMesh *pSkinnedMesh = getSkinnedMesh();
-            if(!pSkinnedMesh)
-                return;
-            animated_type::AnimationsVec& animations = getAnimations();
-            if(animations.empty())
-                return;
-            const anim::SBlendingInfo& pBlendInfo = pSkinnedMesh->blendingInfo;
-            anim::SAnimationInfo blendResult;
-            int blendCount = anim::blendAnimations(animations,
-                                                   anim::Type::BONE,
-                                                   pBlendInfo,
-                                                   &blendResult);
-            if(blendCount)
-                pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
-                                     blendResult.curFrame.dualQuaternions);
+                                 *m_pCurrentDQ);
+        } else if(hasBlendedFrame(anim::Type::BONE)) {
+            anim::SAnimationFrameInfo* pInfo = getBlendedFrame(anim::Type::BONE);
+            pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
+                                 pInfo->dualQuaternions);
         }
     }
     m_drawCall->draw(math::scale(m_finalModelMat, getFinalScale()) * modelMat);

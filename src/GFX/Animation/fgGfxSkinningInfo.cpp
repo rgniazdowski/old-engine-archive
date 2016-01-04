@@ -20,14 +20,12 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::anim::SSkinningInfo::SSkinningInfo() :
-blendingInfo(),
 armatureInfo(),
 boneTypesMap(),
 actionsMap() { }
 //------------------------------------------------------------------------------
 
 gfx::anim::SSkinningInfo::SSkinningInfo(const SSkinningInfo& orig) {
-    blendingInfo.append(orig.blendingInfo);
     armatureInfo.append(orig.armatureInfo);
     boneTypesMap.insert(orig.boneTypesMap.begin(),
                         orig.boneTypesMap.end());

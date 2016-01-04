@@ -23,6 +23,12 @@ using namespace fg;
 gfx::traits::CAnimated::CAnimated() : m_animations() { }
 //------------------------------------------------------------------------------
 
+gfx::traits::CAnimated::~CAnimated() {
+    m_animations.clear();
+    destroyBlendedFrames();
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::traits::CAnimated::setAnimation(anim::CAnimation* pAnimation, unsigned int slot) {
     if(!pAnimation)
         return FG_FALSE;
@@ -367,5 +373,57 @@ void gfx::traits::CAnimated::rewindAnimations(void) {
         if(pInfo)
             pInfo->rewind();
     }
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SAnimationFrameInfo*
+gfx::traits::CAnimated::getBlendedFrame(anim::Type animType) {
+    unsigned int _index = (unsigned int)animType;
+    if(m_blendedFramesMap.size() <= _index)
+        return NULL;
+    return m_blendedFramesMap[_index];
+}
+//------------------------------------------------------------------------------
+
+const gfx::anim::SAnimationFrameInfo*
+gfx::traits::CAnimated::getBlendedFrame(anim::Type animType) const {
+    unsigned int _index = (unsigned int)animType;
+    if(m_blendedFramesMap.size() <= _index)
+        return NULL;
+    return m_blendedFramesMap[_index];
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SAnimationFrameInfo* gfx::traits::CAnimated::prepareBlendedFrame(anim::Type animType) {
+    gfx::anim::SAnimationFrameInfo* pFrame = NULL;
+    if(hasBlendedFrame(animType)) {
+        (pFrame = getBlendedFrame(animType))->reset();
+    } else {
+        pFrame = new anim::SAnimationFrameInfo();
+        unsigned int _index = (unsigned int)animType;
+        m_blendedFramesMap.resize(_index + 1, NULL);
+        m_blendedFramesMap[_index] = pFrame;
+    }
+    return pFrame;
+}
+//------------------------------------------------------------------------------
+
+void gfx::traits::CAnimated::clearBlendedFrame(anim::Type animType) {
+    gfx::anim::SAnimationFrameInfo* pFrame = getBlendedFrame(animType);
+    if(pFrame) {
+        pFrame->clear();
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::traits::CAnimated::destroyBlendedFrames(void) {
+    const unsigned int nSize = m_blendedFramesMap.size();
+    for(unsigned int i = 0; i < nSize; i++) {
+        gfx::anim::SAnimationFrameInfo* pFrame = m_blendedFramesMap[i];
+        if(pFrame)
+            delete pFrame;
+        m_blendedFramesMap[i] = NULL;
+    }
+    m_blendedFramesMap.clear();
 }
 //------------------------------------------------------------------------------

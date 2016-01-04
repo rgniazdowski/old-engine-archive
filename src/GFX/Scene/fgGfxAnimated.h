@@ -19,6 +19,7 @@
     #define FG_INC_GFX_ANIMATED_BLOCK
 
     #include "GFX/Animation/fgGfxAnimationInfo.h"
+    #include "GFX/Animation/fgGfxAnimationType.h"
     #include "Util/fgStrings.h"
     #include "fgTraits.h"
 
@@ -46,6 +47,9 @@ namespace fg {
                 typedef AnimationsVec::iterator AnimationsVecItor;
                 typedef AnimationsVec::const_iterator AnimationsVecConstItor;
 
+                // This will be tricky
+                typedef CVector<anim::SAnimationFrameInfo *> BlendedFramesMap;
+
             public:
                 static const fg::traits::SceneNode SELF_TRAIT = fg::traits::ANIMATED;
 
@@ -57,7 +61,7 @@ namespace fg {
                 /**
                  *
                  */
-                virtual ~CAnimated() { }
+                virtual ~CAnimated();
 
                 //--------------------------------------------------------------
                 /**
@@ -67,7 +71,8 @@ namespace fg {
                  * @param slot
                  * @return 
                  */
-                virtual fgBool setAnimation(const char* name, unsigned int slot) {
+                virtual fgBool setAnimation(const char* name,
+                                            unsigned int slot) {
                     return FG_FALSE;
                 }
                 /**
@@ -76,14 +81,16 @@ namespace fg {
                  * @param slot
                  * @return
                  */
-                fgBool setAnimation(anim::CAnimation* pAnimation, unsigned int slot = 0);
+                fgBool setAnimation(anim::CAnimation* pAnimation,
+                                    unsigned int slot = 0);
                 /**
                  *
                  * @param pAnimationInfo
                  * @param slot
                  * @return
                  */
-                fgBool setAnimation(anim::SAnimationInfo* pAnimationInfo, unsigned int slot = 0);
+                fgBool setAnimation(anim::SAnimationInfo* pAnimationInfo,
+                                    unsigned int slot = 0);
                 /**
                  *
                  * @param pAnimation
@@ -291,6 +298,25 @@ namespace fg {
                 AnimationsVec const& getAnimations(void) const {
                     return m_animations;
                 }
+                BlendedFramesMap& getBlendedFrames(void) {
+                    return m_blendedFramesMap;
+                }
+                BlendedFramesMap const& getBlendedFrames(void) const {
+                    return m_blendedFramesMap;
+                }
+
+                anim::SAnimationFrameInfo* getBlendedFrame(anim::Type animType);
+                const anim::SAnimationFrameInfo* getBlendedFrame(anim::Type animType) const;
+
+                inline fgBool hasBlendedFrame(anim::Type animType) {
+                    return (fgBool)(getBlendedFrame(animType) != NULL);
+                }
+                inline fgBool hasBlendedFrame(anim::Type animType) const {
+                    return (fgBool)(getBlendedFrame(animType) != NULL);
+                }
+                anim::SAnimationFrameInfo* prepareBlendedFrame(anim::Type animType);
+                void clearBlendedFrame(anim::Type animType);
+                void destroyBlendedFrames(void);
             public:
                 /**
                  * 
@@ -299,14 +325,24 @@ namespace fg {
                 unsigned int getAnimationsCount(void) const {
                     return m_animations.size();
                 }
+                unsigned int getBlendedFramesCount(void) const {
+                    unsigned int result = 0;
+                    for(unsigned int i = 0; i < m_blendedFramesMap.size(); i++) {
+                        if(m_blendedFramesMap[i]) {
+                            result += !m_blendedFramesMap[i]->isEmpty();
+                        }
+                    }
+                    return result;
+                }
 
-                //--------------------------------------------------------------
+                //--------------------------------------------------------------                
 
             private:
                 /// Vector holding currently used animations.
                 /// Order is significant.
                 AnimationsVec m_animations;
 
+                BlendedFramesMap m_blendedFramesMap;
             }; // abstract class CAnimated
 
         } // namespace traits
@@ -314,4 +350,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_ANIMATED_BLOCK
-#endif	/* FG_INC_GFX_ANIMATED */
+#endif /* FG_INC_GFX_ANIMATED */

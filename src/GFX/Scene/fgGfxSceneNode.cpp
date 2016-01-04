@@ -11,6 +11,9 @@
 #include "fgGfxSceneNode.h"
 #include "fgGfxSceneManager.h"
 #include "GFX/fgGfxDrawCall.h"
+#include "GFX/Animation/fgGfxAnimation.h"
+#include "GFX/Animation/fgGfxBlending.h"
+#include "GFX/Animation/fgGfxBlendingInfo.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -193,22 +196,22 @@ void gfx::CSceneNode::rotate(float angle, const Vec3f& axis) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNode::rotate(float angle, float x, float y, float z) {    
-    m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));    
+void gfx::CSceneNode::rotate(float angle, float x, float y, float z) {
+    m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNode::setRotation(float angle, const Vec3f& axis) {    
+void gfx::CSceneNode::setRotation(float angle, const Vec3f& axis) {
     const Vector4f translation = m_modelMat[3];
     m_modelMat = math::rotate(Matrix4f(), angle, axis);
-    m_modelMat[3] = translation;    
+    m_modelMat[3] = translation;
     // ignore scaling - when rotating - need to preserve whole translation
 }
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRotation(float angle, float x, float y, float z) {
     const Vector4f translation = m_modelMat[3];
-    m_modelMat = math::rotate(Matrix4f(), angle, Vec3f(x, y, z));    
+    m_modelMat = math::rotate(Matrix4f(), angle, Vec3f(x, y, z));
     m_modelMat[3] = translation;
 }
 //------------------------------------------------------------------------------
@@ -305,7 +308,46 @@ void gfx::CSceneNode::updateAABB(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNode::animate(float delta) { }
+void gfx::CSceneNode::animate(float delta) {
+    animated_type::AnimationsVec& animations = getAnimations();
+    if(animations.empty())
+        return;
+    const unsigned int nAnimations = animations.size();
+    unsigned int nNodes = 0;
+    int nFirstId = -1;
+    for(unsigned int animId = 0; animId < nAnimations; animId++) {
+        anim::SAnimationInfo &animationInfo = animations[animId];
+        // Base function only calculates NODE animations
+        if(animationInfo.pAnimation->getType() == anim::Type::NODE) {
+            animationInfo.calculate(delta);
+            nNodes++;
+            if(nNodes == 1)
+                nFirstId = (int)animId;
+        }
+    }
+    fgBool hasMatrix = FG_FALSE;
+    Matrix4f *pMatrix = NULL;
+    // Now for merging part
+    if(nNodes > 1) {
+        anim::SAnimationFrameInfo* pInfo = animated_type::prepareBlendedFrame(anim::Type::NODE);
+        anim::blendAnimations(animations,
+                              anim::Type::NODE,
+                              anim::SBlendingInfo(),
+                              pInfo);
+        pMatrix = &pInfo->transformations.at(0);
+    } else if(nNodes == 1) {
+        pMatrix = &animations[nFirstId].curFrame.transformations.at(0);
+    }
+    if(hasMatrix) {
+        // need to calculate scale
+        Vec3f outScale;
+        outScale.x = math::length((*pMatrix)[0]);
+        outScale.y = math::length((*pMatrix)[1]);
+        outScale.z = math::length((*pMatrix)[2]);
+        m_modelMat = math::scale((*pMatrix), 1.0f / outScale);
+        m_scale = outScale;
+    }
+}
 //------------------------------------------------------------------------------
 
 void gfx::CSceneNode::update(float delta) {

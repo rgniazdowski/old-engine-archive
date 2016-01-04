@@ -75,8 +75,6 @@ namespace fg {
 
                 //--------------------------------------------------------------
                 ///
-                SBlendingInfo blendingInfo;
-                ///
                 SBlendingInfo armatureInfo;
                 ///
                 BoneTypesMap boneTypesMap;

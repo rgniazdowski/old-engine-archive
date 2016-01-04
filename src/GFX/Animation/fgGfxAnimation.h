@@ -22,6 +22,7 @@
         #error "FG_INC_GFX_ANIMATION_INFO_BLOCK defined; Do not include fgGfxAnimation.h inside of fgGfxAnimationInfo header!"
     #endif
 
+    #include "fgGfxAnimationType.h"
     #include "fgGfxAnimationChannel.h"    
     #include "fgVector.h"    
 
@@ -30,16 +31,7 @@ namespace fg {
         namespace anim {
 
             struct SAnimationFrameInfo;
-            struct SAnimationInfo;
-            
-            enum class Type {
-                INVALID = 0,
-                NODE = 1,
-                OBJECT = Type::NODE,
-                BONE = 2,
-                BONE_RAGDOLL = 3,
-                CAMERA = 4
-            };
+            struct SAnimationInfo;                        
 
             /**
              *
