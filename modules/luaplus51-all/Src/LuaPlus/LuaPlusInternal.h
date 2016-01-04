@@ -82,7 +82,9 @@ struct LuaArgNil {};
 
 #if !LUAPLUS_EXCEPTIONS
 #include <assert.h>
+#include <stdio.h>
 #define luaplus_assert(e) if (!(e)) assert(0)
+#define luaplus_assertlog(e, msg) if (!(e)) { fprintf(stderr, "%s", msg); assert(0); }
 //(void)0
 #define luaplus_throw(e) assert(0)
 //(void)0

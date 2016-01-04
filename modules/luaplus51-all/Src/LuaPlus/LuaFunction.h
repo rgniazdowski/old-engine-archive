@@ -36,7 +36,8 @@ public:
 
 		if (lua_pcall(L, 0, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -51,7 +52,8 @@ public:
 
 		if (lua_pcall(L, 1, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -67,7 +69,8 @@ public:
 
 		if (lua_pcall(L, 2, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -84,7 +87,8 @@ public:
 
 		if (lua_pcall(L, 3, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -121,7 +125,8 @@ public:
 
 		if (lua_pcall(L, 5, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -141,7 +146,8 @@ public:
 
 		if (lua_pcall(L, 6, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -162,7 +168,8 @@ public:
 
 		if (lua_pcall(L, 7, 1, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 		return LPCD::Type<RT>::Get(L, -1);
 	}
@@ -192,7 +199,8 @@ public:
 
 		if (lua_pcall(L, 0, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -206,7 +214,8 @@ public:
 
 		if (lua_pcall(L, 1, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -221,7 +230,8 @@ public:
 
 		if (lua_pcall(L, 2, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -237,7 +247,8 @@ public:
 
 		if (lua_pcall(L, 3, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -254,7 +265,8 @@ public:
 
 		if (lua_pcall(L, 4, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -272,7 +284,8 @@ public:
 
 		if (lua_pcall(L, 5, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -291,7 +304,8 @@ public:
 
 		if (lua_pcall(L, 6, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
@@ -311,7 +325,8 @@ public:
 
 		if (lua_pcall(L, 7, 0, 0)) {
 			const char* errorString = lua_tostring(L, -1);  (void)errorString;
-			luaplus_assert(0);
+			//luaplus_assert(0);
+			luaplus_assertlog(0, errorString);
 		}
 	}
 
