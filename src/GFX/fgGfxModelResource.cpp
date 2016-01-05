@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
  * All rights reserved.
- * 
+ *
  * This file is part of FlexiGame: Flexible Game Engine
- * 
- * FlexiGame source code and any related files can not be copied, modified 
+ *
+ * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
@@ -27,6 +27,7 @@ using namespace fg;
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "fgGfxAssimpHelper.h"
+#include "Animation/fgGfxAnimationInfo.h"
 ::Assimp::Importer* gfx::CModelResource::s_objImporter = NULL;
 #endif
 int gfx::CModelResource::s_cmrInstanceCount = 0;
@@ -35,7 +36,8 @@ int gfx::CModelResource::s_cmrInstanceCount = 0;
 
 gfx::CModelResource::SModelSkinning::SModelSkinning() :
 animations(),
-pArmature(NULL) { }
+pArmature(NULL),
+info() { }
 //------------------------------------------------------------------------------
 
 gfx::CModelResource::SModelSkinning::SModelSkinning(const SModelSkinning& orig) {
@@ -109,6 +111,13 @@ gfx::anim::CAnimation* gfx::CModelResource::SModelSkinning::getAnimation(const c
 }
 //------------------------------------------------------------------------------
 
+gfx::anim::CAnimation* gfx::CModelResource::SModelSkinning::getAnimation(anim::StandardActionType actionType) {
+    if(this->info.hasAction(actionType))
+        return this->getAnimation(this->info.actionsMap[actionType]);
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
     if(!path)
         return FG_FALSE;
@@ -125,6 +134,9 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
     state = NONE;
     util::CFile file;
     status = file.open(path, util::CFile::Mode::READ);
+    if(!status) {
+        //FG_LOG_DEBUG("Failed to load additional skinning info file: '%s'", path);
+    }
     char lineBuf[512];
     CStringVector splits1, splits2;
     std::string line;
@@ -134,7 +146,7 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
         splits2.reserve(8);
         line.reserve(513);
 
-        this->skinningInfo.actionsMap.clear();
+        this->info.actionsMap.clear();
     }
     anim::SBlendingInfo::AnimationPair currentPair;
     anim::StandardActionType action[2] = {anim::ACTION_NONE, anim::ACTION_NONE};
@@ -175,7 +187,9 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
                 continue;
             for(unsigned int _i = 0; _i < _n; _i++) {
                 std::string realAnimName = strings::trim(splits2[_i], " \t\"\'\\{}[]");
-                this->skinningInfo.actionsMap[actionType] = realAnimName;
+
+                this->info.actionsMap[actionType] = this->getAnimation(realAnimName, strings::MATCH_SUBSTR)->getName(); //realAnimName;
+
             }
         } else if(state == READ_BONE_MAPPING && strings::startsWith(line, "map ", FG_FALSE) && pArmature) {
             strings::split(line, '{', splits1);
@@ -192,8 +206,8 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
                 anim::SBone* pBone = this->pArmature->get(realBoneName);
                 pBone->boneType = boneType;
                 if(pBone) {
-                    if(!this->skinningInfo.boneTypesMap[boneType].contains(pBone))
-                        this->skinningInfo.boneTypesMap[boneType].push_back(pBone);
+                    if(!this->info.boneTypesMap[boneType].contains(pBone))
+                        this->info.boneTypesMap[boneType].push_back(pBone);
                 }
             }
         } else if(state == READ_ANIMATION_BLENDING) {
@@ -212,9 +226,9 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
                 action[1] = anim::getActionTypeFromText(splits2[1]);
 
                 anim::CAnimation * animation[2];
-                animation[0] = this->getAnimation(this->skinningInfo.actionsMap[action[0]].c_str(),
+                animation[0] = this->getAnimation(this->info.actionsMap[action[0]].c_str(),
                                                   strings::MATCH_SUBSTR);
-                animation[1] = this->getAnimation(this->skinningInfo.actionsMap[action[1]].c_str(),
+                animation[1] = this->getAnimation(this->info.actionsMap[action[1]].c_str(),
                                                   strings::MATCH_SUBSTR);
                 if(animation[0] && animation[1]) {
                     currentPair.first = animation[0];
@@ -226,10 +240,10 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
                     continue;
                 }
                 state = READ_BLEND_PAIR; // next stage
-                this->skinningInfo.armatureInfo.push_back(anim::SBlendingPair());
-                currentIndex = this->skinningInfo.armatureInfo.size() - 1;
-                this->skinningInfo.armatureInfo[currentIndex].animation = currentPair;
-                this->skinningInfo.armatureInfo[currentIndex].weights.resize(this->pArmature->count());
+                this->info.armatureInfo.push_back(anim::SBlendingPair());
+                currentIndex = this->info.armatureInfo.size() - 1;
+                this->info.armatureInfo[currentIndex].animation = currentPair;
+                this->info.armatureInfo[currentIndex].weights.resize(this->pArmature->count());
             }
         } else if(state == READ_BLEND_PAIR) {
             if(currentIndex < 0) {
@@ -247,7 +261,7 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
             // run+attack
             // HEAD,NECK,ARM_LEFT,ARM_RIGHT={0.0,1.0}
             strings::split(line, '=', splits1);
-            anim::SSkinningInfo::BoneTypesMap& boneTypesMap = this->skinningInfo.boneTypesMap;
+            anim::SSkinningInfo::BoneTypesMap& boneTypesMap = this->info.boneTypesMap;
             CVector<anim::BoneType> boneTypes;
             // get list of bone categories
             strings::split(splits1[0], ',', splits2);
@@ -276,7 +290,7 @@ fgBool gfx::CModelResource::SModelSkinning::loadFromFile(const char* path) {
                 std::string weightStr = strings::trim(splits2[i], " \t\n\r[]{}();,");
                 weights[i] = (float)std::atof(weightStr.c_str());
             }
-            anim::SBlendingInfo& pairsInfoVec = this->skinningInfo.armatureInfo;
+            anim::SBlendingInfo& pairsInfoVec = this->info.armatureInfo;
             // process all bones for every type
             for(unsigned int typeIdx = 0; typeIdx < boneTypes.size(); typeIdx++) {
                 anim::BoneType boneType = boneTypes[typeIdx];
@@ -334,6 +348,188 @@ void gfx::CModelResource::SModelSkinning::translatePositionKeys(const std::strin
             }
         } // for every channel
     } // for every animation
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CModelResource::SModelSkinning::calculateRootMotions(const CModelResource* pModel) {
+    if(!pModel || this->animations.empty())
+        return FG_FALSE;
+    if(!pModel->hasAnimation(this->animations.at(0))) {
+        // this model is not compatible - just in case
+        return FG_FALSE;
+    }
+    // Will need to fast-play each animation - step 100ms is sufficient
+    // For every animation (standard action) check given bones movement (difference/offset)
+    // CPU skinning will be performed - only for selected bones.
+    CVector<anim::StandardActionType> forwards, strafing;
+
+    if(this->info.hasAction(anim::ACTION_RUN))
+        forwards.push_back(anim::ACTION_RUN);
+    if(this->info.hasAction(anim::ACTION_WALK))
+        forwards.push_back(anim::ACTION_WALK);
+
+    if(this->info.hasAction(anim::ACTION_STRAFE_LEFT))
+        strafing.push_back(anim::ACTION_STRAFE_LEFT);
+    if(this->info.hasAction(anim::ACTION_STRAFE_RIGHT))
+        strafing.push_back(anim::ACTION_STRAFE_RIGHT);
+    if(forwards.empty() && strafing.empty())
+        return FG_FALSE;
+    anim::SSkinningInfo::BonesVec bones;
+    if(this->info.hasBone(physics::BONE_FOOT_LEFT))
+        bones.push_back(this->info.getBone(physics::BONE_FOOT_LEFT));
+    if(this->info.hasBone(physics::BONE_FOOT_RIGHT))
+        bones.push_back(this->info.getBone(physics::BONE_FOOT_RIGHT));
+
+    struct _BoneAnalyzeInfo
+    {
+        int boneMeshIdx;
+        Vec3f lastPosition;
+        Vec3f currentPosition;
+        Vec3f direction;
+        Vec3f oldDirection;
+        float distance;
+
+        void updatePosition(const Vec3f& pos) {
+            oldDirection = direction;
+            direction = pos - lastPosition;
+            lastPosition = currentPosition;
+            currentPosition = pos;
+        }
+
+        fgBool didDirectionChange(int which = -1) const {
+            // switch?
+            if(math::sign(direction.x) != math::sign(oldDirection.x) && (which == 0 || which == -1))
+                return FG_TRUE;
+            if(math::sign(direction.y) != math::sign(oldDirection.y) && (which == 1 || which == -1))
+                return FG_TRUE;
+            if(math::sign(direction.z) != math::sign(oldDirection.z) && (which == 2 || which == -1))
+                return FG_TRUE;
+            return FG_FALSE;
+        }
+
+        fgBool didDirectionChange(const Vec3f& oAxis) const {
+            float old = math::dot(oldDirection, oAxis);
+            float cur = math::dot(direction, oAxis);
+            if(math::sign(old) == math::sign(math::length(oAxis)) &&
+               math::sign(old) != math::sign(cur)) {
+                return FG_TRUE;
+            }
+            return FG_FALSE;
+        }
+
+        fgBool isDirectionValid(const Vec3f& oAxis) const {
+            float old = math::dot(oldDirection, oAxis);
+            float cur = math::dot(direction, oAxis);
+            if(math::sign(old) == math::sign(math::length(oAxis)))
+                return FG_TRUE;
+            return FG_FALSE;
+        }
+
+        _BoneAnalyzeInfo() : boneMeshIdx(0), lastPosition(),
+        currentPosition(),
+        direction(),
+        oldDirection(),
+        distance(0.0f) { }
+
+        void clear(void) {
+            boneMeshIdx = 0;
+            oldDirection = Vec3f();
+            direction = Vec3f();
+            currentPosition = Vec3f();
+            lastPosition = Vec3f();
+            distance = 0.0f;
+        }
+    };
+    CVector<_BoneAnalyzeInfo> boneInfo;
+
+    if(bones.empty())
+        return FG_FALSE;
+    boneInfo.resize(bones.size());
+    Vec3f oAxis; // origin axis, +Z for walk/run, -X strafe left, +X strafe right
+    const unsigned int nCount = forwards.size() + strafing.size();
+    anim::SAnimationInfo animationInfo;
+    float tStep = 0.05f; // 50ms / 20 ticks per second
+    float durationS = 0.0f, tCurrent = 0.0f;
+    for(unsigned int i = 0; i < nCount; i++) {
+        anim::StandardActionType actionType;
+        if(i >= forwards.size()) {
+            actionType = strafing[i - forwards.size()];
+            if(actionType == anim::ACTION_STRAFE_LEFT)
+                oAxis = Vec3f(-1.0f, 0.0f, 0.0f);
+            else
+                oAxis = Vec3f(1.0f, 0.0f, 0.0f);
+        } else {
+            actionType = forwards[i];
+            oAxis = Vec3f(0.0f, 0.0f, 1.0f);
+        }
+        anim::CAnimation* pAnimation = this->getAnimation(actionType);
+        if(!pAnimation)
+            continue;
+        if(pAnimation->getType() != anim::Type::BONE)
+            continue;
+        animationInfo.pAnimation = pAnimation;
+        animationInfo.tempo = 1.0f;
+        animationInfo.stop();
+        animationInfo.play();
+        anim::CBoneAnimation* pBoneAnimation = (anim::CBoneAnimation*)pAnimation;
+        const ShapesVec& shapes = pModel->getShapes();
+        const unsigned int nShapes = shapes.size();
+        tCurrent = 0.0f;
+        durationS = pAnimation->getDurationInSeconds();
+        for(unsigned int shapeIdx = 0; shapeIdx < nShapes; shapeIdx++) {
+            SSkinnedMesh* pSkinnedMesh = shapes[shapeIdx]->getSkinnedMesh();
+            if(!pSkinnedMesh)
+                continue;
+            fgBool skip = FG_FALSE;
+            for(unsigned int subBoneIdx = 0; subBoneIdx < bones.size(); subBoneIdx++) {
+                boneInfo[subBoneIdx].clear();
+                boneInfo[subBoneIdx].boneMeshIdx = pSkinnedMesh->getBoneIndex(bones[subBoneIdx]);
+                if(boneInfo[subBoneIdx].boneMeshIdx < 0)
+                    skip = FG_TRUE;
+            }
+            if(skip)
+                continue;
+            // have skinned mesh - prepare to animate it - follow proper bones
+            tStep = 0.0f;
+            float totalSpeed = 0.0f;
+            while(1) {
+                if(tCurrent >= durationS) {
+                    break;
+                }
+                pSkinnedMesh->calculate(animationInfo, tStep);
+                tStep = 0.05f; // 50ms
+                tCurrent += tStep;
+                // foreach bone?
+                for(unsigned int subBoneIdx = 0; subBoneIdx < bones.size(); subBoneIdx++) {
+                    Vec3f result;
+                    pSkinnedMesh->transformPoint(boneInfo[subBoneIdx].boneMeshIdx,
+                                                 3 /* NY - minimum Y */,
+                                                 animationInfo.curFrame.dualQuaternions,
+                                                 result);
+                    boneInfo[subBoneIdx].updatePosition(result);
+                    if(tCurrent == 0.05f)
+                        continue;
+                    if(!boneInfo[subBoneIdx].didDirectionChange(oAxis)) {
+                        if(!boneInfo[subBoneIdx].isDirectionValid(oAxis))
+                            boneInfo[subBoneIdx].distance += math::dot(boneInfo[subBoneIdx].direction, oAxis);
+                    } 
+                    if(tCurrent >= durationS) {
+                        totalSpeed += boneInfo[subBoneIdx].distance / durationS;
+                    }
+                } // for each valid bone                
+            } // while(1) - time loop for animation
+            totalSpeed /= bones.size();
+            totalSpeed *= -1.0f;
+            Vec3f value = this->info.rootMotionsMap[actionType];
+            if(math::length(value) < math::length(oAxis * totalSpeed))
+                this->info.rootMotionsMap[actionType] = oAxis * totalSpeed;
+        } // for each shape in model
+    } // for each valid action type
+
+    // this algorithm works quite well
+    // however this type of movement is not linear
+    // it would look like this needs to be done in real-time
+    return FG_TRUE;
 }
 //------------------------------------------------------------------------------
 
@@ -500,7 +696,7 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
             m_numTriangles += shape->mesh->getNumIndices() / 3;
 
             /*if(shape->mesh->isSkinnedMesh()) {
-                SSkinnedMesh* pSkinned = shape->getSkinnedMesh();                
+                SSkinnedMesh* pSkinned = shape->getSkinnedMesh();
             }*/
         }
         this->m_size += shape->getDataSize();
@@ -946,7 +1142,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
         nodeTransVec.clear();
         aiTransform.Decompose(matScale, matRot, matPos);
 
-        // This may not be working properly for now. #FIXME        
+        // This may not be working properly for now. #FIXME
         if(!isPreTranslation()) {
             // Zero the transformation: the mesh will now appear at center (local)
             // mesh still will be moved by armature offset if animated/rigged
@@ -1075,7 +1271,7 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
                 pBone->offset *= transformInv;
             }
         }
-    } // while (stack not empty)    
+    } // while (stack not empty)
     s_objImporter->FreeScene();
     // load additional skinning info file
     std::string& currentPath = this->getCurrentFilePath();
@@ -1091,12 +1287,6 @@ fgBool gfx::CModelResource::internal_loadUsingAssimp(void) {
     refreshInternalData(); // recalculate internals
     setFlag(RIGGED, (fgBool)(pArmature != NULL));
     setFlag(ANIMATED, (fgBool)(m_skinning.animations.size() > 0));
-    // After everything - bake animations 
-    unsigned int nAnims = m_skinning.animations.size();
-    for(unsigned int i = 0; i < nAnims; i++) {
-        if(m_skinning.animations[i])
-            m_skinning.animations[i]->bake();
-    }
     return FG_TRUE;
 }
 #endif
@@ -1222,7 +1412,8 @@ fgBool gfx::CModelResource::create(void) {
             break;
     };
 
-    if(!this->m_size) return FG_FALSE;
+    if(!this->m_size)
+        return FG_FALSE;
     this->updateAABB();
     this->initSkinningInfo();
     return FG_TRUE;
@@ -1472,7 +1663,14 @@ void gfx::CModelResource::initSkinningInfo(void) {
     for(unsigned int i = 0; i < n; i++) {
         if(!m_shapes[i]->isSkinned())
             continue;
-        m_shapes[i]->getSkinnedMesh()->initSkinningInfo(m_skinning.skinningInfo.armatureInfo);
+        m_shapes[i]->getSkinnedMesh()->initSkinningInfo(m_skinning.info.armatureInfo);
     }
+    // After everything - bake animations
+    unsigned int nAnims = m_skinning.animations.size();
+    for(unsigned int i = 0; i < nAnims; i++) {
+        if(m_skinning.animations[i])
+            m_skinning.animations[i]->bake();
+    }
+    m_skinning.calculateRootMotions(this);
 }
 //------------------------------------------------------------------------------

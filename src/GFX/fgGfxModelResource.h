@@ -150,7 +150,7 @@ namespace fg {
                 /// Original Armature instance
                 anim::CArmature* pArmature;
                 ///
-                anim::SSkinningInfo skinningInfo;
+                anim::SSkinningInfo info;
 
                 /**
                  *
@@ -177,6 +177,8 @@ namespace fg {
                  */
                 anim::CAnimation* getAnimation(const char* name,
                                                strings::MatchMode mode = strings::MATCH_EXACT);
+
+                anim::CAnimation* getAnimation(anim::StandardActionType actionType);
 
                 //--------------------------------------------------------------
                 /**
@@ -206,6 +208,8 @@ namespace fg {
 
                 void translatePositionKeys(const std::string& targetName,
                                            const Vector3f& translation);
+
+                fgBool calculateRootMotions(const CModelResource* pModel);
             }; // protected struct SModelSkinning
 
         public:
@@ -365,6 +369,12 @@ namespace fg {
              */
             void setModelType(ModelType modelType) {
                 m_modelType = modelType;
+            }
+            const anim::SSkinningInfo& getSkinningInfo(void) const {
+                return m_skinning.info;
+            }
+            anim::SSkinningInfo& getSkinningInfo(void) {
+                return m_skinning.info;
             }
             /**
              *
