@@ -297,7 +297,7 @@ void gfx::SSkinnedMesh::initSkinningInfo(const anim::SBlendingInfo& armatureInfo
         }
     }
     countVec.clear();
-    
+
     if(armatureInfo.empty())
         return;
     const unsigned int nPairs = armatureInfo.size();
@@ -517,7 +517,7 @@ unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
         matchedBones.resize(nFound);
     }
     for(unsigned int i = 0; i < nFound; i++) {
-        matchedBones[i] = bones[matchedIdxs[i]];
+        matchedBones[i] = this->bones[matchedIdxs[i]];
     }
     return nFound;
 }
@@ -526,7 +526,7 @@ unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
 unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
                                            CVector<unsigned int>& matchedBones,
                                            float fuzzyEdge) const {
-    const unsigned int nBones = boneBoxes.size();
+    const unsigned int nBones = this->boneBoxes.size();
     if(!nBones)
         return 0;
     //--------------------------------
@@ -557,7 +557,7 @@ unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
     fgBool shouldFuzzy = (fgBool)!!(fuzzyEdge > FG_EPSILON && fuzzyEdge <= 1.0f);
     matchedBones.clear();
     for(unsigned int i = 0; i < nBones; i++) {
-        const AABoundingBox3Df& boneBox = boneBoxes[i];
+        const AABoundingBox3Df& boneBox = this->boneBoxes[i];
         //printf("Testing bone[%d][%s]: min:(%.2f;%.2f;%.2f) max:(%.2f;%.2f;%.2f)\n",
         //       i, bones[i]->name.c_str(),
         //       box.min.x, box.min.y, box.min.z,
@@ -596,6 +596,144 @@ unsigned int gfx::SSkinnedMesh::matchBones(const AABoundingBox3Df& aabb,
 }
 //------------------------------------------------------------------------------
 
+unsigned int gfx::SSkinnedMesh::matchBonesPrecise(const AABoundingBox3Df& aabb,
+                                                  BonesVec& matchedBones) const {
+    unsigned int nFound = 0;
+    CVector<unsigned int> matchedIdxs;
+    nFound = matchBonesPrecise(aabb, matchedIdxs);
+    if(nFound) {
+        matchedBones.clear();
+        matchedBones.reserve(nFound);
+        matchedBones.resize(nFound);
+    }
+    for(unsigned int i = 0; i < nFound; i++) {
+        matchedBones[i] = this->bones[matchedIdxs[i]];
+    }
+    return nFound;
+}
+//------------------------------------------------------------------------------
+
+unsigned int gfx::SSkinnedMesh::matchBonesPrecise(const AABoundingBox3Df& aabb,
+                                                  CVector<unsigned int>& matchedBones) const {
+    const unsigned int nBones = this->bones.size();
+    if(!nBones)
+        return 0;
+    matchedBones.clear();
+    for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
+        anim::SBone* pBone = this->bones[boneIdx];
+        if(!pBone)
+            continue;
+        const unsigned int nWeights = pBone->weights.size();
+        for(unsigned int j = 0; j < nWeights; j++) {
+            anim::SVertexWeight& weight = pBone->weights[j];
+            if(this->meshIndex != (unsigned int)weight.meshIdx)
+                continue;
+            Vector3f point(0.0f, 0.0f, 0.0f);
+            this->getMeshBase()->getPosition(weight.vertexIdx, point);
+            if(aabb.test(point)) {
+                matchedBones.push_back(boneIdx);
+                break; // skip to the next bone
+            }
+        } // for each weight
+    } // for each bone
+    return matchedBones.size();
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::transformPoint(int boneIdx,
+                                       unsigned int pointID,
+                                       const MatrixVec& matrices,
+                                       Vector3f& output) {
+    if(boneIdx < 0 || boneIdx >= (int)this->bones.size())
+        return;
+    if(matrices.empty())
+        return;
+    if(pointID > 5)
+        pointID = 5;
+    SEdgeInfo::SEdgePoint* points = this->boneEdges[boneIdx].points;
+    int subBoneIdx = -1, vertexIdx = points[pointID].index;
+    float weight = 0.0f;
+    if(vertexIdx < 0)
+        return;
+    output = Vec3f();
+    const Vec3f& value = points[pointID].value;
+    for(unsigned int i = 0; i < 4; i++) {
+        subBoneIdx = this->blendIndices[vertexIdx][i];
+        weight = this->blendWeights[vertexIdx][i];
+        if(i > 0 && subBoneIdx == 0) {
+            break;
+        }
+        output += Vec3f(matrices[subBoneIdx] * Vec4f(value, 1.0f)) * weight;
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::SSkinnedMesh::transformPoint(int boneIdx,
+                                       unsigned int pointID,
+                                       const DualQuatsVec& dquats,
+                                       Vector3f& output) {
+    if(boneIdx < 0 || boneIdx >= (int)this->bones.size())
+        return;
+    if(dquats.empty())
+        return;
+    if(pointID > 5)
+        pointID = 5;
+
+    DualQuaternionf blendQuat;
+    Quaternionf q0;
+    SEdgeInfo::SEdgePoint* points = this->boneEdges[boneIdx].points;
+    int subBoneIdx = -1, vertexIdx = points[pointID].index;
+    float weight = 0.0f;
+    if(vertexIdx < 0)
+        return;
+    const Vec3f& value = points[pointID].value;
+
+    for(unsigned int i = 0; i < 4; i++) {
+        subBoneIdx = this->blendIndices[vertexIdx][i];
+        weight = this->blendWeights[vertexIdx][i];
+        if(i > 0 && subBoneIdx == 0) {
+            break;
+        }
+        if(i == 0) {
+            q0 = dquats[subBoneIdx].q0;
+            blendQuat = dquats[subBoneIdx] * weight;
+            continue;
+        }
+        if(math::dot(dquats[subBoneIdx].q0, q0) < 0.0f) {
+            weight *= -1.0f;
+        }
+        blendQuat += dquats[subBoneIdx] * weight;
+    }
+    blendQuat.normalize();
+    output = blendQuat.transform(value);
+}
+//------------------------------------------------------------------------------
+
+int gfx::SSkinnedMesh::getBoneIndex(const std::string& boneName) const {
+    if(boneName.empty())
+        return -1;
+    int index = -1;
+    const unsigned int nBones = this->bones.size();
+    for(unsigned int i = 0; i < nBones; i++) {
+        const anim::SBone* pBone = this->bones[i];
+        if(!pBone)
+            continue;
+        if(pBone->name.compare(boneName) == 0) {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+//------------------------------------------------------------------------------
+
+int gfx::SSkinnedMesh::getBoneIndex(const anim::SBone* pBone) const {
+    if(!pBone)
+        return -1;
+    return this->bones.find((anim::SBone*)pBone);
+}
+//------------------------------------------------------------------------------
+
 /******************************************************************************
  * SKINNED MESH SOA FUNCTIONS - STRUCTURE OF ARRAYS
  ******************************************************************************/
@@ -619,6 +757,21 @@ gfx::SMeshAoS* gfx::SSkinnedMeshSoA::getMeshAoS(void) {
 //------------------------------------------------------------------------------
 
 gfx::SMeshBase* gfx::SSkinnedMeshSoA::getMeshBase(void) {
+    return this;
+}
+//------------------------------------------------------------------------------
+
+const gfx::SMeshSoA* gfx::SSkinnedMeshSoA::getMeshSoA(void) const {
+    return this;
+}
+//------------------------------------------------------------------------------
+
+const gfx::SMeshAoS* gfx::SSkinnedMeshSoA::getMeshAoS(void) const {
+    return NULL; // this is not AoS
+}
+//------------------------------------------------------------------------------
+
+const gfx::SMeshBase* gfx::SSkinnedMeshSoA::getMeshBase(void) const {
     return this;
 }
 //------------------------------------------------------------------------------
@@ -700,6 +853,21 @@ gfx::SMeshAoS* gfx::SSkinnedMeshAoS::getMeshAoS(void) {
 //------------------------------------------------------------------------------
 
 gfx::SMeshBase* gfx::SSkinnedMeshAoS::getMeshBase(void) {
+    return this;
+}
+//------------------------------------------------------------------------------
+
+const gfx::SMeshSoA* gfx::SSkinnedMeshAoS::getMeshSoA(void) const {
+    return NULL;
+}
+//------------------------------------------------------------------------------
+
+const gfx::SMeshAoS* gfx::SSkinnedMeshAoS::getMeshAoS(void) const {
+    return this;
+}
+//------------------------------------------------------------------------------
+
+const gfx::SMeshBase* gfx::SSkinnedMeshAoS::getMeshBase(void) const {
     return this;
 }
 //------------------------------------------------------------------------------

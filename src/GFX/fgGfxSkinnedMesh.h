@@ -167,6 +167,22 @@ namespace fg {
 
             /**
              *
+             * @return
+             */
+            virtual const SMeshSoA* getMeshSoA(void) const = 0;
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshAoS* getMeshAoS(void) const = 0;
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshBase* getMeshBase(void) const = 0;
+
+            /**
+             *
              */
             void clearSkinningInfo(void);
 
@@ -210,6 +226,70 @@ namespace fg {
             unsigned int matchBones(const AABoundingBox3Df& aabb,
                                     CVector<unsigned int>& matchedBones,
                                     float fuzzyEdge = 0.0f) const;
+
+
+            unsigned int matchBonesPrecise(const AABoundingBox3Df& aabb,
+                                            BonesVec& matchedBones) const;
+
+            unsigned int matchBonesPrecise(const AABoundingBox3Df& aabb,
+                                           CVector<unsigned int>& matchedBones) const;
+
+            /**
+             *
+             * @param boneIdx   Bone index for this skinned mesh (not armature)
+             * @param pointID   Point to transform. One of 6 edge points of given bone.
+             * @param matrices  Transformation matrices corresponding to this mesh
+             * @param output    Transformed point in 3D space.
+             */
+            void transformPoint(int boneIdx,
+                                unsigned int pointID,
+                                const MatrixVec& matrices,
+                                Vector3f& output);
+
+            inline void transformPoint(const anim::SBone* pBone,
+                                       unsigned int pointID,
+                                       const MatrixVec& matrices,
+                                       Vector3f& output) {
+                transformPoint(getBoneIndex(pBone), pointID,
+                               matrices, output);
+            }
+            inline void transformPoint(const std::string& boneName,
+                                       unsigned int pointID,
+                                       const MatrixVec& matrices,
+                                       Vector3f& output) {
+                transformPoint(getBoneIndex(boneName), pointID,
+                               matrices, output);
+            }
+
+            /**
+             *
+             * @param boneIdx   Bone index for this skinned mesh (not armature)
+             * @param pointID   Point to transform. One of 6 edge points of given bone.
+             * @param dquats    Transformations corresponding to this mesh
+             * @param output    Transformed point in 3D space.
+             */
+            void transformPoint(int boneIdx,
+                                unsigned int pointID,
+                                const DualQuatsVec& dquats,
+                                Vector3f& output);
+            inline void transformPoint(const anim::SBone* pBone,
+                                       unsigned int pointID,
+                                       const DualQuatsVec& dquats,
+                                       Vector3f& output) {
+                transformPoint(getBoneIndex(pBone), pointID,
+                               dquats, output);
+            }
+            inline void transformPoint(const std::string& boneName,
+                                       unsigned int pointID,
+                                       const DualQuatsVec& dquats,
+                                       Vector3f& output) {
+                transformPoint(getBoneIndex(boneName), pointID,
+                               dquats, output);
+            }
+
+            int getBoneIndex(const std::string& boneName) const;
+            int getBoneIndex(const anim::SBone* pBone) const;
+
 
         protected:
             /**
@@ -286,6 +366,22 @@ namespace fg {
              * @return
              */
             virtual SMeshBase* getMeshBase(void);
+
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshSoA* getMeshSoA(void) const;
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshAoS* getMeshAoS(void) const;
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshBase* getMeshBase(void) const;
 
             /**
              *
@@ -386,6 +482,22 @@ namespace fg {
              * @return
              */
             virtual SMeshBase* getMeshBase(void);
+
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshSoA* getMeshSoA(void) const;
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshAoS* getMeshAoS(void) const;
+            /**
+             *
+             * @return
+             */
+            virtual const SMeshBase* getMeshBase(void) const;
 
             /**
              *
