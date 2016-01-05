@@ -39,11 +39,15 @@ namespace fg {
 
                 typedef util::btree_map<BoneType, BonesVec> BoneTypesMap;
                 typedef BoneTypesMap::iterator BoneTypesMapItor;
-                typedef BoneTypesMap::const_iterator BoneTypesMapConstIto;
+                typedef BoneTypesMap::const_iterator BoneTypesMapConstItor;
 
                 typedef util::btree_map<StandardActionType, std::string> ActionsMap;
                 typedef ActionsMap::iterator ActionsMapItor;
                 typedef ActionsMap::const_iterator ActionsMapConstItor;
+
+                typedef util::btree_map<StandardActionType, Vec3f> RootMotionsMap;
+                typedef RootMotionsMap::iterator RootMotionsMapItor;
+                typedef RootMotionsMap::const_iterator RootMotionsMapConstItor;
 
                 /**
                  *
@@ -73,6 +77,16 @@ namespace fg {
                  */
                 StandardActionType getActionType(const char* animationName);
 
+                fgBool hasAction(StandardActionType actionType) const;
+
+                fgBool hasRootMotion(StandardActionType actionType) const;
+
+                fgBool hasBone(BoneType boneType) const;
+
+                SBone* getBone(BoneType boneType, unsigned int index = 0);
+
+                const SBone* getBone(BoneType boneType, unsigned int index = 0) const;
+
                 //--------------------------------------------------------------
                 ///
                 SBlendingInfo armatureInfo;
@@ -80,6 +94,8 @@ namespace fg {
                 BoneTypesMap boneTypesMap;
                 ///
                 ActionsMap actionsMap;
+                ///
+                RootMotionsMap rootMotionsMap;
             }; // struct SSkinningInfo
 
         } // namespace anim

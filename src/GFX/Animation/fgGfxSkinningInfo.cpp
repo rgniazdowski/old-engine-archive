@@ -22,7 +22,8 @@ using namespace fg;
 gfx::anim::SSkinningInfo::SSkinningInfo() :
 armatureInfo(),
 boneTypesMap(),
-actionsMap() { }
+actionsMap(),
+rootMotionsMap() { }
 //------------------------------------------------------------------------------
 
 gfx::anim::SSkinningInfo::SSkinningInfo(const SSkinningInfo& orig) {
@@ -32,12 +33,16 @@ gfx::anim::SSkinningInfo::SSkinningInfo(const SSkinningInfo& orig) {
 
     actionsMap.insert(orig.actionsMap.begin(),
                       orig.actionsMap.end());
+
+    rootMotionsMap.insert(orig.rootMotionsMap.begin(),
+                          orig.rootMotionsMap.end());
 }
 //------------------------------------------------------------------------------
 
 gfx::anim::SSkinningInfo::~SSkinningInfo() {
     boneTypesMap.clear();
     actionsMap.clear();
+    rootMotionsMap.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -59,5 +64,42 @@ gfx::anim::StandardActionType gfx::anim::SSkinningInfo::getActionType(const char
         }
     }
     return ACTION_NONE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SSkinningInfo::hasAction(StandardActionType actionType) const {
+    return (fgBool)(this->actionsMap.find(actionType) != actionsMap.end());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SSkinningInfo::hasRootMotion(StandardActionType actionType) const {
+    return (fgBool)(this->rootMotionsMap.find(actionType) != rootMotionsMap.end());
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::anim::SSkinningInfo::hasBone(BoneType boneType) const {
+    return (fgBool)(this->boneTypesMap.find(boneType) != boneTypesMap.end());
+}
+//------------------------------------------------------------------------------
+
+gfx::anim::SBone* gfx::anim::SSkinningInfo::getBone(BoneType boneType, unsigned int index) {
+    if(!hasBone(boneType))
+        return NULL;
+    const unsigned int nBones = this->boneTypesMap[boneType].size();
+    if(index >= nBones)
+        return NULL;
+    return this->boneTypesMap[boneType][index];
+}
+//------------------------------------------------------------------------------
+
+const gfx::anim::SBone* gfx::anim::SSkinningInfo::getBone(BoneType boneType,
+                                                          unsigned int index) const {
+    BoneTypesMapConstItor itor =  this->boneTypesMap.find(boneType);
+    if(itor == this->boneTypesMap.end())
+        return NULL;
+    const unsigned int nBones = itor->second.size();
+    if(index >= nBones)
+        return NULL;
+    return itor->second.at(index);
 }
 //------------------------------------------------------------------------------
