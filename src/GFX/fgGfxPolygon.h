@@ -18,14 +18,12 @@
     #define FG_INC_GFX_POLYGON
     #define FG_INC_GFX_POLYGON_BLOCK
 
-    #ifndef FG_INC_GFX_AA_BOUNDING_BOX
-        #include "GFX/fgGfxAABoundingBox.h"
-    #endif
+    #include "GFX/fgGfxAABoundingBox.h"
     #include "GFX/fgGfxVertexData.h"
     #include "GFX/fgGfxPlane.h"
     #include "fgGfxPrimitives.h"
 
-    #define SPLITTER_POLY	0x2
+    #define SPLITTER_POLY 0x2
 
 namespace fg {
     namespace gfx {
@@ -190,7 +188,6 @@ namespace fg {
                                          const Vector3f& rayDir,
                                          Vector3f& baryPosition,
                                          const fgBool bothSides = FG_FALSE);
-
             /**
              *
              * @param rayOrigin
@@ -238,5 +235,5 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_POLYGON_BLOCK
-#endif	/* FG_INC_GFX_POLYGON */
+#endif /* FG_INC_GFX_POLYGON */
 

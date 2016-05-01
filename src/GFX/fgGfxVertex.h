@@ -20,7 +20,9 @@
 
     #include "fgBuildConfig.h"
     #include "fgGfxColor.h"
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector2.h"
+    #include "Math/fgVector3.h"
+    #include "Math/fgVector4.h"
     #include "fgGfxAttribBits.h"
 
 namespace fg {

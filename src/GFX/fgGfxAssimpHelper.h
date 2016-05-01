@@ -18,7 +18,6 @@
     #define FG_INC_GFX_ASSIMP_HELPER
 
     #include "fgBuildConfig.h"
-    #include "Math/fgMathLib.h"
     #include "fgGfxMaterial.h"
 
     #if defined(FG_USING_ASSIMP) 

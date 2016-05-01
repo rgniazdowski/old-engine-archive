@@ -12,36 +12,18 @@
     #define FG_INC_GUI_WIDGET
     #define FG_INC_GUI_WIDGET_BLOCK
 
-    #ifndef FG_INC_BUILD_CONFIG
-        #include "fgBuildConfig.h"
-    #endif
-
-    #ifndef FG_INC_TYPES
-        #include "fgTypes.h"
-    #endif
-
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif
-
+    #include "fgBuildConfig.h"
+    #include "fgTypes.h"
     #include "fgGuiWidgetTypes.h"
 
     #include "Util/fgTag.h"
     #include "Util/fgHandle.h"
     #include "Resource/fgManagedObject.h"
-
     #include "fgGuiStyleContent.h"
     #include "fgGuiCallback.h"
-
-    #ifndef FG_INC_GFX_LAYER
-        #include "GFX/fgGfxLayer.h"
-    #endif
-
+    #include "GFX/fgGfxLayer.h"
     #include "GFX/fgGfxBoundingBox.h"
-
-    #ifndef FG_INC_POINTER_DATA
-        #include "Event/fgPointerData.h"
-    #endif
+    #include "Event/fgPointerData.h"
 
 namespace fg {
     namespace gui {
@@ -54,8 +36,8 @@ namespace fg {
     };
 };
 
-    #define FG_TAG_GUI_WIDGET_NAME	"GuiWidget"
-    #define FG_TAG_GUI_WIDGET		FG_TAG_TYPE(fg::gui::CWidget)
+    #define FG_TAG_GUI_WIDGET_NAME "GuiWidget"
+    #define FG_TAG_GUI_WIDGET  FG_TAG_TYPE(fg::gui::CWidget)
 FG_TAG_TEMPLATE_ID_AUTO(fg::gui::CWidget, FG_TAG_GUI_WIDGET_NAME);
 
     #define FG_GUI_WIDGET_DEFAULT_STYLE "DefaultStyle"
@@ -91,8 +73,8 @@ typedef unsigned int fgGuiWidgetCallbackType;
 namespace fg {
     namespace resource {
         template<typename THandleType> class CManagedObject;
-    };
-};
+    } // namespace resource
+} // namespace fg
 
 namespace fg {
     namespace gui {
@@ -219,7 +201,7 @@ namespace fg {
             /// Current event state of the widget
             EventState m_state;
             ///
-            StateFlags m_stateFlags;            
+            StateFlags m_stateFlags;
 
         protected:
             /**

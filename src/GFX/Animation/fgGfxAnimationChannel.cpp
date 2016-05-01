@@ -15,6 +15,7 @@
  */
 
 #include "fgGfxAnimationChannel.h"
+#include "Math/fgMatrixOperations.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------

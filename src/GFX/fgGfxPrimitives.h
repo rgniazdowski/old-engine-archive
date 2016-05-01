@@ -13,7 +13,6 @@
     #define FG_INC_GFX_PRIMITIVES_BLOCK
 
     #include "fgGfxStdInc.h"
-    #include "Math/fgMathLib.h"
     #include "GFX/Shaders/fgGfxShaderProgram.h"
     #include "fgGfxAABoundingBox.h"
 

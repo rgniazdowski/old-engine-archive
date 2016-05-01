@@ -18,7 +18,8 @@
     #define FG_INC_GFX_BONE
     #define FG_INC_GFX_BONE_BLOCK
 
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector3.h"
+    #include "Math/fgMatrix4.h"
     #include "Math/fgDualQuaternion.h"
     #include "fgVector.h"
     #include "Physics/fgRagdollBoneType.h"

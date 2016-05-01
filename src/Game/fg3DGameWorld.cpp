@@ -32,7 +32,6 @@ scene_type() {
     this->setLayerName("game::CGameWorld3D");
     this->setLayerID(12); // ?
     scene_type::setDefaultNodeObjectType(GAME_ENTITY);
-    //scene_type::addFromModel()
 }
 //------------------------------------------------------------------------------
 

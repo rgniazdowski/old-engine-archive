@@ -16,12 +16,9 @@
 #include "Hardware/fgHardwareState.h"
 #include "Event/fgEventManager.h"
 
-#include <cmath>
-
 #if defined(FG_USING_SDL2)
 #include <SDL2/SDL_events.h>
 #endif
-
 
 const unsigned int fg::event::CInputHandler::MAX_TOUCH_POINTS = FG_INPUT_MAX_TOUCH_POINTS;
 

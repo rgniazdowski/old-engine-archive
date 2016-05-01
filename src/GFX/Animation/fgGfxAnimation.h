@@ -23,8 +23,7 @@
     #endif
 
     #include "fgGfxAnimationType.h"
-    #include "fgGfxAnimationChannel.h"    
-    #include "fgVector.h"    
+    #include "fgGfxAnimationChannel.h"
 
 namespace fg {
     namespace gfx {

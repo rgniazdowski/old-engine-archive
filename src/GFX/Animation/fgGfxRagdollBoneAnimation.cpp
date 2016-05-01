@@ -19,6 +19,7 @@
 #include "fgGfxAnimationInfo.h"
 #include "Physics/fgBulletHelper.h"
 #include "GFX/fgGfxAssimpHelper.h"
+#include "Math/fgMatrixOperations.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------

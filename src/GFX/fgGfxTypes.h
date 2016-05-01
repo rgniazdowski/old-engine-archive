@@ -22,18 +22,6 @@
         #define FG_GFX_NONE 0
     #endif
 
-        #include "Math/fgMathLib.h"
-
-    #if 0
-namespace fg {
-    namespace gfx {
-        namespace math {
-            using namespace ::fg::math;
-        };
-    };
-};
-    #endif // 0 // nope...
-
     #include "fgGfxColor.h"
     #include "fgGfxAttribBits.h"
     #include "fgGfxAttributeData.h"

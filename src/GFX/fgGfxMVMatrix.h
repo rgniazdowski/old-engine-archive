@@ -80,14 +80,16 @@ namespace fg {
              * @return 
              */
             inline const float * getModelViewMatPtr(void) const {
-                return fg::math::value_ptr(m_modelViewMatrix);
+                //return fg::math::value_ptr(m_modelViewMatrix);
+                return (const float*)&(m_modelViewMatrix[0].x);
             }
             /**
              * 
              * @return 
              */
             inline float * getModelViewMatPtr(void) {
-                return fg::math::value_ptr(m_modelViewMatrix);
+                //return fg::math::value_ptr(m_modelViewMatrix);
+                return &(m_modelViewMatrix[0].x);
             }
             /**
              * 
@@ -100,9 +102,10 @@ namespace fg {
         protected:
             /// 
             Matrix4f m_modelViewMatrix;
-        };
-    };
-};
+        }; // class CMVMatrix
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_MV_MATRIX_BLOCK
 #endif /* FG_INC_GFX_MV_MATRIX */

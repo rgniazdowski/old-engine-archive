@@ -19,8 +19,14 @@
     #define FG_INC_PHYSICS_BULLET_HELPER_BLOCK
 
     #include "fgBuildConfig.h"
+    
     #if defined(FG_USING_BULLET)
-        #include "Math/fgMathLib.h"
+        #include "Math/fgVector2.h"
+        #include "Math/fgVector3.h"
+        #include "Math/fgVector4.h"
+        #include "Math/fgMatrix3.h"
+        #include "Math/fgMatrix4.h"
+        #include "Math/fgQuaternion.h"
         #include "LinearMath/btMatrix3x3.h"
         #include "LinearMath/btVector3.h"
         #include "LinearMath/btTransform.h"

@@ -111,6 +111,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxDrawingBatch.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxFrustum.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxLight.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxMVPMatrix.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxMain.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxMaterial.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxMesh.o \
@@ -118,6 +119,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxPlaneGrid.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxPolygon.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o \
+	${OBJECTDIR}/_ext/e022ccff/fgGfxProjection.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxShape.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxSimpleDrawer.o \
 	${OBJECTDIR}/_ext/e022ccff/fgGfxSkinnedMesh.o \
@@ -629,6 +631,11 @@ ${OBJECTDIR}/_ext/e022ccff/fgGfxLight.o: ../../../src/GFX/fgGfxLight.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxLight.o ../../../src/GFX/fgGfxLight.cpp
 
+${OBJECTDIR}/_ext/e022ccff/fgGfxMVPMatrix.o: ../../../src/GFX/fgGfxMVPMatrix.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxMVPMatrix.o ../../../src/GFX/fgGfxMVPMatrix.cpp
+
 ${OBJECTDIR}/_ext/e022ccff/fgGfxMain.o: ../../../src/GFX/fgGfxMain.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
@@ -663,6 +670,11 @@ ${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o: ../../../src/GFX/fgGfxPrimitives.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxPrimitives.o ../../../src/GFX/fgGfxPrimitives.cpp
+
+${OBJECTDIR}/_ext/e022ccff/fgGfxProjection.o: ../../../src/GFX/fgGfxProjection.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e022ccff/fgGfxProjection.o ../../../src/GFX/fgGfxProjection.cpp
 
 ${OBJECTDIR}/_ext/e022ccff/fgGfxShape.o: ../../../src/GFX/fgGfxShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/e022ccff

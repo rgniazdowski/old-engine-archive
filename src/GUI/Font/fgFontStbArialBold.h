@@ -12,9 +12,7 @@
     #define FG_INC_FONT_STB_ARIAL_BOLD
     #define FG_INC_FONT_STB_ARIAL_BOLD_BLOCK
 
-    #ifndef FG_INC_FONT_BUILT_IN_TYPES
-        #include "fgFontBuiltInTypes.h"
-    #endif
+    #include "fgFontBuiltInTypes.h"
 
     #ifndef FG_STB_FONT_PTR
         #define FG_STB_FONT_PTR(_font_name, _param) stb__ ## _font_name ## _usascii_ ## _param
@@ -23,7 +21,7 @@
     #ifndef FG_STB_FONT_CONST
         #define FG_STB_FONT_CONST(_font_name, _const_name) STB_FONT_ ## _font_name ## _usascii_ ## _const_name
     #endif
-    
+
 namespace fg {
     namespace gui {
         namespace font {
@@ -44,9 +42,11 @@ namespace fg {
                 StbArialBold() { }
                 ///
                 ~StbArialBold() { }
-            };
-        };
-    };
-};
+            }; // class StbArialBold
+
+        } // namespace font
+    } // namespace gui
+} // namespace fg
+
     #undef FG_INC_FONT_STB_ARIAL_BOLD_BLOCK
 #endif /* FG_INC_FONT_STB_ARIAL_BOLD */

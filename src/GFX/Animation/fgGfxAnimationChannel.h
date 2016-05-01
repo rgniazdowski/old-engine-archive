@@ -18,7 +18,9 @@
     #define FG_INC_GFX_ANIMATION_CHANNEL
     #define FG_INC_GFX_ANIMATION_CHANNEL_BLOCK
 
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector3.h"
+    #include "Math/fgMatrix4.h"
+    #include "Math/fgQuaternion.h"
     #include "Math/fgDualQuaternion.h"
     #include "fgVector.h"
 

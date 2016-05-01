@@ -55,7 +55,7 @@ namespace fg {
             virtual void setTransform(const Matrix4f& inMatrix) {
                 if(!pTransform)
                     return;
-                pTransform->setFromOpenGLMatrix(math::value_ptr(inMatrix));
+                pTransform->setFromOpenGLMatrix(&(inMatrix[0].x));
             }
             /**
              *

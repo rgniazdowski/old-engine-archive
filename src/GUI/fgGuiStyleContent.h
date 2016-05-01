@@ -15,10 +15,6 @@
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
 
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif
-
     #include "GFX/fgGfxColor.h"
     #include "GFX/fgGfxBoundingBox.h"
 

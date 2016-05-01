@@ -17,9 +17,9 @@
     #define FG_INC_GFX_BSP_TYPES
     #define FG_INC_GFX_BSP_TYPES_BLOCK
 
-    #include "Math/fgMathLib.h"
     #include "fgBool.h"
     #include <cfloat>
+    #include <cstring>
 
     #define ASSERT(...)
 

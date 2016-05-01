@@ -17,7 +17,6 @@
 #include "fgGfxPolygon.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::SPolygon::SPolygon(unsigned int reserve) :

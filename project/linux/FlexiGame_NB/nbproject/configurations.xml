@@ -84,6 +84,7 @@
           <itemPath>../../../src/GFX/Animation/fgGfxAnimationChannel.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxAnimationInfo.cpp</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxAnimationInfo.h</itemPath>
+          <itemPath>../../../src/GFX/Animation/fgGfxAnimationType.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxArmature.cpp</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxArmature.h</itemPath>
           <itemPath>../../../src/GFX/Animation/fgGfxBlending.cpp</itemPath>
@@ -230,6 +231,7 @@
         <itemPath>../../../src/GFX/fgGfxLight.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxLight.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxMVMatrix.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMVPMatrix.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxMVPMatrix.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxMain.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxMain.h</itemPath>
@@ -246,6 +248,7 @@
         <itemPath>../../../src/GFX/fgGfxPolygon.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPrimitives.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPrimitives.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxProjection.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxProjection.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxShape.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxShape.h</itemPath>
@@ -367,8 +370,20 @@
         <itemPath>../../../src/Math/fgDualQuaternion.h</itemPath>
         <itemPath>../../../src/Math/fgKalmanFilter.cpp</itemPath>
         <itemPath>../../../src/Math/fgKalmanFilter.h</itemPath>
+        <itemPath>../../../src/Math/fgMathBase.h</itemPath>
         <itemPath>../../../src/Math/fgMathLib.h</itemPath>
+        <itemPath>../../../src/Math/fgMatrices.h</itemPath>
+        <itemPath>../../../src/Math/fgMatrix2.h</itemPath>
+        <itemPath>../../../src/Math/fgMatrix3.h</itemPath>
+        <itemPath>../../../src/Math/fgMatrix4.h</itemPath>
+        <itemPath>../../../src/Math/fgMatrixOperations.h</itemPath>
+        <itemPath>../../../src/Math/fgQuaternion.h</itemPath>
         <itemPath>../../../src/Math/fgUniversalTransform.h</itemPath>
+        <itemPath>../../../src/Math/fgVector2.h</itemPath>
+        <itemPath>../../../src/Math/fgVector3.h</itemPath>
+        <itemPath>../../../src/Math/fgVector4.h</itemPath>
+        <itemPath>../../../src/Math/fgVectorOperations.h</itemPath>
+        <itemPath>../../../src/Math/fgVectors.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Physics" displayName="Physics" projectFiles="true">
         <itemPath>../../../src/Physics/fgAbstractCollisionBody.cpp</itemPath>
@@ -853,6 +868,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Animation/fgGfxAnimationInfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationType.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1491,6 +1511,11 @@
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMVPMatrix.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="8">
@@ -1534,6 +1559,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxProjection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2019,12 +2049,42 @@
       </item>
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Math/fgMathBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrixOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgQuaternion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectorOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
             ex="false"
@@ -2774,6 +2834,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
             ex="false"
             tool="1"
@@ -3408,6 +3473,11 @@
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMVPMatrix.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="0">
@@ -3451,6 +3521,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxProjection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3936,12 +4011,42 @@
       </item>
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Math/fgMathBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrixOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgQuaternion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectorOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
             ex="false"
@@ -4669,6 +4774,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
             ex="false"
             tool="1"
@@ -5303,6 +5413,11 @@
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMVPMatrix.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="0">
@@ -5346,6 +5461,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxProjection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -5831,12 +5951,42 @@
       </item>
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Math/fgMathBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrixOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgQuaternion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectorOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
             ex="false"
@@ -6550,6 +6700,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
             ex="false"
             tool="1"
@@ -7184,6 +7339,11 @@
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMVPMatrix.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="0">
@@ -7227,6 +7387,11 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxProjection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -7712,12 +7877,42 @@
       </item>
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Math/fgMathBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrixOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgQuaternion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectorOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
             ex="false"
@@ -8436,6 +8631,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
             ex="false"
             tool="1"
@@ -9070,6 +9270,11 @@
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMVPMatrix.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="8">
@@ -9113,6 +9318,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxProjection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -9598,12 +9808,42 @@
       </item>
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Math/fgMathBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrixOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgQuaternion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectorOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
             ex="false"
@@ -10312,6 +10552,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Animation/fgGfxAnimationType.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Animation/fgGfxArmature.cpp"
             ex="false"
             tool="1"
@@ -10946,6 +11191,11 @@
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxMVPMatrix.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="8">
@@ -10989,6 +11239,11 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxProjection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -11474,12 +11729,42 @@
       </item>
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Math/fgMathBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrix4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgMatrixOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgQuaternion.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgUniversalTransform.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVector4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectorOperations.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Math/fgVectors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Physics/fgAbstractCollisionBody.cpp"
             ex="false"

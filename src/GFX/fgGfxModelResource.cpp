@@ -19,6 +19,8 @@
 #include "Util/fgPath.h"
 #include "fgTinyObj.h"
 
+#include "Math/fgMatrixOperations.h"
+
 using namespace fg;
 //------------------------------------------------------------------------------
 

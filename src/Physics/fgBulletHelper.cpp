@@ -21,7 +21,7 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 void physics::bullet_helper::copyMatrix4x4(Matrix4f& dest, const btMatrix3x3& source) {
-    float *m = math::value_ptr(dest);
+    float *m = &(dest[0].x);
     m[0] = float(source[0].x());
     m[1] = float(source[1].x());
     m[2] = float(source[2].x());
@@ -39,17 +39,17 @@ void physics::bullet_helper::copyMatrix4x4(Matrix4f& dest, const btMatrix3x3& so
 //------------------------------------------------------------------------------
 
 void physics::bullet_helper::copyMatrix4x4(Matrix4f& dest, const btTransform& source) {
-    source.getOpenGLMatrix((btScalar*)math::value_ptr(dest));
+    source.getOpenGLMatrix((btScalar*)&(dest[0].x));
 }
 //------------------------------------------------------------------------------
 
 void physics::bullet_helper::copyMatrix4x4(btTransform& dest, const Matrix4f& source) {
-    dest.setFromOpenGLMatrix((btScalar*)math::value_ptr(source));
+    dest.setFromOpenGLMatrix((const btScalar*)&(source[0].x));
 }
 //------------------------------------------------------------------------------
 
 void physics::bullet_helper::copyMatrix3x3(Matrix3f& dest, const btMatrix3x3& source) {
-    float *m = math::value_ptr(dest);
+    float *m = &(dest[0].x);
     //m_el[0].setValue(xx, xy, xz);
     //m_el[1].setValue(yx, yy, yz);
     //m_el[2].setValue(zx, zy, zz);
@@ -67,7 +67,7 @@ void physics::bullet_helper::copyMatrix3x3(Matrix3f& dest, const btMatrix3x3& so
 //------------------------------------------------------------------------------
 
 void physics::bullet_helper::copyMatrix3x3(btMatrix3x3& dest, const Matrix3f& source) {
-    const float *m = math::value_ptr(source);
+    const float *m = (const float*)&(source[0].x);
     /*dest[0].setX(m[0]);
     dest[1].setX(m[1]);
     dest[2].setX(m[2]);

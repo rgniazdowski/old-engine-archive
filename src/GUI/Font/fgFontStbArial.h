@@ -11,10 +11,8 @@
 #ifndef FG_INC_FONT_STB_ARIAL
     #define FG_INC_FONT_STB_ARIAL
     #define FG_INC_FONT_STB_ARIAL_BLOCK
-    
-    #ifndef FG_INC_FONT_BUILT_IN_TYPES
-        #include "fgFontBuiltInTypes.h"
-    #endif
+
+    #include "fgFontBuiltInTypes.h"
 
     #ifndef FG_STB_FONT_PTR
         #define FG_STB_FONT_PTR(_font_name, _param) stb__ ## _font_name ## _usascii_ ## _param
@@ -44,10 +42,11 @@ namespace fg {
                 StbArial() { }
                 ///
                 ~StbArial() { }
-            };
-        };
-    };
-};
+            }; // class StbArial
+
+        } // namespace font
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_FONT_STB_ARIAL_BLOCK
 #endif /* FG_INC_FONT_STB_ARIAL */

@@ -25,7 +25,6 @@
 #include "GFX/Scene/fgGfxSceneManager.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 gfx::CParticleSystem::CParticleSystem(fg::base::CManager *pResourceMgr,

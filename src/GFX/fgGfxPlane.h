@@ -19,7 +19,8 @@
     #define FG_INC_GFX_PLANE_BLOCK
 
     #include "fgBool.h"
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector3.h"
+    #include "Math/fgVectorOperations.h"
 
 namespace fg {
     namespace gfx {
@@ -70,7 +71,9 @@ namespace fg {
              * @param v2
              * @param v3
              */
-            SPlaneT(const vector_type &v1, const vector_type &v2, const vector_type &v3) {
+            SPlaneT(const vector_type &v1, 
+                    const vector_type &v2,
+                    const vector_type &v3) {
                 set(v1, v2, v3);
             }
             /**
@@ -78,7 +81,8 @@ namespace fg {
              * @param normal
              * @param point
              */
-            SPlaneT(const vector_type &normal, const vector_type &point) {
+            SPlaneT(const vector_type &normal,
+                    const vector_type &point) {
                 set(normal, point);
             }
             /**
@@ -86,7 +90,8 @@ namespace fg {
              * @param normal
              * @param _d
              */
-            SPlaneT(const vector_type &normal, value_type _d) {
+            SPlaneT(const vector_type &normal,
+                    value_type _d) {
                 set(normal, _d);
             }
             /**
@@ -96,7 +101,10 @@ namespace fg {
              * @param _c
              * @param _d
              */
-            SPlaneT(value_type _a, value_type _b, value_type _c, value_type _d) {
+            SPlaneT(value_type _a,
+                    value_type _b,
+                    value_type _c,
+                    value_type _d) {
                 set(_a, _b, _c, _d);
             }
             /**
@@ -190,7 +198,10 @@ namespace fg {
              * @param _c
              * @param _d
              */
-            void set(value_type _a, value_type _b, value_type _c, value_type _d) {
+            void set(value_type _a,
+                     value_type _b,
+                     value_type _c,
+                     value_type _d) {
                 // set the normal vector
                 this->n = vector_type(_a, _b, _c);
                 this->d = _d;
@@ -224,7 +235,9 @@ namespace fg {
              * @param c
              * @return
              */
-            value_type distance(value_type a, value_type b, value_type c) const {
+            value_type distance(value_type a,
+                                value_type b,
+                                value_type c) const {
                 return (value_type)(this->d + math::dot(this->n, vector_type(a, b, c)));
                 //return (value_type)(math::dot(vector_type(a, b, c), this->n) - this->d);
 
@@ -384,19 +397,15 @@ namespace fg {
                 return FG_FALSE;
             }
 
-        };
+        }; // struct SPlaneT<T>
 
-        ///
         typedef SPlaneT<int> Planei;
-        ///
         typedef SPlaneT<float> Planef;
-        ///
         typedef SPlaneT<unsigned int> Planeu;
-        ///
         typedef SPlaneT<double> Planed;
 
-    }
-}
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_PLANE_BLOCK
 #endif /* FG_INC_GFX_PLANE */

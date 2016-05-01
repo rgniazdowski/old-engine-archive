@@ -25,6 +25,8 @@
 #include "Event/fgEventManager.h"
 #include "Util/fgProfiling.h"
 
+#include "Math/fgMatrixOperations.h"
+
 #include "fgLog.h"
 
 using namespace fg;

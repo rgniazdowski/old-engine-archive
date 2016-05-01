@@ -12,7 +12,6 @@
     #define FG_INC_PARTICLE
     #define FG_INC_PARTICLE_BLOCK
 
-    #include "Math/fgMathLib.h"
     #include "GFX/fgGfxTypes.h"
     #include "GFX/fgGfxBoundingBox.h"
 
@@ -125,6 +124,7 @@ namespace fg {
                 }
             }
         }; // struct SParticle
+        
     } // namespace gfx
 } // namespace fg
 

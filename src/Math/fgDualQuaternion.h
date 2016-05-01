@@ -18,7 +18,11 @@
     #define FG_INC_MATH_DUAL_QUATERNION
     #define FG_INC_MATH_DUAL_QUATERNION_BLOCK
 
-    #include "fgMathLib.h"
+    #include "fgVector3.h"
+    #include "fgVector4.h"
+    #include "fgMatrix3.h"
+    #include "fgMatrix4.h"
+    #include "fgQuaternion.h"
 
 namespace fg {
 

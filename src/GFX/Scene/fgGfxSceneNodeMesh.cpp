@@ -20,6 +20,7 @@
 #include "GFX/fgGfxShape.h"
 #include "GFX/Animation/fgGfxAnimation.h"
 #include "GFX/Animation/fgGfxBlending.h"
+#include "Math/fgMatrixOperations.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------

@@ -18,9 +18,6 @@
     #define FG_INC_GFX_DRAWABLE
     #define FG_INC_GFX_DRAWABLE_BLOCK
 
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif
     #include "fgBool.h"
     #include "fgTraits.h"
 

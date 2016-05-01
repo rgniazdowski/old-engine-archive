@@ -18,6 +18,7 @@
 #include "GFX/Shaders/fgGfxShaderProgram.h"
 #include "fgGfxMVPMatrix.h"
 #include "fgGfxPrimitives.h"
+#include "Math/fgMatrixOperations.h"
 
 using namespace fg;
 

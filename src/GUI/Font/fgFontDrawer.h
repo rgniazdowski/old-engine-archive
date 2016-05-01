@@ -24,12 +24,10 @@
 // is kinda generic
 typedef unsigned int fgFontPrintMode;
 
-    #define FG_FONT_PRINT_MODE_ABSOLUTE		0
-    #define FG_FONT_PRINT_MODE_RELATIVE		1
+    #define FG_FONT_PRINT_MODE_ABSOLUTE  0
+    #define FG_FONT_PRINT_MODE_RELATIVE  1
 
-    #ifndef FG_INC_GFX_DRAWING_BATCH
-        #include "GFX/fgGfxDrawingBatch.h"
-    #endif 
+    #include "GFX/fgGfxDrawingBatch.h"
 
 namespace fg {
     namespace gui {
@@ -252,9 +250,10 @@ namespace fg {
             Color4f m_color;
             /// Font printing mode
             fgFontPrintMode m_printMode;
-        };
-    };
-};
+        }; // class CFontDrawer
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_FONT_DRAWER_BLOCK
 #endif /* FG_INC_FONT_DRAWER */

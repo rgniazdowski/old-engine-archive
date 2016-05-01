@@ -12,14 +12,11 @@
     #define FG_INC_MATHLIB
     #define FG_INC_MATHLIB_BLOCK
 
-    #include "fgBuildConfig.h"
-    #include "fgBool.h"
-    #include <cmath>
+    #include "fgMathBase.h"
+    #include "fgVectors.h"
+    #include "fgMatrices.h"
 
-    #if !defined(FG_RAND)
-        #define FG_RAND(_A, _B) (_A + (int)(((float)(_B - _A + 1)) * rand() / (((float)RAND_MAX) + 1.0f)))
-    #endif
-
+#if 0
     #if defined FG_USING_GLM
         #include "glm/common.hpp"
         #include "glm/vec2.hpp"
@@ -37,34 +34,8 @@
         #include "glm/gtc/quaternion.hpp"
         #include "glm/gtc/epsilon.hpp"
         #include "glm/gtc/type_ptr.hpp"
-    #endif
-
-    #ifndef FG_EPSILON
-        #define FG_EPSILON 1e-6f
-    #endif
-
-    #ifndef M_PI
-        #define M_PI        3.14159265358979323846 /* PI (double) */
-    #endif
-
-    #ifndef M_PIF
-        #define M_PIF       3.14159265358979323846f /* PI (float) */
-    #endif
-
-    #ifndef M_SQRT3F
-        #define M_SQRT3F    1.73205080756887729352f /* sqrt(3)(float) */
-    #endif
-
-    #ifndef M_SQRT3
-        #define M_SQRT3    1.73205080756887729352 /* sqrt(3)(double) */
-    #endif
-
-    #ifndef FG_DEG2RAD
-        #define FG_DEG2RAD (M_PIF / 180.0f)
-    #endif
-    #ifndef FG_RAD2DEG
-        #define FG_RAD2DEG (180.0f / M_PIF)
-    #endif
+    #endif /* defined FG_USING_GLM */
+    
 
 namespace fg {
 
@@ -74,256 +45,8 @@ namespace fg {
 
         namespace detail {
             using namespace ::glm::detail;
-        }
-        template <typename T, typename U, precision P>
-        GLM_FUNC_QUALIFIER detail::tvec3<T, P> project(detail::tvec3<T, P> const & obj,
-                                                       detail::tmat4x4<T, P> const & mvp,
-                                                       detail::tvec4<U, P> const & viewport) {
-            detail::tvec4<T, P> tmp = detail::tvec4<T, P>(obj, T(1));
-            tmp = mvp * tmp;
-
-            tmp /= tmp.w;
-            tmp = tmp * T(0.5) + T(0.5);
-            tmp[0] = tmp[0] * T(viewport[2]) + T(viewport[0]);
-            tmp[1] = tmp[1] * T(viewport[3]) + T(viewport[1]);
-
-            return detail::tvec3<T, P>(tmp);
-        }
-        /**
-         *
-         * @param value
-         * @return
-         */
-        inline fgBool isPowOf2(int value) {
-            return (fgBool)((value & (value - 1)) == 0);
-        }
-        /**
-         *
-         * @param value
-         * @param sv
-         * @return
-         */
-        inline int toPow2(int value, int sv = 0x1) {
-            while(value >>= 1) {
-                sv <<= 1;
-            }
-            return sv;
-        }
-        //----------------------------------------------------------------------
-        template <typename T>
-        inline fgBool isZero(T a, T b = (T)0.00001) {
-            if(a == (T)0.0) return FG_TRUE;
-            return ( a > -b && a < b);
-        }
-        //----------------------------------------------------------------------
-        template <typename T, precision P>
-        inline fgBool isZero(detail::tvec2<T, P> const & v, T b = (T)0.00001) {
-            return (fgBool)(isZero(v.x, b) && isZero(v.y, b));
-        }
-        //----------------------------------------------------------------------
-        template <typename T, precision P>
-        inline fgBool isZero(detail::tvec3<T, P> const & v, T b = (T)0.00001) {
-            return (fgBool)(isZero(v.x, b) && isZero(v.y, b) && isZero(v.z, b));
-        }
-        //----------------------------------------------------------------------
-        template <typename T, precision P>
-        inline fgBool isZero(detail::tvec4<T, P> const & v, T b = (T)0.00001) {
-            return (fgBool)(isZero(v.x, b) && isZero(v.y, b) && isZero(v.z, b) && isZero(v.w, b));
-        }
-        //----------------------------------------------------------------------
-        template <typename T, precision P>
-        GLM_FUNC_QUALIFIER T squareLength(detail::tvec2<T, P> const & v) {
-            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");
-            return (v.x * v.x + v.y * v.y);
-        }
-        template <typename T, precision P>
-        GLM_FUNC_QUALIFIER T squareLength(detail::tvec3<T, P> const & v) {
-            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");
-            return (v.x * v.x + v.y * v.y + v.z * v.z);
-        }
-        template <typename T, precision P>
-        GLM_FUNC_QUALIFIER T squareLength(detail::tvec4<T, P> const & v) {
-            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");
-            return (v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
-        }
-        template <typename T, precision P>
-        GLM_FUNC_QUALIFIER detail::tvec2<T, P> componentProduct(detail::tvec2<T, P> const & v1, detail::tvec2<T, P> const & v2) {
-            return detail::tvec2<T, P>(v1.x * v2.x,
-                    v1.y * v2.y);
-        }
-        template <typename T, precision P>
-        GLM_FUNC_QUALIFIER detail::tvec3<T, P> componentProduct(detail::tvec3<T, P> const & v1, detail::tvec3<T, P> const & v2) {
-            return detail::tvec3<T, P>(v1.x * v2.x,
-                    v1.y * v2.y,
-                    v1.z * v2.z);
-        }
-        template <typename T, precision P>
-        GLM_FUNC_QUALIFIER detail::tvec4<T, P> componentProduct(detail::tvec4<T, P> const & v1, detail::tvec4<T, P> const & v2) {
-            return detail::tvec4<T, P>(v1.x * v2.x,
-                    v1.y * v2.y,
-                    v1.z * v2.z,
-                    v1.w * v2.w);
-        }
-
+        }        
     } /* namespace math */
-
-        #if !defined(FG_MATH_GLM_VECTOR_MASK)
-            #define FG_MATH_GLM_VECTOR_MASK
-
-            #if !defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK)
-                #define FG_MATH_GLM_VECTOR_TEMPLATE_MASK
-    // #FIXME - This requires c++11
-                #if 0
-
-    template<typename T>
-    struct Vector2T {
-        typedef glm::detail::tvec2<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Vector3T {
-        typedef glm::detail::tvec3<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Vector4T {
-        typedef glm::detail::tvec4<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Vec2T {
-        typedef glm::detail::tvec2<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Vec3T {
-        typedef glm::detail::tvec3<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Vec4T {
-        typedef glm::detail::tvec4<T, glm::defaultp> type;
-    };
-                #else
-    template<typename T>
-    using Vector2T = glm::detail::tvec2<T, glm::defaultp>;
-    template<typename T>
-    using Vector3T = glm::detail::tvec3<T, glm::defaultp>;
-    template<typename T>
-    using Vector4T = glm::detail::tvec4<T, glm::defaultp>;
-
-    template<typename T>
-    using Vec2T = glm::detail::tvec2<T, glm::defaultp>;
-    template<typename T>
-    using Vec3T = glm::detail::tvec3<T, glm::defaultp>;
-    template<typename T>
-    using Vec4T = glm::detail::tvec4<T, glm::defaultp>;
-                #endif /* FG_USING_*/
-            #endif /* !defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK */
-
-    typedef glm::bvec2 Vector2b;
-    typedef glm::bvec3 Vector3b;
-    typedef glm::bvec4 Vector4b;
-
-    typedef glm::uvec2 Vector2u;
-    typedef glm::uvec3 Vector3u;
-    typedef glm::uvec4 Vector4u;
-
-    typedef glm::ivec2 Vector2i;
-    typedef glm::ivec3 Vector3i;
-    typedef glm::ivec4 Vector4i;
-
-    typedef glm::vec2 Vector2f;
-    typedef glm::vec3 Vector3f;
-    typedef glm::vec4 Vector4f;
-
-    typedef glm::dvec2 Vector2d;
-    typedef glm::dvec3 Vector3d;
-    typedef glm::dvec4 Vector4d;
-        #endif
-
-        #if !defined(FG_MATH_GLM_MATRIX_MASK)
-            #define FG_MATH_GLM_MATRIX_MASK
-
-            #if !defined(FG_MATH_GLM_MATRIX_TEMPLATE_MASK)
-                #define FG_MATH_GLM_MATRIX_TEMPLATE_MASK
-    // #FIXME - This requires c++11 - alias template/typedef cap
-                #if 0
-
-    template<typename T>
-    struct Matrix2T {
-        typedef glm::detail::tmat2x2<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Matrix3T {
-        typedef glm::detail::tmat3x3<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Matrix4T {
-        typedef glm::detail::tmat4x4<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Mat2T {
-        typedef glm::detail::tmat2x2<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Mat3T {
-        typedef glm::detail::tmat3x3<T, glm::defaultp> type;
-    };
-
-    template<typename T>
-    struct Mat4T {
-        typedef glm::detail::tmat4x4<T, glm::defaultp> type;
-    };
-                #else
-    template<typename T>
-    using Matrix2T = glm::detail::tmat2x2<T, glm::defaultp>;
-    template<typename T>
-    using Matrix3T = glm::detail::tmat3x3<T, glm::defaultp>;
-    template<typename T>
-    using Matrix4T = glm::detail::tmat4x4<T, glm::defaultp>;
-
-    template<typename T>
-    using Mat2T = glm::detail::tmat2x2<T, glm::defaultp>;
-    template<typename T>
-    using Mat3T = glm::detail::tmat3x3<T, glm::defaultp>;
-    template<typename T>
-    using Mat4T = glm::detail::tmat4x4<T, glm::defaultp>;
-                #endif /* FG_USING_ */
-            #endif /* !defined(FG_MATH_MATRIX_TEMPLATE_MASK) */
-
-    typedef glm::mat2 Matrix2f;
-    typedef glm::mat3 Matrix3f;
-    typedef glm::mat4 Matrix4f;
-
-    typedef glm::dmat2 Matrix2d;
-    typedef glm::dmat3 Matrix3d;
-    typedef glm::dmat4 Matrix4d;
-        #endif /* !defined(FG_MATH_GLM_MATRIX_MASK) */
-
-        #if !defined(FG_MATH_GLM_QUAT_MASK)
-            #define FG_MATH_GLM_QUAT_MASK
-    typedef glm::quat Quaternionf;
-    typedef glm::dquat Quaterniond;
-
-            #if !defined(FG_MATH_GLM_QUAT_TEMPLATE_MASK)
-                #if 0
-
-    template<typename T>
-    struct QuatertionT {
-        typedef glm::detail::tquat<T, glm::defaultp> type;
-    };
-                #else
-    template<typename T>
-    using QuaternionT = glm::detail::tquat<T, glm::defaultp>;
-                #endif /* FG_USING_ */
-            #endif /* !defined(FG_MATH_GLM_QUAT_TEMPLATE_MASK) */
-
-        #endif /* !defined(FG_MATH_GLM_QUAT_MASK) */
 
     #else /* FG_USING_GLM */
 
@@ -1679,48 +1402,9 @@ namespace fg {
     };
     #endif /* FG_USING_GLM */
 
+} /* namespace fg */
 
-
-    #ifdef FG_MATH_GLM_VECTOR_MASK
-    typedef Vector2b Vec2b;
-    typedef Vector3b Vec3b;
-    typedef Vector4b Vec4b;
-
-    typedef Vector2u Vec2u;
-    typedef Vector3u Vec3u;
-    typedef Vector4u Vec4u;
-
-    typedef Vector2i Vec2i;
-    typedef Vector3i Vec3i;
-    typedef Vector4i Vec4i;
-
-    typedef Vector2f Vec2f;
-    typedef Vector3f Vec3f;
-    typedef Vector4f Vec4f;
-
-    typedef Vector2d Vec2d;
-    typedef Vector3d Vec3d;
-    typedef Vector4d Vec4d;
-
-    #endif /* FG_MATH_GLM_VECTOR_MASK */
-
-    #if defined(FG_MATH_GLM_MATRIX_MASK)
-
-    typedef Matrix2f Mat2f;
-    typedef Matrix3f Mat3f;
-    typedef Matrix4f Mat4f;
-
-    typedef Matrix2d Mat2d;
-    typedef Matrix3d Mat3d;
-    typedef Matrix4d Mat4d;
-    #endif /* FG_MATH_GLM_MATRIX_MASK */
-
-    #ifdef FG_MATH_GLM_QUAT_MASK
-    typedef Quaternionf Quatf;
-    typedef Quaterniond Quatd;
-    #endif /* FG_MATH_GLM_QUAT_MASK */
-
-} /* namespace fg; */
+#endif /* if 0 */
 
     #undef FG_INC_MATHLIB_BLOCK
 #endif /* FG_INC_MATHLIB */

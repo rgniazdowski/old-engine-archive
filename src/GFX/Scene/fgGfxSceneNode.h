@@ -11,8 +11,7 @@
 #ifndef FG_INC_GFX_SCENE_NODE
     #define FG_INC_GFX_SCENE_NODE
     #define FG_INC_GFX_SCENE_NODE_BLOCK
-
-    #include "Math/fgMathLib.h"
+    
     #include "Util/fgTag.h"
     #include "GFX/fgGfxAABoundingBox.h"
     #include "GFX/fgGfxBoundingVolume.h"
@@ -52,19 +51,12 @@ namespace fg {
         /// Special handle type for gfx object (scene object)
         typedef fg::util::CHandle<SceneNodeTag> SceneNodeHandle;
 
-        ///
         class CGfxMain;
-        ///
         class CSceneManager;
-        ///
         class CScene3D;
-        ///
         class CScene2D;
-        ///
         class CSceneNodeMesh;
-        ///
         class CSceneNodeObject;
-        ///
         struct STreeNode;
 
         /**
@@ -311,18 +303,14 @@ namespace fg {
              * 
              * @param translateion
              */
-            inline void translateMatrix(const Vec3f& translation) {
-                m_modelMat = math::translate(m_modelMat, translation);
-            }
+            void translateMatrix(const Vec3f& translation);
             /**
              *
              * @param x
              * @param y
              * @param z
              */
-            inline void translateMatrix(float x, float y, float z) {
-                m_modelMat = math::translate(m_modelMat, Vec3f(x, y, z));
-            }
+            void translateMatrix(float x, float y, float z);
             /**
              * 
              * @param angle

@@ -15,6 +15,8 @@
 #include "GFX/Animation/fgGfxBlending.h"
 #include "GFX/Animation/fgGfxBlendingInfo.h"
 
+#include "Math/fgMatrixOperations.h"
+
 using namespace fg;
 //------------------------------------------------------------------------------
 
@@ -188,6 +190,16 @@ void gfx::CSceneNode::setPosition(float x, float y, float z) {
     m_modelMat[3].x = x;
     m_modelMat[3].y = y;
     m_modelMat[3].z = z;
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNode::translateMatrix(const Vec3f& translation) {
+    m_modelMat = math::translate(m_modelMat, translation);
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNode::translateMatrix(float x, float y, float z) {
+    m_modelMat = math::translate(m_modelMat, Vec3f(x, y, z));
 }
 //------------------------------------------------------------------------------
 

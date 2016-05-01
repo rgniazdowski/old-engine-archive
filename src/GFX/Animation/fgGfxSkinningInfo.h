@@ -18,8 +18,7 @@
     #define FG_INC_GFX_ANIM_SKINNING_INFO
     #define FG_INC_GFX_ANIM_SKINNING_INFO_BLOCK
 
-    #include "fgGfxBlendingInfo.h"
-    #include "fgGfxBone.h"
+    #include "fgGfxBlendingInfo.h"    
     #include "fgGfxBoneAnimation.h"
     #include "Util/fgBTreeMap.h"
 

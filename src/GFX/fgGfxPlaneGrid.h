@@ -18,12 +18,9 @@
     #define FG_INC_GFX_PLANE_GRID
     #define FG_INC_GFX_PLANE_GRID_BLOCK
 
-    #ifndef FG_INC_GFX_PLANE
-        #include "fgGfxPlane.h"
-    #endif
-    #ifndef FG_INC_GFX_VERTEX_DATA
-        #include "fgGfxVertexData.h"
-    #endif
+    #include "fgGfxPlane.h"
+    #include "fgGfxVertexData.h"
+    #include "Math/fgMatrix4.h"
 
 namespace fg {
     namespace gfx {
@@ -98,4 +95,4 @@ namespace fg {
 }
 
     #undef FG_INC_GFX_PLANE_GRID_BLOCK
-#endif	/* FG_INC_GFX_PLANE_GRID */
+#endif /* FG_INC_GFX_PLANE_GRID */

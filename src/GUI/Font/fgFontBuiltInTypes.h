@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_FONT_BUILT_IN_TYPES
     #define FG_INC_FONT_BUILT_IN_TYPES
@@ -21,7 +21,7 @@
     #endif
 
     #include "Util/fgMemory.h"
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector2.h"
     #include <string>
 
 namespace fg {
@@ -77,7 +77,7 @@ namespace fg {
             heightPOW2(0),
             firstChar(0),
             numChars(0) { }
-        };
+        }; // struct SFontBuiltInRawData
 
         /*
          *
@@ -96,7 +96,7 @@ namespace fg {
             Vec2i p0i;
             Vec2i p1i;
             int stepi;
-        };
+        }; // struct SFontCharInfo
 
         /*
          *
@@ -126,9 +126,10 @@ namespace fg {
                 numChars = 0;
                 firstChar = 0;
             }
-        };
-    };
-};
+        }; // struct SFontDataInfo
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_FONT_BUILT_IN_TYPES_BLOCK
 #endif /* FG_INC_FONT_BUILT_IN_TYPES */

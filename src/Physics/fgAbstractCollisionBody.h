@@ -21,7 +21,7 @@
     #include "fgBulletMaskTypes.h"
     #include "fgVector.h"
     #include "fgBool.h"
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector3.h"
 
 namespace fg {
     namespace physics {

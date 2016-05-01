@@ -12,8 +12,6 @@
     #define FG_INC_GFX_CAMERA
     #define FG_INC_GFX_CAMERA_BLOCK
 
-// FIXME! #mathlib too big?
-    #include "Math/fgMathLib.h"
     #include "fgGfxFrustum.h"
 
 namespace fg {
@@ -57,24 +55,22 @@ namespace fg {
              * Updates the view matrix based on the internal vector values
              * @return 
              */
-            virtual float* update(void) {
-                m_viewMatrix = math::lookAt(m_eye, m_center, m_up);
-                //m_frustum.set(m_eye, m_center, m_up); // #SRSLY?
-                return getViewMatPtr();
-            }
+            virtual float* update(void);
             /**
              * Returns the pointer to the view matrix
              * @return 
              */
             inline const float* getViewMatPtr(void) const {
-                return math::value_ptr(m_viewMatrix);
+                //return math::value_ptr(m_viewMatrix);
+                return (const float*)&(m_viewMatrix[0].x);
             }
             /**
              * Returns the pointer to the view matrix
              * @return 
              */
             inline float* getViewMatPtr(void) {
-                return math::value_ptr(m_viewMatrix);
+                //return math::value_ptr(m_viewMatrix);
+                return &(m_viewMatrix[0].x);
             }
             /**
              * 
@@ -144,42 +140,48 @@ namespace fg {
              * @return 
              */
             inline const float* getPtrEye(void) const {
-                return math::value_ptr(m_eye);
+                //return math::value_ptr(m_eye);
+                return (const float*)&(m_eye.x);
             }
             /**
              * Returns the pointer to the eye vector data
              * @return 
              */
             inline float* getPtrEye(void) {
-                return math::value_ptr(m_eye);
+                //return math::value_ptr(m_eye);
+                return &(m_eye.x);
             }
             /**
              * Returns the pointer to the center vector data
              * @return 
              */
             inline const float* getPtrCenter(void) const {
-                return math::value_ptr(m_center);
+                //return math::value_ptr(m_center);
+                return (const float*)&(m_center.x);
             }
             /**
              * Returns the pointer to the center vector data
              * @return 
              */
             inline float* getPtrCenter(void) {
-                return math::value_ptr(m_center);
+                //return math::value_ptr(m_center);
+                return  &(m_center.x);
             }
             /**
              * Returns the pointer to the up vector data
              * @return 
              */
             inline const float* getPtrUp(void) const {
-                return math::value_ptr(m_up);
+                //return math::value_ptr(m_up);
+                return (const float*)&(m_up.x);
             }
             /**
              * Returns the pointer to the up vector data
              * @return 
              */
             inline float* getPtrUp(void) {
-                return math::value_ptr(m_up);
+                //return math::value_ptr(m_up);
+                return &(m_up.x);
             }
             /**
              * Resets the internal view matrix
@@ -215,9 +217,10 @@ namespace fg {
             Vector3f m_center;
             /// Head by default will be up (0,1,0)
             Vector3f m_up;
-        };
-    };
-};
+        }; // class CCamera
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_CAMERA_BLOCK
 #endif /* FG_INC_GFX_CAMERA */

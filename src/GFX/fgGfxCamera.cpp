@@ -9,3 +9,14 @@
  ******************************************************************************/
 
 #include "fgGfxCamera.h"
+#include "Math/fgMatrixOperations.h"
+
+using namespace fg;
+//------------------------------------------------------------------------------
+
+float* gfx::CCamera::update(void) {
+    m_viewMatrix = math::lookAt(m_eye, m_center, m_up);
+    //m_frustum.set(m_eye, m_center, m_up); // #SRSLY?
+    return getViewMatPtr();
+}
+//------------------------------------------------------------------------------

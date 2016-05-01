@@ -19,6 +19,9 @@
     #define FG_INC_GFX_UNIFORM_UPDATER_BLOCK
 
     #include "fgGfxShaderDefs.h"
+    #include "Math/fgMatrix2.h"
+    #include "Math/fgMatrix3.h"
+    #include "Math/fgMatrix4.h"
 
 namespace fg {
     namespace gfx {

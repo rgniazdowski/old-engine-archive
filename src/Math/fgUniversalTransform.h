@@ -18,7 +18,8 @@
     #define FG_INC_UNIVERSAL_TRANSFORM
     #define FG_INC_UNIVERSAL_TRANSFORM_BLOCK
 
-    #include "fgMathLib.h"
+    #include "fgVector3.h"
+    #include "fgMatrix4.h"
     
 namespace fg {
     namespace math {

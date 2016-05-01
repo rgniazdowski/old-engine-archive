@@ -12,6 +12,7 @@
 #include "GFX/fgGfxErrorCodes.h"
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
+#include "Math/fgMatrixOperations.h"
 #include "fgLog.h"
 
 #ifndef FG_INC_GFX_SHADER_MANAGER
@@ -763,10 +764,10 @@ fgBool gfx::CShaderProgram::setUniform(const SDirectionalLight& light) {
     if(bind->nestedLocations[0] < 0)
         return FG_FALSE;
     //".direction", ".ambient", ".diffuse", ".specular"
-    glUniform3fv(bind->nestedLocations[0], 1, math::value_ptr(light.direction));
-    glUniform4fv(bind->nestedLocations[1], 1, math::value_ptr(light.ambient));
-    glUniform4fv(bind->nestedLocations[2], 1, math::value_ptr(light.diffuse));
-    glUniform4fv(bind->nestedLocations[3], 1, math::value_ptr(light.specular));
+    glUniform3fv(bind->nestedLocations[0], 1, &(light.direction.x));
+    glUniform4fv(bind->nestedLocations[1], 1, &(light.ambient.x));
+    glUniform4fv(bind->nestedLocations[2], 1, &(light.diffuse.x));
+    glUniform4fv(bind->nestedLocations[3], 1, &(light.specular.x));
 #if defined(FG_DEBUG)
     GLCheckError("glUniform4fv");
 #endif    
@@ -783,9 +784,9 @@ fgBool gfx::CShaderProgram::setUniform(const SMaterial& material) {
     // if not present, can always check for uniform block?
     //".ambient", ".diffuse", ".specular", ".shininess"
 
-    glUniform4fv(bind->nestedLocations[0], 1, math::value_ptr(material.ambient));
-    glUniform4fv(bind->nestedLocations[1], 1, math::value_ptr(material.diffuse));
-    glUniform4fv(bind->nestedLocations[2], 1, math::value_ptr(material.specular));
+    glUniform4fv(bind->nestedLocations[0], 1, &(material.ambient.x));
+    glUniform4fv(bind->nestedLocations[1], 1, &(material.diffuse.x));
+    glUniform4fv(bind->nestedLocations[2], 1, &(material.specular.x));
     glUniform1f(bind->nestedLocations[3], material.shininess);
     return FG_TRUE;
 }
@@ -798,7 +799,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
         return FG_FALSE;
 
     math::rotate(matrix, 0.0f, Vec3f(0.0f, 0.0f, 0.0f));
-    glUniformMatrix4fv(bind->location, 1, GL_FALSE, math::value_ptr(matrix));
+    glUniformMatrix4fv(bind->location, 1, GL_FALSE, &(matrix[0].x));
     GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
 }
@@ -840,7 +841,7 @@ fgBool gfx::CShaderProgram::setUniform(shaders::UniformType type,
     SUniformBind* bind = &m_uniformBinds[type];
     if(bind->location == -1)
         return FG_FALSE;
-    glUniformMatrix3fv(bind->location, 1, GL_FALSE, math::value_ptr(matrix));
+    glUniformMatrix3fv(bind->location, 1, GL_FALSE, &(matrix[0].x));
     GLCheckError("glUniformMatrix3fv");
     return FG_TRUE;
 }

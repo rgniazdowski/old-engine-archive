@@ -12,9 +12,7 @@
     #define FG_INC_GFX_MATERIAL
     #define FG_INC_GFX_MATERIAL_BLOCK
 
-    #ifndef FG_INC_GFX_TYPES
-        #include "fgGfxTypes.h"
-    #endif
+    #include "fgGfxTypes.h"
 
 namespace fg {
     namespace gfx {

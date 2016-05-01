@@ -12,19 +12,19 @@
     #define FG_INC_GFX_PROJECTION
     #define FG_INC_GFX_PROJECTION_BLOCK
 
-    #include "fgBuildConfig.h"
-    #include "Math/fgMathLib.h"
+    #include "Math/fgMatrix4.h"
 
-    #define FG_GFX_PERSPECTIVE_ZNEAR_DEFAULT	0.01f
-    #define FG_GFX_PERSPECTIVE_ZFAR_DEFAULT	4096.0f
 
-    #define FG_GFX_PERSPECTIVE_FOVY_DEFAULT	45.0f
-    #define FG_GFX_PERSPECTIVE_FOV_DEFAULT	45.0f
+    #define FG_GFX_PERSPECTIVE_ZNEAR_DEFAULT 0.01f
+    #define FG_GFX_PERSPECTIVE_ZFAR_DEFAULT 4096.0f
 
-    #define FG_GFX_PERSPECTIVE_ASPECT_DEFAULT	(1024.0f/768.0f)
+    #define FG_GFX_PERSPECTIVE_FOVY_DEFAULT 45.0f
+    #define FG_GFX_PERSPECTIVE_FOV_DEFAULT 45.0f
 
-    #define FG_GFX_ORTHO_ZNEAR_DEFAULT	-512.0f
-    #define FG_GFX_ORTHO_ZFAR_DEFAULT	2048.0f
+    #define FG_GFX_PERSPECTIVE_ASPECT_DEFAULT (1024.0f/768.0f)
+
+    #define FG_GFX_ORTHO_ZNEAR_DEFAULT -512.0f
+    #define FG_GFX_ORTHO_ZFAR_DEFAULT 2048.0f
 
 namespace fg {
     namespace gfx {
@@ -57,18 +57,10 @@ namespace fg {
              * @param zNear
              * @param zFar
              */
-            virtual inline void setPerspective(float fovY,
-                                               float aspect,
-                                               float zNear = FG_GFX_PERSPECTIVE_ZNEAR_DEFAULT,
-                                               float zFar = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT) {
-                float properFOV;
-    #if defined GLM_FORCE_RADIANS
-                properFOV = math::radians(fovY);
-    #else
-                properFOV = fovY;
-    #endif
-                m_projMatrix = math::perspective(properFOV, aspect, zNear, zFar);
-            }
+            virtual void setPerspective(float fovY,
+                                        float aspect,
+                                        float zNear = FG_GFX_PERSPECTIVE_ZNEAR_DEFAULT,
+                                        float zFar = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT);
             /**
              * 
              * @param left
@@ -78,26 +70,24 @@ namespace fg {
              * @param zNear
              * @param zFar
              */
-            virtual inline void setOrtho(float left,
-                                         float right,
-                                         float bottom,
-                                         float top,
-                                         float zNear = FG_GFX_ORTHO_ZNEAR_DEFAULT,
-                                         float zFar = FG_GFX_ORTHO_ZFAR_DEFAULT) {
-                m_projMatrix = math::ortho(left, right, bottom, top, zNear, zFar);
-            }
+            virtual void setOrtho(float left,
+                                  float right,
+                                  float bottom,
+                                  float top,
+                                  float zNear = FG_GFX_ORTHO_ZNEAR_DEFAULT,
+                                  float zFar = FG_GFX_ORTHO_ZFAR_DEFAULT);
             /**
              * 
              * @return 
              */
-            inline Matrix4f & getRefProjMatrix(void) {
+            inline Matrix4f& getRefProjMatrix(void) {
                 return m_projMatrix;
             }
             /**
              * 
              * @return 
              */
-            inline Matrix4f const & getRefProjMatrix(void) const {
+            inline Matrix4f const& getRefProjMatrix(void) const {
                 return m_projMatrix;
             }
             /**
@@ -105,14 +95,16 @@ namespace fg {
              * @return 
              */
             inline const float * getProjMatPtr(void) const {
-                return math::value_ptr(m_projMatrix);
+                //return math::value_ptr(m_projMatrix);
+                return (const float*)&(m_projMatrix[0].x);
             }
             /**
              * 
              * @return 
              */
             inline float * getProjMatPtr(void) {
-                return math::value_ptr(m_projMatrix);
+                //return math::value_ptr(m_projMatrix);
+                return (float *)&(m_projMatrix[0].x);
             }
             /**
              * 
@@ -120,9 +112,10 @@ namespace fg {
             virtual inline void identity(void) {
                 m_projMatrix = Matrix4f();
             }
-        };
-    };
-};
+        }; // class CProjection
+
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_PROJECTION_BLOCK
 #endif /* FG_INC_GFX_PROJECTION */

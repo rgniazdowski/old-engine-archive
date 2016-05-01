@@ -14,6 +14,7 @@
 #include "fgGfxAABoundingBox.h"
 #include "GFX/fgGfxVertexData.h"
 #include "fgGfxMesh.h"
+#include "Math/fgMatrixOperations.h"
 
 using namespace fg;
 

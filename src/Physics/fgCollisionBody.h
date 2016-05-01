@@ -18,10 +18,10 @@
     #define FG_INC_COLLISION_BODY
     #define FG_INC_COLLISION_BODY_BLOCK
 
+    #include "fgBool.h"
     #include "fgBulletMaskTypes.h"
     #include "fgAbstractCollisionBody.h"
-    #include "fgBool.h"
-    #include "Math/fgMathLib.h"
+
     #include "Math/fgDualQuaternion.h"
 
     #if defined(FG_USING_BULLET)
@@ -107,7 +107,7 @@ namespace fg {
             virtual CRigidBody* getRigidBody(void);
             virtual CRigidBody const* getRigidBody(void) const;
             virtual fgBool hasCollisionShape(void) const {
-                return (fgBool)(getCollisionShape() != NULL);
+                return (fgBool)(this->getCollisionShape() != NULL);
             }
             virtual fgBool hasRigidBody(void) const {
                 return FG_TRUE;

@@ -14,10 +14,13 @@
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
-
-    #include "fgGfxVertex.h"
     #include "fgLog.h"
-    #include <cmath>
+
+    #include "Math/fgVector2.h"
+    #include "Math/fgVector3.h"
+    #include "Math/fgVector4.h"
+    #include "Math/fgMatrix3.h"
+    #include "Math/fgMatrix4.h"        
 
 namespace fg {
     namespace gfx {
@@ -677,8 +680,8 @@ namespace fg {
         typedef BoundingBox3Du BB3Du;
         typedef BoundingBox3Dd BB3Dd;
 
-    };
-};
+    } // namespace gfx
+} // namespace fg
 
     #undef FG_INC_GFX_BOUNDING_BOX_BLOCK
 #endif /* FG_INC_GFX_BOUNDING_BOX */

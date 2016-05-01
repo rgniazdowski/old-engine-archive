@@ -15,7 +15,6 @@
  */
 
 #include "fgGfxFrustum.h"
-#include "Math/fgMathLib.h"
 #include "fgGfxGL.h"
 #include "fgGfxBoundingVolume.h"
 
@@ -41,7 +40,7 @@ void gfx::CFrustum::setCamera(const float angle,
     this->m_zNear = zNear;
     this->m_zFar = zFar;
 
-    this->m_tang = (float)tan(angle * FG_DEG2RAD * 0.5);
+    this->m_tang = (float)math::tan(angle * FG_DEG2RAD * 0.5);
     this->m_nh = zNear * this->m_tang;
     this->m_nw = m_nh * ratio;
     this->m_fh = zFar * this->m_tang;

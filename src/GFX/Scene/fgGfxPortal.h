@@ -18,15 +18,8 @@
     #define FG_INC_GFX_PORTAL
     #define FG_INC_GFX_PORTAL_BLOCK
 
-    #ifndef FG_INC_TYPES
-        #include "fgTypes.h"
-    #endif
-    #ifndef FG_INC_GFX_PLANE
-        #include "GFX/fgGfxPlane.h"
-    #endif
-    #ifndef FG_INC_MATHLIB
-        #include "Math/fgMathLib.h"
-    #endif
+    #include "fgTypes.h"
+    #include "GFX/fgGfxPlane.h"
 
 namespace fg {
     namespace gfx {
@@ -194,5 +187,5 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_PORTAL_BLOCK
-#endif	/* FG_INC_GFX_PORTAL */
+#endif /* FG_INC_GFX_PORTAL */
 

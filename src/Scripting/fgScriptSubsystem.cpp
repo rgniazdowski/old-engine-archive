@@ -84,7 +84,6 @@
 #include "Util/fgStrings.h"
 
 using namespace fg;
-
 //------------------------------------------------------------------------------
 
 #if defined(FG_USING_LUA_PLUS)

@@ -22,6 +22,8 @@
 #include "fgColors.h"
 #include "fgDebugConfig.h"
 
+#include "Math/fgMatrixOperations.h"
+
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
 #endif

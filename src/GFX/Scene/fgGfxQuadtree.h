@@ -13,7 +13,6 @@
     #define FG_INC_GFX_QUADTREE_BLOCK
 
     #include "GFX/fgGfxStdInc.h"
-    #include "fgGfxSceneNode.h"
     #include "fgGfxTreeNode.h"
     #include "fgGfxBasetree.h"
 

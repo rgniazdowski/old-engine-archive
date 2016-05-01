@@ -177,4 +177,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_PS_PARTICLE_EMITTER_BLOCK
-#endif	/* FG_INC_PS_PARTICLE_EMITTER */
+#endif /* FG_INC_PS_PARTICLE_EMITTER */

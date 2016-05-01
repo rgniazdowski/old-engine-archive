@@ -78,21 +78,21 @@ void gfx::CUniformUpdater::update(CMVMatrix* matrix,
 void gfx::CUniformUpdater::update(shaders::UniformType uniformType,
                                   const Matrix4f& matrix,
                                   unsigned int index) {
-    m_uniformValues[uniformType].copy(math::value_ptr(matrix), 16, index);
+    m_uniformValues[uniformType].copy(&(matrix[0].x), 16, index);
 }
 //------------------------------------------------------------------------------
 
 void gfx::CUniformUpdater::update(shaders::UniformType uniformType,
                                   const Matrix3f& matrix,
                                   unsigned int index) {
-    m_uniformValues[uniformType].copy(math::value_ptr(matrix), 9, index);
+    m_uniformValues[uniformType].copy(&(matrix[0].x), 9, index);
 }
 //------------------------------------------------------------------------------
 
 void gfx::CUniformUpdater::update(shaders::UniformType uniformType,
                                   const Matrix2f& matrix,
                                   unsigned int index) {
-    m_uniformValues[uniformType].copy(math::value_ptr(matrix), 4, index);
+    m_uniformValues[uniformType].copy(&(matrix[0].x), 4, index);
 }
 //------------------------------------------------------------------------------
 
@@ -201,7 +201,7 @@ void gfx::CUniformUpdater::SUniformValue::copy(const Matrix4f& matrix, unsigned 
     if(offset + required > this->size)
         this->resize(offset + required);
     uintptr_t address = ((uintptr_t)this->data) + offset;
-    memcpy((void*)address, math::value_ptr(matrix), required);
+    memcpy((void*)address, &(matrix[0].x), required);
     if(this->count <= index)
         this->count = index + 1;
 }
@@ -215,7 +215,7 @@ void gfx::CUniformUpdater::SUniformValue::copy(const Matrix3f& matrix, unsigned 
     if(offset + required > this->size)
         this->resize(offset + required);
     uintptr_t address = ((uintptr_t)this->data) + offset;
-    memcpy((void*)address, math::value_ptr(matrix), required);
+    memcpy((void*)address, &(matrix[0].x), required);
     if(this->count <= index)
         this->count = index + 1;
 }
@@ -229,7 +229,7 @@ void gfx::CUniformUpdater::SUniformValue::copy(const Matrix2f& matrix, unsigned 
     if(offset + required > this->size)
         this->resize(offset + required);
     uintptr_t address = ((uintptr_t)this->data) + offset;
-    memcpy((void*)address, math::value_ptr(matrix), required);
+    memcpy((void*)address, &(matrix[0].x), required);
     if(this->count <= index)
         this->count = index + 1;
 }

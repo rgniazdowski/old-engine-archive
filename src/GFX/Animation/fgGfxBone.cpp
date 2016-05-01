@@ -16,9 +16,9 @@
 
 #include <stack>
 #include "fgGfxBone.h"
-#include "fgVector.h"
 #include "Util/fgStrings.h"
-#include "Math/fgDualQuaternion.h"
+#include "Math/fgVector4.h"
+#include "Math/fgMatrixOperations.h"
 
 namespace fg {
     namespace gfx {

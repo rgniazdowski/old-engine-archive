@@ -19,8 +19,7 @@
     #define FG_INC_GFX_TREE_NODE_BLOCK
 
     #include "fgBool.h"
-    #include "fgVector.h"
-    #include "Math/fgMathLib.h"
+    #include "fgVector.h"    
     #include "fgGfxSpatialObject.h"
 
 namespace fg {

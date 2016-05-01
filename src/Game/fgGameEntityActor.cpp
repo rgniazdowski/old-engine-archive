@@ -21,6 +21,8 @@
 #include "GFX/Animation/fgGfxRagdollBoneAnimation.h"
 #include "Physics/fgPhysics.h"
 #include "GFX/Scene/fgGfxSceneNodeMesh.h"
+
+#include "Math/fgMatrixOperations.h"
 #include <stack>
 
 using namespace fg;

@@ -18,6 +18,7 @@
 #include "GFX/Shaders/fgGfxShaderManager.h"
 #include "GFX/fgGfxPrimitives.h"
 #include "fgGfxSceneSkyBox.h"
+#include "Math/fgMatrixOperations.h"
 
 using namespace fg;
 //------------------------------------------------------------------------------
@@ -37,7 +38,7 @@ gfx::CSceneSkyBox::CSceneSkyBox(const CSceneSkyBox& orig) {
         this->m_skyBoxScale = orig.m_skyBoxScale;
         this->m_textureID = orig.m_textureID;
         this->m_program = orig.m_program;
-        this->m_MVP = orig.m_MVP;        
+        this->m_MVP = orig.m_MVP;
     }
 }
 //------------------------------------------------------------------------------

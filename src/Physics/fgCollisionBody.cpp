@@ -402,14 +402,14 @@ void physics::CCollisionBody::getWorldTransform(float* outMatrix) const {
 //------------------------------------------------------------------------------
 
 void physics::CCollisionBody::setWorldTransform(const Matrix4f& matrix) {
-    m_worldTransform.setFromOpenGLMatrix(math::value_ptr(matrix));
+    m_worldTransform.setFromOpenGLMatrix(&(matrix[0].x));
 }
 //------------------------------------------------------------------------------
 
 void physics::CCollisionBody::setWorldTransform(const DualQuaternionf& dq) {
     static Matrix4f matrix;
     dq.toMat4(matrix);
-    m_worldTransform.setFromOpenGLMatrix(math::value_ptr(matrix));
+    m_worldTransform.setFromOpenGLMatrix(&(matrix[0].x));
 }
 //------------------------------------------------------------------------------
 

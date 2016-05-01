@@ -15,7 +15,7 @@
     #include "fgBuildConfig.h"
 
     #include "fgPointerRawData.h"
-    #include "Math/fgMathLib.h"
+    #include "Math/fgVector2.h"
     #include "Event/fgEventManager.h"
 
     #define FG_INPUT_MAX_TOUCH_POINTS 10

@@ -14,11 +14,11 @@
  * Created on July 13, 2015, 12:27 PM
  */
 
-#include <limits.h>
+#include <climits>
 #include <malloc.h>
 
 #include "fgGrid.h"
-#include "Math/fgMathLib.h"
+#include "Math/fgVectorOperations.h"
 
 using namespace fg;
 

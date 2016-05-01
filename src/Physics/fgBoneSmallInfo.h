@@ -18,6 +18,9 @@
     #define FG_BONE_SMALL_INFO
     #define FG_BONE_SMALL_INFO_BLOCK
 
+    #include "Math/fgVector3.h"
+    #include "Math/fgQuaternion.h"
+
     #include "fgRagdollBoneType.h"
 
 namespace fg {
