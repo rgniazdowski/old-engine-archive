@@ -22,7 +22,6 @@
     #include "fgGfxBoneAnimation.h"
     #include "Util/fgBTreeMap.h"
 
-
 namespace fg {
     namespace gfx {
         namespace anim {
@@ -31,6 +30,7 @@ namespace fg {
              * 
              */
             struct SSkinningInfo {
+            public:
                 typedef SSkinningInfo self_type;
                 typedef SSkinningInfo type;
 
@@ -48,6 +48,7 @@ namespace fg {
                 typedef RootMotionsMap::iterator RootMotionsMapItor;
                 typedef RootMotionsMap::const_iterator RootMotionsMapConstItor;
 
+            public:
                 /**
                  *
                  */
@@ -75,25 +76,55 @@ namespace fg {
                  * @return
                  */
                 StandardActionType getActionType(const char* animationName);
-
+                /**
+                 * 
+                 * @param actionType
+                 * @return
+                 */
                 fgBool hasAction(StandardActionType actionType) const;
-
+                /**
+                 *
+                 * @param actionType
+                 * @return
+                 */
                 fgBool hasRootMotion(StandardActionType actionType) const;
-
+                /**
+                 *
+                 * @param boneType
+                 * @return
+                 */
                 fgBool hasBone(BoneType boneType) const;
-
-                SBone* getBone(BoneType boneType, unsigned int index = 0);
-
-                const SBone* getBone(BoneType boneType, unsigned int index = 0) const;
+                /**
+                 *
+                 * @param boneType
+                 * @param index
+                 * @return
+                 */
+                SBone* getBone(BoneType boneType,
+                               unsigned int index = 0);
+                /**
+                 *
+                 * @param boneType
+                 * @param index
+                 * @return
+                 */
+                const SBone* getBone(BoneType boneType,
+                                     unsigned int index = 0) const;
 
                 //--------------------------------------------------------------
-                ///
+            public:
+                /// This contains blending info but with global indexing - based
+                /// on the armature bones array - blending info per mesh will be
+                /// indexed differently.
                 SBlendingInfo armatureInfo;
-                ///
+                /// This is special mapping - bone type maps to vector of bones
+                /// with such type. Designed for easier access and management.
                 BoneTypesMap boneTypesMap;
-                ///
+                /// Actions map - maps action enum type to animation name.
                 ActionsMap actionsMap;
-                ///
+                /// Simplified root motions map - maps action enum type with
+                /// velocity/direction vector. Used mostly for running/jumping
+                /// animations.
                 RootMotionsMap rootMotionsMap;
             }; // struct SSkinningInfo
 
@@ -102,4 +133,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_ANIM_SKINNING_INFO_BLOCK
-#endif	/* FG_INC_GFX_ANIM_SKINNING_INFO */
+#endif /* FG_INC_GFX_ANIM_SKINNING_INFO */

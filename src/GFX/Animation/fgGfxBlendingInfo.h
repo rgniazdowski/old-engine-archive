@@ -91,7 +91,7 @@ namespace fg {
                 typedef std::pair<CAnimation*, CAnimation*> AnimationPair;
                 typedef CVector<SWeightPair> WeightsVec;
 
-                ///
+                /// Pair of CAnimation* objects to blend
                 AnimationPair animation;
                 ///
                 WeightsVec weights;

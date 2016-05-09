@@ -1662,10 +1662,25 @@ gfx::anim::CAnimation* gfx::CModelResource::getMatchingAnimation(const char* nam
 
 void gfx::CModelResource::initSkinningInfo(void) {
     const unsigned int n = m_shapes.size();
+    m_skinning.mainBones.clear();
+    BonesVec& bones = m_skinning.mainBones;
     for(unsigned int i = 0; i < n; i++) {
         if(!m_shapes[i]->isSkinned())
             continue;
+        SSkinnedMesh* pSkinned = m_shapes[i]->getSkinnedMesh();
         m_shapes[i]->getSkinnedMesh()->initSkinningInfo(m_skinning.info.armatureInfo);
+        
+        for(unsigned int j=0;j<pSkinned->bones.size();j++) {
+            if(!bones.contains(pSkinned->bones[j])) {
+                bones.push_back(pSkinned->bones[j]);
+                // This mapping will be quite useful when calculating final matrix
+                // transformations for each bone.
+                // Such transformations need to be computed once per frame and
+                // then copied into separate array for each skinned mesh (because
+                // given skinned mesh can be influenced by different set of bones)
+                m_skinning.bonesIdxMap[bones[bones.size()-1]->index] = bones.size()-1;
+            }
+        }
     }
     // After everything - bake animations
     unsigned int nAnims = m_skinning.animations.size();

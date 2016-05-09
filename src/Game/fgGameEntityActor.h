@@ -102,6 +102,7 @@ namespace fg {
             }
 
             virtual void updateAABB(void);
+
         protected:
             virtual fgBool setupCollisionBody(physics::BodyType bodyType);
 

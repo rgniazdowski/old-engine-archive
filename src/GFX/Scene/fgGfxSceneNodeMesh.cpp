@@ -29,8 +29,7 @@ gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
 base_type(SCENE_NODE_MESH, pParent),
 drawable_type(),
 m_pMesh(NULL),
-m_pMaterial(NULL),
-m_pCurrentDQ(NULL) {
+m_pMaterial(NULL) {
     if(!m_drawCall) {
         m_drawCall = new CDrawCall(DRAW_CALL_MESH,
                                    ATTRIBUTE_POSITION_BIT |
@@ -180,12 +179,12 @@ void gfx::CSceneNodeMesh::animate(float delta) {
                                                pBlendInfo,
                                                pInfo);
         if(!blendCount)
-            m_pCurrentDQ = &animations[nFirstId].curFrame.dualQuaternions;
+            animated_type::setFinalDQs(&animations[nFirstId].curFrame.dualQuaternions);
         else
-            m_pCurrentDQ = NULL;
+            animated_type::setFinalDQs(&pInfo->dualQuaternions);
 
     } else if(nBoneAnims == 1) {
-        m_pCurrentDQ = &animations[nFirstId].curFrame.dualQuaternions;
+        animated_type::setFinalDQs(&animations[nFirstId].curFrame.dualQuaternions);
     }
 }
 //------------------------------------------------------------------------------
@@ -193,19 +192,13 @@ void gfx::CSceneNodeMesh::animate(float delta) {
 void gfx::CSceneNodeMesh::draw(const Matrix4f& modelMat) {
     if(!isVisible() || !m_drawCall)
         return;
-    animated_type::AnimationsVec& animations = getAnimations();
-    const unsigned int nAnimations = animations.size();
     // should now use shader, check flags and push uniforms
     CShaderProgram* pProgram = m_drawCall->getShaderProgram();
-    if(pProgram && nAnimations) {
+    if(pProgram) {
         pProgram->use();
-        if(m_pCurrentDQ) {
+        if(animated_type::getFinalDQs()) {
             pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
-                                 *m_pCurrentDQ);
-        } else if(hasBlendedFrame(anim::Type::BONE)) {
-            anim::SAnimationFrameInfo* pInfo = getBlendedFrame(anim::Type::BONE);
-            pProgram->setUniform(shaders::UNIFORM_BONE_DUAL_QUATERNIONS,
-                                 pInfo->dualQuaternions);
+                                 *animated_type::getFinalDQs());
         }
     }
     m_drawCall->draw(math::scale(m_finalModelMat, getFinalScale()) * modelMat);
@@ -221,39 +214,20 @@ void gfx::CSceneNodeMesh::updateAABB(void) {
         m_aabb.max = m_pMesh->aabb.max;
         m_aabb.transform(m_finalModelMat, m_scale);
     } else {
-        m_aabb.invalidate();
-        animated_type::AnimationsVec& animations = getAnimations();
-        if(animations.empty())
-            return;
-        // This still need fixing, need to interpolate animations
-        // automatically, and use result here
-        // (without traversing animations ...)
         SSkinnedMesh *pSkinnedMesh = this->getSkinnedMesh();
-        const unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo &info = animations[animId];
-            if(!info.pAnimation)
-                continue;
-            if(info.pAnimation->getType() != anim::Type::BONE &&
-               info.pAnimation->getType() != anim::Type::BONE_RAGDOLL)
-                continue;
+        m_aabb.invalidate();
+        if(animated_type::getFinalDQs()) {            
             unsigned int nBones = pSkinnedMesh->boneEdges.size();
-
             for(unsigned int boneId = 0; boneId < nBones; boneId++) {
                 Vec3f min, max;
                 pSkinnedMesh->boneEdges[boneId].transform(pSkinnedMesh,
-                                                          info.curFrame.dualQuaternions,
+                                                          *animated_type::getFinalDQs(),
                                                           min, max);
                 m_aabb.merge(min);
                 m_aabb.merge(max);
             }
-            if(info.pAnimation->getType() == anim::Type::BONE);
-            //break; // #FIXME - this seriously need to be better
-            // also would really need some method in base class
-            // that updates the aabb based on the children size
-            // but too soon for that !TODO
-        }
-        m_aabb.transform(m_finalModelMat, m_scale);
+            m_aabb.transform(m_finalModelMat, m_scale);            
+        }        
     }
     m_aabb.radius = math::length(m_aabb.getExtent());
 }

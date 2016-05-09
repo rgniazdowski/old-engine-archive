@@ -138,12 +138,10 @@ namespace fg {
             SMeshBase* m_pMesh;
             ///
             SMaterial* m_pMaterial;
-            ///
-            CVector<DualQuaternionf>* m_pCurrentDQ;
         }; // class CSceneNodeMesh
 
     } // namespace gfx
 } // namespace fg
 
     #undef FG_INC_GFX_SCENE_NODE_MESH_BLOCK
-#endif	/* FG_INC_GFX_SCENE_NODE_MESH */
+#endif /* FG_INC_GFX_SCENE_NODE_MESH */

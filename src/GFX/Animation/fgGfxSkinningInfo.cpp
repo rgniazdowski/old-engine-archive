@@ -40,6 +40,7 @@ gfx::anim::SSkinningInfo::SSkinningInfo(const SSkinningInfo& orig) {
 //------------------------------------------------------------------------------
 
 gfx::anim::SSkinningInfo::~SSkinningInfo() {
+    armatureInfo.clear();
     boneTypesMap.clear();
     actionsMap.clear();
     rootMotionsMap.clear();
@@ -53,7 +54,8 @@ gfx::anim::StandardActionType gfx::anim::SSkinningInfo::getActionType(const std:
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::StandardActionType gfx::anim::SSkinningInfo::getActionType(const char* animationName) {
+gfx::anim::StandardActionType
+gfx::anim::SSkinningInfo::getActionType(const char* animationName) {
     if(!animationName)
         return ACTION_NONE;
     ActionsMapConstItor itor = actionsMap.begin();
@@ -94,7 +96,7 @@ gfx::anim::SBone* gfx::anim::SSkinningInfo::getBone(BoneType boneType, unsigned 
 
 const gfx::anim::SBone* gfx::anim::SSkinningInfo::getBone(BoneType boneType,
                                                           unsigned int index) const {
-    BoneTypesMapConstItor itor =  this->boneTypesMap.find(boneType);
+    BoneTypesMapConstItor itor = this->boneTypesMap.find(boneType);
     if(itor == this->boneTypesMap.end())
         return NULL;
     const unsigned int nBones = itor->second.size();

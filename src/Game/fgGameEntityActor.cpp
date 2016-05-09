@@ -53,13 +53,17 @@ game::CEntityActor::CEntityActor(const self_type& orig) : base_type(orig), physi
     // this is important - with actor body there is no need for ENTITY_MESH
     // children - only NODE_MESH which does not have physical properties.
     base_type::setDefaultMeshChildType(gfx::SCENE_NODE_MESH);
-    // need a little hack here...
-    //gfx::CModelResource* pModel = orig.getModel();
-    //*((base_type*)this) = *((base_type*)&orig);
 }
 //------------------------------------------------------------------------------
 
-game::CEntityActor::~CEntityActor() { }
+game::CEntityActor::~CEntityActor() {
+    if(m_ragdollAnimation) {
+        this->stopAnimations();
+        this->removeAnimation(m_ragdollAnimation);
+        delete m_ragdollAnimation;
+        m_ragdollAnimation = NULL;
+    }
+}
 //------------------------------------------------------------------------------
 
 fgBool game::CEntityActor::queryTrait(const fg::traits::SceneNode trait, void **pObj) {
@@ -172,7 +176,8 @@ fgBool game::CEntityActor::copyAnimationToRagdoll(gfx::anim::SAnimationInfo* pIn
             continue;
         // should invert by bone offset?
         pBody->setInitialTransform(pBone->index,
-                                   math::scale(pInfo->curFrame.transformations[i] * math::inverse(pBone->offset), pBone->getOffsetScale()));
+                                   math::scale(pInfo->curFrame.transformations[i] * math::inverse(pBone->offset),
+                                               pBone->getOffsetScale()));
     }
     return FG_TRUE;
 }
@@ -182,38 +187,26 @@ void game::CEntityActor::startRagdolling(void) {
     if(isRagdolling()) //&& this->getAnimation((unsigned int)0)->getType() == gfx::anim::Type::BONE_RAGDOLL)
         return; // ignore;
     fgBool status = FG_FALSE;
-    ChildrenVec& children = this->getChildren();
-    const unsigned int n = children.size();
     if(isRagdoll()) {
-        //if(this->setAnimation(m_ragdollAnimation, 0)) {
-        //    this->getAnimationInfoBySlot(0)->play(); // activate
-        //}
         physics::CRagdollCollisionBody* pBody = getRagdollCollisionBody();
         pBody->setModelMatrix(this->getFinalModelMatrix());
-        //pBody->
 
-        for(unsigned int i = 0; i < n; i++) {
-            CSceneNode* pChild = children[i];
-            if(!pChild->checkNodeType(gfx::SCENE_NODE_MESH))
-                continue;
-            copyAnimationToRagdoll(pChild->getAnimationInfoBySlot(0),
-                                   static_cast<gfx::CSceneNodeMesh*>(pChild)->getSkinnedMesh()->bones);
-            break; // ooops! #FIXME need to get merged animation and list of bones
-        }
+        // copyAnimationToRagdoll
+        copyAnimationToRagdoll(this->getAnimationInfoBySlot(0),
+                               this->getModel()->getMainBones());
+        // how to get merged animation? #FIXME
+        if(this->hasBlendedFrame(gfx::anim::Type::BONE));
+
         pBody->startRagdolling();
         status = pBody->isRagdolling();
     }
     if(!status)
         return;
-
-
-    for(unsigned int i = 0; i < n; i++) {
-        CSceneNode* pChild = children[i];
-        if(!pChild->checkNodeType(gfx::SCENE_NODE_MESH))
-            continue;
-        pChild->removeAnimations();
-        pChild->setAnimation(m_ragdollAnimation, 0);
-        pChild->getAnimationInfoBySlot(0)->play();
+    if(this->getAnimationInfoBySlot(0)) {
+        this->getAnimationInfoBySlot(0)->stop(FG_TRUE);
+    }
+    if(this->setAnimation(m_ragdollAnimation, 0)) {
+        this->getAnimationInfoBySlot(0)->play(); // activate
     }
 }
 //------------------------------------------------------------------------------
@@ -221,17 +214,9 @@ void game::CEntityActor::startRagdolling(void) {
 void game::CEntityActor::stopRagdolling(void) {
     if(isRagdoll()) {
         getRagdollCollisionBody()->stopRagdolling();
-// #FIXME - should preserve ragdoll animation? (bones need to have state updated)
+        // #FIXME - should preserve ragdoll animation? (bones need to have state updated)
 #if 0
         this->removeAnimation(m_ragdollAnimation);
-        ChildrenVec& children = this->getChildren();
-        const unsigned int n = children.size();
-        for(unsigned int i = 0; i < n; i++) {
-            CSceneNode* pChild = children[i];
-            if(!pChild->checkNodeType(gfx::SCENE_NODE_MESH))
-                continue;
-            pChild->removeAnimation(m_ragdollAnimation);
-        }
 #endif
     }
 }

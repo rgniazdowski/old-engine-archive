@@ -20,7 +20,11 @@
 using namespace fg;
 //------------------------------------------------------------------------------
 
-gfx::traits::CAnimated::CAnimated() : m_animations() { }
+gfx::traits::CAnimated::CAnimated() :
+m_animations(),
+m_blendedFramesMap(),
+m_pFinalDQs(NULL),
+m_pFinalMatrices(NULL) { }
 //------------------------------------------------------------------------------
 
 gfx::traits::CAnimated::~CAnimated() {
@@ -394,7 +398,8 @@ gfx::traits::CAnimated::getBlendedFrame(anim::Type animType) const {
 }
 //------------------------------------------------------------------------------
 
-gfx::anim::SAnimationFrameInfo* gfx::traits::CAnimated::prepareBlendedFrame(anim::Type animType) {
+gfx::anim::SAnimationFrameInfo*
+gfx::traits::CAnimated::prepareBlendedFrame(anim::Type animType) {
     gfx::anim::SAnimationFrameInfo* pFrame = NULL;
     if(hasBlendedFrame(animType)) {
         (pFrame = getBlendedFrame(animType))->reset();
@@ -426,4 +431,34 @@ void gfx::traits::CAnimated::destroyBlendedFrames(void) {
     }
     m_blendedFramesMap.clear();
 }
+//------------------------------------------------------------------------------
+
+void gfx::traits::CAnimated::clearFinalTransformations(void) {
+    m_pFinalDQs = NULL;
+    m_pFinalMatrices = NULL;
+ }
+//------------------------------------------------------------------------------
+
+void gfx::traits::CAnimated::setFinalDQs(DualQuatsVec* pFinalDQs) {
+    // can be NULL
+    m_pFinalDQs = pFinalDQs;
+ }
+//------------------------------------------------------------------------------
+
+void gfx::traits::CAnimated::setFinalMatrices(MatricesVec* pFinalMatrices) {
+    // can be NULL
+    m_pFinalMatrices = pFinalMatrices;
+ }
+//------------------------------------------------------------------------------
+
+gfx::traits::CAnimated::DualQuatsVec*
+gfx::traits::CAnimated::getFinalDQs(void) {
+    return m_pFinalDQs;
+ }
+//------------------------------------------------------------------------------
+
+gfx::traits::CAnimated::MatricesVec*
+gfx::traits::CAnimated::getFinalMatrices(void) {
+    return m_pFinalMatrices;
+ }
 //------------------------------------------------------------------------------

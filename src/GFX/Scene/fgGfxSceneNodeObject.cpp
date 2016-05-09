@@ -113,24 +113,79 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneNodeObject::updateAABB(void) {
-#if 0
-    physics::CCollisionBody *body = getCollisionBody();
-    if(body) {
-        if(m_pModel && !isAutoScale()) {
-            if(body->getBodyType() == physics::CCollisionBody::BODY_SPHERE) {
-                body->setRadius(math::length(m_scale * m_pModel->getAABB().getExtent()));
-            } else {
-                body->setHalfSize(m_scale * (m_pModel->getAABB().getExtent()));
-            }
-            body->setInertiaTensor();
-            body->calculateDerivedData();
+void gfx::CSceneNodeObject::animate(float delta) {
+    animated_type::AnimationsVec& animations = getAnimations();
+    if(animations.empty())
+        return;
+
+    unsigned int nBoneAnims = 0;
+    int nFirstId = -1;
+    const unsigned int nAnimations = animations.size();
+    for(unsigned int animId = 0; animId < nAnimations; animId++) {
+        anim::SAnimationInfo &animationInfo = animations[animId];
+        // calculate will check if animation is compatible
+        // #FIXME - this will recalculate animation step if the model has
+        // two or more shapes with the same animation - need to check it somehow
+        if(animationInfo.pAnimation->getType() == anim::Type::BONE ||
+           animationInfo.pAnimation->getType() == anim::Type::BONE_RAGDOLL) {
+            //pSkinnedMesh->calculate(animationInfo, delta);
+            // Now transformation matrices for all bones are calculated.
+            // Before drawing underlying skinned meshes need to create
+            // separate transformation vectors (animation frame info)
+            ((anim::CBoneAnimation*)animationInfo.pAnimation)->calculate(animationInfo,
+                                                                         this->m_pModel->getMainBones(),
+                                                                         delta);
+            nBoneAnims++;
+            if(nBoneAnims == 1)
+                nFirstId = (int)animId;
         }
-        // Well the collision body is present, so the base function can be called
-        // it will do the required transformations (based on the physics)
-        base_type::updateAABB();
     }
-#endif 
+
+    base_type::animate(delta);
+    unsigned int nSkinnedMeshes = 0;
+    fgBool shouldCopy = FG_FALSE;
+    const unsigned int nChildren = getChildrenCount();
+    for(unsigned int childId = 0; childId < nChildren; childId++) {
+        CSceneNode* pNode = getChildByIndex(childId);
+        if(!pNode)
+            continue;
+        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
+            continue;
+        }
+
+        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
+        SSkinnedMesh* pSkinnedMesh = pNodeMesh->getSkinnedMesh();
+        if(!pSkinnedMesh)
+            continue;
+        if(!shouldCopy) {
+            pNodeMesh->setFinalDQs(NULL);
+            nSkinnedMeshes++;
+        }
+        if(childId == nChildren - 1 && !shouldCopy) {
+            shouldCopy = FG_TRUE;
+            childId = -1;
+            m_meshFramesVec.resize(nSkinnedMeshes);
+            nSkinnedMeshes = 0;
+            continue;
+        }
+        if(shouldCopy) {
+            const CModel::BonesIdxMap& indexMap = this->m_pModel->getMainBonesMapping();
+            const unsigned int nBones = pSkinnedMesh->bones.size();
+            m_meshFramesVec[nSkinnedMeshes].dualQuaternions.resize(nBones);
+            for(unsigned int i = 0; i < nBones; i++) {
+                // bone index in main array
+                unsigned int boneIndex = indexMap.at(pSkinnedMesh->bones[i]->index);
+                m_meshFramesVec[nSkinnedMeshes].dualQuaternions[i] =
+                        animations[nFirstId].curFrame.dualQuaternions[boneIndex];
+            }
+            pNodeMesh->setFinalDQs(&m_meshFramesVec[nSkinnedMeshes].dualQuaternions);
+            nSkinnedMeshes++;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneNodeObject::updateAABB(void) {
     if(m_pModel) {
         if(!m_pModel->isAnimated()) {
             m_aabb.min = m_pModel->getAABB().min;
@@ -138,8 +193,6 @@ void gfx::CSceneNodeObject::updateAABB(void) {
             m_aabb.transform(m_finalModelMat, m_scale);
         } else {
             m_aabb.invalidate();
-            // should now just merge with aabb's of the meshes? lol
-            // this begins to suck beyond comprehension.
             const unsigned int nChildren = getChildrenCount();
             for(unsigned int childId = 0; childId < nChildren; childId++) {
                 CSceneNode* pNode = getChildByIndex(childId);
@@ -152,11 +205,9 @@ void gfx::CSceneNodeObject::updateAABB(void) {
                 m_aabb.merge(pNodeMesh->getBoundingVolume());
             }
         }
-        //if(body && !isAutoScale()) {
+        //if(body && !isAutoScale())
         //    m_aabb.radius = body->getRadius();
-        //} else {
         m_aabb.radius = math::length(m_aabb.extent);
-        //}
     }
 }
 //------------------------------------------------------------------------------
@@ -283,11 +334,7 @@ fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) 
         return FG_FALSE;
     if(!name[0])
         return FG_FALSE;
-    fgBool status = base_type::setAnimation(name, slot);
-    if(status) {
-        // the base type did not fail - ?
-        return FG_TRUE;
-    }
+    fgBool status = FG_FALSE;
     // now this function is quite tricky
     // will need to search for animations inside the armature (if any)
     if(!m_pModel)
@@ -312,224 +359,9 @@ fgBool gfx::CSceneNodeObject::setAnimation(const char* name, unsigned int slot) 
         }
     }
     if(pAnimation) {
-        // now need to set this for all skinned meshes        
-        const unsigned int nChildren = getChildrenCount();
-        for(unsigned int childId = 0; childId < nChildren; childId++) {
-            CSceneNode* pNode = getChildByIndex(childId);
-            if(!pNode)
-                continue;
-            if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-                continue;
-            }
-
-            CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-            SSkinnedMesh* pSkinnedMesh = pNodeMesh->getSkinnedMesh();
-            if(!pSkinnedMesh)
-                continue;
-            if(!pSkinnedMesh->isAnimationCompatible(pAnimation))
-                continue;
-            // animation is found and compatible
-            pNodeMesh->setAnimation(pAnimation, slot);
-        }
+        this->setAnimation(pAnimation, slot);
+        // no need to set animation for child meshes
     }
     return status;
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeObject::removeAnimations(void) {
-    animated_type::removeAnimations();
-    // SceneNodeObject is a special node type
-    // when added to the scene, children are added automatically
-    // based on the shapes of the model.
-    if(!m_pModel)
-        return;
-    if(!m_pModel->isAnimated())
-        return;
-    const unsigned int nChildren = getChildrenCount();
-    for(unsigned int childId = 0; childId < nChildren; childId++) {
-        CSceneNode* pNode = getChildByIndex(childId);
-        if(!pNode) {
-            continue;
-        }
-        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-            continue;
-        }
-        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
-            continue;
-        }
-        // now it is know that this mesh node is based on this objects' model;
-        // need to remove animations that are also based on this model
-        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
-        unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo* pInfo = &animations[animId];
-            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
-                pNodeMesh->removeAnimation(pInfo->pAnimation);
-                animId--;
-                nAnimations--;
-                continue;
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeObject::playAnimations(void) {
-    animated_type::playAnimations();
-    if(!m_pModel)
-        return;
-    if(!m_pModel->isAnimated())
-        return;
-    const unsigned int nChildren = getChildrenCount();
-    for(unsigned int childId = 0; childId < nChildren; childId++) {
-        CSceneNode* pNode = getChildByIndex(childId);
-        if(!pNode) {
-            continue;
-        }
-        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-            continue;
-        }
-        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
-            continue;
-        }
-        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
-        const unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo* pInfo = &animations[animId];
-            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
-                pInfo->play();
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeObject::stopAnimations(void) {
-    animated_type::stopAnimations();
-    if(!m_pModel)
-        return;
-    if(!m_pModel->isAnimated())
-        return;
-    const unsigned int nChildren = getChildrenCount();
-    for(unsigned int childId = 0; childId < nChildren; childId++) {
-        CSceneNode* pNode = getChildByIndex(childId);
-        if(!pNode) {
-            continue;
-        }
-        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-            continue;
-        }
-        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
-            continue;
-        }
-        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
-        const unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo* pInfo = &animations[animId];
-            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
-                pInfo->stop();
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeObject::pauseAnimations(fgBool toggle) {
-    animated_type::pauseAnimations();
-    if(!m_pModel)
-        return;
-    if(!m_pModel->isAnimated())
-        return;
-    const unsigned int nChildren = getChildrenCount();
-    for(unsigned int childId = 0; childId < nChildren; childId++) {
-        CSceneNode* pNode = getChildByIndex(childId);
-        if(!pNode) {
-            continue;
-        }
-        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-            continue;
-        }
-        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
-            continue;
-        }
-        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
-        const unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo* pInfo = &animations[animId];
-            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
-                if(toggle) {
-                    pInfo->togglePause();
-                } else {
-                    pInfo->pause();
-                }
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeObject::resumeAnimations(void) {
-    animated_type::resumeAnimations();
-    if(!m_pModel)
-        return;
-    if(!m_pModel->isAnimated())
-        return;
-    const unsigned int nChildren = getChildrenCount();
-    for(unsigned int childId = 0; childId < nChildren; childId++) {
-        CSceneNode* pNode = getChildByIndex(childId);
-        if(!pNode) {
-            continue;
-        }
-        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-            continue;
-        }
-        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
-            continue;
-        }
-        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
-        const unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo* pInfo = &animations[animId];
-            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
-                pInfo->resume();
-            }
-        }
-    }
-}
-//------------------------------------------------------------------------------
-
-void gfx::CSceneNodeObject::rewindAnimations(void) {
-    animated_type::rewindAnimations();
-    if(!m_pModel)
-        return;
-    if(!m_pModel->isAnimated())
-        return;
-    const unsigned int nChildren = getChildrenCount();
-    for(unsigned int childId = 0; childId < nChildren; childId++) {
-        CSceneNode* pNode = getChildByIndex(childId);
-        if(!pNode) {
-            continue;
-        }
-        if(!pNode->checkNodeType(gfx::SCENE_NODE_MESH)) {
-            continue;
-        }
-        CSceneNodeMesh* pNodeMesh = static_cast<CSceneNodeMesh*>(pNode);
-        if(!m_pModel->hasMesh(pNodeMesh->getMesh())) {
-            continue;
-        }
-        animated_type::AnimationsVec& animations = pNodeMesh->getAnimations();
-        const unsigned int nAnimations = animations.size();
-        for(unsigned int animId = 0; animId < nAnimations; animId++) {
-            anim::SAnimationInfo* pInfo = &animations[animId];
-            if(m_pModel->hasAnimation(pInfo->pAnimation)) {
-                pInfo->rewind();
-            }
-        }
-    }
 }
 //------------------------------------------------------------------------------

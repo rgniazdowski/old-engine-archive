@@ -47,7 +47,8 @@ namespace fg {
             /**
              * 
              */
-            CSceneNodeObject(CModelResource *pModel = NULL, CSceneNode *pParent = NULL);
+            CSceneNodeObject(CModelResource *pModel = NULL,
+                             CSceneNode *pParent = NULL);
             /**
              * 
              * @param orig
@@ -92,31 +93,7 @@ namespace fg {
              */
             virtual void refreshGfxInternals(void);
 
-        public:
-            /**
-             *
-             */
-            virtual void removeAnimations(void);
-            /**
-             *
-             */
-            virtual void playAnimations(void);
-            /**
-             *
-             */
-            virtual void stopAnimations(void);
-            /**
-             *
-             */
-            virtual void pauseAnimations(fgBool toggle = FG_TRUE);
-            /**
-             *
-             */
-            virtual void resumeAnimations(void);
-            /**
-             *
-             */
-            virtual void rewindAnimations(void);
+            virtual void animate(float delta = 0.0f);
 
         public:
             /**
@@ -143,6 +120,7 @@ namespace fg {
             /// This is the node type that is being used when automatically
             /// adding children based on object model data;
             SceneNodeType m_defaultMeshChildType;
+            CVector<anim::SAnimationFrameInfo> m_meshFramesVec;
         }; // class CSceneNodeObject
 
     } // namespace gfx

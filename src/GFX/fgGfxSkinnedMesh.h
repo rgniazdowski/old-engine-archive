@@ -75,15 +75,31 @@ namespace fg {
                     NZ = 5
                 };
 
+                /**
+                 * Structure for edge point of the bone
+                 */
                 struct SEdgePoint {
+                    /// index of the point (vertex) in this mesh
                     int index;
+                    ///
                     float length;
+                    /// Position of the edge point (value))
                     Vector3f value;
+                    /**
+                     * Default constructor
+                     */
                     SEdgePoint() : index(-1), length(0.0f), value() { }
                 } points[6];
+                /**
+                 * Default constructor
+                 */
                 SEdgeInfo() {
                     invalidate();
                 }
+                /**
+                 * Copy constructor
+                 * @param orig
+                 */
                 SEdgeInfo(const SEdgeInfo& orig) {
                     for(unsigned int i = 0; i < 6; i++) {
                         points[i].index = orig.points[i].index;
@@ -91,9 +107,23 @@ namespace fg {
                         points[i].value = orig.points[i].value;
                     }
                 }
-
+                /**
+                 * Merge given point with this edge info.
+                 * @param index Index of the point/vertex
+                 * @param value Position of the point to merge
+                 */
                 void merge(int index, const Vector3f& value);
+                /**
+                 * Reset all data.
+                 */
                 void invalidate(void);
+                /**
+                 * Transform this edge info based on the given transformation matrices.
+                 * @param pMesh         Pointer to the skinned mesh structure that owns this edge information
+                 * @param matrices      Vector with transformation matrices - indexing with local bones
+                 * @param outputMin     Reference to the transformed output value (minimum point of aabb)
+                 * @param outputMax     Reference to the transformed output value (maximum point of aabb)
+                 */
                 void transform(SSkinnedMesh* pMesh,
                                const MatrixVec& matrices,
                                Vector3f& outputMin,
@@ -122,36 +152,38 @@ namespace fg {
             virtual unsigned short internal_getBlendIndicesVboArrayIdx(void) const;
 
         public:
-            ///
+            /// Global mesh index (based on meshes inside the model)
             unsigned int meshIndex;
-            ///
-            BonesVec bones;
-            ///
+            /// Local bone list for this skinned mesh.
+            /// Not every bone from the armature need to affect this mesh.
+            BonesVec bones;            
+            /// Vector with blending weights (for each vertex - 4 floats)
             BlendVec blendWeights;
-            ///
+            /// Vector with blending indices (for each vertex - 4 floats)
             BlendVec blendIndices;
-            ///
+            /// Bones' AABB boxes for this mesh.
             BoneBoxesVec boneBoxes;
-            ///
+            /// Bones' edge information
             BoneEdgesVec boneEdges;
             /// Custom blending info for bones attached to this mesh.
             /// Blending info is an array with special structures. Each contains
-            /// animation pair and a list of weights (proportions for each bone)
+            /// animation pair and a list of weights (proportions for each bone).
+            /// This blending info instance will contain weights indexed locally.
             anim::SBlendingInfo blendingInfo;
 
             /**
-             *
+             * Default constructor.
              */
             SSkinnedMesh();
 
             /**
-             * 
+             * Default destructor.
              */
             virtual ~SSkinnedMesh();
 
             /**
-             *
-             * @return
+             * 
+             * @return 
              */
             virtual SMeshSoA* getMeshSoA(void) = 0;
             /**
@@ -326,7 +358,8 @@ namespace fg {
         }; // struct SSkinnedMesh
 
         /**
-         *
+         * Skinned Mesh Structure of Arrays version.
+         * This structure extends base mesh SoA and SkinnedMesh base.
          */
         struct SSkinnedMeshSoA : public SMeshSoA, public SSkinnedMesh {
         public:

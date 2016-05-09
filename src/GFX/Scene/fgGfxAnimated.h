@@ -50,6 +50,9 @@ namespace fg {
                 // This will be tricky
                 typedef CVector<anim::SAnimationFrameInfo *> BlendedFramesMap;
 
+                typedef anim::SAnimationFrameInfo::DualQuatsVec DualQuatsVec;
+                typedef anim::SAnimationFrameInfo::MatricesVec MatricesVec;
+
             public:
                 static const fg::traits::SceneNode SELF_TRAIT = fg::traits::ANIMATED;
 
@@ -64,17 +67,7 @@ namespace fg {
                 virtual ~CAnimated();
 
                 //--------------------------------------------------------------
-                /**
-                 * This function is intentionally left empty. It should be overloaded if needed.
-                 * Mainly such function will be used from scripts on scene node object
-                 * @param pAnimationInfo
-                 * @param slot
-                 * @return 
-                 */
-                virtual fgBool setAnimation(const char* name,
-                                            unsigned int slot) {
-                    return FG_FALSE;
-                }
+                
                 /**
                  *
                  * @param pAnimation
@@ -298,25 +291,65 @@ namespace fg {
                 AnimationsVec const& getAnimations(void) const {
                     return m_animations;
                 }
+                /**
+                 *
+                 * @return
+                 */
                 BlendedFramesMap& getBlendedFrames(void) {
                     return m_blendedFramesMap;
                 }
+                /**
+                 *
+                 * @return
+                 */
                 BlendedFramesMap const& getBlendedFrames(void) const {
                     return m_blendedFramesMap;
                 }
-
+                /**
+                 *
+                 * @param animType
+                 * @return
+                 */
                 anim::SAnimationFrameInfo* getBlendedFrame(anim::Type animType);
+                /**
+                 *
+                 * @param animType
+                 * @return
+                 */
                 const anim::SAnimationFrameInfo* getBlendedFrame(anim::Type animType) const;
 
-                inline fgBool hasBlendedFrame(anim::Type animType) {
-                    return (fgBool)(getBlendedFrame(animType) != NULL);
-                }
+                /**
+                 * 
+                 * @param animType
+                 * @return
+                 */
                 inline fgBool hasBlendedFrame(anim::Type animType) const {
                     return (fgBool)(getBlendedFrame(animType) != NULL);
                 }
+                /**
+                 * 
+                 * @param animType
+                 * @return
+                 */
                 anim::SAnimationFrameInfo* prepareBlendedFrame(anim::Type animType);
+                /**
+                 *
+                 * @param animType
+                 */
                 void clearBlendedFrame(anim::Type animType);
+                /**
+                 *
+                 */
                 void destroyBlendedFrames(void);
+
+                //--------------------------------------------------------------
+
+                void clearFinalTransformations(void);
+                void setFinalDQs(DualQuatsVec* pFinalDQs);
+                void setFinalMatrices(MatricesVec* pFinalMatrices);
+                DualQuatsVec* getFinalDQs(void);
+                MatricesVec* getFinalMatrices(void);
+                
             public:
                 /**
                  * 
@@ -325,6 +358,10 @@ namespace fg {
                 unsigned int getAnimationsCount(void) const {
                     return m_animations.size();
                 }
+                /**
+                 * 
+                 * @return
+                 */
                 unsigned int getBlendedFramesCount(void) const {
                     unsigned int result = 0;
                     for(unsigned int i = 0; i < m_blendedFramesMap.size(); i++) {
@@ -334,15 +371,19 @@ namespace fg {
                     }
                     return result;
                 }
-
                 //--------------------------------------------------------------                
 
             private:
                 /// Vector holding currently used animations.
                 /// Order is significant.
                 AnimationsVec m_animations;
-
+                ///
                 BlendedFramesMap m_blendedFramesMap;
+                ///
+                DualQuatsVec* m_pFinalDQs;
+                ///
+                MatricesVec* m_pFinalMatrices;
+
             }; // abstract class CAnimated
 
         } // namespace traits

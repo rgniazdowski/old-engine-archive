@@ -18,6 +18,7 @@
     #include "Resource/fgResource.h"
     #include "Util/fgStrings.h"
     #include "Animation/fgGfxSkinningInfo.h"
+    #include "Animation/fgGfxArmature.h"
 
     #if defined(FG_USING_ASSIMP)
 namespace Assimp {
@@ -93,8 +94,17 @@ namespace fg {
             /// Type definition for special vector iterator
             typedef ShapesVec::iterator ShapesVecItor;
 
+            typedef std::map<unsigned int, unsigned int> BonesIdxMap;
+            typedef BonesIdxMap::iterator BonesIdxMapItor;
+            typedef BonesIdxMap::const_iterator BonesIdxMapConstItor;
+
             typedef CVector<anim::CAnimation*> AnimationsVec;
             typedef AnimationsVec::iterator AnimationsVecItor;
+            typedef AnimationsVec::const_iterator AnimationsVecConstItor;
+
+            typedef anim::CArmature::BonesVec BonesVec;
+            typedef BonesVec::iterator BonesVecItor;
+            typedef BonesVec::const_iterator BonesVecConstItor;
 
         public:
 
@@ -142,15 +152,17 @@ namespace fg {
                 typedef SModelSkinning self_type;
                 typedef SModelSkinning type;
 
-                typedef CVector<anim::CAnimation*> AnimationsVec;
-                typedef AnimationsVec::iterator AnimationsVecItor;
-
                 /// Array with all animations associated with this model
                 AnimationsVec animations;
                 /// Original Armature instance
                 anim::CArmature* pArmature;
-                ///
+                /// Skinning info (blending info, actions map, bone type maps)
                 anim::SSkinningInfo info;
+                /// This is a list of all bones that are used with this model
+                /// (no duplicates) - based on the bones used with skinned meshes.
+                BonesVec mainBones;
+                /// Mapping of global (armature) bone index to local index (mainBones)
+                BonesIdxMap bonesIdxMap;
 
                 /**
                  *
@@ -370,9 +382,17 @@ namespace fg {
             void setModelType(ModelType modelType) {
                 m_modelType = modelType;
             }
+            /**
+             *
+             * @return
+             */
             const anim::SSkinningInfo& getSkinningInfo(void) const {
                 return m_skinning.info;
             }
+            /**
+             * 
+             * @return
+             */
             anim::SSkinningInfo& getSkinningInfo(void) {
                 return m_skinning.info;
             }
@@ -426,6 +446,34 @@ namespace fg {
             SMeshBase* getMesh(const char* name);
 
         public:
+            /**
+             * 
+             * @return 
+             */
+            BonesVec& getMainBones(void) {
+                return m_skinning.mainBones;
+            }
+            /**
+             * 
+             * @return
+             */
+            BonesVec const& getMainBones(void) const {
+                return m_skinning.mainBones;
+            }
+            /**
+             * 
+             * @return
+             */
+            BonesIdxMap& getMainBonesMapping(void) {
+                return m_skinning.bonesIdxMap;
+            }
+            /**
+             *
+             * @return
+             */
+            BonesIdxMap const& getMainBonesMapping(void) const {
+                return m_skinning.bonesIdxMap;
+            }
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
@@ -827,6 +875,11 @@ namespace fg {
              * @return
              */
             anim::CAnimation* getAnimation(const char* name);
+            /**
+             * 
+             * @param name
+             * @return
+             */
             anim::CAnimation* getMatchingAnimation(const std::string& name);
             /**
              *

@@ -48,7 +48,6 @@ gfx::SSkinnedMesh::~SSkinnedMesh() {
     boneBoxes.clear();
     boneEdges.clear();
     blendingInfo.clear();
-
 }
 //------------------------------------------------------------------------------
 
@@ -59,7 +58,6 @@ void gfx::SSkinnedMesh::clearSkinningInfo(void) {
     boneBoxes.clear();
     boneEdges.clear();
     blendingInfo.clear();
-
 }
 //------------------------------------------------------------------------------
 
@@ -78,28 +76,6 @@ void gfx::SSkinnedMesh::clear(SMeshBase* pMeshSuper) {
         return;
     pMeshSuper->clear();
     clearSkinningInfo();
-}
-//------------------------------------------------------------------------------
-
-static void getVertexPos(const void* data,
-                         unsigned int stride,
-                         unsigned int index,
-                         Vector3f& result) {
-    if(!data || !stride)
-        return;
-    // need to reset    
-    typedef float value_type;
-    typedef unsigned int size_type;
-
-    uintptr_t offset = (uintptr_t)data;
-    const size_type innerMax = 3;
-    const size_type i = index;
-    const void *cur = (const void *)(offset + i * stride);
-    value_type *values = (value_type *)cur;
-    for(size_type j = 0; j < innerMax; j++) {
-        value_type checkVal = *(values + j); // offset + sizeof(value_type)*j
-        result[j] = checkVal;
-    }
 }
 //------------------------------------------------------------------------------
 
@@ -270,6 +246,8 @@ void gfx::SSkinnedMesh::initSkinningInfo(const anim::SBlendingInfo& armatureInfo
     boneBoxes.resize(nBones);
     boneEdges.resize(nBones);
     for(unsigned int boneIdx = 0; boneIdx < nBones; boneIdx++) {
+        // boneIdx is local
+        // pBone->index is global (based on armature)
         anim::SBone* pBone = bones[boneIdx];
         if(!pBone)
             continue;
@@ -303,7 +281,7 @@ void gfx::SSkinnedMesh::initSkinningInfo(const anim::SBlendingInfo& armatureInfo
     const unsigned int nPairs = armatureInfo.size();
     this->blendingInfo.resize(nPairs);
     // Indexing in 'armatureInfo' matches the indexes in the whole armature
-    // Need to convert it so the indexes in 'weights' match bone indexes in this mesh
+    // Need to convert it so the indexes in 'weights' match bone indexes of this mesh
     for(unsigned int pairIdx = 0; pairIdx < nPairs; pairIdx++) {
         this->blendingInfo[pairIdx].weights.resize(nBones);
         this->blendingInfo[pairIdx].animation = armatureInfo[pairIdx].animation;

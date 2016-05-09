@@ -150,17 +150,24 @@ namespace fg {
                 SAnimationFrameInfo curFrame;
                 ///
                 float tempo;
-                ///
 
             private:
+                ///
                 StateFlags m_stateFlags;
+                ///
                 int m_loopCount;
 
+                /**
+                 * 
+                 * @param flags
+                 * @param toggle
+                 */
                 void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
 
             public:
                 /**
-                 *
+                 * 
+                 * @param _pAnimation
                  */
                 SAnimationInfo(CAnimation* _pAnimation = NULL);
                 /**
@@ -274,4 +281,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_GFX_ANIMATION_INFO_BLOCK
-#endif	/* FG_INC_GFX_ANIMATION_INFO */
+#endif /* FG_INC_GFX_ANIMATION_INFO */

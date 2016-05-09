@@ -2195,9 +2195,13 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_3X)(float, float, float);
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_4X)(float, float, float, float);
     typedef fgBool(gfx::CSceneNode::*SCENENODE_Bool_C_STR_UINT_IN)(const char*, unsigned int);
+    typedef fgBool(gfx::CSceneNodeObject::*SCENENODEOBJ_Bool_C_STR_UINT_IN)(const char*, unsigned int);
 
     typedef Vector3f & (gfx::CSceneNode::*FUNC_getScale)(void);
     typedef void (gfx::CSceneNode::*FUNC_setScale)(float, float, float);
+    typedef void (gfx::CSceneNode::*FUNC_playAnimations)(void);
+    typedef void (gfx::CSceneNode::*FUNC_stopAnimations)(void);
+    typedef void (gfx::CSceneNode::*FUNC_resumeAnimations)(void);
 
     const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
     const char* metatableSceneNodeObjectName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_OBJECT_MT_ID);
@@ -2210,6 +2214,12 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             .ObjectDirect("isManaged", (gfx::CSceneNode::base_type *)0, &gfx::CSceneNode::base_type::isManaged)
 
             .ObjectDirect("update", (gfx::CSceneNode *)0, &gfx::CSceneNode::update)
+#if 0
+            .ObjectDirect("setAnimation",
+                          (gfx::CSceneNode *)0,
+                          static_cast<SCENENODE_Bool_C_STR_UINT_IN>
+                          (&gfx::CSceneNode::setAnimation))
+#endif
             .ObjectDirect("setAnimation", (gfx::CSceneNode *)0, static_cast<SCENENODE_Bool_C_STR_UINT_IN>(&gfx::CSceneNode::setAnimation))
 
             .ObjectDirect("getPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec4fref_void>(&gfx::CSceneNode::getPosition))
@@ -2269,7 +2279,13 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             ;
 
     // Register GfxSceneNodeObject metatable
-    LPCD::Class(m_luaState->GetCState(), metatableSceneNodeObjectName, metatableSceneNodeName)
+    LPCD::Class(m_luaState->GetCState(),
+                metatableSceneNodeObjectName,
+                metatableSceneNodeName)
+            .ObjectDirect("setAnimation",
+                          (gfx::CSceneNodeObject *)0,
+                          static_cast<SCENENODEOBJ_Bool_C_STR_UINT_IN>
+                          (&gfx::CSceneNodeObject::setAnimation))
             ;
 
     // Register GfxSceneNodeMesh metatable
