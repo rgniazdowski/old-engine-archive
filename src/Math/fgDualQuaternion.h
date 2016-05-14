@@ -59,7 +59,9 @@ namespace fg {
          * @param _qe
          */
         DualQuaternionT(const quat_type& _q0, const quat_type& _qe) :
-        q0(_q0), qe(_qe) { }
+        q0(_q0), qe(_qe) {
+            this->q0 = math::normalize(q0);
+        }
         /**
          *
          * @param _q
@@ -80,12 +82,8 @@ namespace fg {
          *
          * @param mat
          */
-        DualQuaternionT(const mat4_type& mat) {
-            vec3_type v;
-            v.x = mat[3].x;
-            v.y = mat[3].y;
-            v.z = mat[3].z;
-            initializeFrom(math::toQuat(mat), v);
+        DualQuaternionT(const mat4_type& mat) {            
+            initializeFrom(math::toQuat(mat), vec3_type(mat[3].x, mat[3].y, mat[3].z));
         }
         /**
          *
@@ -99,13 +97,8 @@ namespace fg {
          * @param q
          * @param t
          */
-        void initializeFrom(const quat_type& q, const vec3_type& t) {
-            this->qe.w = -0.5f * (t.x * q.x + t.y * q.y + t.z * q.z);
-            this->qe.x = 0.5f * (t.x * q.w + t.y * q.z - t.z * q.y);
-            this->qe.y = 0.5f * (-t.x * q.z + t.y * q.w + t.z * q.x);
-            this->qe.z = 0.5f * (t.x * q.y - t.y * q.x + t.z * q.w);
-            this->q0 = math::normalize(q);
-            //this->q0 = q;
+        void initializeFrom(const quat_type& q, const vec3_type& t) {            
+            this->q0 = math::normalize(q);            
             this->qe = (quat_type(0, t) * this->q0) * 0.5f;
         }
         /**
@@ -119,12 +112,8 @@ namespace fg {
          * 
          * @param mat
          */
-        void initializeFrom(const mat4_type& mat) {
-            vec3_type v;
-            v.x = mat[3].x;
-            v.y = mat[3].y;
-            v.z = mat[3].z;
-            initializeFrom(math::toQuat(mat), v);
+        void initializeFrom(const mat4_type& mat) {            
+            initializeFrom(math::toQuat(mat), vec3_type(mat[3].x, mat[3].y, mat[3].z));
         }
         //----------------------------------------------------------------------
         /**
@@ -168,34 +157,22 @@ namespace fg {
         inline void getTranslation(vec3_type& t) const {
             T n = math::length(q0);
             // translation vector from dual quaternion part:
-            t.x = 2.f * (-qe.w * q0.x + qe.x * q0.w - qe.y * q0.z + qe.z * q0.y) / n;
-            t.y = 2.f * (-qe.w * q0.y + qe.x * q0.z + qe.y * q0.w - qe.z * q0.x) / n;
-            t.z = 2.f * (-qe.w * q0.z - qe.x * q0.y + qe.y * q0.x + qe.z * q0.w) / n;
-            //quat_type q = (qe * 2.0f) * math::conjugate(q0);
-            //t.x = q.x;
-            //t.y = q.y;
-            //t.z = q.z;
+            t.x = ((value_type)2.0) * (-qe.w * q0.x + qe.x * q0.w - qe.y * q0.z + qe.z * q0.y) / n;
+            t.y = ((value_type)2.0) * (-qe.w * q0.y + qe.x * q0.z + qe.y * q0.w - qe.z * q0.x) / n;
+            t.z = ((value_type)2.0) * (-qe.w * q0.z - qe.x * q0.y + qe.y * q0.x + qe.z * q0.w) / n;
         }
         /**
          * 
          * @param t
          */
         inline void getTranslation(vec4_type& t) const {
-            vec3_type t3;
-            getTranslation(t3);
-            t.x = t3.x;
-            t.y = t3.y;
-            t.z = t3.z;
-        }
-        /**
-         *
-         * @return
-         */
-        inline vec3_type getTranslation(void) const {
-            vec3_type t;
-            getTranslation(t);
-            return t;
-        }
+            T n = math::length(q0);
+            // translation vector from dual quaternion part:
+            t.x = ((value_type)2.0) * (-qe.w * q0.x + qe.x * q0.w - qe.y * q0.z + qe.z * q0.y) / n;
+            t.y = ((value_type)2.0) * (-qe.w * q0.y + qe.x * q0.z + qe.y * q0.w - qe.z * q0.x) / n;
+            t.z = ((value_type)2.0) * (-qe.w * q0.z - qe.x * q0.y + qe.y * q0.x + qe.z * q0.w) / n;
+            t.w = value_type(0.0);
+        }        
         //----------------------------------------------------------------------
         /**
          *
@@ -205,7 +182,7 @@ namespace fg {
         inline vec3_type transform(const vec3_type& v) const {
             // As the dual quaternions may be the results from a
             // linear blending we have to normalize it :
-            T norm = math::length(q0);
+            value_type norm = math::length(q0);
             quat_type qblend_0 = q0 / norm;
             quat_type qblend_e = qe / norm;
 
@@ -213,8 +190,7 @@ namespace fg {
             // 2.f * qblend_e * conjugate(qblend_0)
             vec3_type v0 = vec3_type(qblend_0.x, qblend_0.y, qblend_0.z);
             vec3_type ve = vec3_type(qblend_e.x, qblend_e.y, qblend_e.z);
-            vec3_type trans = (ve * qblend_0.w - v0 * qblend_e.w + math::cross(v0, ve)) * 2.f;
-
+            vec3_type trans = (ve * qblend_0.w - v0 * qblend_e.w + math::cross(v0, ve)) * value_type(2.0);
             // Rotate
             return math::rotate(qblend_0, v) + trans;
         }
@@ -225,34 +201,32 @@ namespace fg {
          */
         inline vec4_type transform(const vec4_type& v) const {
             vec3_type rv3 = transform(vec3_type(v.x, v.y, v.z));
-            return vec4_type(rv3.x, rv3.y, rv3.z, (T)0.0);
+            return vec4_type(rv3.x, rv3.y, rv3.z, (value_type)0.0);
         }
         //----------------------------------------------------------------------
         /**
          *
          */
         inline void normalize(void) {
-            T n = math::length(q0);
-            q0 /= n;
-            qe /= n;
+            value_type n = math::length(this->q0);
+            this->q0 /= n;
+            this->qe /= n;
         }
         /**
          *
          * @param v
          * @return
          */
-        inline vec3_type rotate(const vec3_type& v) const {
-            quat_type tmp = math::normalize(q0);
-            return math::rotate(tmp, v);
+        inline vec3_type rotate(const vec3_type& v) const {            
+            return math::rotate(math::normalize(this->q0), v);
         }
         /**
          *
          * @param v
          * @return
          */
-        inline vec4_type rotate(const vec4_type& v) const {
-            quat_type tmp = math::normalize(q0);
-            return math::rotate(tmp, v);
+        inline vec4_type rotate(const vec4_type& v) const {            
+            return math::rotate(math::normalize(this->q0), v);
         }
         //----------------------------------------------------------------------
         /**
@@ -261,7 +235,7 @@ namespace fg {
          */
         mat4_type toMat4(void) const {
             // rotation matrix from non-dual part
-            mat4_type mat = math::toMat4(q0);
+            mat4_type mat = math::toMat4(this->q0);
             getTranslation(mat[3]);
             return mat;
         }
@@ -269,16 +243,15 @@ namespace fg {
          * 
          * @return 
          */
-        mat3_type toMat3(void) const {
-            mat3_type mat = math::toMat3(q0);
-            return mat;
+        mat3_type toMat3(void) const {            
+            return math::toMat3(this->q0);
         }
         /**
          * 
          * @param outMat
          */
         void toMat4(mat4_type& outMat) const {
-            outMat = math::toMat4(q0);
+            outMat = math::toMat4(this->q0);
             getTranslation(outMat[3]);
         }
         /**
@@ -286,7 +259,7 @@ namespace fg {
          * @param outMat
          */
         void toMat3(mat3_type& outMat) const {
-            outMat = math::toMat3(q0);
+            outMat = math::toMat3(this->q0);
         }
         //----------------------------------------------------------------------
         /**
@@ -331,7 +304,9 @@ namespace fg {
         }
         //----------------------------------------------------------------------
     public:
+        // Real part
         quat_type q0;
+        // Dual part
         quat_type qe;
     }; // struct DualQuaternionT
 
@@ -385,6 +360,18 @@ namespace fg {
         DualQuaternionT<T, P> result = dq;
         result *= s;
         return result;
+    }
+    /**
+     * 
+     * @param lhs
+     * @param rhs
+     * @return 
+     */
+    template<typename T, math::precision P>
+    inline DualQuaternionT<T, P> operator *(DualQuaternionT<T, P> const& lhs,
+            DualQuaternionT<T, P> const& rhs) {
+        return DualQuaternionT<T, P>(rhs.q0 * lhs.q0,
+                rhs.qe * lhs.q0 + rhs.q0 * lhs.qe);
     }
     /**
      *
@@ -519,4 +506,4 @@ namespace fg {
 } // namespace fg
 
     #undef FG_INC_MATH_DUAL_QUATERNION_BLOCK
-#endif	/* FG_INC_MATH_DUAL_QUATERNION */
+#endif /* FG_INC_MATH_DUAL_QUATERNION */
