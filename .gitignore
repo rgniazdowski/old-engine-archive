@@ -6,6 +6,12 @@ build_infinium_scons_x86
 build_infinium_scons_aarch64
 deployments
 Infinium.mkb.bak
+data/dna.txt
+data/date.txt
+data/textures/brick*
+data/main/textures/brick*
+data/EndlessFlying/obj/Enemy1
+data/EndlessFlying/obj/Enemy2
 data/outputFull.log
 data/outputDebug.log
 data/outputDebugFull.log
@@ -90,7 +96,13 @@ icons/spot_*
 icons/tabbar_*
 icons/webclip_*
 icons/toolbar_*
+*.swp
+backup*
+bak_*
 log
+asdasdasd*
+asdf*
+abcde*
 modules/cpp_btree.zip
 modules/SDL2-2.0.3
 modules/SDL2_mixer-2.0.0
@@ -102,6 +114,8 @@ modules/SDL2_mixer-2.0.0.zip
 modules/SDL2_image-2.0.0.zip
 modules/SDL2_net-2.0.0.zip
 modules/SDL2_ttf-2.0.12.zip
+modules/bullet3-2.8*zip
+modules/bullet/bullet3-2.8*zip
 modules/bullet/modified
 modules/bullet/bullet3
 modules/bullet/bullet3-master.zip
