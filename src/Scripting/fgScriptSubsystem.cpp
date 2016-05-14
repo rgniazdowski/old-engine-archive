@@ -2220,7 +2220,21 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
                           static_cast<SCENENODE_Bool_C_STR_UINT_IN>
                           (&gfx::CSceneNode::setAnimation))
 #endif
-            .ObjectDirect("setAnimation", (gfx::CSceneNode *)0, static_cast<SCENENODE_Bool_C_STR_UINT_IN>(&gfx::CSceneNode::setAnimation))
+
+            .ObjectDirect("playAnimations",
+                          (gfx::CSceneNode *)0,
+                          static_cast<FUNC_playAnimations>
+                          (&gfx::CSceneNode::playAnimations))
+
+            .ObjectDirect("resumeAnimations",
+                          (gfx::CSceneNode *)0,
+                          static_cast<FUNC_resumeAnimations>
+                          (&gfx::CSceneNode::resumeAnimations))
+
+            .ObjectDirect("stopAnimations",
+                          (gfx::CSceneNode *)0,
+                          static_cast<FUNC_stopAnimations>
+                          (&gfx::CSceneNode::stopAnimations))
 
             .ObjectDirect("getPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec4fref_void>(&gfx::CSceneNode::getPosition))
             .ObjectDirect("setPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setPosition))
@@ -2999,7 +3013,7 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
     // Register Gui Style metatable
     //
     // #FIXME - will need to create base metatable for ManagedObject
-    // because there are many types that shader that base class
+    // because there are many types that share that base class.
     // Thanks to this there will be less copy pasting of the same
     // function pointers definitions ...
     //
@@ -3017,8 +3031,7 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
                           static_cast<GS_StyleContent_C_STR_IN>(&gui::CStyle::getContentPtr))
             .Function("isValid", &script::CScriptSubsystem::__isValid)
             ;
-    // fgGuiStyle FUBAR ^ ^ ^ ^ ^ ^ ^ ^ ^
-
+    
     // Register Built in types for fgGuiStyleContent
     // Remember: Need definitions for special functions in LPCD namespace
     // Templates for Push/Match/Get -- types like: fgGuiSize/Background/Border
