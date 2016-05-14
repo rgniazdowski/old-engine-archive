@@ -685,6 +685,20 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     m_fgObj.SetInteger("ON_COLLISION_BEGIN", (int)gfx::CSceneNodeTrigger::ON_COLLISION_BEGIN);
     m_fgObj.SetInteger("ON_COLLISION_END", (int)gfx::CSceneNodeTrigger::ON_COLLISION_END);
 
+    m_fgObj.SetInteger("SCENE_NODE_INVALID", (int)gfx::SCENE_NODE_INVALID);
+    m_fgObj.SetInteger("SCENE_NODE_ROOT", (int)gfx::SCENE_NODE_ROOT);
+    m_fgObj.SetInteger("SCENE_NODE_MESH", (int)gfx::SCENE_NODE_MESH);
+    m_fgObj.SetInteger("SCENE_NODE_OBJECT", (int)gfx::SCENE_NODE_OBJECT);
+    m_fgObj.SetInteger("SCENE_NODE_TRIGGER", (int)gfx::SCENE_NODE_TRIGGER);
+    m_fgObj.SetInteger("SCENE_NODE_INTERIOR", (int)gfx::SCENE_NODE_INTERIOR);
+    m_fgObj.SetInteger("SCENE_NODE_LANDSCAPE", (int)gfx::SCENE_NODE_LANDSCAPE);
+    m_fgObj.SetInteger("SCENE_NODE_PARTICLE_EMITTER", (int)gfx::SCENE_NODE_PARTICLE_EMITTER);
+    
+    m_fgObj.SetInteger("GAME_ENTITY_INVALID", (int)game::GAME_ENTITY_INVALID);
+    m_fgObj.SetInteger("GAME_ENTITY", (int)game::GAME_ENTITY);
+    m_fgObj.SetInteger("GAME_ENTITY_MESH", (int)game::GAME_ENTITY_MESH);
+    m_fgObj.SetInteger("GAME_ENTITY_ACTOR", (int)game::GAME_ENTITY_ACTOR);
+
     //
     // PHYSICS CONSTANTS (COLLISION BODY/OTHER)
     //
@@ -2063,6 +2077,18 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::isShowGroundGrid);
 
+     metatable.RegisterObjectDirect("setSkyBoxFollowsCamera",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setSkyBoxFollowsCamera);
+
+    metatable.RegisterObjectDirect("isSkyBoxFollowsCamera",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isSkyBoxFollowsCamera);
+
+    metatable.RegisterObjectDirect("doesSkyBoxFollowCamera",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::doesSkyBoxFollowCamera);
+
 
     metatable.RegisterObjectDirect("reportSelectionMove",
                                    static_cast<gfx::CSceneManager *>(0),
@@ -2076,6 +2102,14 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::reportSelectionUnclick);
 
+    metatable.RegisterObjectDirect("setDefaultNodeObjectType",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setDefaultNodeObjectType);
+
+    metatable.RegisterObjectDirect("getDefaultNodeObjectType",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::getDefaultNodeObjectType);
+    
 
     metatable.RegisterObjectDirect("destroyNode",
                                    static_cast<gfx::CSceneManager *>(0),
