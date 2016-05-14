@@ -78,6 +78,12 @@
 			<Add option="`pkg-config libpng --libs`" />
 			<Add option="`pkg-config zlib --libs`" />
 		</Linker>
+		<Unit filename="CBspMaterialsEditDialog.cpp" />
+		<Unit filename="CBspMaterialsEditDialog.h" />
+		<Unit filename="CBspPreviewBottomPanel.cpp" />
+		<Unit filename="CBspPreviewBottomPanel.h" />
+		<Unit filename="CBspPreviewLeftPanel.cpp" />
+		<Unit filename="CBspPreviewLeftPanel.h" />
 		<Unit filename="CEditorConfigPanel.cpp" />
 		<Unit filename="CEditorConfigPanel.h" />
 		<Unit filename="CEditorDrawingBatchFrame.cpp" />
@@ -98,15 +104,15 @@
 		<Unit filename="FlexiGameEditorApp.h" />
 		<Unit filename="FlexiGameEditorMain.cpp" />
 		<Unit filename="FlexiGameEditorMain.h" />
-		<Unit filename="CBspMaterialsEditDialog.cpp" />
-		<Unit filename="CBspMaterialsEditDialog.h" />
+		<Unit filename="wxsmith/CBspMaterialsEditDialog.wxs" />
+		<Unit filename="wxsmith/CBspPreviewBottomPanel.wxs" />
+		<Unit filename="wxsmith/CBspPreviewLeftPanel.wxs" />
 		<Unit filename="wxsmith/CEditorConfigPanel.wxs" />
 		<Unit filename="wxsmith/CEditorDrawingBatchFrame.wxs" />
 		<Unit filename="wxsmith/CEditorEventMgrPanel.wxs" />
 		<Unit filename="wxsmith/CEditorResMgrPanel.wxs" />
 		<Unit filename="wxsmith/CEditorScriptMgrPanel.wxs" />
 		<Unit filename="wxsmith/FlexiGameEditorFrame.wxs" />
-		<Unit filename="wxsmith/CBspMaterialsEditDialog.wxs" />
 		<Extensions>
 			<envvars />
 			<code_completion>
@@ -133,6 +139,8 @@
 					<wxPanel wxs="wxsmith/CEditorEventMgrPanel.wxs" src="CEditorEventMgrPanel.cpp" hdr="CEditorEventMgrPanel.h" fwddecl="0" i18n="1" name="CEditorEventMgrPanel" language="CPP" />
 					<wxFrame wxs="wxsmith/CEditorDrawingBatchFrame.wxs" src="CEditorDrawingBatchFrame.cpp" hdr="CEditorDrawingBatchFrame.h" fwddecl="0" i18n="1" name="CEditorDrawingBatchFrame" language="CPP" />
 					<wxDialog wxs="wxsmith/CBspMaterialsEditDialog.wxs" src="CBspMaterialsEditDialog.cpp" hdr="CBspMaterialsEditDialog.h" fwddecl="0" i18n="1" name="CBspMaterialsEditDialog" language="CPP" />
+					<wxPanel wxs="wxsmith/CBspPreviewLeftPanel.wxs" src="CBspPreviewLeftPanel.cpp" hdr="CBspPreviewLeftPanel.h" fwddecl="0" i18n="1" name="CBspPreviewLeftPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/CBspPreviewBottomPanel.wxs" src="CBspPreviewBottomPanel.cpp" hdr="CBspPreviewBottomPanel.h" fwddecl="0" i18n="1" name="CBspPreviewBottomPanel" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

@@ -164,7 +164,7 @@ m_engineMain(NULL) {
     MenuItem11 = new wxMenuItem(Menu3, idMenuEngineQuit, _("Quit\tAlt+Q"), _("Close the game engine - exit the game"), wxITEM_NORMAL);
     Menu3->Append(MenuItem11);
     Menu3->AppendSeparator();
-    MenuItem10 = new wxMenuItem(Menu3, idMenuEngineFreezeFrame, _("Freeze frame\tAlt-P"), _("Pause/freeze current frame"), wxITEM_NORMAL);
+    MenuItem10 = new wxMenuItem(Menu3, idMenuEngineFreezeFrame, _("&Freeze frame\tAlt-P"), _("Pause/freeze current frame"), wxITEM_NORMAL);
     Menu3->Append(MenuItem10);
     MenuBarTop->Append(Menu3, _("En&gine"));
     Menu4 = new wxMenu();
@@ -302,6 +302,21 @@ m_engineMain(NULL) {
 }
 //------------------------------------------------------------------------------
 
+void FlexiGameEditorFrame::onContextMenu(wxContextMenuEvent& event) {
+
+    printf("On context menu: %ls\n", event.GetPropagatedFrom()->GetClassInfo()->GetClassName());
+
+    wxPoint pos = event.GetPosition() - MainNotebook->GetScreenPosition();
+    printf("EVENT           X: %d Y: %d\n", event.GetPosition().x, event.GetPosition().y);
+    printf("NOTEBOOK POS:   X: %d Y: %d\n", MainNotebook->GetPosition().x, MainNotebook->GetPosition().y);
+    printf("DIFF            X: %d Y: %d\n", pos.x, pos.y);
+    int idx = MainNotebook->HitTest(wxPoint(100, 5));
+    int idx2 = MainNotebook->HitTest(pos);
+    printf("Test dif: %d | test event: %d\n", idx, idx2);
+    MainNotebook->SetSelection(idx2);
+    PopupMenu(&GfxCanvasContextMenu);
+
+}
 
 FlexiGameEditorFrame::~FlexiGameEditorFrame() {
     //(*Destroy(FlexiGameEditorFrame)

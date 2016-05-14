@@ -27,7 +27,9 @@
 
     #include "CPreviewModeBase.h"
     #include "CBspMaterialsEditDialog.h"
-
+    // Panels
+    #include "CBspPreviewBottomPanel.h"
+    #include "CBspPreviewLeftPanel.h"
 
 class wxWindow;
 class wxFrame;
@@ -772,6 +774,10 @@ namespace fg {
 
             /// Special internal dialog for showing material options
             CBspMaterialsEditDialog* m_materialsEditDialog;
+            ///
+            CBspPreviewLeftPanel* m_bspLeftPanel;
+            ///
+            CBspPreviewBottomPanel* m_bspBottomPanel;
 
         public:
             static const long idMenuFreeLook;

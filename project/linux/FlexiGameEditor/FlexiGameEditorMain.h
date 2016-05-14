@@ -138,6 +138,7 @@ public:
      */
     EnginePreviewMode getPreviewMode(const char* name);
 
+    void onContextMenu(wxContextMenuEvent& event);
 
     int FilterEvent(wxEvent& event);
 

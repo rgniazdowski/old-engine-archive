@@ -22,6 +22,7 @@
 
     #include <wx/string.h>
     #include <wx/menu.h>
+    #include <wx/panel.h>
 
 namespace fg {
     class CEngineMain;
@@ -48,6 +49,8 @@ namespace fg {
             m_previewID(0),
             m_isActive(FG_FALSE),
             m_callbacksRegistered(FG_FALSE),
+            m_leftPanel(NULL),
+            m_bottomPanel(NULL),
             m_engineMainOrig(pEngineMainOrig) { }
             /**
              *
@@ -158,6 +161,20 @@ namespace fg {
             wxEvtHandler* getEventHandler(void) {
                 return (wxEvtHandler*)&m_contextMenu;
             }
+            /**
+             * 
+             * @return
+             */
+            wxPanel* getLeftPanel(void) const {
+                return m_leftPanel;
+            }
+            /**
+             *
+             * @return
+             */
+            wxPanel* getBottomPanel(void) const {
+                return m_bottomPanel;
+            }
 
         protected:
             /// Context menu - internal
@@ -172,6 +189,10 @@ namespace fg {
             fgBool m_isActive;
             ///
             fgBool m_callbacksRegistered;
+            ///
+            wxPanel* m_leftPanel;
+            ///
+            wxPanel* m_bottomPanel;
             /// Pointer to pointer for the main engine instance. Double pointer is used
             /// so the pointer change is seen in every dependent Editor object.
             fg::CEngineMain** m_engineMainOrig;

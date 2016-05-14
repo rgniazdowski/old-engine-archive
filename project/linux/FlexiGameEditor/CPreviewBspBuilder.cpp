@@ -76,7 +76,7 @@ void editor::CPreviewBspBuilder::SPolygonHolder::render(const fgBool drawBox) {
     if(drawBox) {
         if(drawCall)
             if(drawCall->getShaderProgram())
-                drawCall->getShaderProgram()->setUniform(gfx::FG_GFX_USE_TEXTURE, 0.0f);
+                drawCall->getShaderProgram()->setUniform(gfx::UNIFORM_USE_TEXTURE, 0.0f);
         gfx::primitives::drawAABBLines(polygon.bbox, colors::getColor("red"));
     }
 }
@@ -92,7 +92,7 @@ fgBool editor::CPreviewBspBuilder::SPolygonHolder::rayIntersect(const Vec3f& ray
 
 void editor::CPreviewBspBuilder::SPolygonHolder::refreshDrawCall(void) {
     if(!drawCall) {
-        drawCall = new gfx::CDrawCall(FG_GFX_DRAW_CALL_EXTERNAL_ARRAY,
+        drawCall = new gfx::CDrawCall(DRAW_CALL_EXTERNAL_ARRAY,
                                       polygon.getVertexData()->attribMask());
     }
     drawCall->setupFromVertexData(polygon.getVertexData());
@@ -131,7 +131,9 @@ m_renderShotCB(NULL),
 m_mouseHandlerCB(NULL),
 m_keyboardHandlerCB(NULL),
 m_pMainFrame(pParent),
-m_materialsEditDialog(NULL) {
+m_materialsEditDialog(NULL),
+m_bspLeftPanel(NULL),
+m_bspBottomPanel(NULL) {
     {
         using namespace fg::event;
         m_preRenderShotCB = new CPlainFunctionCallback(&CPreviewBspBuilder::preRenderHandler,
@@ -241,6 +243,8 @@ m_materialsEditDialog(NULL) {
                        idMenuFirst, idMenuLast);
 
     m_materialsEditDialog = new CBspMaterialsEditDialog(m_pMainFrame);
+    m_bspBottomPanel = new CBspPreviewBottomPanel(m_pMainFrame);
+    m_bottomPanel = m_bspBottomPanel;
 
     refreshInternals();
 }
@@ -938,7 +942,7 @@ fgBool editor::CPreviewBspBuilder::renderHandler(void* systemData, void* userDat
                                                                        1.0f,
                                                                        1.0f,
                                                                        1.0f);
-                polygonHolder.drawCall->getShaderProgram()->setUniform(gfx::FG_GFX_USE_TEXTURE, 1.0f);
+                polygonHolder.drawCall->getShaderProgram()->setUniform(gfx::UNIFORM_USE_TEXTURE, 1.0f);
                 polygonHolder.setMaterial(pTmpMaterial);
             }
         }
