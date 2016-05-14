@@ -129,11 +129,15 @@ void main()
     v_eye = -(u_mvMatrix * a_position);
     
 	// Transform the points position by MVP matrix
-	gl_Position = u_mvpMatrix * blendPos;
-	
+	if(1) {
+		gl_Position = u_mvpMatrix * blendPos;	
+	} else {
+		gl_Position = vec4(1.0, 1.0, 1.0, 1.0);
+	}
 	
 	// varying position contains original data position
 	v_position = blendPos.xyz;
+
 	// Texture coordinate
 	v_texCoord = a_texCoord;
 	// Normal coordinate

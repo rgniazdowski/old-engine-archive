@@ -73,7 +73,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/chainreaction: ${OBJECTFILES}
 ${OBJECTDIR}/main_SolutionFinder.o: main_SolutionFinder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_DEFAULTS -DTIXML_USE_STL -DFG_RELEASE -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src `pkg-config --cflags glew` `pkg-config --cflags libpng` `pkg-config --cflags zlib` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_SolutionFinder.o main_SolutionFinder.cpp
+	$(COMPILE.cc) -O2 -s -DFG_DEFAULTS -DFG_RELEASE -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree -I../../../modules/assimp/include -I../../../modules/bullet/bullet3/src `pkg-config --cflags glew` `pkg-config --cflags libpng` `pkg-config --cflags zlib` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_SolutionFinder.o main_SolutionFinder.cpp
 
 # Subprojects
 .build-subprojects:

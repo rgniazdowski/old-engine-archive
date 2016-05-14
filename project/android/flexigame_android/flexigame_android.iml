@@ -80,7 +80,6 @@
       <excludeFolder url="file:///mnt/armada/Develop/Game.Dev.Engine/infinium/project/android/flexigame_android/build/intermediates/rs" />
       <excludeFolder url="file:///mnt/armada/Develop/Game.Dev.Engine/infinium/project/android/flexigame_android/build/intermediates/symbols" />
       <excludeFolder url="file:///mnt/armada/Develop/Game.Dev.Engine/infinium/project/android/flexigame_android/build/outputs" />
-      <excludeFolder url="file:///mnt/armada/Develop/Game.Dev.Engine/infinium/project/android/flexigame_android/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

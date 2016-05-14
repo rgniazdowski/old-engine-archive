@@ -20,9 +20,10 @@ void main()
 {
     vec4 texel;
 	if(u_useTexture > 0.5)
-		texel = texture2D(s_texture, v_texCoord);
+		texel = texture2D(s_texture, v_texCoord) * u_CustomColor;
 	else
 		texel = u_CustomColor;
-    gl_FragColor = texel * v_color * u_CustomColor;
+    // gl_FragColor = texel * v_color * u_CustomColor;
+    gl_FragColor = texel * v_color;
 }
 
