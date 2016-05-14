@@ -37,12 +37,16 @@ m_stateFlags(NO_FLAGS) {
 //------------------------------------------------------------------------------
 
 gfx::anim::SAnimationChannel::SAnimationChannel(const SAnimationChannel& orig) {
+    m_stateFlags = NO_FLAGS;
+    this->setBakeDQs(orig.shouldBakeDQs());
+    this->setBakeMatrices(orig.shouldBakeMatrices());
     targetName.append(orig.targetName);
     positionKeys.append(orig.positionKeys);
     scalingKeys.append(orig.scalingKeys);
     rotationKeys.append(orig.rotationKeys);
     matrixKeys.append(orig.matrixKeys);
     dualQuatKeys.append(orig.dualQuatKeys);
+    setFlag(KEYS_FASTER_LOOKUP, orig.isFasterLookup());
     if(matrixKeys.size() || dualQuatKeys.size()) {
         setFlag(BAKED, FG_TRUE);
         setFlag(KEYS_FASTER_LOOKUP, FG_TRUE);
