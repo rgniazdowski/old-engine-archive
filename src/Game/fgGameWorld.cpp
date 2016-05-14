@@ -232,7 +232,6 @@ fgBool game::CGameWorld::destroy(void) {
 
 void game::CGameWorld::update(float delta) {
     base_type::update(delta); // intelligent world
-
     physical_world::update(delta); // #FIXME
 }
 //------------------------------------------------------------------------------

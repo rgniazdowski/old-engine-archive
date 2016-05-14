@@ -22,7 +22,7 @@ using namespace fg;
 
 gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
                             self_type* pParent) :
-base_type(), // fgManagedObjectBase init
+base_type(), // resource::CManagedObject init
 animated_type(),
 spatial_type(),
 m_nodeType(nodeType), // Current node type
@@ -53,7 +53,7 @@ gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
         this->m_nodeType = orig.m_nodeType;
         this->m_pTreeNode = NULL;
         this->m_pParent = NULL;
-        //this->m_children; // ?? ?? 
+        //this->m_children; // ?? ?? deep copy
         this->m_stateFlags = orig.m_stateFlags;
         this->m_scale = orig.m_scale;
         this->m_modelMat = orig.m_modelMat;
@@ -123,7 +123,6 @@ fgBool gfx::CSceneNode::queryTrait(const fg::traits::SceneNode trait, void **pOb
     } else if(pObj) {
         *pObj = NULL;
     }
-
     return status;
 }
 //------------------------------------------------------------------------------

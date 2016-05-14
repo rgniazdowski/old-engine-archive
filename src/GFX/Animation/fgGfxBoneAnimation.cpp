@@ -101,10 +101,10 @@ gfx::anim::StandardActionType gfx::anim::getActionTypeFromText(const char* text)
         }
     }
     return result;
-
 }
 //------------------------------------------------------------------------------
 #if 0
+
 int gfx::anim::getBonesForStandardAction(StandardActionType action,
                                          CVector<BoneType>& boneTypes) {
     if(action == ACTION_NONE)
@@ -151,6 +151,7 @@ int gfx::anim::getBonesForStandardAction(StandardActionType action,
 }
 //------------------------------------------------------------------------------
 #endif
+
 gfx::anim::CBoneAnimation::CBoneAnimation(CArmature* pArmature) :
 base_type(),
 m_pArmature(pArmature) {

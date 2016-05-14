@@ -27,8 +27,7 @@ rotationKeys(),
 scalingKeys(),
 matrixKeys(),
 dualQuatKeys(),
-m_isBaked(FG_FALSE),
-m_shouldBakeDQ(FG_FALSE) {
+m_stateFlags(NO_FLAGS) {
     positionKeys.reserve(2);
     scalingKeys.reserve(2);
     rotationKeys.reserve(2);
@@ -44,8 +43,10 @@ gfx::anim::SAnimationChannel::SAnimationChannel(const SAnimationChannel& orig) {
     rotationKeys.append(orig.rotationKeys);
     matrixKeys.append(orig.matrixKeys);
     dualQuatKeys.append(orig.dualQuatKeys);
-    m_isBaked = FG_FALSE;
-
+    if(matrixKeys.size() || dualQuatKeys.size()) {
+        setFlag(BAKED, FG_TRUE);
+        setFlag(KEYS_FASTER_LOOKUP, FG_TRUE);
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -56,15 +57,14 @@ gfx::anim::SAnimationChannel::~SAnimationChannel() {
     rotationKeys.clear();
     matrixKeys.clear();
     dualQuatKeys.clear();
-    m_isBaked = FG_FALSE;
-    m_shouldBakeDQ = FG_FALSE;
+    m_stateFlags = NO_FLAGS;
 }
 //------------------------------------------------------------------------------
 
 const Vector3f& gfx::anim::SAnimationChannel::getPosition(float currentTime) {
     unsigned int index = 0;
     const unsigned int count = positionKeys.size();
-    if(!m_isBaked) {
+    if(!isFasterLookup()) {
         while(FG_TRUE) {
             if(index + 1 >= count)
                 break;
@@ -89,7 +89,7 @@ void gfx::anim::SAnimationChannel::getPositionInterpolated(Vector3f& result,
     float mixFactor = 1.0f;
     const unsigned int count = positionKeys.size();
     while(FG_TRUE) {
-        if(m_isBaked) {
+        if(isFasterLookup()) {
             // if is baked - force index
             index = (unsigned int)currentTime;
         }
@@ -118,17 +118,10 @@ void gfx::anim::SAnimationChannel::getPositionInterpolated(Vector3f& result,
 }
 //------------------------------------------------------------------------------
 
-Vector3f gfx::anim::SAnimationChannel::getPositionInterpolated(float currentTime) {
-    Vector3f result;
-    getPositionInterpolated(result, currentTime);
-    return result;
-}
-//------------------------------------------------------------------------------
-
 const Vector3f& gfx::anim::SAnimationChannel::getScale(float currentTime) {
     unsigned int index = 0;
     const unsigned int count = scalingKeys.size();
-    if(!m_isBaked) {
+    if(!isFasterLookup()) {
         while(FG_TRUE) {
             if(index + 1 >= count)
                 break;
@@ -152,7 +145,7 @@ void gfx::anim::SAnimationChannel::getScaleInterpolated(Vector3f& result,
     float mixFactor = 1.0f;
     const unsigned int count = scalingKeys.size();
     while(FG_TRUE) {
-        if(m_isBaked) {
+        if(isFasterLookup()) {
             index = (unsigned int)currentTime;
         }
         if(index + 1 >= count) {
@@ -180,17 +173,10 @@ void gfx::anim::SAnimationChannel::getScaleInterpolated(Vector3f& result,
 }
 //------------------------------------------------------------------------------
 
-Vector3f gfx::anim::SAnimationChannel::getScaleInterpolated(float currentTime) {
-    Vector3f result;
-    getScaleInterpolated(result, currentTime);
-    return result;
-}
-//------------------------------------------------------------------------------
-
 const Quaternionf& gfx::anim::SAnimationChannel::getRotation(float currentTime) {
     unsigned int index = 0;
     const unsigned int count = rotationKeys.size();
-    if(!m_isBaked) {
+    if(!isFasterLookup()) {
         while(FG_TRUE) {
             if(index + 1 >= count)
                 break;
@@ -214,7 +200,7 @@ void gfx::anim::SAnimationChannel::getRotationInterpolated(Quaternionf& result,
     float mixFactor = 1.0f;
     const unsigned int count = rotationKeys.size();
     while(FG_TRUE) {
-        if(m_isBaked) {
+        if(isFasterLookup()) {
             index = (unsigned int)currentTime;
         }
         if(index + 1 >= count) {
@@ -242,15 +228,8 @@ void gfx::anim::SAnimationChannel::getRotationInterpolated(Quaternionf& result,
 }
 //------------------------------------------------------------------------------
 
-Quaternionf gfx::anim::SAnimationChannel::getRotationInterpolated(float currentTime) {
-    Quaternionf result;
-    getRotationInterpolated(result, currentTime);
-    return result;
-}
-//------------------------------------------------------------------------------
-
 void gfx::anim::SAnimationChannel::getMatrix(Matrix4f& result, float currentTime) {
-    if(!m_isBaked) {
+    if(!isBaked() || matrixKeys.empty()) {
         const Vector3f& position = getPosition(currentTime);
         const Quaternionf& rotation = getRotation(currentTime);
         const Vector3f& scale = getScale(currentTime);
@@ -268,13 +247,6 @@ void gfx::anim::SAnimationChannel::getMatrix(Matrix4f& result, float currentTime
 }
 //------------------------------------------------------------------------------
 
-Matrix4f gfx::anim::SAnimationChannel::getMatrix(float currentTime) {
-    Matrix4f result;
-    getMatrix(result, currentTime);
-    return result;
-}
-//------------------------------------------------------------------------------
-
 void gfx::anim::SAnimationChannel::getMatrixInterpolated(Matrix4f& result,
                                                          float currentTime) {
     Vector3f position, scale;
@@ -286,20 +258,13 @@ void gfx::anim::SAnimationChannel::getMatrixInterpolated(Matrix4f& result,
     // translate - rotate - scale
     result = math::translate(Matrix4f(), position);
     result *= math::toMat4(rotation);
-    result = math::scale(result, scale);
-}
-//------------------------------------------------------------------------------
-
-Matrix4f gfx::anim::SAnimationChannel::getMatrixInterpolated(float currentTime) {
-    Matrix4f result;
-    getMatrixInterpolated(result, currentTime);
-    return result;
+    result = math::scale(result, scale);    
 }
 //------------------------------------------------------------------------------
 
 void gfx::anim::SAnimationChannel::getDualQuaternion(DualQuaternionf& result,
                                                      float currentTime) {
-    if(!m_isBaked || dualQuatKeys.empty()) {
+    if(!isBaked() || dualQuatKeys.empty()) {
         result.initializeFrom(getRotation(currentTime), getPosition(currentTime));
     } else {
         const unsigned int count = dualQuatKeys.size();
@@ -311,36 +276,39 @@ void gfx::anim::SAnimationChannel::getDualQuaternion(DualQuaternionf& result,
 }
 //------------------------------------------------------------------------------
 
-DualQuaternionf gfx::anim::SAnimationChannel::getDualQuaternion(float currentTime) {
-
-    if(!m_isBaked || dualQuatKeys.empty()) {
-        return DualQuaternionf(getRotation(currentTime), getPosition(currentTime));
-    } else {
-        const unsigned int count = dualQuatKeys.size();
-        unsigned int index = (unsigned int)currentTime;
-        if(index >= count)
-            index = count - 1;
-        return dualQuatKeys[index].value;
-    }
-}
-//------------------------------------------------------------------------------
-
 void gfx::anim::SAnimationChannel::getDualQuaternionInterpolated(DualQuaternionf& result,
                                                                  float currentTime) {
-    Quatf rot;
-    Vec3f pos;
-    getRotationInterpolated(rot, currentTime);
-    getPositionInterpolated(pos, currentTime);
-    result.initializeFrom(rot, pos);
-}
-//------------------------------------------------------------------------------
-
-DualQuaternionf gfx::anim::SAnimationChannel::getDualQuaternionInterpolated(float currentTime) {
-    Quatf rot;
-    Vec3f pos;
-    getRotationInterpolated(rot, currentTime);
-    getPositionInterpolated(pos, currentTime);
-    return DualQuaternionf(rot, pos);
+    if(isBaked() && !dualQuatKeys.empty()) {
+        float mixFactor = 1.0f;
+        const unsigned int count = dualQuatKeys.size();
+        unsigned int index = (unsigned int)currentTime, mixIndex = 0;
+        if(index + 1 >= count) {
+            // this key is the last one - no interpolation
+            mixIndex = index;
+        } else /* if(dualQuatKeys[index + 1].elapsed > currentTime) */ {
+            mixIndex = index + 1;
+            // the next key lies in the future, need to mix it with proper proportion
+            const float keyDiff = dualQuatKeys[mixIndex].elapsed - dualQuatKeys[index].elapsed;
+            const float currentDiff = currentTime - dualQuatKeys[index].elapsed;
+            mixFactor = currentDiff / keyDiff;
+        }
+        if(mixIndex == index) {
+            result = dualQuatKeys[index].value;
+        } else {
+            result = DualQuaternionf(math::slerp(dualQuatKeys[index].value.q0,
+                                                 dualQuatKeys[mixIndex].value.q0,
+                                                 mixFactor),
+                                     math::slerp(dualQuatKeys[index].value.qe,
+                                                 dualQuatKeys[mixIndex].value.qe,
+                                                 mixFactor));
+        }
+    } else {
+        Quatf rot;
+        Vec3f pos;
+        getRotationInterpolated(rot, currentTime);
+        getPositionInterpolated(pos, currentTime);
+        result.initializeFrom(rot, pos);
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -370,14 +338,14 @@ void gfx::anim::SAnimationChannel::clearKeys(void) {
     scalingKeys.clear();
     matrixKeys.clear();
     dualQuatKeys.clear();
-    m_isBaked = FG_FALSE;
+    setFlag(BAKED, FG_FALSE);
+    setFlag(KEYS_FASTER_LOOKUP, FG_FALSE);
 }
 //------------------------------------------------------------------------------
 
 void gfx::anim::SAnimationChannel::bake(fgBool force) {
-    if(m_isBaked && !force)
+    if(isBaked() && !force)
         return;
-    m_isBaked = FG_FALSE;
     if(positionKeys.size()) {
         unsigned int nKeys = positionKeys.size();
         float diff = positionKeys[nKeys - 1].elapsed - positionKeys[0].elapsed;
@@ -479,25 +447,30 @@ void gfx::anim::SAnimationChannel::bake(fgBool force) {
             }
         }
     }
-
-    unsigned int nMaxKey = math::max(positionKeys.size(), scalingKeys.size());
-    nMaxKey = math::max(nMaxKey, (unsigned int)rotationKeys.size());
-    matrixKeys.reserve(nMaxKey);
-    if(shouldBakeDQ())
-        dualQuatKeys.reserve(nMaxKey);
-    matrixKeys.clear();
-    dualQuatKeys.clear();
-    Matrix4f outMat;
-    DualQuaternionf outDQ;
-    for(unsigned int i = 0; i < nMaxKey; i++) {
-        // can use getMatrix here - isBaked is set to FALSE
-        getMatrix(outMat, (float)i);
-        matrixKeys.push_back(SMatrixKeyf((float)i, outMat));
-        if(shouldBakeDQ()) {
-            getDualQuaternion(outDQ, (float)i);
-            dualQuatKeys.push_back(SDualQuatKeyf((float)i, outDQ));
+    setFlag(KEYS_FASTER_LOOKUP, FG_TRUE);
+    if(shouldBakeMatrices() || shouldBakeDQs()) {
+        unsigned int nMaxKey = math::max(positionKeys.size(), scalingKeys.size());
+        nMaxKey = math::max(nMaxKey, (unsigned int)rotationKeys.size());
+        if(shouldBakeMatrices())
+            matrixKeys.reserve(nMaxKey);
+        if(shouldBakeDQs())
+            dualQuatKeys.reserve(nMaxKey);
+        matrixKeys.clear();
+        dualQuatKeys.clear();
+        Matrix4f outMat;
+        DualQuaternionf outDQ;
+        for(unsigned int i = 0; i < nMaxKey; i++) {
+            // can use getMatrix here - isBaked is set to FALSE
+            if(shouldBakeMatrices()) {
+                getMatrix(outMat, (float)i);
+                matrixKeys.push_back(SMatrixKeyf((float)i, outMat));
+            }
+            if(shouldBakeDQs()) {
+                getDualQuaternion(outDQ, (float)i);
+                dualQuatKeys.push_back(SDualQuatKeyf((float)i, outDQ));
+            }
         }
+        setFlag(BAKED, FG_TRUE);
     }
-    m_isBaked = FG_TRUE;
 }
 //------------------------------------------------------------------------------

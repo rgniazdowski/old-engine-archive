@@ -64,7 +64,14 @@ void gfx::anim::CAnimation::clear(void) {
 void gfx::anim::CAnimation::bake(void) {
     const unsigned int n = count();
     for(unsigned int i = 0; i < n; i++) {
-        this->m_channels[i].bake();
+        // For now there is no need to bake dual quaternions - how to use them?
+        // There is a problem with proper scaling and DQs - for now need to use
+        // mat4 operations and then convert final bone transformation matrix
+        // to DQ format for mesh skinning shader.
+        this->m_channels[i].setBakeDQs(FG_FALSE);
+        // need to set it explicitly - otherwise only pos/rot/scale keys will be fixed
+        this->m_channels[i].setBakeMatrices(FG_TRUE);
+        this->m_channels[i].bake(); // go!
     }
 }
 //------------------------------------------------------------------------------

@@ -514,7 +514,7 @@ fgBool gfx::CModelResource::SModelSkinning::calculateRootMotions(const CModelRes
                     if(!boneInfo[subBoneIdx].didDirectionChange(oAxis)) {
                         if(!boneInfo[subBoneIdx].isDirectionValid(oAxis))
                             boneInfo[subBoneIdx].distance += math::dot(boneInfo[subBoneIdx].direction, oAxis);
-                    } 
+                    }
                     if(tCurrent >= durationS) {
                         totalSpeed += boneInfo[subBoneIdx].distance / durationS;
                     }
@@ -1669,8 +1669,8 @@ void gfx::CModelResource::initSkinningInfo(void) {
             continue;
         SSkinnedMesh* pSkinned = m_shapes[i]->getSkinnedMesh();
         m_shapes[i]->getSkinnedMesh()->initSkinningInfo(m_skinning.info.armatureInfo);
-        
-        for(unsigned int j=0;j<pSkinned->bones.size();j++) {
+
+        for(unsigned int j = 0; j < pSkinned->bones.size(); j++) {
             if(!bones.contains(pSkinned->bones[j])) {
                 bones.push_back(pSkinned->bones[j]);
                 // This mapping will be quite useful when calculating final matrix
@@ -1678,7 +1678,7 @@ void gfx::CModelResource::initSkinningInfo(void) {
                 // Such transformations need to be computed once per frame and
                 // then copied into separate array for each skinned mesh (because
                 // given skinned mesh can be influenced by different set of bones)
-                m_skinning.bonesIdxMap[bones[bones.size()-1]->index] = bones.size()-1;
+                m_skinning.bonesIdxMap[bones[bones.size() - 1]->index] = bones.size() - 1;
             }
         }
     }

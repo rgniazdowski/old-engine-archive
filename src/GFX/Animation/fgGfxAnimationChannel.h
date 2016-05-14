@@ -23,6 +23,7 @@
     #include "Math/fgQuaternion.h"
     #include "Math/fgDualQuaternion.h"
     #include "fgVector.h"
+    #include "fgEnumFlags.h"
 
 namespace fg {
     namespace gfx {
@@ -118,6 +119,7 @@ namespace fg {
              *
              */
             struct SAnimationChannel {
+            public:
                 typedef SAnimationChannel self_type;
                 typedef SAnimationChannel type;
 
@@ -126,6 +128,20 @@ namespace fg {
                 typedef CVector<SVectorKeyf> ScalingKeys;
                 typedef CVector<SMatrixKeyf> MatrixKeys;
                 typedef CVector<SDualQuatKeyf> DualQuatKeys;
+
+                enum StateFlags {
+                    /// No current flags set
+                    NO_FLAGS = 0x0000,
+                    /// All keys are ready (faster lookup) and matrices and/or
+                    /// dual quaternions are ready for really fast lookup.
+                    BAKED = 0x0001,
+                    /// Keys are ready for faster lookup (pre-baked).
+                    KEYS_FASTER_LOOKUP = 0x0002,
+                    /// Should bake matrices
+                    BAKE_MATRICES = 0x0004,
+                    /// Should bake dual quaternions
+                    BAKE_DQS = 0x0008
+                }; // enum StateFlags
 
                 /**
                  *
@@ -156,12 +172,6 @@ namespace fg {
                  */
                 void getPositionInterpolated(Vector3f& result,
                                              float currentTime = 0.0f);
-                /**
-                 *
-                 * @param currentTime
-                 * @return
-                 */
-                Vector3f getPositionInterpolated(float currentTime = 0.0f);
 
                 //--------------------------------------------------------------
 
@@ -178,12 +188,6 @@ namespace fg {
                  */
                 void getScaleInterpolated(Vector3f& result,
                                           float currentTime = 0.0f);
-                /**
-                 *
-                 * @param currentTime
-                 * @return
-                 */
-                Vector3f getScaleInterpolated(float currentTime = 0.0f);
 
                 //--------------------------------------------------------------
 
@@ -200,12 +204,6 @@ namespace fg {
                  */
                 void getRotationInterpolated(Quaternionf& result,
                                              float currentTime = 0.0f);
-                /**
-                 *
-                 * @param currentTime
-                 * @return
-                 */
-                Quaternionf getRotationInterpolated(float currentTime = 0.0f);
 
                 //--------------------------------------------------------------
 
@@ -215,12 +213,6 @@ namespace fg {
                  * @param currentTime
                  */
                 void getMatrix(Matrix4f& result, float currentTime = 0.0f);
-                /**
-                 *
-                 * @param currentTime
-                 * @return
-                 */
-                Matrix4f getMatrix(float currentTime = 0.0f);
 
                 //--------------------------------------------------------------
 
@@ -230,32 +222,17 @@ namespace fg {
                  * @param currentTime
                  */
                 void getMatrixInterpolated(Matrix4f& result,
-                                           float currentTime = 0.0f);
-                /**
-                 *
-                 * @param currentTime
-                 * @return
-                 */
-                Matrix4f getMatrixInterpolated(float currentTime = 0.0f);
+                                           float currentTime = 0.0f);                
 
                 //--------------------------------------------------------------
 
                 void getDualQuaternion(DualQuaternionf& result,
                                        float currentTime = 0.0f);
 
-                DualQuaternionf getDualQuaternion(float currentTime = 0.0f);
-
                 //--------------------------------------------------------------
 
                 void getDualQuaternionInterpolated(DualQuaternionf& result,
                                                    float currentTime = 0.0f);
-
-                /**
-                 *
-                 * @param currentTime
-                 * @return
-                 */
-                DualQuaternionf getDualQuaternionInterpolated(float currentTime = 0.0f);
 
                 //--------------------------------------------------------------
 
@@ -270,10 +247,20 @@ namespace fg {
                          Quaternionf& outRotation,
                          Vector3f& outScale,
                          float currentTime = 0.0f);
+                /**
+                 * 
+                 * @param outMatrix
+                 * @param currentTime
+                 */
                 inline void get(Matrix4f& outMatrix,
                                 float currentTime = 0.0f) {
                     getMatrix(outMatrix, currentTime);
                 }
+                /**
+                 *
+                 * @param outDQ
+                 * @param currentTime
+                 */
                 inline void get(DualQuaternionf& outDQ,
                                 float currentTime = 0.0f) {
                     getDualQuaternion(outDQ, currentTime);
@@ -290,10 +277,20 @@ namespace fg {
                                      Quaternionf& outRotation,
                                      Vector3f& outScale,
                                      float currentTime = 0.0f);
+                /**
+                 * 
+                 * @param outMatrix
+                 * @param currentTime
+                 */
                 inline void getInterpolated(Matrix4f& outMatrix,
                                             float currentTime = 0.0f) {
                     getMatrixInterpolated(outMatrix, currentTime);
                 }
+                /**
+                 *
+                 * @param outDQ
+                 * @param currentTime
+                 */
                 inline void getInterpolated(DualQuaternionf& outDQ,
                                             float currentTime = 0.0f) {
                     getDualQuaternionInterpolated(outDQ, currentTime);
@@ -305,41 +302,87 @@ namespace fg {
                  *
                  */
                 void clearKeys(void);
-
                 /**
                  *
                  */
                 void bake(fgBool force = FG_FALSE);
+                /**
+                 *
+                 * @return
+                 */
                 fgBool isBaked(void) const {
-                    return m_isBaked;
+                    return (fgBool)!!(m_stateFlags & BAKED);
                 }
-                fgBool shouldBakeDQ(void) const {
-                    return m_shouldBakeDQ;
+                /**
+                 *
+                 * @param toggle
+                 */
+                void setBakeDQs(const fgBool toggle = FG_TRUE) {
+                    setFlag(BAKE_DQS, toggle);
                 }
-                void setBakeDQ(const fgBool toggle) {
-                    m_shouldBakeDQ = toggle;
+                /**
+                 * 
+                 * @return
+                 */
+                fgBool shouldBakeDQs(void) const {
+                    return (fgBool)!!(m_stateFlags & BAKE_DQS);
+                }
+                /**
+                 * 
+                 * @param toggle
+                 */
+                void setBakeMatrices(const fgBool toggle = FG_TRUE) {
+                    setFlag(BAKE_MATRICES, toggle);
+                }
+                /**
+                 * 
+                 * @return
+                 */
+                fgBool shouldBakeMatrices(void) const {
+                    return (fgBool)!!(m_stateFlags & BAKE_MATRICES);
+                }
+                /**
+                 *
+                 * @return
+                 */
+                fgBool isFasterLookup(void) const {
+                    return (fgBool)!!(m_stateFlags & KEYS_FASTER_LOOKUP);
                 }
 
+            protected:
+                void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);                
+
             public:
-                ///
+                /// Target node name - for reference.
                 std::string targetName;
-                ///
+                /// All position keys (stored as float vectors)
                 PositionKeys positionKeys;
-                ///
+                /// All rotation keys
                 RotationKeys rotationKeys;
-                ///
+                /// All scaling keys
                 ScalingKeys scalingKeys;
-                /// special matrix keys (pre-baked)
+                /// Special matrix keys (pre-baked - for faster retrieval)
                 MatrixKeys matrixKeys;
-                /// special dual quaternion keys (pre-baked - for faster retrieval)
+                /// Special dual quaternion keys (pre-baked - for faster retrieval)
                 /// to have it accessible - need to call bake()
                 DualQuatKeys dualQuatKeys;
 
             protected:
-                fgBool m_isBaked;
-                fgBool m_shouldBakeDQ;
+                /// Current state flags - various on/off options.
+                StateFlags m_stateFlags;
 
             }; // struct SAnimationChannel
+
+            FG_ENUM_FLAGS(SAnimationChannel::StateFlags);
+
+            inline void SAnimationChannel::setFlag(const StateFlags flags, const fgBool toggle) {
+                if(toggle) {
+                    m_stateFlags |= flags;
+                } else {
+                    m_stateFlags |= flags;
+                    m_stateFlags ^= flags;
+                }
+            }
 
         } // namespace anim
     } // namespace gfx
